@@ -180,26 +180,29 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
         () -> {
           CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
           IImage image = JSContext.unwrapObject(imageRef);
-          if (dWidth_sWidth < 0 || dHeight_sHeight < 0) {
-            ctx.drawImage(image.getBitmap(), (float) dx_sx, (float) dy_sy);
-          } else if (dx < 0 || dy < 0) {
-            ctx.drawImage(
-                image.getBitmap(),
-                (float) dx_sx,
-                (float) dy_sy,
-                (float) dWidth_sWidth,
-                (float) dHeight_sHeight);
-          } else {
-            ctx.drawImage(
-                image.getBitmap(),
-                (float) dx_sx,
-                (float) dy_sy,
-                (float) dWidth_sWidth,
-                (float) dHeight_sHeight,
-                (float) dx,
-                (float) dy,
-                (float) dWidth,
-                (float) dHeight);
+          if (image != null) {
+
+            if (dWidth_sWidth < 0 || dHeight_sHeight < 0) {
+              ctx.drawImage(image.getBitmap(), (float) dx_sx, (float) dy_sy);
+            } else if (dx < 0 || dy < 0) {
+              ctx.drawImage(
+                  image.getBitmap(),
+                  (float) dx_sx,
+                  (float) dy_sy,
+                  (float) dWidth_sWidth,
+                  (float) dHeight_sHeight);
+            } else {
+              ctx.drawImage(
+                  image.getBitmap(),
+                  (float) dx_sx,
+                  (float) dy_sy,
+                  (float) dWidth_sWidth,
+                  (float) dHeight_sHeight,
+                  (float) dx,
+                  (float) dy,
+                  (float) dWidth,
+                  (float) dHeight);
+            }
           }
         });
   }

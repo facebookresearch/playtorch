@@ -31,16 +31,16 @@ export default function CanvasRect() {
       ctx.clear();
 
       ctx.fillStyle = '#00bfff';
-      ctx.fillCircle(200, 200, 90);
-      ctx.fillStyle = '#00ff00';
-      ctx.lineWidth = 25;
-      ctx.drawCircle(200, 200, 90);
+      ctx.fillCircle(80, 80, 36);
+      ctx.strokeStyle = '#00ff00';
+      ctx.lineWidth = 10;
+      ctx.drawCircle(80, 80, 36);
 
       ctx.fillStyle = '#fb0fff';
-      ctx.fillRect(100, 400, 160, 180);
-      ctx.fillStyle = '#00ffff';
-      ctx.lineWidth = 15;
-      ctx.strokeRect(100, 400, 160, 180);
+      ctx.fillRect(40, 160, 64, 72);
+      ctx.strokeStyle = '#00ffff';
+      ctx.lineWidth = 6;
+      ctx.strokeRect(40, 160, 64, 72);
 
       ctx.invalidate();
     }
@@ -50,12 +50,7 @@ export default function CanvasRect() {
     return null;
   }
 
-  return <Canvas style={styles.canvas} onContext2D={handleContext2D} />;
+  return (
+    <Canvas style={StyleSheet.absoluteFill} onContext2D={handleContext2D} />
+  );
 }
-
-const styles = StyleSheet.create({
-  canvas: {
-    height: 800,
-    width: 600,
-  },
-});

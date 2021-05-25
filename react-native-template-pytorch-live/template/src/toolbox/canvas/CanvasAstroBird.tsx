@@ -10,28 +10,32 @@
 import * as React from 'react';
 import {useEffect, useMemo} from 'react';
 import {useCallback, useState} from 'react';
-import {Text} from 'react-native';
+import {LayoutRectangle, Text} from 'react-native';
 import {Button, StyleSheet, View} from 'react-native';
 import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
 import AstroBirdGame from './AstroBirdGame';
 
 export default function CanvasAstroBird() {
   const [isTryAgainVisible, setIsTryAgainVisible] = useState<boolean>(false);
-  const [
-    drawingContext,
-    setDrawingContext,
-  ] = useState<CanvasRenderingContext2D>();
+  const [layout, setLayout] = useState<LayoutRectangle | null>(null);
+  const [drawingContext, setDrawingContext] = useState<
+    CanvasRenderingContext2D
+  >();
 
   const astroBird = useMemo(() => {
-    if (drawingContext != null) {
-      const game = new AstroBirdGame(drawingContext);
+    if (drawingContext != null && layout !== null) {
+      const game = new AstroBirdGame(
+        drawingContext,
+        layout.width,
+        layout.height,
+      );
       game.onGameEnded(() => {
         setIsTryAgainVisible(true);
       });
       return game;
     }
     return null;
-  }, [drawingContext, setIsTryAgainVisible]);
+  }, [drawingContext, layout, setIsTryAgainVisible]);
 
   const handleContext2D = useCallback(
     async (ctx: CanvasRenderingContext2D) => {
@@ -59,7 +63,14 @@ export default function CanvasAstroBird() {
 
   return (
     <View style={styles.container} onTouchStart={handleTouch}>
-      <Canvas style={styles.canvas} onContext2D={handleContext2D} />
+      <Canvas
+        style={styles.canvas}
+        onContext2D={handleContext2D}
+        onLayout={event => {
+          const {layout} = event.nativeEvent;
+          setLayout(layout);
+        }}
+      />
       {isTryAgainVisible && (
         <View style={styles.tryAgain}>
           <Text style={styles.tryAgainText}>Nice job! Want to try again?</Text>

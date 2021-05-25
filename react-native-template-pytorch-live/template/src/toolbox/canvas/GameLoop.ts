@@ -19,13 +19,14 @@ export default abstract class GameLoop {
 
   constructor(ctx: CanvasRenderingContext2D) {
     this.ctx = ctx;
+    this.animate = this.animate.bind(this);
   }
 
   public start(): void {
     this.totalTime = 0;
     this.lastTime = null;
     this.isRunningAnimation = true;
-    this.rafHandle = requestAnimationFrame(this.animate.bind(this));
+    this.rafHandle = requestAnimationFrame(this.animate);
   }
 
   public stop(): void {
@@ -41,7 +42,7 @@ export default abstract class GameLoop {
       deltaTime = time - this.lastTime;
       if (deltaTime < this.fpsTime) {
         if (this.isRunningAnimation) {
-          this.rafHandle = requestAnimationFrame(this.animate.bind(this));
+          this.rafHandle = requestAnimationFrame(this.animate);
         }
         return;
       }

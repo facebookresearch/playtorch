@@ -31,12 +31,12 @@ export default function CanvasClearRect() {
       ctx.clear();
 
       ctx.fillStyle = 'red';
-      ctx.fillRect(100, 500, 100, 140);
-      ctx.clearRect(110, 520, 80, 100);
+      ctx.fillRect(10, 10, 40, 56);
+      ctx.clearRect(14, 18, 32, 40);
 
       ctx.fillStyle = 'green';
-      ctx.fillRect(100, 700, 100, 140);
-      ctx.clearRect(120, 710, 50, 80);
+      ctx.fillRect(10, 80, 40, 56);
+      ctx.clearRect(18, 84, 20, 32);
 
       ctx.invalidate();
     }
@@ -46,12 +46,7 @@ export default function CanvasClearRect() {
     return null;
   }
 
-  return <Canvas style={styles.canvas} onContext2D={handleContext2D} />;
+  return (
+    <Canvas style={StyleSheet.absoluteFill} onContext2D={handleContext2D} />
+  );
 }
-
-const styles = StyleSheet.create({
-  canvas: {
-    height: 800,
-    width: 600,
-  },
-});

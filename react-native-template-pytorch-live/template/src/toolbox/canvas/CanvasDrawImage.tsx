@@ -40,12 +40,12 @@ export default function CanvasDrawImage() {
 
       if (catImage != null) {
         ctx.drawImage(catImage, 10, 10);
-        ctx.drawImage(catImage, 10, 600, 200, 100);
-        ctx.drawImage(catImage, 350, 130, 100, 100, 10, 750, 200, 200);
+        ctx.drawImage(catImage, 50, 50, 200, 100);
+        ctx.drawImage(catImage, 350, 130, 100, 100, 50, 200, 100, 100);
       }
 
       if (capybaraImage != null) {
-        ctx.drawImage(capybaraImage, 10, 1000, 500, 300);
+        ctx.drawImage(capybaraImage, 50, 350, 300, 200);
       }
 
       ctx.invalidate();
@@ -56,12 +56,7 @@ export default function CanvasDrawImage() {
     return null;
   }
 
-  return <Canvas style={styles.canvas} onContext2D={handleContext2D} />;
+  return (
+    <Canvas style={StyleSheet.absoluteFill} onContext2D={handleContext2D} />
+  );
 }
-
-const styles = StyleSheet.create({
-  canvas: {
-    height: 800,
-    width: 600,
-  },
-});

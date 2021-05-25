@@ -8,8 +8,8 @@
  */
 
 import {useIsFocused} from '@react-navigation/native';
-import React, {useCallback, useLayoutEffect, useState} from 'react';
-import {Button, StyleSheet, View} from 'react-native';
+import React, {useCallback, useLayoutEffect, useRef, useState} from 'react';
+import {Button, LayoutChangeEvent, StyleSheet, View} from 'react-native';
 import {
   Camera,
   Canvas,
@@ -21,6 +21,7 @@ import useImageFromUri from '../utils/useImageFromUri';
 
 export default function CanvasExample() {
   const isFocused = useIsFocused();
+  const canvasRef = useRef();
   const [isCameraActive, setIsCameraActive] = useState<boolean>(false);
   const [drawingContext, setDrawingContext] = useState<
     CanvasRenderingContext2D

@@ -9,22 +9,21 @@
 
 import * as React from 'react';
 import {useCallback} from 'react';
-import {requireNativeComponent, ViewStyle} from 'react-native';
+import {requireNativeComponent, ViewProps} from 'react-native';
 import {Image, wrapRef} from './ImageModule';
 import type {NativeJSRef} from './NativeJSRef';
 
-type ViewProps = {
+type CameraProps = {
   hideCaptureButton?: boolean,
   onCapture?(image: Image): void,
   onFrame?(image: Image): void,
-  style?: ViewStyle,
-};
+} & ViewProps;
 
-const PyTorchCoreCameraView = requireNativeComponent<ViewProps>(
+const PyTorchCoreCameraView = requireNativeComponent<CameraProps>(
   'PyTorchCoreCameraView',
 );
 
-export function Camera({style, onFrame, onCapture, hideCaptureButton}: ViewProps) {
+export function Camera({onFrame, onCapture, hideCaptureButton, ...otherProps}: CameraProps) {
   const handleFrame = useCallback(
     (event: any) => {
       const {nativeEvent} = event;
@@ -48,10 +47,10 @@ export function Camera({style, onFrame, onCapture, hideCaptureButton}: ViewProps
   );
   return (
     <PyTorchCoreCameraView
+      {...otherProps}
       hideCaptureButton={hideCaptureButton}
       onCapture={handleCapture}
       onFrame={handleFrame}
-      style={style}
     />
   );
 }

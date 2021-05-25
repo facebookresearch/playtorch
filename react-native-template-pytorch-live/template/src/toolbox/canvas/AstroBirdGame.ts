@@ -15,14 +15,14 @@ import {
 import GameLoop from './GameLoop';
 
 type Pipe = {
-  x: number,
-  height: number,
-  passed: boolean,
+  x: number;
+  height: number;
+  passed: boolean;
 };
 
 export default class AstroBirdGame extends GameLoop {
-  canvasWidth: number = 1080;
-  canvasHeight: number = 1600;
+  canvasWidth: number;
+  canvasHeight: number;
 
   onGameEndedCallback: (() => void) | null = null;
 
@@ -64,14 +64,16 @@ export default class AstroBirdGame extends GameLoop {
   pipes: Pipe[] = [];
 
   horizSpeed: number = 0.4;
-  groundHeight: number = 0.05;
+  groundHeightPct: number = 0.2;
   landX: number = 0;
   landXBuffer: number = 1;
   landImageHeightPx: number = 0;
   backgroundShift: number = 0;
 
-  constructor(ctx: CanvasRenderingContext2D) {
+  constructor(ctx: CanvasRenderingContext2D, width: number, height: number) {
     super(ctx);
+    this.canvasWidth = width;
+    this.canvasHeight = height;
     this.loadImages();
   }
 
@@ -146,30 +148,31 @@ export default class AstroBirdGame extends GameLoop {
 
   drawLand(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = '#1e045d';
+    const groundHeight = this.groundHeightPct * this.canvasHeight;
     ctx.fillRect(
       0,
-      this.canvasHeight * (1 - this.groundHeight) + this.landImageHeightPx,
+      this.canvasHeight - groundHeight,
       this.canvasWidth,
-      this.canvasHeight,
+      groundHeight,
     );
     if (this.landImage != null) {
       ctx.drawImage(
         this.landImage,
         -this.canvasWidth * this.landX,
-        this.canvasHeight * (1 - this.groundHeight),
+        this.canvasHeight * (1 - this.groundHeightPct),
       );
     }
   }
 
   drawBackground(ctx: CanvasRenderingContext2D): void {
     ctx.fillStyle = '#1e045d';
-    ctx.fillRect(0, 0, 1080, 1400);
+    ctx.fillRect(0, 0, 432, 560);
     ctx.fillStyle = '#1e045d';
-    ctx.fillRect(0, 1400, 1080, 1920 - 1612);
+    ctx.fillRect(0, 560, 432, 768 - 644);
 
     if (this.backgroundImage != null) {
       const scaleWidth =
-        (this.canvasHeight * (1 - this.groundHeight)) /
+        (this.canvasHeight * (1 - this.groundHeightPct)) /
         this.backgroundImage.getHeight();
       this.backgroundShift = this.gameStarted
         ? this.backgroundShift - 0.5
@@ -179,7 +182,7 @@ export default class AstroBirdGame extends GameLoop {
         this.backgroundShift,
         0,
         this.backgroundImage.getWidth() * scaleWidth,
-        this.canvasHeight * (1 - this.groundHeight),
+        this.canvasHeight * (1 - this.groundHeightPct),
       );
     }
   }
@@ -241,9 +244,9 @@ export default class AstroBirdGame extends GameLoop {
   }
 
   drawScore(ctx: CanvasRenderingContext2D): void {
-    const x = 50;
-    const y = 100;
-    const offset = -3;
+    const x = 10;
+    const y = 30;
+    const offset = -1;
     ctx.fillStyle = '#000000';
     ctx.fillText(`Score: ${this.score}`, x, y);
     ctx.fillStyle = '#ffffff';
@@ -373,10 +376,10 @@ export default class AstroBirdGame extends GameLoop {
       let height =
         Math.random() *
           (1 -
-            this.groundHeight -
+            this.groundHeightPct -
             2 * this.minPipeHeight -
             this.pipeHeightGap) +
-        this.groundHeight +
+        this.groundHeightPct +
         this.minPipeHeight;
 
       // Random height
@@ -419,7 +422,7 @@ export default class AstroBirdGame extends GameLoop {
 
   _checkIfDead(): void {
     // Check if hit the ground
-    if (this.birdHeight - this.birdImageHeightPct / 2 <= this.groundHeight) {
+    if (this.birdHeight - this.birdImageHeightPct / 2 <= this.groundHeightPct) {
       // birdHeight = groundHeight + birdImageHeightPct / 2;
       this.endGame();
       return;

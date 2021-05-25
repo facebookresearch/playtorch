@@ -22,6 +22,7 @@ import java.util.Stack;
 
 public class CanvasRenderingContext2D {
   private final DrawingCanvasView mDrawingCanvasView;
+  private float mPixelDensity;
   private final Stack<CanvasState> mSavedStates;
   private Paint mFillPaint;
   private Paint mStrokePaint;
@@ -53,6 +54,7 @@ public class CanvasRenderingContext2D {
   }
 
   private void init() {
+    mPixelDensity = mDrawingCanvasView.getResources().getDisplayMetrics().density;
 
     mClearPaint = new Paint();
     mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
@@ -86,7 +88,7 @@ public class CanvasRenderingContext2D {
   }
 
   public void setLineWidth(float width) {
-    mStrokePaint.setStrokeWidth(width);
+    mStrokePaint.setStrokeWidth(dpToPx(width));
   }
 
   public void clear() {
@@ -94,21 +96,22 @@ public class CanvasRenderingContext2D {
   }
 
   public void clearRect(float x, float y, float width, float height) {
-    mCanvas.drawRect(x, y, x + width, y + height, mClearPaint);
+    mCanvas.drawRect(dpToPx(x), dpToPx(y), dpToPx(x + width), dpToPx(y + height), mClearPaint);
   }
 
   public void strokeRect(float x, float y, float width, float height) {
-    mCanvas.drawRect(x, y, x + width, y + height, mStrokePaint);
+    mCanvas.drawRect(dpToPx(x), dpToPx(y), dpToPx(x + width), dpToPx(y + height), mStrokePaint);
   }
 
   public void fillRect(float x, float y, float width, float height) {
     mFillPaint.setStyle(Paint.Style.FILL);
-    mCanvas.drawRect(x, y, x + width, y + height, mFillPaint);
+    mCanvas.drawRect(dpToPx(x), dpToPx(y), dpToPx(x + width), dpToPx(y + height), mFillPaint);
   }
 
   public void arc(
       float x, float y, float radius, float startAngle, float endAngle, boolean counterclockwise) {
-    RectF rect = new RectF(x - radius, y - radius, x + radius, y + radius);
+    RectF rect =
+        new RectF(dpToPx(x - radius), dpToPx(y - radius), dpToPx(x + radius), dpToPx(y + radius));
 
     float PI2 = (float) Math.PI * 2;
 
@@ -132,28 +135,29 @@ public class CanvasRenderingContext2D {
   }
 
   public void drawCircle(float x, float y, float radius) {
-    mCanvas.drawCircle(x, y, radius, mStrokePaint);
+    mCanvas.drawCircle(dpToPx(x), dpToPx(y), dpToPx(radius), mStrokePaint);
   }
 
   public void fillCircle(float x, float y, float radius) {
-    mCanvas.drawCircle(x, y, radius, mFillPaint);
+    mCanvas.drawCircle(dpToPx(x), dpToPx(y), dpToPx(radius), mFillPaint);
   }
 
   public void drawImage(Bitmap bitmap, float dx, float dy) {
     Matrix matrix = new Matrix();
-    matrix.postTranslate(dx, dy);
+    matrix.postScale(mPixelDensity, mPixelDensity, 1.0f, 1.0f);
+    matrix.postTranslate(dpToPx(dx), dpToPx(dy));
     mCanvas.drawBitmap(bitmap, matrix, null);
   }
 
   public void drawImage(Bitmap bitmap, float dx, float dy, float dWidth, float dHeight) {
     int sWidth = bitmap.getWidth();
     int sHeight = bitmap.getHeight();
-    float scaleX = dWidth / sWidth;
-    float scaleY = dHeight / sHeight;
+    float scaleX = dpToPx(dWidth) / sWidth;
+    float scaleY = dpToPx(dHeight) / sHeight;
 
     Matrix matrix = new Matrix();
     matrix.postScale(scaleX, scaleY);
-    matrix.postTranslate(dx, dy);
+    matrix.postTranslate(dpToPx(dx), dpToPx(dy));
     mCanvas.drawBitmap(bitmap, matrix, null);
   }
 
@@ -171,17 +175,17 @@ public class CanvasRenderingContext2D {
     Bitmap destBitmap =
         Bitmap.createBitmap(bitmap, (int) sx, (int) sy, (int) sWidth, (int) sHeight);
 
-    float scaleX = dWidth / sWidth;
-    float scaleY = dHeight / sHeight;
+    float scaleX = dpToPx(dWidth) / sWidth;
+    float scaleY = dpToPx(dHeight) / sHeight;
 
     Matrix matrix = new Matrix();
     matrix.postScale(scaleX, scaleY);
-    matrix.postTranslate(dx, dy);
+    matrix.postTranslate(dpToPx(dx), dpToPx(dy));
     mCanvas.drawBitmap(destBitmap, matrix, null);
   }
 
   public void fillText(String text, float x, float y) {
-    mCanvas.drawText(text, x, y, mTextFillPaint);
+    mCanvas.drawText(text, dpToPx(x), dpToPx(y), mTextFillPaint);
   }
 
   /**
@@ -212,7 +216,7 @@ public class CanvasRenderingContext2D {
    */
   protected void setTransform(float a, float b, float c, float d, float e, float f) {
     Matrix matrix = new Matrix();
-    matrix.setValues(new float[] {a, c, e, b, d, f, 0, 0, 1});
+    matrix.setValues(new float[] {a, c, dpToPx(e), b, d, dpToPx(f), 0, 0, 1});
     mCanvas.setMatrix(matrix);
   }
 
@@ -225,11 +229,11 @@ public class CanvasRenderingContext2D {
   }
 
   protected void rotate(float angle, float x, float y) {
-    mCanvas.rotate(radiansToDegrees(angle), x, y);
+    mCanvas.rotate(radiansToDegrees(angle), dpToPx(x), dpToPx(y));
   }
 
   protected void translate(float x, float y) {
-    mCanvas.translate(x, y);
+    mCanvas.translate(dpToPx(x), dpToPx(y));
   }
 
   /**
@@ -271,6 +275,10 @@ public class CanvasRenderingContext2D {
 
   private float radiansToDegrees(float radians) {
     return (float) (radians * 180 / Math.PI);
+  }
+
+  private float dpToPx(float px) {
+    return px * mPixelDensity;
   }
 
   static class CanvasState {

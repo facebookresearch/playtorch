@@ -40,12 +40,7 @@ export default function CanvasFillText() {
     return null;
   }
 
-  return <Canvas style={styles.canvas} onContext2D={handleContext2D} />;
+  return (
+    <Canvas style={StyleSheet.absoluteFill} onContext2D={handleContext2D} />
+  );
 }
-
-const styles = StyleSheet.create({
-  canvas: {
-    height: 800,
-    width: 600,
-  },
-});

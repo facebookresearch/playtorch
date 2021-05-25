@@ -9,7 +9,7 @@
 
 import * as React from 'react';
 import {useCallback} from 'react';
-import {NativeModules, requireNativeComponent, ViewStyle} from 'react-native';
+import {NativeModules, requireNativeComponent, ViewProps} from 'react-native';
 import type {Image} from './ImageModule';
 import type {NativeJSRef} from './NativeJSRef';
 
@@ -79,10 +79,9 @@ export type CanvasRenderingContext2D = {
   restore(): void,
 };
 
-type ViewProps = {
+type CanvasProps = {
   onContext2D(ctx: CanvasRenderingContext2D): void,
-  style: ViewStyle,
-};
+} & ViewProps;
 
 // We use this invalid value as a workaround to simulate a nullable value. This allows
 // us to implement overloading methods in native (e.g., see drawImage).
@@ -197,11 +196,11 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
   };
 };
 
-const PyTorchCoreCanvasView = requireNativeComponent<ViewProps>(
+const PyTorchCoreCanvasView = requireNativeComponent<CanvasProps>(
   'PyTorchCoreCanvasView',
 );
 
-export function Canvas({style, onContext2D}: ViewProps) {
+export function Canvas({onContext2D, ...otherProps}: CanvasProps) {
   const handleContext2D = useCallback(
     (event: any) => {
       const {nativeEvent} = event;
@@ -212,5 +211,5 @@ export function Canvas({style, onContext2D}: ViewProps) {
     },
     [onContext2D],
   );
-  return <PyTorchCoreCanvasView style={style} onContext2D={handleContext2D} />;
+  return <PyTorchCoreCanvasView {...otherProps} onContext2D={handleContext2D} />;
 }

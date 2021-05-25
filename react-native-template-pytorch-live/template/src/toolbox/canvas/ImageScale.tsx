@@ -48,8 +48,8 @@ export default function ImageScale() {
     if (ctx != null && catImage != null && scaledCatImage != null) {
       ctx.clear();
 
-      ctx.drawImage(catImage, 50, 50);
-      ctx.drawImage(scaledCatImage, 50, 700);
+      ctx.drawImage(catImage, 10, 10);
+      ctx.drawImage(scaledCatImage, 50, 200);
 
       ctx.invalidate();
     }
@@ -59,12 +59,7 @@ export default function ImageScale() {
     return null;
   }
 
-  return <Canvas style={styles.canvas} onContext2D={handleContext2D} />;
+  return (
+    <Canvas style={StyleSheet.absoluteFill} onContext2D={handleContext2D} />
+  );
 }
-
-const styles = StyleSheet.create({
-  canvas: {
-    height: 800,
-    width: 600,
-  },
-});

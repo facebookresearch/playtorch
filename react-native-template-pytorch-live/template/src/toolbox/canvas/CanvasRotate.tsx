@@ -33,7 +33,7 @@ export default function CanvasRotate() {
       // Point of transform origin
       ctx.strokeStyle = 'blue';
       ctx.lineWidth = 10;
-      ctx.arc(0, 0, 10, 0, 2 * Math.PI);
+      ctx.arc(0, 0, 5, 0, 2 * Math.PI);
 
       // Non-rotated rectangle
       ctx.fillStyle = 'gray';
@@ -55,12 +55,7 @@ export default function CanvasRotate() {
     return null;
   }
 
-  return <Canvas style={styles.canvas} onContext2D={handleContext2D} />;
+  return (
+    <Canvas style={StyleSheet.absoluteFill} onContext2D={handleContext2D} />
+  );
 }
-
-const styles = StyleSheet.create({
-  canvas: {
-    height: 800,
-    width: 600,
-  },
-});

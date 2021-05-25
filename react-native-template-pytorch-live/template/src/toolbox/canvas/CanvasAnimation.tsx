@@ -62,52 +62,52 @@ export default function CanvasAnimation() {
         const sin = Math.sin(2 * Math.PI * step);
 
         if (catImage != null) {
-          let x5 = 100 + 600 * cos;
-          let y5 = 400 + 400 * -sin;
+          let x5 = 40 + 240 * cos;
+          let y5 = 160 + 160 * -sin;
           ctx.drawImage(catImage, x5, y5);
 
-          let x6 = 300 + 200 * cos;
-          ctx.drawImage(catImage, x6, x6, 200, 100);
+          let x6 = 120 + 80 * cos;
+          ctx.drawImage(catImage, x6, x6, 80, 40);
 
-          let x7 = 400 + 200 * -cos;
-          let y7 = 800 + 300 * -sin;
-          ctx.drawImage(catImage, 350, 130, 100, 100, x7, y7, 200, 200);
+          let x7 = 160 + 80 * -cos;
+          let y7 = 320 + 120 * -sin;
+          ctx.drawImage(catImage, 350, 130, 100, 100, x7, y7, 100, 100);
         }
 
         if (capybaraImage != null) {
-          let x7 = 240 + 200 * -cos;
-          let y7 = 1300 + 100 * sin;
-          ctx.drawImage(capybaraImage, x7, y7, 500, 300);
+          let x7 = 96 + 80 * -cos;
+          let y7 = 520 + 40 * sin;
+          ctx.drawImage(capybaraImage, x7, y7, 200, 120);
         }
 
-        let x1 = 500 + 200 * cos;
-        let y1 = 500 + 200 * sin;
+        let x1 = 200 + 80 * cos;
+        let y1 = 200 + 80 * sin;
         ctx.fillStyle = '#800080';
-        ctx.fillCircle(x1, y1, 50);
+        ctx.fillCircle(x1, y1, 20);
         ctx.fillStyle = '#000000';
-        ctx.lineWidth = 10;
-        ctx.drawCircle(x1, y1, 50);
+        ctx.lineWidth = 4;
+        ctx.drawCircle(x1, y1, 20);
 
-        let x2 = 500 + 300 * -cos;
-        let y2 = 1000 + 400 * sin;
+        let x2 = 200 + 120 * -cos;
+        let y2 = 400 + 160 * sin;
         ctx.fillStyle = '#ff6347';
-        ctx.fillCircle(x2, y2, 80);
+        ctx.fillCircle(x2, y2, 32);
 
-        let x3 = 500 + 300 * cos;
-        let y3 = 1200 + 400 * -sin;
+        let x3 = 200 + 120 * cos;
+        let y3 = 480 + 160 * -sin;
         ctx.fillStyle = '#00bfff';
-        ctx.fillCircle(x3, y3, 90);
+        ctx.fillCircle(x3, y3, 36);
         ctx.fillStyle = '#00ff00';
-        ctx.lineWidth = 25;
-        ctx.drawCircle(x3, y3, 90);
+        ctx.lineWidth = 10;
+        ctx.drawCircle(x3, y3, 36);
 
-        let x4 = 600 + 300 * -cos;
-        let y4 = 700 + 400 * -sin;
+        let x4 = 240 + 120 * -cos;
+        let y4 = 280 + 160 * -sin;
         ctx.fillStyle = '#fb0fff';
-        ctx.fillRect(x4, y4, 60, 80);
+        ctx.fillRect(x4, y4, 24, 32);
         ctx.fillStyle = '#00ffff';
-        ctx.lineWidth = 15;
-        ctx.strokeRect(x4, y4, 60, 80);
+        ctx.lineWidth = 6;
+        ctx.strokeRect(x4, y4, 24, 32);
 
         ctx.invalidate();
 
@@ -134,12 +134,7 @@ export default function CanvasAnimation() {
     return null;
   }
 
-  return <Canvas style={styles.canvas} onContext2D={handleContext2D} />;
+  return (
+    <Canvas style={StyleSheet.absoluteFill} onContext2D={handleContext2D} />
+  );
 }
-
-const styles = StyleSheet.create({
-  canvas: {
-    height: 800,
-    width: 600,
-  },
-});

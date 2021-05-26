@@ -35,8 +35,9 @@ module.exports = {
         {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/facebookexperimental/pytorch-live',
-          label: 'GitHub',
           position: 'right',
+          className: 'header-github-link',
+          'aria-label': 'GitHub repository',
         },
       ],
     },

@@ -42,7 +42,6 @@ module.exports = {
           docId: 'cli',
           label: 'API',
         },
-        {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/facebookexperimental/pytorch-live',
           position: 'right',
@@ -75,10 +74,6 @@ module.exports = {
         {
           title: 'More',
           items: [
-            {
-              label: 'Blog',
-              to: '/blog',
-            },
             {
               label: 'GitHub',
               href: 'https://github.com/facebook/docusaurus',
@@ -126,11 +121,6 @@ module.exports = {
           ],
           editUrl:
             'https://github.com/facebookexperimental/pytorch-live/edit/master/website/',
-        },
-        blog: {
-          showReadingTime: true,
-          editUrl:
-            'https://github.com/facebookexperimental/pytorch-live/edit/master/website/blog/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

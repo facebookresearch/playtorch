@@ -36,6 +36,12 @@ module.exports = {
           position: 'left',
           label: 'Tutorial',
         },
+        {
+          type: 'doc',
+          position: 'left',
+          docId: 'cli',
+          label: 'API',
+        },
         {to: '/blog', label: 'Blog', position: 'left'},
         {
           href: 'https://github.com/facebookexperimental/pytorch-live',
@@ -115,6 +121,9 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
+          remarkPlugins: [
+            [require('@docusaurus/remark-plugin-npm2yarn'), {sync: true}],
+          ],
           editUrl:
             'https://github.com/facebookexperimental/pytorch-live/edit/master/website/',
         },

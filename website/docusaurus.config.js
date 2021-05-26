@@ -19,6 +19,10 @@ module.exports = {
   organizationName: 'facebookexperimental',
   projectName: 'pytorch-live',
   themeConfig: {
+    prism: {
+      theme: require('prism-react-renderer/themes/github'),
+      darkTheme: require('prism-react-renderer/themes/dracula'),
+    },
     navbar: {
       title: 'PyTorch Live',
       logo: {

@@ -17,15 +17,95 @@ const {
   PyTorchCoreCanvasRenderingContext2DModule: CanvasRenderingContext2DModule,
 } = NativeModules;
 
-export type CanvasRenderingContext2D = {
-  lineWidth: number,
-  fillStyle: string,
-  strokeStyle: string,
-  invalidate(): void,
-  clear(): void,
-  clearRect(x: number, y: number, width: number, height: number): void,
-  strokeRect(x: number, y: number, width: number, height: number): void,
-  fillRect(x: number, y: number, width: number, height: number): void,
+/**
+ * The Canvas 2D API provided by the React Native PyTorch Core canvas
+ * **is going to** match the W3C specification of the
+ * [`2dcontext`](https://www.w3.org/TR/2dcontext/)
+ * (and MDN [`CanvasRenderingContext2D`](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/)).
+ *
+ * The motivation behind this is to have a canvas API for mobile that matches
+ * the standardized Web canvas API, which ultimately will allow us to write
+ * demos once and run them on mobile and web.
+ *
+ * :::info
+ *
+ * The canvas API currently only implements a subset of the `2dcontext` API and
+ * we will gradually add more functionality as needed.
+ *
+ * :::
+ *
+ * :::info
+ *
+ * The documenation for the canvas is adapted from the MDN
+ * [`CanvasRenderingContext2D`](https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/).
+ *
+ * :::
+ */
+export interface CanvasRenderingContext2D {
+  /**
+   * The `fillStyle` property of the Canvas 2D API specifies the color inside
+   * shapes. The default style is `#000` (black).
+   *
+   * **Options**
+   *
+   * `color` A [`CSS <color>`](https://reactnative.dev/docs/colors#color-apis) value as string.
+   */
+  fillStyle: string;
+
+  /**
+   * The `lineWidth` property of the Canvas 2D API sets the thickness of lines.
+   *
+   * **Options**
+   *
+   * `value` A number specifying the line width, in coordinate space units. Zero, negative, `Infinity`, and `NaN` values are ignored. This value is `1.0` by default.
+   */
+  lineWidth: number;
+
+  /**
+   * The `strokeStyle` property of the Canvas 2D API specifies the color to use
+   * for the strokes (outlines) around shapes. The default is `#000` (black).
+   *
+   * **Options**
+   *
+   * `color` A [`CSS <color>`](https://reactnative.dev/docs/colors#color-apis) value as string.
+   */
+  strokeStyle: string;
+
+  /**
+   * The `arc()` function of the Canvas 2D API adds a circular arc to the
+   * current sub-path.
+   *
+   * ```typescript
+   * ctx.arc(100, 75, 50, 0, 2 * Math.PI);
+   * ```
+   *
+   * The `arc()` function creates a circular arc centered at `(x, y)` with a
+   * radius of `radius`. The path starts at `startAngle`, ends at `endAngle`,
+   * travels in the direction given by `counterclockwise` (defaulting to
+   * clockwise).
+   *
+   * :::caution
+   *
+   * The `arc()` function differs from the 2dcontext specification and is
+   * subject to change. It will require a preceeding `ctx.beginPath()` call
+   * and either a superceeding [[CanvasRenderingContext2D.stroke]] or
+   * [[CanvasRenderingContext2D.fill]] call.
+   *
+   * ```typescript
+   * ctx.beginPath();
+   * ctx.arc(100, 75, 50, 0, 2 * Math.PI);
+   * ctx.stroke();
+   * ```
+   *
+   * :::
+   *
+   * @param x The horizontal coordinate of the arc's center.
+   * @param y The vertical coordinate of the arc's center.
+   * @param radius The arc's radius. Must be positive.
+   * @param startAngle The angle at which the arc starts in radians, measured from the positive x-axis.
+   * @param endAngle The angle at which the arc ends in radians, measured from the positive x-axis.
+   * @param anticlockwise An optional Boolean. If `true`, draws the arc counter-clockwise between the start and end angles. The default is `false` (clockwise).
+   */
   arc(
     x: number,
     y: number,
@@ -33,17 +113,83 @@ export type CanvasRenderingContext2D = {
     startAngle: number,
     endAngle: number,
     anticlockwise?: boolean,
-  ): void,
-  drawCircle(x: number, y: number, radius: number): void,
-  fillCircle(x: number, y: number, radius: number): void,
-  drawImage(image: Image, dx: number, dy: number): void,
+  ): void;
+
+  /**
+   * Clears the entire canvas to be transparent.
+   *
+   * @deprecated This function will be removed in the beta release.
+   */
+  clear(): void;
+
+  /**
+   * The `clearRect()` function of the Canvas 2D API erases the pixels in a
+   * rectangular area by setting them to transparent black.
+   *
+   * The `clearRect()` function sets the pixels in a rectangular area to
+   * transparent black (`rgba(0,0,0,0)`). The rectangle's corner is at
+   * `(x, y)`, and its size is specified by `width` and `height`.
+   *
+   * @param x The x-axis coordinate of the rectangle's starting point.
+   * @param y The y-axis coordinate of the rectangle's starting point.
+   * @param width The rectangle's width. Positive values are to the right, and negative to the left.
+   * @param height The rectangle's height. Positive values are down, and negative are up.
+   */
+  clearRect(x: number, y: number, width: number, height: number): void;
+
+  /**
+   * Draws a circle at `(x, y)` with the given `radius`.
+   *
+   * @param x The x-axis coordinate of the circle's starting point.
+   * @param y The y-axis coordinate of the circle's starting point.
+   * @param radius The circle's radius. Must be positive.
+   *
+   * @deprecated This function will be removed in the beta release.
+   */
+  drawCircle(x: number, y: number, radius: number): void;
+
+  /**
+   * The `drawImage()` function of the Canvas 2D API provides different ways
+   * to draw an image onto the canvas.
+   *
+   * @param image An element to draw into the context. The specification permits an [[Image]] source.
+   * @param dx The x-axis coordinate in the destination canvas at which to place the top-left corner of the source image.
+   * @param dy The y-axis coordinate in the destination canvas at which to place the top-left corner of the source image.
+   */
+  drawImage(image: Image, dx: number, dy: number): void;
+
+  /**
+   * The `drawImage()` function of the Canvas 2D API provides different ways
+   * to draw an image onto the canvas.
+   *
+   * @param image An element to draw into the context. The specification permits an [[Image]] source.
+   * @param dx The x-axis coordinate in the destination canvas at which to place the top-left corner of the source image.
+   * @param dy The y-axis coordinate in the destination canvas at which to place the top-left corner of the source image.
+   * @param dWidth The width to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in width when drawn. Note that this argument is not included in the 3-argument syntax.
+   * @param dHeight The height to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in height when drawn. Note that this argument is not included in the 3-argument syntax.
+   */
   drawImage(
     image: Image,
     dx: number,
     dy: number,
     dWidth: number,
     dHeight: number,
-  ): void,
+  ): void;
+
+  /**
+   * The `drawImage()` function of the Canvas 2D API provides different ways to
+   * draw an image onto the canvas.
+   *
+   * @param image An element to draw into the context. The specification permits an [[Image]] source.
+   * @param sx The x-axis coordinate of the top left corner of the sub-rectangle of the source image to draw into the destination context. Note that this argument is not included in the 3- or 5-argument syntax.
+   * @param sy The y-axis coordinate of the top left corner of the sub-rectangle of the source image to draw into the destination context. Note that this argument is not included in the 3- or 5-argument syntax.
+   * @param sWidth The width of the sub-rectangle of the source image to draw into the destination context. If not specified, the entire rectangle from the coordinates specified by `sx` and `sy` to the bottom-right corner of the image is used. Note that this argument is not included in the 3- or 5-argument syntax.
+   * @param sHeight The height of the sub-rectangle of the source image to draw into the destination context. Note that this argument is not included in the 3- or 5-argument syntax.
+   * @param dx The x-axis coordinate in the destination canvas at which to place the top-left corner of the source image.
+   * @param dy The y-axis coordinate in the destination canvas at which to place the top-left corner of the source image.
+   * @param dWidth The width to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in width when drawn. Note that this argument is not included in the 3-argument syntax.
+   * @param dHeight The height to draw the image in the destination canvas. This allows scaling of the drawn image. If not specified, the image is not scaled in height when drawn. Note that this argument is not included in the 3-argument syntax.
+   */
   drawImage(
     image: Image,
     sx: number,
@@ -54,8 +200,151 @@ export type CanvasRenderingContext2D = {
     dy: number,
     dWidth: number,
     dHeight: number,
-  ): void,
-  fillText(text: string, x: number, y: number): void,
+  ): void;
+
+  /**
+   * Fill a circle at `(x, y)` with the given `radius`.
+   *
+   * @param x The x-axis coordinate of the circle's starting point.
+   * @param y The y-axis coordinate of the circle's starting point.
+   * @param radius The circle's radius. Must be positive.
+   *
+   * @deprecated This function will be removed in the beta release.
+   */
+  fillCircle(x: number, y: number, radius: number): void;
+
+  /**
+   * The `fillRect()` function of the Canvas 2D API draws a rectangle that is filled according to the current `fillStyle`.
+   *
+   * The `fillRect()` function draws a filled rectangle whose starting point is at `(x, y)` and whose size is specified by `width` and `height`. The fill style is determined by the current `fillStyle` attribute.
+   *
+   * ```typescript
+   * ctx.fillRect(10, 20, 30, 40);
+   * ```
+   *
+   * @param x The x-axis coordinate of the rectangle's starting point.
+   * @param y The y-axis coordinate of the rectangle's starting point.
+   * @param width The rectangle's width. Positive values are to the right, and negative to the left.
+   * @param height The rectangle's height. Positive values are down, and negative are up.
+   */
+  fillRect(x: number, y: number, width: number, height: number): void;
+
+  /**
+   * The `fillText()` function, part of the Canvas 2D API, draws a text string
+   * at the specified coordinates, filling the string's characters with the
+   * current [[fillStyle]].
+   *
+   * ```typescript
+   * ctx.fillText('Hello world', 50, 90);
+   * ```
+   *
+   * :::caution
+   *
+   * The `fillText()` function does not support `font`, `textAlign`,
+   * `textBaseline`, and `direction`.
+   *
+   * ```typescript
+   * ctx.font = '50px serif';
+   * ctx.fillText('Hello world', 50, 90);
+   * ```
+   *
+   * :::
+   *
+   * @param text A string specifying the text string to render into the context.
+   * @param x The x-axis coordinate of the point at which to begin drawing the text, in pixels.
+   * @param y The y-axis coordinate of the baseline on which to begin drawing the text, in pixels.
+   */
+  fillText(text: string, x: number, y: number): void;
+
+  /**
+   * Invalidate the canvas resulting in a repaint.
+   */
+  invalidate(): void;
+
+  /**
+   * The `restore()` function of the Canvas 2D API restores the most recently
+   * saved canvas state by popping the top entry in the drawing state stack. If
+   * there is no saved state, this function does nothing.
+   *
+   * For more information about the drawing state, see [[CanvasRenderingContext2D.save]].
+   */
+  restore(): void;
+
+  /**
+   * The rotate angle,x,y API is not supported by the web canvas and we will
+   * eventually depracate this API. It is, however, needed for Flappy Bird
+   * until the whole web canvas api is implemented.
+   *
+   * @param angle The rotation angle, clockwise in radians. You can use _`degree`_` * Math.PI / 180` to calculate a radian from a degree.
+   * @param x The x-axis pivot point which rotates the canvas around the pivot point.
+   * @param y The y-axis pivot point which rotates the canvas around the pivot point.
+   *
+   * @deprecated Will be deprecated eventually.
+   */
+  rotate(angle: number, x: number, y: number): void;
+
+  /**
+   * The `rotate()` function of the Canvas 2D API adds a rotation to the
+   * transformation matrix.
+   *
+   * The rotation center point is always the canvas origin. To change the
+   * center point, you will need to move the canvas by using the
+   * [[translate]] function.
+   *
+   * @param angle The rotation angle, clockwise in radians. You can use _`degree`_` * Math.PI / 180` to calculate a radian from a degree.
+   */
+  rotate(angle: number): void;
+
+  /**
+   * The `save()` function of the Canvas 2D API saves the entire state of the
+   * canvas by pushing the current state onto a stack.
+   *
+   * **The drawing state**
+   *
+   * The drawing state that gets saved onto a stack consists of:
+   *
+   * * The current transformation matrix.
+   * * The current values of the following attributes: [[strokeStyle]], [[fillStyle]].
+   */
+  save(): void;
+
+  /**
+   * The `scale()` function of the Canvas 2D API adds a scaling transformation
+   * to the canvas units horizontally and/or vertically.
+   *
+   * By default, one unit on the canvas is exactly one pixel. A scaling
+   * transformation modifies this behavior. For instance, a scaling factor of
+   * `0.5` results in a unit size of 0.5 pixels; shapes are thus drawn at half
+   * the normal size. Similarly, a scaling factor of 2.0 increases the unit
+   * size so that one unit becomes two pixels; shapes are thus drawn at twice
+   * the normal size.
+   *
+   * @param x Scaling factor in the horizontal direction. A negative value flips pixels across the vertical axis. A value of `1` results in no horizontal scaling.
+   * @param y Scaling factor in the vertical direction. A negative value flips pixels across the horizontal axis. A value of `1` results in no vertical scaling.
+   */
+  scale(x: number, y: number): void;
+
+  /**
+   * The `setTransform()` function of the Canvas 2D API resets (overrides) the
+   * current transformation to the identity matrix, and then invokes a
+   * transformation described by the arguments of this function. This lets you
+   * scale, rotate, translate (move), and skew the context.
+   *
+   * The transformation matrix is described by:
+   *
+   * $$\left[ \begin{array}{ccc} a & c & e \\ b & d & f \\ 0 & 0 & 1 \end{array} \right]$$
+   *
+   * `setTransform()` has two types of parameter that it can accept. The older type consists of several parameters representing the individual components of the transformation matrix to set:
+   *
+   * The newer type consists of a single parameter, `matrix`, representing a 2D transformation matrix to set.
+   *
+   * @param a $$m_{11}$$ Horizontal scaling. A value of `1` results in no scaling.
+   * @param b $$m_{12}$$ Vertical skewing.
+   * @param c $$m_{21}$$ Horizontal skewing.
+   * @param d $$m_{22}$$ Vertical scaling. A value of `1` results in no scaling.
+   * @param e $$dx$$ Horizontal translation (moving).
+   * @param f $$dy$$ Vertical translation (moving).
+   */
   setTransform(
     a: number,
     b: number,
@@ -63,28 +352,54 @@ export type CanvasRenderingContext2D = {
     d: number,
     e: number,
     f: number,
-  ): void,
-  scale(x: number, y: number): void,
-  rotate(angle: number): void,
+  ): void;
+
   /**
-   * The rotate angle,x,y API is not supported by the web canvas and we will
-   * eventually depracate this API. It is, however, needed for Flappy Bird
-   * until the whole web canvas api is implemented.
+   * The `strokeRect()` function of the Canvas 2D API draws a rectangle that is
+   * stroked (outlined) according to the current `strokeStyle` and other
+   * context settings.
    *
-   * @deprecated Will be deprecated eventually.
+   * The `strokeRect()` function draws a stroked rectangle whose starting point is at `(x, y)` and whose size is specified by `width` and `height`.
+   *
+   * @param x The x-axis coordinate of the rectangle's starting point.
+   * @param y The y-axis coordinate of the rectangle's starting point.
+   * @param width The rectangle's width. Positive values are to the right, and negative to the left.
+   * @param height The rectangle's height. Positive values are down, and negative are up.
    */
-  rotate(angle: number, x: number, y: number): void,
-  translate(x: number, y: number): void,
-  save(): void,
-  restore(): void,
-};
+  strokeRect(x: number, y: number, width: number, height: number): void;
 
-type CanvasProps = {
-  onContext2D(ctx: CanvasRenderingContext2D): void,
-} & ViewProps;
+  /**
+   * The `translate()` function of the Canvas 2D API adds a translation
+   * transformation to the current matrix.
+   *
+   * The `translate()` function adds a translation transformation to the
+   * current matrix by moving the canvas and its origin `x` units horizontally
+   * and `y` units vertically on the grid.
+   *
+   * @param x Distance to move in the horizontal direction. Positive values are to the right, and negative to the left.
+   * @param y Distance to move in the vertical direction. Positive values are down, and negative are up.
+   */
+  translate(x: number, y: number): void;
+}
 
-// We use this invalid value as a workaround to simulate a nullable value. This allows
-// us to implement overloading methods in native (e.g., see drawImage).
+/**
+ * Properties for the canvas.
+ *
+ * ```typescript
+ * <Canvas style={styles.canvas} onContext2D={handleContext2D} />
+ * ```
+ */
+export interface CanvasProps extends ViewProps {
+  onContext2D(ctx: CanvasRenderingContext2D): void;
+}
+
+/**
+ * @hidden
+ *
+ * We use this invalid value as a workaround to simulate a nullable value. This
+ * allows us to implement overloading functions in native (e.g., see
+ * [[CanvasRenderingContext2D.drawImage]]).
+ */
 const INVALID_VALUE_NULLABLE = -1;
 
 const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
@@ -200,6 +515,45 @@ const PyTorchCoreCanvasView = requireNativeComponent<CanvasProps>(
   'PyTorchCoreCanvasView',
 );
 
+/**
+ * A canvas component providing drawing functions similar to `2dcontext`.
+ *
+ * ```typescript
+ * export default function App() {
+ *   const [drawingContext, setDrawingContext] = useState<
+ *     CanvasRenderingContext2D
+ *   >();
+ *
+ *   const handleContext2D = useCallback(
+ *     async (ctx: CanvasRenderingContext2D) => {
+ *       setDrawingContext(ctx);
+ *     },
+ *     [setDrawingContext],
+ *   );
+ *
+ *   useLayoutEffect(() => {
+ *     const ctx = drawingContext;
+ *     if (ctx != null) {
+ *       ctx.clear();
+ *
+ *       ctx.fillStyle = '#fb0fff';
+ *       ctx.fillRect(40, 160, 64, 72);
+ *       ctx.strokeStyle = '#00ffff';
+ *       ctx.lineWidth = 6;
+ *       ctx.strokeRect(40, 160, 64, 72);
+ *
+ *       ctx.invalidate();
+ *     }
+ *   }, [drawingContext]);
+ *
+ *   return (
+ *     <Canvas style={StyleSheet.absoluteFill} onContext2D={handleContext2D} />
+ *   );
+ * }
+ * ```
+ *
+ * @component
+ */
 export function Canvas({onContext2D, ...otherProps}: CanvasProps) {
   const handleContext2D = useCallback(
     (event: any) => {
@@ -211,5 +565,7 @@ export function Canvas({onContext2D, ...otherProps}: CanvasProps) {
     },
     [onContext2D],
   );
-  return <PyTorchCoreCanvasView {...otherProps} onContext2D={handleContext2D} />;
+  return (
+    <PyTorchCoreCanvasView {...otherProps} onContext2D={handleContext2D} />
+  );
 }

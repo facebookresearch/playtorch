@@ -149,6 +149,14 @@ public class CanvasRenderingContext2D {
     mPath.addArc(rect, radiansToDegrees(initialAngle), radiansToDegrees(sweepAngle));
   }
 
+  public void lineTo(float x, float y) {
+    mPath.lineTo(dpToPx(x), dpToPx(y));
+  }
+
+  public void moveTo(float x, float y) {
+    mPath.moveTo(dpToPx(x), dpToPx(y));
+  }
+
   public void drawCircle(float x, float y, float radius) {
     mCanvas.drawCircle(dpToPx(x), dpToPx(y), dpToPx(radius), mStrokePaint);
   }

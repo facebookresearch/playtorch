@@ -32,6 +32,7 @@ import CanvasFillText from './canvas/CanvasFillText';
 import ImageScale from './canvas/ImageScale';
 import CameraFrameByFrame from './camera/CameraFrameByFrame';
 import CameraTakePicture from './camera/CameraTakePicture';
+import CanvasMoveTo from './canvas/CanvasMoveTo';
 
 export type Tool = {
   icon?: JSX.Element;
@@ -66,6 +67,12 @@ const tools: ToolSection = [
         title: 'Canvas#arc',
         subtitle: 'Drawing arc/circles on a canvas',
         component: CanvasArc,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#moveTo',
+        subtitle: 'Drawing lines on a canvas',
+        component: CanvasMoveTo,
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,

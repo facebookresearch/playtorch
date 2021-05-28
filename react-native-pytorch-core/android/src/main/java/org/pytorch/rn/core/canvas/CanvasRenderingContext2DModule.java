@@ -162,6 +162,24 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void lineTo(ReadableMap canvasRef, double x, double y) {
+    mMainHandler.post(
+        () -> {
+          CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
+          ctx.lineTo((float) x, (float) y);
+        });
+  }
+
+  @ReactMethod
+  public void moveTo(ReadableMap canvasRef, double x, double y) {
+    mMainHandler.post(
+        () -> {
+          CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
+          ctx.moveTo((float) x, (float) y);
+        });
+  }
+
+  @ReactMethod
   public void drawCircle(ReadableMap canvasRef, double x, double y, double radius) {
     mMainHandler.post(
         () -> {

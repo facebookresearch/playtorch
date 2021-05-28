@@ -286,6 +286,29 @@ export interface CanvasRenderingContext2D {
   invalidate(): void;
 
   /**
+   * The `lineTo()`, part of the Canvas 2D API, adds a straight line to the
+   * current sub-path by connecting the sub-path's last point to the specified
+   * `(x, y)` coordinates.
+   *
+   * Like other methods that modify the current path, this method does not
+   * directly render anything. To draw the path onto a canvas, you can use the
+   * [[fill]] or [[stroke]] methods.
+   *
+   * @param x The x-axis coordinate of the line's end point.
+   * @param y The y-axis coordinate of the line's end point.
+   */
+  lineTo(x: number, y: number): void;
+
+  /**
+   * The `moveTo()` method of the Canvas 2D API begins a new sub-path at the
+   * point specified by the given `(x, y)` coordinates.
+   *
+   * @param x The x-axis (horizontal) coordinate of the point.
+   * @param y The y-axis (vertical) coordinate of the point.
+   */
+  moveTo(x: number, y: number): void;
+
+  /**
    * The `restore()` function of the Canvas 2D API restores the most recently
    * saved canvas state by popping the top entry in the drawing state stack. If
    * there is no saved state, this function does nothing.
@@ -525,6 +548,12 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
     },
     invalidate(): void {
       CanvasRenderingContext2DModule.invalidate(ref);
+    },
+    lineTo(x: number, y: number): void {
+      CanvasRenderingContext2DModule.lineTo(ref, x, y);
+    },
+    moveTo(x: number, y: number): void {
+      CanvasRenderingContext2DModule.moveTo(ref, x, y);
     },
     async restore(): Promise<void> {
       await CanvasRenderingContext2DModule.restore(ref);

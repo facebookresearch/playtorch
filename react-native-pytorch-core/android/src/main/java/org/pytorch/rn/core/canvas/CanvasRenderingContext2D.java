@@ -13,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
@@ -31,6 +32,7 @@ public class CanvasRenderingContext2D {
   private TextPaint mTextFillPaint;
   private Bitmap mBitmap;
   private Canvas mCanvas;
+  private Path mPath;
 
   public CanvasRenderingContext2D(DrawingCanvasView drawingCanvasView) {
     mDrawingCanvasView = drawingCanvasView;
@@ -55,6 +57,8 @@ public class CanvasRenderingContext2D {
 
   private void init() {
     mPixelDensity = mDrawingCanvasView.getResources().getDisplayMetrics().density;
+
+    mPath = new Path();
 
     mClearPaint = new Paint();
     mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
@@ -108,6 +112,18 @@ public class CanvasRenderingContext2D {
     mCanvas.drawRect(dpToPx(x), dpToPx(y), dpToPx(x + width), dpToPx(y + height), mFillPaint);
   }
 
+  public void beginPath() {
+    mPath = new Path();
+  }
+
+  public void stroke() {
+    mCanvas.drawPath(mPath, mStrokePaint);
+  }
+
+  public void fill() {
+    mCanvas.drawPath(mPath, mFillPaint);
+  }
+
   public void arc(
       float x, float y, float radius, float startAngle, float endAngle, boolean counterclockwise) {
     RectF rect =
@@ -130,8 +146,7 @@ public class CanvasRenderingContext2D {
       }
     }
 
-    mCanvas.drawArc(
-        rect, radiansToDegrees(initialAngle), radiansToDegrees(sweepAngle), false, mStrokePaint);
+    mPath.addArc(rect, radiansToDegrees(initialAngle), radiansToDegrees(sweepAngle));
   }
 
   public void drawCircle(float x, float y, float radius) {

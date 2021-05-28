@@ -76,28 +76,15 @@ export interface CanvasRenderingContext2D {
    * current sub-path.
    *
    * ```typescript
+   * ctx.beginPath();
    * ctx.arc(100, 75, 50, 0, 2 * Math.PI);
+   * ctx.stroke();
    * ```
    *
    * The `arc()` function creates a circular arc centered at `(x, y)` with a
    * radius of `radius`. The path starts at `startAngle`, ends at `endAngle`,
    * travels in the direction given by `counterclockwise` (defaulting to
    * clockwise).
-   *
-   * :::caution
-   *
-   * The `arc()` function differs from the 2dcontext specification and is
-   * subject to change. It will require a preceeding `ctx.beginPath()` call
-   * and either a superceeding [[CanvasRenderingContext2D.stroke]] or
-   * [[CanvasRenderingContext2D.fill]] call.
-   *
-   * ```typescript
-   * ctx.beginPath();
-   * ctx.arc(100, 75, 50, 0, 2 * Math.PI);
-   * ctx.stroke();
-   * ```
-   *
-   * :::
    *
    * @param x The horizontal coordinate of the arc's center.
    * @param y The vertical coordinate of the arc's center.
@@ -114,6 +101,13 @@ export interface CanvasRenderingContext2D {
     endAngle: number,
     anticlockwise?: boolean,
   ): void;
+
+  /**
+   * The `beginPath()` method of the Canvas 2D API starts a new path by
+   * emptying the list of sub-paths. Call this method when you want to create
+   * a new path.
+   */
+  beginPath(): void;
 
   /**
    * Clears the entire canvas to be transparent.
@@ -201,6 +195,36 @@ export interface CanvasRenderingContext2D {
     dWidth: number,
     dHeight: number,
   ): void;
+
+  /**
+   * The `fill()` function of the Canvas 2D API fills the current or given path
+   * with the current fillStyle.
+   *
+   * :::caution
+   *
+   * The `fill()` function differs from the 2dcontext specification and is
+   * subject to change. It currently does not take additional `fillRule`
+   * or `path` and `fillRule` params.
+   *
+   * ```typescript
+   * // Create path
+   * let region = new Path2D();
+   * region.moveTo(30, 90);
+   * region.lineTo(110, 20);
+   * region.lineTo(240, 130);
+   * region.lineTo(60, 130);
+   * region.lineTo(190, 20);
+   * region.lineTo(270, 90);
+   * region.closePath();
+   *
+   * // Fill path
+   * ctx.fillStyle = 'green';
+   * ctx.fill(region, 'evenodd');
+   * ```
+   *
+   * :::
+   */
+  fill(): void;
 
   /**
    * Fill a circle at `(x, y)` with the given `radius`.
@@ -355,6 +379,26 @@ export interface CanvasRenderingContext2D {
   ): void;
 
   /**
+   * The CanvasRenderingContext2D.stroke() method of the Canvas 2D API strokes (outlines) the current or given path with the current stroke style.
+   *
+   * Strokes are aligned to the center of a path; in other words, half of the stroke is drawn on the inner side, and half on the outer side.
+   *
+   * The stroke is drawn using the non-zero winding rule, which means that path intersections will still get filled.
+   *
+   * :::caution
+   *
+   * The `stroke()` function differs from the 2dcontext specification and is
+   * subject to change. It currently does not take additional `path` param.
+   *
+   * ```typescript
+   * void ctx.stroke(path);
+   * ```
+   *
+   * :::
+   */
+  stroke(): void;
+
+  /**
    * The `strokeRect()` function of the Canvas 2D API draws a rectangle that is
    * stroked (outlined) according to the current `strokeStyle` and other
    * context settings.
@@ -413,21 +457,6 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
     set strokeStyle(color: string) {
       CanvasRenderingContext2DModule.setStrokeStyle(ref, color);
     },
-    invalidate(): void {
-      CanvasRenderingContext2DModule.invalidate(ref);
-    },
-    clear(): void {
-      CanvasRenderingContext2DModule.clear(ref);
-    },
-    clearRect(x: number, y: number, width: number, height: number): void {
-      CanvasRenderingContext2DModule.clearRect(ref, x, y, width, height);
-    },
-    strokeRect(x: number, y: number, width: number, height: number): void {
-      CanvasRenderingContext2DModule.strokeRect(ref, x, y, width, height);
-    },
-    fillRect(x: number, y: number, width: number, height: number): void {
-      CanvasRenderingContext2DModule.fillRect(ref, x, y, width, height);
-    },
     arc(
       x: number,
       y: number,
@@ -446,11 +475,17 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
         anticlockwise,
       );
     },
+    beginPath(): void {
+      CanvasRenderingContext2DModule.beginPath(ref);
+    },
+    clear(): void {
+      CanvasRenderingContext2DModule.clear(ref);
+    },
+    clearRect(x: number, y: number, width: number, height: number): void {
+      CanvasRenderingContext2DModule.clearRect(ref, x, y, width, height);
+    },
     drawCircle(x: number, y: number, radius: number): void {
       CanvasRenderingContext2DModule.drawCircle(ref, x, y, radius);
-    },
-    fillCircle(x: number, y: number, radius: number): void {
-      CanvasRenderingContext2DModule.fillCircle(ref, x, y, radius);
     },
     drawImage(
       image: Image,
@@ -476,8 +511,36 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
         dHeight,
       );
     },
+    fill(): void {
+      CanvasRenderingContext2DModule.fill(ref);
+    },
+    fillCircle(x: number, y: number, radius: number): void {
+      CanvasRenderingContext2DModule.fillCircle(ref, x, y, radius);
+    },
+    fillRect(x: number, y: number, width: number, height: number): void {
+      CanvasRenderingContext2DModule.fillRect(ref, x, y, width, height);
+    },
     fillText(text: string, x: number, y: number): void {
       CanvasRenderingContext2DModule.fillText(ref, text, x, y);
+    },
+    invalidate(): void {
+      CanvasRenderingContext2DModule.invalidate(ref);
+    },
+    async restore(): Promise<void> {
+      await CanvasRenderingContext2DModule.restore(ref);
+    },
+    rotate(
+      angle: number,
+      x: number = INVALID_VALUE_NULLABLE,
+      y: number = INVALID_VALUE_NULLABLE,
+    ): void {
+      CanvasRenderingContext2DModule.rotate(ref, angle, x, y);
+    },
+    async save(): Promise<void> {
+      await CanvasRenderingContext2DModule.save(ref);
+    },
+    scale(x: number, y: number): void {
+      CanvasRenderingContext2DModule.scale(ref, x, y);
     },
     setTransform(
       a: number,
@@ -489,24 +552,14 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
     ) {
       CanvasRenderingContext2DModule.setTransform(ref, a, b, c, d, e, f);
     },
-    scale(x: number, y: number): void {
-      CanvasRenderingContext2DModule.scale(ref, x, y);
+    stroke(): void {
+      CanvasRenderingContext2DModule.stroke(ref);
     },
-    rotate(
-      angle: number,
-      x: number = INVALID_VALUE_NULLABLE,
-      y: number = INVALID_VALUE_NULLABLE,
-    ): void {
-      CanvasRenderingContext2DModule.rotate(ref, angle, x, y);
+    strokeRect(x: number, y: number, width: number, height: number): void {
+      CanvasRenderingContext2DModule.strokeRect(ref, x, y, width, height);
     },
     translate(x: number, y: number): void {
       CanvasRenderingContext2DModule.translate(ref, x, y);
-    },
-    async save(): Promise<void> {
-      await CanvasRenderingContext2DModule.save(ref);
-    },
-    async restore(): Promise<void> {
-      await CanvasRenderingContext2DModule.restore(ref);
     },
   };
 };

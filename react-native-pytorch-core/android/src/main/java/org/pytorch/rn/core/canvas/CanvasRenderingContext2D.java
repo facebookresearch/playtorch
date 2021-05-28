@@ -7,7 +7,6 @@
 
 package org.pytorch.rn.core.canvas;
 
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -23,7 +22,8 @@ import java.util.Stack;
 
 public class CanvasRenderingContext2D {
   private final DrawingCanvasView mDrawingCanvasView;
-  private float mPixelDensity;
+  private final DisplayMetrics mDisplayMetrics;
+  private final float mPixelDensity;
   private final Stack<CanvasState> mSavedStates;
   private Paint mFillPaint;
   private Paint mStrokePaint;
@@ -37,6 +37,10 @@ public class CanvasRenderingContext2D {
   public CanvasRenderingContext2D(DrawingCanvasView drawingCanvasView) {
     mDrawingCanvasView = drawingCanvasView;
     mSavedStates = new Stack<>();
+
+    mDisplayMetrics = mDrawingCanvasView.getResources().getDisplayMetrics();
+    mPixelDensity = mDisplayMetrics.density;
+
     initPaint();
     init();
   }
@@ -53,12 +57,8 @@ public class CanvasRenderingContext2D {
     mStrokePaint.setDither(true);
     mStrokePaint.setColor(Color.BLACK);
     mStrokePaint.setStyle(Paint.Style.STROKE);
-  }
-
-  private void init() {
-    mPixelDensity = mDrawingCanvasView.getResources().getDisplayMetrics().density;
-
-    mPath = new Path();
+    // Initialize stroke width to be pixel density, which matches 1px for a web canvas.
+    mStrokePaint.setStrokeWidth(mPixelDensity);
 
     mClearPaint = new Paint();
     mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
@@ -66,16 +66,18 @@ public class CanvasRenderingContext2D {
     mBitmapPaint = new Paint();
     mBitmapPaint.setFilterBitmap(true);
 
-    DisplayMetrics displayMetrics = Resources.getSystem().getDisplayMetrics();
-    mBitmap =
-        Bitmap.createBitmap(
-            displayMetrics.widthPixels, displayMetrics.heightPixels, Bitmap.Config.ARGB_8888);
-    mCanvas = new Canvas(mBitmap);
-
     mTextFillPaint = new TextPaint();
     mTextFillPaint.set(mFillPaint);
     mTextFillPaint.setStyle(Paint.Style.FILL);
     mTextFillPaint.setTextSize(50);
+  }
+
+  private void init() {
+    mPath = new Path();
+    mBitmap =
+        Bitmap.createBitmap(
+            mDisplayMetrics.widthPixels, mDisplayMetrics.heightPixels, Bitmap.Config.ARGB_8888);
+    mCanvas = new Canvas(mBitmap);
   }
 
   protected void onDraw(Canvas canvas) {

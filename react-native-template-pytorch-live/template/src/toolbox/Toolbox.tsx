@@ -18,6 +18,7 @@ import CameraFrameByFrame from './camera/CameraFrameByFrame';
 import CameraTakePicture from './camera/CameraTakePicture';
 import CanvasAnimation from './canvas/CanvasAnimation';
 import CanvasArc from './canvas/CanvasArc';
+import CanvasArcMatrix from './canvas/CanvasArcMatrix';
 import CanvasClearRect from './canvas/CanvasClearRect';
 import CanvasClosePath from './canvas/CanvasClosePath';
 import CanvasDrawImage from './canvas/CanvasDrawImage';
@@ -83,6 +84,12 @@ const tools: ToolSection = [
         title: 'Canvas#arc',
         subtitle: 'Drawing arc/circles on a canvas',
         component: CanvasArc,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas Arc Matrix',
+        subtitle: 'Drawing an arcs matrix on a canvas',
+        component: CanvasArcMatrix,
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,

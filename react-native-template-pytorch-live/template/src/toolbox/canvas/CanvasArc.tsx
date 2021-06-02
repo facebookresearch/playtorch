@@ -12,33 +12,6 @@ import React, {useCallback, useLayoutEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
 
-function drawArcGrid(
-  ctx: CanvasRenderingContext2D,
-  offsetX: number,
-  offsetY: number,
-  radius: number,
-  gridSize: number,
-  anticlockwise: boolean,
-  isFill: boolean,
-): void {
-  for (let row = 0; row < 10; row++) {
-    const startAngle = row * 0.5 * Math.PI;
-    for (let col = 0; col < 10; col++) {
-      const endAngle = col * 0.5 * Math.PI;
-      ctx.beginPath();
-      ctx.arc(
-        col * gridSize + offsetX,
-        row * gridSize + offsetY,
-        radius,
-        startAngle,
-        endAngle,
-        anticlockwise,
-      );
-      isFill ? ctx.fill() : ctx.stroke();
-    }
-  }
-}
-
 export default function CanvasArc() {
   const isFocused = useIsFocused();
   const [drawingContext, setDrawingContext] = useState<
@@ -57,23 +30,26 @@ export default function CanvasArc() {
     if (ctx != null) {
       ctx.clear();
 
-      const radius = 5;
-      const gridSize = 15;
-      ctx.lineWidth = 2;
-      ctx.strokeStyle = '#00ff00';
-      ctx.fillStyle = '#ff00ff';
+      // Draw shapes
+      for (let i = 0; i <= 3; i++) {
+        for (let j = 0; j <= 2; j++) {
+          ctx.beginPath();
+          let x = 25 + j * 50; // x coordinate
+          let y = 25 + i * 50; // y coordinate
+          let radius = 20; // Arc radius
+          let startAngle = 0; // Starting point on circle
+          let endAngle = Math.PI + (Math.PI * j) / 2; // End point on circle
+          let counterclockwise = i % 2 == 1; // Draw counterclockwise
 
-      // Draw grid of circles in clockwise direction
-      drawArcGrid(ctx, 20, 20, radius, gridSize, false, false);
+          ctx.arc(x, y, radius, startAngle, endAngle, counterclockwise);
 
-      // Draw grid of circles in anticlockwise direction
-      drawArcGrid(ctx, 200, 20, radius, gridSize, true, false);
-
-      // Draw grid of filled circles in clockwise direction
-      drawArcGrid(ctx, 20, 200, radius, gridSize, false, true);
-
-      // Draw grid of filled circles in anticlockwise direction
-      drawArcGrid(ctx, 200, 200, radius, gridSize, true, true);
+          if (i > 1) {
+            ctx.fill();
+          } else {
+            ctx.stroke();
+          }
+        }
+      }
 
       ctx.invalidate();
     }

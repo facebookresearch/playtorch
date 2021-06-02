@@ -77,6 +77,15 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void setLineCap(ReadableMap canvasRef, String lineCap) {
+    mMainHandler.post(
+        () -> {
+          CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
+          ctx.setLineCap(lineCap);
+        });
+  }
+
+  @ReactMethod
   public void setLineJoin(ReadableMap canvasRef, String lineJoin) {
     mMainHandler.post(
         () -> {

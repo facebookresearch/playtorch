@@ -21,6 +21,7 @@ import CanvasArc from './canvas/CanvasArc';
 import CanvasClearRect from './canvas/CanvasClearRect';
 import CanvasClosePath from './canvas/CanvasClosePath';
 import CanvasDrawImage from './canvas/CanvasDrawImage';
+import CanvasLineCap from './canvas/CanvasLineCap';
 import CanvasLineJoin from './canvas/CanvasLineJoin';
 import CanvasMoveTo from './canvas/CanvasMoveTo';
 import CanvasRect from './canvas/CanvasRect';
@@ -79,6 +80,12 @@ const tools: ToolSection = [
         title: 'Canvas#moveTo',
         subtitle: 'Drawing lines on a canvas',
         component: CanvasMoveTo,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#lineCap',
+        subtitle: 'Drawing lines with line cap on a canvas',
+        component: CanvasLineCap,
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,

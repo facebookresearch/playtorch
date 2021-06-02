@@ -104,6 +104,26 @@ public class CanvasRenderingContext2D {
     mTextFillPaint.setStrokeWidth(strokeWidth);
   }
 
+  public void setLineCap(String lineCap) {
+    Paint.Cap cap = null;
+    switch (lineCap) {
+      case "butt":
+        cap = Paint.Cap.BUTT;
+        break;
+      case "round":
+        cap = Paint.Cap.ROUND;
+        break;
+      case "square":
+        cap = Paint.Cap.SQUARE;
+        break;
+    }
+
+    if (cap != null) {
+      mStrokePaint.setStrokeCap(cap);
+      mTextFillPaint.setStrokeCap(cap);
+    }
+  }
+
   public void setLineJoin(String lineJoin) {
     Paint.Join join = null;
     switch (lineJoin) {

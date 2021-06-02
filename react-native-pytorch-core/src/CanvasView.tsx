@@ -19,6 +19,13 @@ const {
 } = NativeModules;
 
 /**
+ * * `"butt"` The ends of lines are squared off at the endpoints. Default value.
+ * * `"round"` The ends of lines are rounded.
+ * * `"square"` The ends of lines are squared off by adding a box with an equal width and half the height of the line's thickness.
+ */
+type LineCap = 'butt' | 'round' | 'square';
+
+/**
  * There are three possible values for this property: `"round"`, `"bevel"`,
  * and `"miter"`. The default is `"miter"`.
  *
@@ -73,6 +80,24 @@ export interface CanvasRenderingContext2D {
    * `value` A string parsed as CSS font value. The default font is 10px sans-serif.
    */
   font: string;
+
+  /**
+   * The `lineCap` property of the Canvas 2D API determines the shape used to
+   * draw the end points of lines.
+   *
+   * :::note
+   *
+   * Lines can be drawn with the [[stroke]], [[strokeRect]], and [[strokeText]] functions.
+   *
+   * :::
+   *
+   * **Options**
+   *
+   * * `"butt"` The ends of lines are squared off at the endpoints. Default value.
+   * * `"round"` The ends of lines are rounded.
+   * * `"square"` The ends of lines are squared off by adding a box with an equal width and half the height of the line's thickness.
+   */
+  lineCap: LineCap;
 
   /**
    * The `lineJoin` property of the Canvas 2D API determines the shape used to
@@ -571,6 +596,9 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
     },
     set fillStyle(color: string) {
       CanvasRenderingContext2DModule.setFillStyle(ref, color);
+    },
+    set lineCap(value: LineCap) {
+      CanvasRenderingContext2DModule.setLineCap(ref, value);
     },
     set lineJoin(value: LineJoin) {
       CanvasRenderingContext2DModule.setLineJoin(ref, value);

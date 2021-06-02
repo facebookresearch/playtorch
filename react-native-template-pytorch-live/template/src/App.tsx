@@ -7,29 +7,27 @@
  * @format
  */
 
-import * as React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import Examples from './examples/Examples';
-import Demos from './demos/MyDemos';
+import {NavigationContainer} from '@react-navigation/native';
+import * as React from 'react';
+import {ReactNode} from 'react';
+import {Platform} from 'react-native';
 import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import {enableScreens} from 'react-native-screens';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ModelPreloader from './components/ModelPreloader';
+import Demos from './demos/MyDemos';
+import Examples from './examples/Examples';
 import {Models} from './Models';
 import Toolbox from './toolbox/Toolbox';
 
-Icon.loadFont();
-
 // Before rendering any navigation stack
-import {enableScreens} from 'react-native-screens';
-import {Platform, SafeAreaView, StyleSheet} from 'react-native';
-import {ReactNode} from 'react';
 enableScreens();
+
+Icon.loadFont();
 
 const Tab = createBottomTabNavigator();
 
@@ -73,8 +71,9 @@ function AppWithNavigation() {
             inactiveTintColor: '#fff',
             style: {
               backgroundColor: '#000',
-              paddingTop: 10,
+              borderTopWidth: 0,
               height: 60 + insets.bottom,
+              paddingTop: 10,
             },
             labelStyle: {
               height: 22,

@@ -30,13 +30,22 @@ export default function CanvasClearRect() {
     if (ctx != null) {
       ctx.clear();
 
-      ctx.fillStyle = 'red';
-      ctx.fillRect(10, 10, 40, 56);
-      ctx.clearRect(14, 18, 32, 40);
+      // Draw yellow background
+      ctx.beginPath();
+      ctx.fillStyle = '#ffff66';
+      ctx.fillRect(0, 0, 300, 150);
 
-      ctx.fillStyle = 'green';
-      ctx.fillRect(10, 80, 40, 56);
-      ctx.clearRect(18, 84, 20, 32);
+      // Draw blue triangle
+      ctx.beginPath();
+      ctx.fillStyle = 'blue';
+      ctx.moveTo(20, 20);
+      ctx.lineTo(180, 20);
+      ctx.lineTo(130, 130);
+      ctx.closePath();
+      ctx.fill();
+
+      // Clear part of the canvas
+      ctx.clearRect(10, 10, 120, 100);
 
       ctx.invalidate();
     }

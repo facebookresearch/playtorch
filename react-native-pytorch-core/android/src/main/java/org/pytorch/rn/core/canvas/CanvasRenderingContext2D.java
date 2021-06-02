@@ -106,6 +106,7 @@ public class CanvasRenderingContext2D {
 
   public void clear() {
     mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
+    mPath.reset();
   }
 
   public void clearRect(float x, float y, float width, float height) {
@@ -122,7 +123,7 @@ public class CanvasRenderingContext2D {
   }
 
   public void beginPath() {
-    mPath = new Path();
+    mPath.reset();
   }
 
   public void closePath() {

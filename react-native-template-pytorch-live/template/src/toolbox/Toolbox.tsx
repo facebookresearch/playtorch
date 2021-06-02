@@ -7,32 +7,30 @@
  * @format
  */
 
-import * as React from 'react';
-
 import {
-  createStackNavigator,
   CardStyleInterpolators,
+  createStackNavigator,
 } from '@react-navigation/stack';
-import Icon from 'react-native-vector-icons/Ionicons';
-
+import * as React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
-import ToolboxList from './ToolboxList';
-import CanvasArc from './canvas/CanvasArc';
-import ToolboxContext, {useToolboxContext} from './ToolboxContext';
-import CanvasDrawImage from './canvas/CanvasDrawImage';
-import CanvasAnimation from './canvas/CanvasAnimation';
-import CanvasRect from './canvas/CanvasRect';
-import CanvasClearRect from './canvas/CanvasClearRect';
-import CanvasSaveRestore from './canvas/CanvasSaveRestore';
-import CanvasSetTransform from './canvas/CanvasSetTransform';
-import CanvasScale from './canvas/CanvasScale';
-import CanvasRotate from './canvas/CanvasRotate';
-import CanvasTranslate from './canvas/CanvasTranslate';
-import CanvasFillText from './canvas/CanvasFillText';
-import ImageScale from './canvas/ImageScale';
+import Icon from 'react-native-vector-icons/Ionicons';
 import CameraFrameByFrame from './camera/CameraFrameByFrame';
 import CameraTakePicture from './camera/CameraTakePicture';
+import CanvasAnimation from './canvas/CanvasAnimation';
+import CanvasArc from './canvas/CanvasArc';
+import CanvasClearRect from './canvas/CanvasClearRect';
+import CanvasDrawImage from './canvas/CanvasDrawImage';
 import CanvasMoveTo from './canvas/CanvasMoveTo';
+import CanvasRect from './canvas/CanvasRect';
+import CanvasRotate from './canvas/CanvasRotate';
+import CanvasSaveRestore from './canvas/CanvasSaveRestore';
+import CanvasScale from './canvas/CanvasScale';
+import CanvasSetTransform from './canvas/CanvasSetTransform';
+import CanvasText from './canvas/CanvasText';
+import CanvasTranslate from './canvas/CanvasTranslate';
+import ImageScale from './canvas/ImageScale';
+import ToolboxContext, {useToolboxContext} from './ToolboxContext';
+import ToolboxList from './ToolboxList';
 
 export type Tool = {
   icon?: JSX.Element;
@@ -118,9 +116,9 @@ const tools: ToolSection = [
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas Fill Text',
+        title: 'Canvas Text',
         subtitle: 'Drawing text on canvas',
-        component: CanvasFillText,
+        component: CanvasText,
       },
     ],
   },

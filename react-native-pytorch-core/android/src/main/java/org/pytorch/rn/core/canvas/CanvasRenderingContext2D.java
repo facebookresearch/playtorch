@@ -16,8 +16,10 @@ import android.graphics.Path;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.text.TextPaint;
 import android.util.DisplayMetrics;
+import com.facebook.react.bridge.ReadableMap;
 import java.util.Stack;
 
 public class CanvasRenderingContext2D {
@@ -69,7 +71,10 @@ public class CanvasRenderingContext2D {
     mTextFillPaint = new TextPaint();
     mTextFillPaint.set(mFillPaint);
     mTextFillPaint.setStyle(Paint.Style.FILL);
-    mTextFillPaint.setTextSize(50);
+    // The default font size for web canvas is 10px.
+    mTextFillPaint.setTextSize(dpToPx(10));
+    // Initialize stroke width to be pixel density, which matches 1px for a web canvas.
+    mTextFillPaint.setStrokeWidth(mPixelDensity);
   }
 
   private void init() {
@@ -94,7 +99,9 @@ public class CanvasRenderingContext2D {
   }
 
   public void setLineWidth(float width) {
-    mStrokePaint.setStrokeWidth(dpToPx(width));
+    final float strokeWidth = dpToPx(width);
+    mStrokePaint.setStrokeWidth(strokeWidth);
+    mTextFillPaint.setStrokeWidth(strokeWidth);
   }
 
   public void clear() {
@@ -209,7 +216,48 @@ public class CanvasRenderingContext2D {
     mCanvas.drawBitmap(destBitmap, matrix, null);
   }
 
+  public void setFont(final ReadableMap font) {
+    String textSizeString = font.getString("fontSize");
+    int textSize = Integer.parseInt(textSizeString.substring(0, textSizeString.length() - 2));
+    mTextFillPaint.setTextSize(dpToPx(textSize));
+
+    String fontFamily = font.getArray("fontFamily").getString(0);
+    Typeface typeface = Typeface.DEFAULT;
+    switch (fontFamily) {
+      case "serif":
+        typeface = Typeface.SERIF;
+        break;
+      case "sans-serif":
+        typeface = Typeface.SANS_SERIF;
+        break;
+      case "monospace":
+        typeface = Typeface.MONOSPACE;
+        break;
+    }
+
+    int typefaceStyle = Typeface.NORMAL;
+
+    String fontWeight = font.getString("fontWeight");
+    if ("bold".equals(fontWeight)) {
+      typefaceStyle += Typeface.BOLD;
+    }
+
+    String fontStyle = font.getString("fontStyle");
+    if ("italic".equals(fontStyle)) {
+      typefaceStyle += Typeface.ITALIC;
+    }
+
+    Typeface newTypeface = Typeface.create(typeface, typefaceStyle);
+    mTextFillPaint.setTypeface(newTypeface);
+  }
+
   public void fillText(String text, float x, float y) {
+    mTextFillPaint.setStyle(Paint.Style.FILL);
+    mCanvas.drawText(text, dpToPx(x), dpToPx(y), mTextFillPaint);
+  }
+
+  public void strokeText(String text, float x, float y) {
+    mTextFillPaint.setStyle(Paint.Style.STROKE);
     mCanvas.drawText(text, dpToPx(x), dpToPx(y), mTextFillPaint);
   }
 

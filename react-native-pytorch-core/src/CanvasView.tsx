@@ -12,6 +12,7 @@ import {useCallback} from 'react';
 import {NativeModules, requireNativeComponent, ViewProps} from 'react-native';
 import type {Image} from './ImageModule';
 import type {NativeJSRef} from './NativeJSRef';
+import * as CSSFontUtils from './utils/CSSFontUtils';
 
 const {
   PyTorchCoreCanvasRenderingContext2DModule: CanvasRenderingContext2DModule,
@@ -51,6 +52,17 @@ export interface CanvasRenderingContext2D {
    * `color` A [`CSS <color>`](https://reactnative.dev/docs/colors#color-apis) value as string.
    */
   fillStyle: string;
+
+  /**
+   * The `font` property of the Canvas 2D API specifies the current text style
+   * to use when drawing text. This string uses the same syntax as the CSS font
+   * specifier.
+   *
+   * **Options**
+   *
+   * `value` A string parsed as CSS font value. The default font is 10px sans-serif.
+   */
+  font: string;
 
   /**
    * The `lineWidth` property of the Canvas 2D API sets the thickness of lines.
@@ -264,8 +276,8 @@ export interface CanvasRenderingContext2D {
    *
    * :::caution
    *
-   * The `fillText()` function does not support `font`, `textAlign`,
-   * `textBaseline`, and `direction`.
+   * The `strokeText()` function does not support `textAlign`, `textBaseline`,
+   * and `direction`.
    *
    * ```typescript
    * ctx.font = '50px serif';
@@ -274,7 +286,7 @@ export interface CanvasRenderingContext2D {
    *
    * :::
    *
-   * @param text A string specifying the text string to render into the context.
+   * @param text A string specifying the text string to render into the context. The text is rendered using the settings specified by `font`.
    * @param x The x-axis coordinate of the point at which to begin drawing the text, in pixels.
    * @param y The y-axis coordinate of the baseline on which to begin drawing the text, in pixels.
    */
@@ -439,6 +451,35 @@ export interface CanvasRenderingContext2D {
   strokeRect(x: number, y: number, width: number, height: number): void;
 
   /**
+   * The `strokeText()`, part of the Canvas 2D API, strokes — that is, draws
+   * the outlines of — the characters of a text string at the specified
+   * coordinates. An optional parameter allows specifying a maximum width for
+   * the rendered text, which the user agent will achieve by condensing the
+   * text or by using a lower font size.
+   *
+   * This function draws directly to the canvas without modifying the current
+   * path, so any subsequent [[fill]] or [[stroke]] calls will have no effect
+   * on it.
+   *
+   * :::caution
+   *
+   * The `strokeText()` function does not support `textAlign`, `textBaseline`,
+   * and `direction`.
+   *
+   * ```typescript
+   * ctx.font = '50px serif';
+   * ctx.strokeText('Hello world', 50, 90);
+   * ```
+   *
+   * :::
+   *
+   * @param text A string specifying the text string to render into the context. The text is rendered using the settings specified by `font`.
+   * @param x The x-axis coordinate of the point at which to begin drawing the text.
+   * @param y The y-axis coordinate of the point at which to begin drawing the text.
+   */
+  strokeText(text: string, x: number, y: number): void;
+
+  /**
    * The `translate()` function of the Canvas 2D API adds a translation
    * transformation to the current matrix.
    *
@@ -474,11 +515,17 @@ const INVALID_VALUE_NULLABLE = -1;
 
 const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
   return {
-    set lineWidth(width: number) {
-      CanvasRenderingContext2DModule.setLineWidth(ref, width);
+    set font(value: string) {
+      const font = CSSFontUtils.parse(value);
+      if (font !== null) {
+        CanvasRenderingContext2DModule.setFont(ref, font);
+      }
     },
     set fillStyle(color: string) {
       CanvasRenderingContext2DModule.setFillStyle(ref, color);
+    },
+    set lineWidth(width: number) {
+      CanvasRenderingContext2DModule.setLineWidth(ref, width);
     },
     set strokeStyle(color: string) {
       CanvasRenderingContext2DModule.setStrokeStyle(ref, color);
@@ -589,6 +636,9 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
     },
     strokeRect(x: number, y: number, width: number, height: number): void {
       CanvasRenderingContext2DModule.strokeRect(ref, x, y, width, height);
+    },
+    strokeText(text: string, x: number, y: number): void {
+      CanvasRenderingContext2DModule.strokeText(ref, text, x, y);
     },
     translate(x: number, y: number): void {
       CanvasRenderingContext2DModule.translate(ref, x, y);

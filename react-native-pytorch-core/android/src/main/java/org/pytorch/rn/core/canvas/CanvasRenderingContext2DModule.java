@@ -253,11 +253,29 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void setFont(ReadableMap canvasRef, ReadableMap font) {
+    mMainHandler.post(
+        () -> {
+          CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
+          ctx.setFont(font);
+        });
+  }
+
+  @ReactMethod
   public void fillText(ReadableMap canvasRef, String text, double x, double y) {
     mMainHandler.post(
         () -> {
           CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
           ctx.fillText(text, (float) x, (float) y);
+        });
+  }
+
+  @ReactMethod
+  public void strokeText(ReadableMap canvasRef, String text, double x, double y) {
+    mMainHandler.post(
+        () -> {
+          CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
+          ctx.strokeText(text, (float) x, (float) y);
         });
   }
 

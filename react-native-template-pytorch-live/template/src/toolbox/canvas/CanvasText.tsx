@@ -12,7 +12,7 @@ import React, {useCallback, useLayoutEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
 
-export default function CanvasFillText() {
+export default function CanvasText() {
   const isFocused = useIsFocused();
   const [drawingContext, setDrawingContext] = useState<
     CanvasRenderingContext2D
@@ -30,7 +30,11 @@ export default function CanvasFillText() {
     if (ctx != null) {
       ctx.clear();
 
+      ctx.font = 'italic bold 40px sans-serif';
+      ctx.lineWidth = 3;
+
       ctx.fillText('Hello world', 50, 90);
+      ctx.strokeText('Hello world', 50, 190);
 
       ctx.invalidate();
     }

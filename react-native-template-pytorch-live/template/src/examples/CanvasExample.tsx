@@ -17,7 +17,7 @@ import {
   Image,
 } from 'react-native-pytorch-core';
 import useImageFromBundle from '../utils/useImageFromBundle';
-import useImageFromUri from '../utils/useImageFromUri';
+import useImageFromURL from '../utils/useImageFromURL';
 
 export default function CanvasExample() {
   const isFocused = useIsFocused();
@@ -39,7 +39,7 @@ export default function CanvasExample() {
   }, []);
 
   const catImage = useImageFromBundle(require('../../assets/images/cat.jpg'));
-  const capybaraImage = useImageFromUri(
+  const capybaraImage = useImageFromURL(
     'https://cdn.britannica.com/79/191679-050-C7114D2B/Adult-capybara.jpg',
   );
 

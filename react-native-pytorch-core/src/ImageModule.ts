@@ -120,19 +120,13 @@ export const ImageUtil = {
    * the loaded image.
    *
    * ```typescript
-   * const image: Image = await ImageUtils.load('https://image.url');
+   * const image: Image = await ImageUtils.fromURL('https://image.url');
    * ```
-   *
-   * :::caution
-   *
-   * This function is going to be renamed to `ImageUtils.fromURL`.
-   *
-   * :::
    *
    * @param url The image url.
    */
-  async load(url: string): Promise<Image> {
-    const ref: NativeJSRef = await ImageModule.load(url);
+  async fromURL(url: string): Promise<Image> {
+    const ref: NativeJSRef = await ImageModule.fromURL(url);
     return wrapRef(ref);
   },
 

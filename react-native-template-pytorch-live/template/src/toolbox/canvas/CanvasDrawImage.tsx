@@ -11,7 +11,7 @@ import {useIsFocused} from '@react-navigation/native';
 import React, {useCallback, useLayoutEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
-import useImageFromUri from '../../utils/useImageFromUri';
+import useImageFromURL from '../../utils/useImageFromURL';
 
 export default function CanvasDrawImage() {
   const isFocused = useIsFocused();
@@ -19,10 +19,10 @@ export default function CanvasDrawImage() {
     CanvasRenderingContext2D
   >();
 
-  const catImage = useImageFromUri(
+  const catImage = useImageFromURL(
     'https://ichef.bbci.co.uk/news/976/cpsprodpb/12A9B/production/_111434467_gettyimages-1143489763.jpg',
   );
-  const capybaraImage = useImageFromUri(
+  const capybaraImage = useImageFromURL(
     'https://cdn.britannica.com/79/191679-050-C7114D2B/Adult-capybara.jpg',
   );
 

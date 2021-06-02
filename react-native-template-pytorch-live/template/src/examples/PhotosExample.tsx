@@ -23,10 +23,10 @@ export default function PhotosExample() {
     activeModelInfo,
   );
 
-  const handleImageUri = useCallback(
-    (uri: string) => {
+  const handleImageURL = useCallback(
+    (url: string) => {
       (async () => {
-        const image = await ImageUtil.load(uri);
+        const image = await ImageUtil.fromURL(url);
         processImage(image);
       })();
     },
@@ -35,7 +35,7 @@ export default function PhotosExample() {
 
   return (
     <>
-      <PredefinedImageList onSelectImage={handleImageUri} />
+      <PredefinedImageList onSelectImage={handleImageURL} />
       <ModelSelector
         style={styles.actions}
         modelInfos={Models}

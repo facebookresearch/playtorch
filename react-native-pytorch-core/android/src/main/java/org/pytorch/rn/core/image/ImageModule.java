@@ -66,9 +66,9 @@ public class ImageModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void load(String uri, Promise promise) {
+  public void fromURL(String urlString, Promise promise) {
     try {
-      URL url = new URL(uri);
+      URL url = new URL(urlString);
       Bitmap bitmap = BitmapFactory.decodeStream(url.openConnection().getInputStream());
       IImage image = new Image(bitmap);
       JSContext.NativeJSRef ref = JSContext.wrapObject(image);
@@ -76,12 +76,12 @@ public class ImageModule extends ReactContextBaseJavaModule {
     } catch (IOException e) {
       promise.reject(e);
     }
-    promise.reject(new Error("Could not load image from " + uri));
+    promise.reject(new Error("Could not load image from " + urlString));
   }
 
   @ReactMethod
-  public void fromBundle(final String imageUri, Promise promise) {
-    Uri uri = Uri.parse(imageUri);
+  public void fromBundle(final String uriString, Promise promise) {
+    Uri uri = Uri.parse(uriString);
 
     // Get file path to cache image or load image model from cache if loading from Uri fails
     File targetFile = new File(getReactApplicationContext().getCacheDir(), uri.getPath());
@@ -89,7 +89,7 @@ public class ImageModule extends ReactContextBaseJavaModule {
     // Always try to load image from uri to make sure it's always the latest version. Only if
     // fetching the model from the uri fails, it will load the cached version (if exists).
     try {
-      InputStream inputStream = new URL(imageUri).openStream();
+      InputStream inputStream = new URL(uriString).openStream();
 
       // Create directory for model if they don't exist
       targetFile.mkdirs();

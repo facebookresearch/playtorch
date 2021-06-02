@@ -77,6 +77,15 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void setLineJoin(ReadableMap canvasRef, String lineJoin) {
+    mMainHandler.post(
+        () -> {
+          CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
+          ctx.setLineJoin(lineJoin);
+        });
+  }
+
+  @ReactMethod
   public void clear(ReadableMap canvasRef) {
     mMainHandler.post(
         () -> {

@@ -104,6 +104,26 @@ public class CanvasRenderingContext2D {
     mTextFillPaint.setStrokeWidth(strokeWidth);
   }
 
+  public void setLineJoin(String lineJoin) {
+    Paint.Join join = null;
+    switch (lineJoin) {
+      case "bevel":
+        join = Paint.Join.BEVEL;
+        break;
+      case "round":
+        join = Paint.Join.ROUND;
+        break;
+      case "miter":
+        join = Paint.Join.MITER;
+        break;
+    }
+
+    if (join != null) {
+      mStrokePaint.setStrokeJoin(join);
+      mTextFillPaint.setStrokeJoin(join);
+    }
+  }
+
   public void clear() {
     mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
     mPath.reset();

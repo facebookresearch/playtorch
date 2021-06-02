@@ -19,6 +19,16 @@ const {
 } = NativeModules;
 
 /**
+ * There are three possible values for this property: `"round"`, `"bevel"`,
+ * and `"miter"`. The default is `"miter"`.
+ *
+ * * `"round"` Rounds off the corners of a shape by filling an additional sector of disc centered at the common endpoint of connected segments. The radius for these rounded corners is equal to the line width.
+ * * `"bevel"` Fills an additional triangular area between the common endpoint of connected segments, and the separate outside rectangular corners of each segment.
+ * * `"miter"` Connected segments are joined by extending their outside edges to connect at a single point, with the effect of filling an additional lozenge-shaped area. This setting is affected by the [[miterLimit]] property. Default value.
+ */
+type LineJoin = 'bevel' | 'round' | 'miter';
+
+/**
  * The Canvas 2D API provided by the React Native PyTorch Core canvas
  * **is going to** match the W3C specification of the
  * [`2dcontext`](https://www.w3.org/TR/2dcontext/)
@@ -63,6 +73,33 @@ export interface CanvasRenderingContext2D {
    * `value` A string parsed as CSS font value. The default font is 10px sans-serif.
    */
   font: string;
+
+  /**
+   * The `lineJoin` property of the Canvas 2D API determines the shape used to
+   * join two line segments where they meet.
+   *
+   * This property has no effect wherever two connected segments have the same
+   * direction, because no joining area will be added in this case. Degenerate
+   * segments with a length of zero (i.e., with all endpoints and control
+   * points at the exact same position) are also ignored.
+   *
+   * :::note
+   *
+   * Lines can be drawn with the [[stroke]], [[strokeRect]], and [[strokeText]]
+   * functions.
+   *
+   * :::
+   *
+   * **Options**
+   *
+   * There are three possible values for this property: `"round"`, `"bevel"`,
+   * and `"miter"`. The default is `"miter"`.
+   *
+   * * `"round"` Rounds off the corners of a shape by filling an additional sector of disc centered at the common endpoint of connected segments. The radius for these rounded corners is equal to the line width.
+   * * `"bevel"` Fills an additional triangular area between the common endpoint of connected segments, and the separate outside rectangular corners of each segment.
+   * * `"miter"` Connected segments are joined by extending their outside edges to connect at a single point, with the effect of filling an additional lozenge-shaped area. This setting is affected by the [[miterLimit]] property. Default value.
+   */
+  lineJoin: LineJoin;
 
   /**
    * The `lineWidth` property of the Canvas 2D API sets the thickness of lines.
@@ -534,6 +571,9 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
     },
     set fillStyle(color: string) {
       CanvasRenderingContext2DModule.setFillStyle(ref, color);
+    },
+    set lineJoin(value: LineJoin) {
+      CanvasRenderingContext2DModule.setLineJoin(ref, value);
     },
     set lineWidth(width: number) {
       CanvasRenderingContext2DModule.setLineWidth(ref, width);

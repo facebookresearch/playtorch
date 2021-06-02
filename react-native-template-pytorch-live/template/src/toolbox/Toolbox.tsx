@@ -21,6 +21,7 @@ import CanvasArc from './canvas/CanvasArc';
 import CanvasClearRect from './canvas/CanvasClearRect';
 import CanvasClosePath from './canvas/CanvasClosePath';
 import CanvasDrawImage from './canvas/CanvasDrawImage';
+import CanvasLineJoin from './canvas/CanvasLineJoin';
 import CanvasMoveTo from './canvas/CanvasMoveTo';
 import CanvasRect from './canvas/CanvasRect';
 import CanvasRotate from './canvas/CanvasRotate';
@@ -78,6 +79,12 @@ const tools: ToolSection = [
         title: 'Canvas#moveTo',
         subtitle: 'Drawing lines on a canvas',
         component: CanvasMoveTo,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#lineJoin',
+        subtitle: 'Drawing lines with line join on a canvas',
+        component: CanvasLineJoin,
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,

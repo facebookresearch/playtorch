@@ -247,6 +247,7 @@ export default class AstroBirdGame extends GameLoop {
     const x = 10;
     const y = 30;
     const offset = -1;
+    ctx.font = '20px sans-serif';
     ctx.fillStyle = '#000000';
     ctx.fillText(`Score: ${this.score}`, x, y);
     ctx.fillStyle = '#ffffff';

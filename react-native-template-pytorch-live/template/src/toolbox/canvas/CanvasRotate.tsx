@@ -31,9 +31,9 @@ export default function CanvasRotate() {
       ctx.clear();
 
       // Point of transform origin
-      ctx.strokeStyle = 'blue';
-      ctx.lineWidth = 10;
       ctx.arc(0, 0, 5, 0, 2 * Math.PI);
+      ctx.fillStyle = 'blue';
+      ctx.fill();
 
       // Non-rotated rectangle
       ctx.fillStyle = 'gray';

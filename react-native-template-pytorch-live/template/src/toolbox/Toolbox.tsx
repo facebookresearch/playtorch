@@ -19,6 +19,7 @@ import CameraTakePicture from './camera/CameraTakePicture';
 import CanvasAnimation from './canvas/CanvasAnimation';
 import CanvasArc from './canvas/CanvasArc';
 import CanvasClearRect from './canvas/CanvasClearRect';
+import CanvasClosePath from './canvas/CanvasClosePath';
 import CanvasDrawImage from './canvas/CanvasDrawImage';
 import CanvasMoveTo from './canvas/CanvasMoveTo';
 import CanvasRect from './canvas/CanvasRect';
@@ -59,6 +60,12 @@ const tools: ToolSection = [
         title: 'Canvas#clearRect',
         subtitle: 'Clear rect on a canvas',
         component: CanvasClearRect,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#closePath',
+        subtitle: 'Close path on a canvas',
+        component: CanvasClosePath,
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,

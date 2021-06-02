@@ -125,6 +125,10 @@ public class CanvasRenderingContext2D {
     mPath = new Path();
   }
 
+  public void closePath() {
+    mPath.close();
+  }
+
   public void stroke() {
     mCanvas.drawPath(mPath, mStrokePaint);
   }

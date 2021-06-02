@@ -144,6 +144,17 @@ export interface CanvasRenderingContext2D {
   clearRect(x: number, y: number, width: number, height: number): void;
 
   /**
+   * The `closePath()` function of the Canvas 2D API attempts to add a straight
+   * line from the current point to the start of the current sub-path. If the
+   * shape has already been closed or has only one point, this function does
+   * nothing.
+   *
+   * This function doesn't draw anything to the canvas directly. You can render
+   * the path using the [[stroke]] or [[fill]] functions.
+   */
+  closePath(): void;
+
+  /**
    * Draws a circle at `(x, y)` with the given `radius`.
    *
    * @param x The x-axis coordinate of the circle's starting point.
@@ -556,6 +567,9 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
     },
     clearRect(x: number, y: number, width: number, height: number): void {
       CanvasRenderingContext2DModule.clearRect(ref, x, y, width, height);
+    },
+    closePath(): void {
+      CanvasRenderingContext2DModule.closePath(ref);
     },
     drawCircle(x: number, y: number, radius: number): void {
       CanvasRenderingContext2DModule.drawCircle(ref, x, y, radius);

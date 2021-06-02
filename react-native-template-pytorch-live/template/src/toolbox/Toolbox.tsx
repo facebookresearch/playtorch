@@ -21,6 +21,7 @@ import CanvasArc from './canvas/CanvasArc';
 import CanvasClearRect from './canvas/CanvasClearRect';
 import CanvasClosePath from './canvas/CanvasClosePath';
 import CanvasDrawImage from './canvas/CanvasDrawImage';
+import CanvasFillRect from './canvas/CanvasFillRect';
 import CanvasLineCap from './canvas/CanvasLineCap';
 import CanvasLineJoin from './canvas/CanvasLineJoin';
 import CanvasMiterLimit from './canvas/CanvasMiterLimit';
@@ -58,6 +59,12 @@ const tools: ToolSection = [
         title: 'Canvas#rect',
         subtitle: 'Drawing rect on a canvas',
         component: CanvasRect,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#fillRect',
+        subtitle: 'Drawing filled rect on a canvas',
+        component: CanvasFillRect,
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,

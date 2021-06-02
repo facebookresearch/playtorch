@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-  <dimen name="camera_button_size">73dp</dimen>
+  <dimen name="camera_button_size_normal">73dp</dimen>
+  <dimen name="inner_button_size_normal">61dp</dimen>
   <dimen name="camera_button_border">6dp</dimen>
   <dimen name="camera_button_inner_border_normal">18dp</dimen>
   <dimen name="camera_button_inner_border_pressed">24dp</dimen>

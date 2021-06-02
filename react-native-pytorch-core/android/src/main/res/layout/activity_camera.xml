@@ -17,8 +17,8 @@
 
   <Button
     android:id="@+id/capture_button"
-    android:layout_width="@dimen/camera_button_size"
-    android:layout_height="@dimen/camera_button_size"
+    android:layout_width="@dimen/camera_button_size_normal"
+    android:layout_height="@dimen/camera_button_size_normal"
     android:layout_marginBottom="16dp"
     android:background="@drawable/camera_button"
     app:layout_constraintBottom_toBottomOf="parent"

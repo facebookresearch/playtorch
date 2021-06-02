@@ -8,10 +8,16 @@
 package org.pytorch.rn.core.camera;
 
 import android.Manifest;
+import android.animation.ValueAnimator;
+import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
+import android.graphics.drawable.LayerDrawable;
 import android.util.Log;
 import android.util.Size;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.Surface;
 import android.view.View;
@@ -59,6 +65,13 @@ public class CameraManager extends ViewGroupManager<ConstraintLayout> {
   private Button mCaptureButton;
   private ConstraintLayout mLayout;
   private ImageCapture mImageCapture;
+  private ValueAnimator pressAnimation, releaseAnimation;
+  private AnimatorUpdateListener animatorUpdateListener;
+  private LayerDrawable mCaptureButtonLayerDrawable;
+  private GradientDrawable mCaptureButtonInnerCircle;
+  private int CAMERA_BUTTON_INNER_BORDER_NORMAL, CAMERA_BUTTON_INNER_BORDER_PRESSED;
+  private final int DURATION = 100;
+  private final float SCALE_BUTTON_BY = 1.15f;
 
   /** Blocking camera operations are performed using this executor */
   private ExecutorService cameraExecutor;
@@ -89,9 +102,60 @@ public class CameraManager extends ViewGroupManager<ConstraintLayout> {
 
     mPreviewView = mLayout.findViewById(R.id.preview_view);
     mCaptureButton = mLayout.findViewById(R.id.capture_button);
-    mCaptureButton.setOnClickListener(
-        v -> {
-          capturePhoto();
+
+    // Initialize drawables to change (inner circle stroke)
+    mCaptureButtonLayerDrawable =
+        (LayerDrawable)
+            reactContext
+                .getResources()
+                .getDrawable(R.drawable.camera_button, mReactContext.getTheme())
+                .mutate();
+    mCaptureButtonInnerCircle =
+        (GradientDrawable)
+            mCaptureButtonLayerDrawable.findDrawableByLayerId(R.id.camera_button_inner_circle);
+
+    // Calculate pixel values of borders
+    float density = mReactContext.getResources().getDisplayMetrics().density;
+    CAMERA_BUTTON_INNER_BORDER_NORMAL = (int) (density * 18);
+    CAMERA_BUTTON_INNER_BORDER_PRESSED = (int) (density * 24);
+
+    // Initialize Value Animators and Listeners
+    // grow means grow border so the circle shrinks
+    pressAnimation =
+        ValueAnimator.ofInt(CAMERA_BUTTON_INNER_BORDER_NORMAL, CAMERA_BUTTON_INNER_BORDER_PRESSED)
+            .setDuration(DURATION);
+    releaseAnimation =
+        ValueAnimator.ofInt(CAMERA_BUTTON_INNER_BORDER_PRESSED, CAMERA_BUTTON_INNER_BORDER_NORMAL)
+            .setDuration(DURATION);
+
+    animatorUpdateListener =
+        new ValueAnimator.AnimatorUpdateListener() {
+          @Override
+          public void onAnimationUpdate(ValueAnimator updatedAnimation) {
+            int animatedValue = (int) updatedAnimation.getAnimatedValue();
+            mCaptureButtonInnerCircle.setStroke(animatedValue, Color.TRANSPARENT);
+            mCaptureButton.setBackground(mCaptureButtonLayerDrawable);
+          }
+        };
+
+    pressAnimation.addUpdateListener(animatorUpdateListener);
+    releaseAnimation.addUpdateListener(animatorUpdateListener);
+
+    mCaptureButton.setOnTouchListener(
+        (v, e) -> {
+          switch (e.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+              pressAnimation.start();
+              mCaptureButton.animate().scaleX(SCALE_BUTTON_BY).setDuration(DURATION);
+              mCaptureButton.animate().scaleY(SCALE_BUTTON_BY).setDuration(DURATION);
+              capturePhoto();
+              break;
+            case MotionEvent.ACTION_UP:
+              releaseAnimation.start();
+              mCaptureButton.animate().scaleX(1f).setDuration(DURATION);
+              mCaptureButton.animate().scaleY(1f).setDuration(DURATION);
+          }
+          return false;
         });
 
     // The PreviewView has a width/height of 0/0. This was reported as an issue in the CameraX

@@ -30,17 +30,8 @@ export default function CanvasRect() {
     if (ctx != null) {
       ctx.clear();
 
-      ctx.fillStyle = '#00bfff';
-      ctx.fillCircle(80, 80, 36);
-      ctx.strokeStyle = '#00ff00';
-      ctx.lineWidth = 10;
-      ctx.drawCircle(80, 80, 36);
-
-      ctx.fillStyle = '#fb0fff';
-      ctx.fillRect(40, 160, 64, 72);
-      ctx.strokeStyle = '#00ffff';
-      ctx.lineWidth = 6;
-      ctx.strokeRect(40, 160, 64, 72);
+      ctx.rect(10, 20, 150, 100);
+      ctx.fill();
 
       ctx.invalidate();
     }

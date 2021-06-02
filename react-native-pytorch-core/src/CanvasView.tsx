@@ -424,6 +424,31 @@ export interface CanvasRenderingContext2D {
   moveTo(x: number, y: number): void;
 
   /**
+   * The `rect()` method of the Canvas 2D API adds a rectangle to the current
+   * path.
+   *
+   * Like other methods that modify the current path, this method does not
+   * directly render anything.  To draw the rectangle onto a canvas, you can
+   * use the [[fill]] or [[stroke]] methods.
+   *
+   * :::note
+   *
+   * To both create and render a rectangle in one step, use the [[fillRect]] or
+   * [[strokeRect]] functions.
+   *
+   * :::
+   *
+   * The `rect()` method creates a rectangular path whose starting point is at
+   * `(x, y)` and whose size is specified by `width` and `height`.
+   *
+   * @param x The x-axis coordinate of the rectangle's starting point.
+   * @param y The y-axis coordinate of the rectangle's starting point.
+   * @param width The rectangle's width. Positive values are to the right, and negative to the left.
+   * @param height The rectangle's height. Positive values are down, and negative are up.
+   */
+  rect(x: number, y: number, width: number, height: number): void;
+
+  /**
    * The `restore()` function of the Canvas 2D API restores the most recently
    * saved canvas state by popping the top entry in the drawing state stack. If
    * there is no saved state, this function does nothing.
@@ -730,6 +755,9 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
     },
     moveTo(x: number, y: number): void {
       CanvasRenderingContext2DModule.moveTo(ref, x, y);
+    },
+    rect(x: number, y: number, width: number, height: number): void {
+      CanvasRenderingContext2DModule.rect(ref, x, y, width, height);
     },
     async restore(): Promise<void> {
       await CanvasRenderingContext2DModule.restore(ref);

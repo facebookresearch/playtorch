@@ -222,6 +222,10 @@ public class CanvasRenderingContext2D {
     mPath.addArc(rect, radiansToDegrees(initialAngle), radiansToDegrees(sweepAngle));
   }
 
+  public void rect(float x, float y, float width, float height) {
+    mPath.addRect(dpToPx(x), dpToPx(y), dpToPx(x + width), dpToPx(y + height), Path.Direction.CW);
+  }
+
   public void lineTo(float x, float y) {
     mPath.lineTo(dpToPx(x), dpToPx(y));
   }

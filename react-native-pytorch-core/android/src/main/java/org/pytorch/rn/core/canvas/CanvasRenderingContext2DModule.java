@@ -204,6 +204,15 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void rect(ReadableMap canvasRef, double x, double y, double width, double height) {
+    mMainHandler.post(
+        () -> {
+          CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
+          ctx.rect((float) x, (float) y, (float) width, (float) height);
+        });
+  }
+
+  @ReactMethod
   public void lineTo(ReadableMap canvasRef, double x, double y) {
     mMainHandler.post(
         () -> {

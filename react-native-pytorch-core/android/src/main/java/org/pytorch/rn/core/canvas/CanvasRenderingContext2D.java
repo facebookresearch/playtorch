@@ -144,6 +144,11 @@ public class CanvasRenderingContext2D {
     }
   }
 
+  public void setMiterLimit(final float miterLimit) {
+    mStrokePaint.setStrokeMiter(miterLimit);
+    mTextFillPaint.setStrokeMiter(miterLimit);
+  }
+
   public void clear() {
     mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
     mPath.reset();

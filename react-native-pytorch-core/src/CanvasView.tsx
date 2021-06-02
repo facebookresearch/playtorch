@@ -136,6 +136,13 @@ export interface CanvasRenderingContext2D {
   lineWidth: number;
 
   /**
+   * The `miterLimit` property of the Canvas 2D API sets the miter limit ratio.
+   *
+   * `value` A number specifying the miter limit ratio, in coordinate space units. Zero, negative, [[Infinity]], and [[NaN]] values are ignored. The default value is `10.0`.
+   */
+  miterLimit: number;
+
+  /**
    * The `strokeStyle` property of the Canvas 2D API specifies the color to use
    * for the strokes (outlines) around shapes. The default is `#000` (black).
    *
@@ -605,6 +612,9 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
     },
     set lineWidth(width: number) {
       CanvasRenderingContext2DModule.setLineWidth(ref, width);
+    },
+    set miterLimit(value: number) {
+      CanvasRenderingContext2DModule.setMiterLimit(ref, value);
     },
     set strokeStyle(color: string) {
       CanvasRenderingContext2DModule.setStrokeStyle(ref, color);

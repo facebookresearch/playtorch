@@ -95,6 +95,15 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void setMiterLimit(ReadableMap canvasRef, double miterLimit) {
+    mMainHandler.post(
+        () -> {
+          CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
+          ctx.setMiterLimit((float) miterLimit);
+        });
+  }
+
+  @ReactMethod
   public void clear(ReadableMap canvasRef) {
     mMainHandler.post(
         () -> {

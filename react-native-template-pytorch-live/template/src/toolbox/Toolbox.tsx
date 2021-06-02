@@ -23,6 +23,7 @@ import CanvasClosePath from './canvas/CanvasClosePath';
 import CanvasDrawImage from './canvas/CanvasDrawImage';
 import CanvasLineCap from './canvas/CanvasLineCap';
 import CanvasLineJoin from './canvas/CanvasLineJoin';
+import CanvasMiterLimit from './canvas/CanvasMiterLimit';
 import CanvasMoveTo from './canvas/CanvasMoveTo';
 import CanvasRect from './canvas/CanvasRect';
 import CanvasRotate from './canvas/CanvasRotate';
@@ -92,6 +93,12 @@ const tools: ToolSection = [
         title: 'Canvas#lineJoin',
         subtitle: 'Drawing lines with line join on a canvas',
         component: CanvasLineJoin,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#miterLimit',
+        subtitle: 'Drawing lines with miter limit on a canvas',
+        component: CanvasMiterLimit,
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,

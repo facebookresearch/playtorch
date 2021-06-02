@@ -103,8 +103,8 @@ export interface CanvasRenderingContext2D {
   ): void;
 
   /**
-   * The `beginPath()` method of the Canvas 2D API starts a new path by
-   * emptying the list of sub-paths. Call this method when you want to create
+   * The `beginPath()` function of the Canvas 2D API starts a new path by
+   * emptying the list of sub-paths. Call this function when you want to create
    * a new path.
    */
   beginPath(): void;
@@ -290,9 +290,9 @@ export interface CanvasRenderingContext2D {
    * current sub-path by connecting the sub-path's last point to the specified
    * `(x, y)` coordinates.
    *
-   * Like other methods that modify the current path, this method does not
+   * Like other functions that modify the current path, this function does not
    * directly render anything. To draw the path onto a canvas, you can use the
-   * [[fill]] or [[stroke]] methods.
+   * [[fill]] or [[stroke]] functions.
    *
    * @param x The x-axis coordinate of the line's end point.
    * @param y The y-axis coordinate of the line's end point.
@@ -300,7 +300,7 @@ export interface CanvasRenderingContext2D {
   lineTo(x: number, y: number): void;
 
   /**
-   * The `moveTo()` method of the Canvas 2D API begins a new sub-path at the
+   * The `moveTo()` function of the Canvas 2D API begins a new sub-path at the
    * point specified by the given `(x, y)` coordinates.
    *
    * @param x The x-axis (horizontal) coordinate of the point.
@@ -402,11 +402,14 @@ export interface CanvasRenderingContext2D {
   ): void;
 
   /**
-   * The CanvasRenderingContext2D.stroke() method of the Canvas 2D API strokes (outlines) the current or given path with the current stroke style.
+   * The `stroke()` function of the Canvas 2D API strokes (outlines) the
+   * current or given path with the current stroke style.
    *
-   * Strokes are aligned to the center of a path; in other words, half of the stroke is drawn on the inner side, and half on the outer side.
+   * Strokes are aligned to the center of a path; in other words, half of the
+   * stroke is drawn on the inner side, and half on the outer side.
    *
-   * The stroke is drawn using the non-zero winding rule, which means that path intersections will still get filled.
+   * The stroke is drawn using the non-zero winding rule, which means that path
+   * intersections will still get filled.
    *
    * :::caution
    *

@@ -31,6 +31,7 @@ import CanvasSaveRestore from './canvas/CanvasSaveRestore';
 import CanvasScale from './canvas/CanvasScale';
 import CanvasSetTransform from './canvas/CanvasSetTransform';
 import CanvasText from './canvas/CanvasText';
+import CanvasTextAlign from './canvas/CanvasTextAlign';
 import CanvasTranslate from './canvas/CanvasTranslate';
 import ImageScale from './canvas/ImageScale';
 import ToolboxContext, {useToolboxContext} from './ToolboxContext';
@@ -147,6 +148,12 @@ const tools: ToolSection = [
         title: 'Canvas Text',
         subtitle: 'Drawing text on canvas',
         component: CanvasText,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#textAlign',
+        subtitle: 'Drawing aligned text on canvas',
+        component: CanvasTextAlign,
       },
     ],
   },

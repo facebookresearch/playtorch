@@ -104,6 +104,15 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void setTextAlign(ReadableMap canvasRef, String textAlign) {
+    mMainHandler.post(
+        () -> {
+          CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
+          ctx.setTextAlign(textAlign);
+        });
+  }
+
+  @ReactMethod
   public void clear(ReadableMap canvasRef) {
     mMainHandler.post(
         () -> {

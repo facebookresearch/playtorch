@@ -149,6 +149,20 @@ public class CanvasRenderingContext2D {
     mTextFillPaint.setStrokeMiter(miterLimit);
   }
 
+  public void setTextAlign(final String textAlign) {
+    switch (textAlign) {
+      case "left":
+        mTextFillPaint.setTextAlign(Paint.Align.LEFT);
+        break;
+      case "center":
+        mTextFillPaint.setTextAlign(Paint.Align.CENTER);
+        break;
+      case "right":
+        mTextFillPaint.setTextAlign(Paint.Align.RIGHT);
+        break;
+    }
+  }
+
   public void clear() {
     mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
     mPath.reset();

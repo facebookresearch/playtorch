@@ -36,6 +36,13 @@ type LineCap = 'butt' | 'round' | 'square';
 type LineJoin = 'bevel' | 'round' | 'miter';
 
 /**
+ * * `"left"` The text is left-aligned.
+ * * `"right"` The text is right-aligned.
+ * * `"center"` The text is centered.
+ */
+type TextAlign = "left" | "right" | "center";
+
+/**
  * The Canvas 2D API provided by the React Native PyTorch Core canvas
  * **is going to** match the W3C specification of the
  * [`2dcontext`](https://www.w3.org/TR/2dcontext/)
@@ -151,6 +158,22 @@ export interface CanvasRenderingContext2D {
    * `color` A [`CSS <color>`](https://reactnative.dev/docs/colors#color-apis) value as string.
    */
   strokeStyle: string;
+
+  /**
+   * The `textAlign` property of the Canvas 2D API specifies the current text
+   * alignment used when drawing text.
+   *
+   * The alignment is relative to the `x` value of the [[fillText]] method. For
+   * example, if `textAlign` is `"center"`, then the text's left edge will be at
+   * `x - (textWidth / 2)`.
+   *
+   * **Options**
+   *
+   * * `"left"` The text is left-aligned.
+   * * `"right"` The text is right-aligned.
+   * * `"center"` The text is centered.
+   */
+  textAlign: TextAlign;
 
   /**
    * The `arc()` function of the Canvas 2D API adds a circular arc to the
@@ -618,6 +641,9 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
     },
     set strokeStyle(color: string) {
       CanvasRenderingContext2DModule.setStrokeStyle(ref, color);
+    },
+    set textAlign(value: TextAlign) {
+      CanvasRenderingContext2DModule.setTextAlign(ref, value);
     },
     arc(
       x: number,

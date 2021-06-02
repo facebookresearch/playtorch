@@ -9,7 +9,7 @@
 
 import * as React from 'react';
 import {useCallback} from 'react';
-import {NativeModules, requireNativeComponent, ViewProps} from 'react-native';
+import {NativeModules, processColor, requireNativeComponent, ViewProps} from 'react-native';
 import type {Image} from './ImageModule';
 import type {NativeJSRef} from './NativeJSRef';
 import * as CSSFontUtils from './utils/CSSFontUtils';
@@ -624,7 +624,11 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
         CanvasRenderingContext2DModule.setFont(ref, font);
       }
     },
-    set fillStyle(color: string) {
+    set fillStyle(value: string) {
+      const color = processColor(value);
+      if (color == null) {
+        throw new Error(`invalid color value ${value}`);
+      }
       CanvasRenderingContext2DModule.setFillStyle(ref, color);
     },
     set lineCap(value: LineCap) {
@@ -639,7 +643,11 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
     set miterLimit(value: number) {
       CanvasRenderingContext2DModule.setMiterLimit(ref, value);
     },
-    set strokeStyle(color: string) {
+    set strokeStyle(value: string) {
+      const color = processColor(value);
+      if (color == null) {
+        throw new Error(`invalid color value ${value}`);
+      }
       CanvasRenderingContext2DModule.setStrokeStyle(ref, color);
     },
     set textAlign(value: TextAlign) {

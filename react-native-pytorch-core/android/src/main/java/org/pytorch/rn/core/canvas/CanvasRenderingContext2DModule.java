@@ -7,7 +7,6 @@
 
 package org.pytorch.rn.core.canvas;
 
-import android.graphics.Color;
 import android.os.Handler;
 import androidx.annotation.NonNull;
 import com.facebook.react.bridge.Promise;
@@ -48,22 +47,20 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void setFillStyle(ReadableMap canvasRef, String color) {
+  public void setFillStyle(ReadableMap canvasRef, double color) {
     mMainHandler.post(
         () -> {
           CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
-          int intColor = Color.parseColor(color);
-          ctx.setFillStyle(intColor);
+          ctx.setFillStyle((int) color);
         });
   }
 
   @ReactMethod
-  public void setStrokeStyle(ReadableMap canvasRef, String color) {
+  public void setStrokeStyle(ReadableMap canvasRef, double color) {
     mMainHandler.post(
         () -> {
           CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
-          int intColor = Color.parseColor(color);
-          ctx.setStrokeStyle(intColor);
+          ctx.setStrokeStyle((int) color);
         });
   }
 

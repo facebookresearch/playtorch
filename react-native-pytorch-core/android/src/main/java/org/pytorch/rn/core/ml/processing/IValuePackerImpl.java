@@ -252,10 +252,7 @@ public class IValuePackerImpl implements IIValuePacker {
         if (!mSpecSrcJson.has(SPEC_KEY_VOCABULARY_GPT2)) {
           throw new IllegalStateException("Spec missing gpt2 vocabulary");
         }
-
-        final GPT2Tokenizer gpt2Tokenizer =
-            new GPT2Tokenizer(mSpecSrcJson.getJSONObject(SPEC_KEY_VOCABULARY_GPT2));
-        return gpt2Tokenizer.decode(tokenIds);
+        return getGPT2Tokenizer().decode(tokenIds);
     }
 
     throw new IllegalArgumentException("Unknown decoder \"" + decoder + "\"");
@@ -338,8 +335,7 @@ public class IValuePackerImpl implements IIValuePacker {
         throw new IllegalStateException("Spec missing gpt2 vocabulary");
       }
 
-      final GPT2Tokenizer gpt2Tokenizer = getGPT2Tokenizer();
-      final long[] tokenIds = gpt2Tokenizer.tokenize(jobject.getString("string"));
+      final long[] tokenIds = getGPT2Tokenizer().tokenize(jobject.getString("string"));
       return IValue.from(Tensor.fromBlob(tokenIds, new long[] {1, tokenIds.length}));
     }
 

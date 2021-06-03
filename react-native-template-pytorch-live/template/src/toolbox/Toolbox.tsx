@@ -18,7 +18,7 @@ import CameraFrameByFrame from './camera/CameraFrameByFrame';
 import CameraTakePicture from './camera/CameraTakePicture';
 import CanvasShapes from './canvas/CanvasShapes';
 import CanvasStarter from './canvas/CanvasStarter';
-import CanvasAnimation from './canvas/CanvasAnimation';
+import CanvasAnimator from './canvas/CanvasAnimator';
 import CanvasArcMatrix from './canvas/CanvasArcMatrix';
 import CanvasClosePath from './canvas/CanvasClosePath';
 import CanvasDrawImage from './canvas/CanvasDrawImage';
@@ -38,6 +38,7 @@ import CanvasArc from './apiTest/CanvasArc';
 import CanvasClearRect from './apiTest/CanvasClearRect';
 import CanvasFillRect from './apiTest/CanvasFillRect';
 import CanvasRect from './apiTest/CanvasRect';
+import CanvasAnimation from './apiTest/CanvasAnimation';
 import ToolboxContext, {useToolboxContext} from './ToolboxContext';
 import ToolboxList from './ToolboxList';
 
@@ -68,6 +69,12 @@ const tools: ToolSection = [
         title: 'Canvas Shapes',
         subtitle: 'Drawing shapes on a canvas',
         component: CanvasShapes,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas Animator',
+        subtitle: 'Animator test',
+        component: CanvasAnimator,
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
@@ -110,12 +117,6 @@ const tools: ToolSection = [
         title: 'Canvas#drawImage',
         subtitle: 'Drawing images on a canvas',
         component: CanvasDrawImage,
-      },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas Animation',
-        subtitle: 'Animate drawings on canvas',
-        component: CanvasAnimation,
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
@@ -212,6 +213,12 @@ const tools: ToolSection = [
         title: 'Canvas#arc',
         subtitle: 'Drawing arc/circles on a canvas',
         component: CanvasArc,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas Animation',
+        subtitle: 'Animate drawings on canvas',
+        component: CanvasAnimation,
       },
     ],
   },

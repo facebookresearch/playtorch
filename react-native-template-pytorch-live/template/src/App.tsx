@@ -40,10 +40,12 @@ type ModelPreloaderWrapperProps = {
  * platform.
  */
 function ModelPreloaderWrapper({children}: ModelPreloaderWrapperProps) {
-  if (Platform.OS !== 'android') {
-    <ModelPreloader modelInfos={Models} loadAsync={true}>
-      {children}
-    </ModelPreloader>;
+  if (Platform.OS === 'android') {
+    return (
+      <ModelPreloader modelInfos={Models} loadAsync={true}>
+        {children}
+      </ModelPreloader>
+    );
   }
   return <>{children}</>;
 }

@@ -14,11 +14,14 @@ import {
 import * as React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
+
 import CameraFrameByFrame from './camera/CameraFrameByFrame';
 import CameraTakePicture from './camera/CameraTakePicture';
+
 import CanvasShapes from './canvas/CanvasShapes';
 import CanvasStarter from './canvas/CanvasStarter';
 import CanvasAnimator from './canvas/CanvasAnimator';
+import CanvasTransform from './canvas/CanvasTransform';
 import CanvasArcMatrix from './canvas/CanvasArcMatrix';
 import CanvasClosePath from './canvas/CanvasClosePath';
 import CanvasDrawImage from './canvas/CanvasDrawImage';
@@ -26,19 +29,21 @@ import CanvasLineCap from './canvas/CanvasLineCap';
 import CanvasLineJoin from './canvas/CanvasLineJoin';
 import CanvasMiterLimit from './canvas/CanvasMiterLimit';
 import CanvasMoveTo from './canvas/CanvasMoveTo';
-import CanvasRotate from './canvas/CanvasRotate';
-import CanvasSaveRestore from './canvas/CanvasSaveRestore';
-import CanvasScale from './canvas/CanvasScale';
-import CanvasSetTransform from './canvas/CanvasSetTransform';
 import CanvasText from './canvas/CanvasText';
 import CanvasTextAlign from './canvas/CanvasTextAlign';
-import CanvasTranslate from './canvas/CanvasTranslate';
 import ImageScale from './canvas/ImageScale';
+
 import CanvasArc from './apiTest/CanvasArc';
 import CanvasClearRect from './apiTest/CanvasClearRect';
 import CanvasFillRect from './apiTest/CanvasFillRect';
 import CanvasRect from './apiTest/CanvasRect';
 import CanvasAnimation from './apiTest/CanvasAnimation';
+import CanvasRotate from './apiTest/CanvasRotate';
+import CanvasSaveRestore from './apiTest/CanvasSaveRestore';
+import CanvasSetTransform from './apiTest/CanvasSetTransform';
+import CanvasScale from './apiTest/CanvasScale';
+import CanvasTranslate from './apiTest/CanvasTranslate';
+
 import ToolboxContext, {useToolboxContext} from './ToolboxContext';
 import ToolboxList from './ToolboxList';
 
@@ -75,6 +80,12 @@ const tools: ToolSection = [
         title: 'Canvas Animator',
         subtitle: 'Animator test',
         component: CanvasAnimator,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas Transform',
+        subtitle: 'Affine transforms like scale, rotate, and skew',
+        component: CanvasTransform,
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
@@ -117,36 +128,6 @@ const tools: ToolSection = [
         title: 'Canvas#drawImage',
         subtitle: 'Drawing images on a canvas',
         component: CanvasDrawImage,
-      },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas Save and Restore',
-        subtitle: 'Save, draw, and restore context',
-        component: CanvasSaveRestore,
-      },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas Set Transform',
-        subtitle: 'Draw with transform',
-        component: CanvasSetTransform,
-      },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas Scale',
-        subtitle: 'Drawing with scale on canvas',
-        component: CanvasScale,
-      },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas Rotate',
-        subtitle: 'Drawing with rotate on canvas',
-        component: CanvasRotate,
-      },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas Translate',
-        subtitle: 'Drawing with translate on canvas',
-        component: CanvasTranslate,
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
@@ -219,6 +200,36 @@ const tools: ToolSection = [
         title: 'Canvas Animation',
         subtitle: 'Animate drawings on canvas',
         component: CanvasAnimation,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas Save and Restore',
+        subtitle: 'Save, draw, and restore context',
+        component: CanvasSaveRestore,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas Set Transform',
+        subtitle: 'Draw with transform',
+        component: CanvasSetTransform,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas Scale',
+        subtitle: 'Drawing with scale on canvas',
+        component: CanvasScale,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas Rotate',
+        subtitle: 'Drawing with rotate on canvas',
+        component: CanvasRotate,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas Translate',
+        subtitle: 'Drawing with translate on canvas',
+        component: CanvasTranslate,
       },
     ],
   },

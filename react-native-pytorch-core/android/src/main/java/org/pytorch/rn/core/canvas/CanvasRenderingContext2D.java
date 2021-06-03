@@ -20,6 +20,7 @@ import android.graphics.Typeface;
 import android.text.TextPaint;
 import android.util.DisplayMetrics;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.uimanager.ReactInvalidPropertyException;
 import java.util.Stack;
 
 public class CanvasRenderingContext2D {
@@ -104,7 +105,7 @@ public class CanvasRenderingContext2D {
     mTextFillPaint.setStrokeWidth(strokeWidth);
   }
 
-  public void setLineCap(String lineCap) {
+  public void setLineCap(String lineCap) throws ReactInvalidPropertyException {
     Paint.Cap cap = null;
     switch (lineCap) {
       case "butt":
@@ -116,12 +117,12 @@ public class CanvasRenderingContext2D {
       case "square":
         cap = Paint.Cap.SQUARE;
         break;
+      default:
+        throw new ReactInvalidPropertyException("lineCap", lineCap, "butt | round | square");
     }
 
-    if (cap != null) {
-      mStrokePaint.setStrokeCap(cap);
-      mTextFillPaint.setStrokeCap(cap);
-    }
+    mStrokePaint.setStrokeCap(cap);
+    mTextFillPaint.setStrokeCap(cap);
   }
 
   public void setLineJoin(String lineJoin) {
@@ -136,12 +137,12 @@ public class CanvasRenderingContext2D {
       case "miter":
         join = Paint.Join.MITER;
         break;
+      default:
+        throw new ReactInvalidPropertyException("lineJoin", lineJoin, "bevel | round | miter");
     }
 
-    if (join != null) {
-      mStrokePaint.setStrokeJoin(join);
-      mTextFillPaint.setStrokeJoin(join);
-    }
+    mStrokePaint.setStrokeJoin(join);
+    mTextFillPaint.setStrokeJoin(join);
   }
 
   public void setMiterLimit(final float miterLimit) {
@@ -160,6 +161,8 @@ public class CanvasRenderingContext2D {
       case "right":
         mTextFillPaint.setTextAlign(Paint.Align.RIGHT);
         break;
+      default:
+        throw new ReactInvalidPropertyException("textAlign", textAlign, "left | center | right");
     }
   }
 

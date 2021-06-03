@@ -14,6 +14,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.uimanager.ReactInvalidPropertyException;
 import org.pytorch.rn.core.image.IImage;
 import org.pytorch.rn.core.javascript.JSContext;
 
@@ -74,25 +75,34 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void setLineCap(ReadableMap canvasRef, String lineCap) {
+  public void setLineCap(final ReadableMap canvasRef, final String lineCap, final Promise promise) {
     mMainHandler.post(
         () -> {
           CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
-          ctx.setLineCap(lineCap);
+          try {
+            ctx.setLineCap(lineCap);
+          } catch (ReactInvalidPropertyException e) {
+            promise.reject(e);
+          }
         });
   }
 
   @ReactMethod
-  public void setLineJoin(ReadableMap canvasRef, String lineJoin) {
+  public void setLineJoin(
+      final ReadableMap canvasRef, final String lineJoin, final Promise promise) {
     mMainHandler.post(
         () -> {
           CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
-          ctx.setLineJoin(lineJoin);
+          try {
+            ctx.setLineJoin(lineJoin);
+          } catch (ReactInvalidPropertyException e) {
+            promise.reject(e);
+          }
         });
   }
 
   @ReactMethod
-  public void setMiterLimit(ReadableMap canvasRef, double miterLimit) {
+  public void setMiterLimit(final ReadableMap canvasRef, final double miterLimit) {
     mMainHandler.post(
         () -> {
           CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
@@ -101,11 +111,15 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void setTextAlign(ReadableMap canvasRef, String textAlign) {
+  public void setTextAlign(ReadableMap canvasRef, String textAlign, final Promise promise) {
     mMainHandler.post(
         () -> {
           CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
-          ctx.setTextAlign(textAlign);
+          try {
+            ctx.setTextAlign(textAlign);
+          } catch (ReactInvalidPropertyException e) {
+            promise.reject(e);
+          }
         });
   }
 

@@ -22,6 +22,7 @@ import CanvasShapes from './canvas/CanvasShapes';
 import CanvasStarter from './canvas/CanvasStarter';
 import CanvasAnimator from './canvas/CanvasAnimator';
 import CanvasTransform from './canvas/CanvasTransform';
+import Images from './canvas/Images';
 import CanvasArcMatrix from './canvas/CanvasArcMatrix';
 import CanvasClosePath from './canvas/CanvasClosePath';
 import CanvasDrawImage from './canvas/CanvasDrawImage';
@@ -31,7 +32,7 @@ import CanvasMiterLimit from './canvas/CanvasMiterLimit';
 import CanvasMoveTo from './canvas/CanvasMoveTo';
 import CanvasText from './canvas/CanvasText';
 import CanvasTextAlign from './canvas/CanvasTextAlign';
-import ImageScale from './canvas/ImageScale';
+import ImageScale from './apiTest/ImageScale';
 
 import CanvasArc from './apiTest/CanvasArc';
 import CanvasClearRect from './apiTest/CanvasClearRect';
@@ -149,9 +150,9 @@ const tools: ToolSection = [
     data: [
       {
         icon: <Icon name="image-outline" size={32} color="tomato" />,
-        title: 'Image Scale',
-        subtitle: 'Scaling images',
-        component: ImageScale,
+        title: 'Images',
+        subtitle: 'Different ways to display images',
+        component: Images,
       },
       {
         icon: <Icon name="videocam-outline" size={32} color="tomato" />,
@@ -230,6 +231,12 @@ const tools: ToolSection = [
         title: 'Canvas Translate',
         subtitle: 'Drawing with translate on canvas',
         component: CanvasTranslate,
+      },
+      {
+        icon: <Icon name="image-outline" size={32} color="tomato" />,
+        title: 'Image Scale',
+        subtitle: 'Scaling images',
+        component: ImageScale,
       },
     ],
   },

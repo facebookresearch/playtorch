@@ -351,7 +351,7 @@ public class IValuePackerImpl implements IIValuePacker {
     final int len = jarray.length();
     float[] array = new float[jarray.length()];
     for (int i = 0; i < len; ++i) {
-      array[i] = jarray.getLong(i);
+      array[i] = (float) jarray.getDouble(i);
     }
     return array;
   }

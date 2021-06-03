@@ -25,8 +25,5 @@ for name, model in models.items():
     spec = Path(f"{name}.pt.live.spec.json").read_text()
     extra_files = {}
     extra_files["model/live.spec.json"] = spec
-    script_model_opt._save_for_lite_interpreter(f"{name}.pt")
-    script_model_opt._save_for_lite_interpreter(
-        f"{name}_with_spec.pt", _extra_files=extra_files
-    )
+    script_model_opt._save_for_lite_interpreter(f"{name}.pt", _extra_files=extra_files)
     print(f"Model {name} successfully exported")

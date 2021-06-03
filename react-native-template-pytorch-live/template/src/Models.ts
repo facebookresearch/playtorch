@@ -12,16 +12,12 @@ export type ModelInfo = {
   model: number;
 };
 
+// Example for how to export a model with the live.spec.json bundled as extra files
+// Google Colab: https://colab.research.google.com/drive/1vGlRddixmdJvyJ0kTl3uYXuXZ8Q2Ir4C
 export const Models: ModelInfo[] = [
   {
     name: 'ResNet 18',
     model: require('../models/resnet18.pt'),
-  },
-  // Example for how to export a model with the live.spec.json bundled as extra files
-  // Google Colab: https://colab.research.google.com/drive/1vGlRddixmdJvyJ0kTl3uYXuXZ8Q2Ir4C
-  {
-    name: 'ResNet 18 (with spec)',
-    model: require('../models/resnet18_with_spec.pt'),
   },
   {
     name: 'MobileNet V3 Small',

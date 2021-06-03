@@ -16,18 +16,16 @@ import {ScrollView, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/Ionicons';
 import CameraFrameByFrame from './camera/CameraFrameByFrame';
 import CameraTakePicture from './camera/CameraTakePicture';
+import CanvasShapes from './canvas/CanvasShapes';
+import CanvasStarter from './canvas/CanvasStarter';
 import CanvasAnimation from './canvas/CanvasAnimation';
-import CanvasArc from './canvas/CanvasArc';
 import CanvasArcMatrix from './canvas/CanvasArcMatrix';
-import CanvasClearRect from './canvas/CanvasClearRect';
 import CanvasClosePath from './canvas/CanvasClosePath';
 import CanvasDrawImage from './canvas/CanvasDrawImage';
-import CanvasFillRect from './canvas/CanvasFillRect';
 import CanvasLineCap from './canvas/CanvasLineCap';
 import CanvasLineJoin from './canvas/CanvasLineJoin';
 import CanvasMiterLimit from './canvas/CanvasMiterLimit';
 import CanvasMoveTo from './canvas/CanvasMoveTo';
-import CanvasRect from './canvas/CanvasRect';
 import CanvasRotate from './canvas/CanvasRotate';
 import CanvasSaveRestore from './canvas/CanvasSaveRestore';
 import CanvasScale from './canvas/CanvasScale';
@@ -36,6 +34,10 @@ import CanvasText from './canvas/CanvasText';
 import CanvasTextAlign from './canvas/CanvasTextAlign';
 import CanvasTranslate from './canvas/CanvasTranslate';
 import ImageScale from './canvas/ImageScale';
+import CanvasArc from './apiTest/CanvasArc';
+import CanvasClearRect from './apiTest/CanvasClearRect';
+import CanvasFillRect from './apiTest/CanvasFillRect';
+import CanvasRect from './apiTest/CanvasRect';
 import ToolboxContext, {useToolboxContext} from './ToolboxContext';
 import ToolboxList from './ToolboxList';
 
@@ -57,33 +59,21 @@ const tools: ToolSection = [
     data: [
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas#rect',
-        subtitle: 'Drawing rect on a canvas',
-        component: CanvasRect,
+        title: 'Canvas Starter',
+        subtitle: 'This template helps you start with canvas drawing quickly',
+        component: CanvasStarter,
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas#fillRect',
-        subtitle: 'Drawing filled rect on a canvas',
-        component: CanvasFillRect,
-      },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas#clearRect',
-        subtitle: 'Clear rect on a canvas',
-        component: CanvasClearRect,
+        title: 'Canvas Shapes',
+        subtitle: 'Drawing shapes on a canvas',
+        component: CanvasShapes,
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
         title: 'Canvas#closePath',
         subtitle: 'Close path on a canvas',
         component: CanvasClosePath,
-      },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas#arc',
-        subtitle: 'Drawing arc/circles on a canvas',
-        component: CanvasArc,
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
@@ -192,6 +182,36 @@ const tools: ToolSection = [
         title: 'Camera Take Picture',
         subtitle: 'Take picture processing',
         component: CameraTakePicture,
+      },
+    ],
+  },
+
+  {
+    title: 'API Test',
+    data: [
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#rect',
+        subtitle: 'Drawing rect on a canvas',
+        component: CanvasRect,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#fillRect',
+        subtitle: 'Drawing filled rect on a canvas',
+        component: CanvasFillRect,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#clearRect',
+        subtitle: 'Clear rect on a canvas',
+        component: CanvasClearRect,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#arc',
+        subtitle: 'Drawing arc/circles on a canvas',
+        component: CanvasArc,
       },
     ],
   },

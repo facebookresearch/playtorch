@@ -7,23 +7,24 @@
  * @format
  */
 
+import {
+  CardStyleInterpolators,
+  createStackNavigator,
+} from '@react-navigation/stack';
 import * as React from 'react';
 import {
-  Text,
-  StyleSheet,
-  View,
   Image,
-  TouchableOpacity,
   SectionList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
-import {
-  createStackNavigator,
-  CardStyleInterpolators,
-} from '@react-navigation/stack';
-import CanvasExample from './CanvasExample';
-import CameraExample from './CameraExample';
-import PhotosExample from './PhotosExample';
 import AstroBirdExample from './AstroBirdExample';
+import CameraExample from './CameraExample';
+import CanvasExample from './CanvasExample';
+import NLPExample from './NLPQAExample';
+import PhotosExample from './PhotosExample';
 
 const contents = [
   {
@@ -31,7 +32,7 @@ const contents = [
     data: [
       {
         name: 'Photo example',
-        info: 'Identify animals in a example',
+        info: 'Identify animals in an example',
         component: 'PhotosExample',
         img: require('../../assets/images/wnn_photo1_fpo.jpg'),
       },
@@ -40,6 +41,17 @@ const contents = [
         info: 'Identify objects in the camera',
         component: 'CameraExample',
         img: require('../../assets/images/wnn_photo2_fpo.jpg'),
+      },
+    ],
+  },
+  {
+    title: 'NLP',
+    data: [
+      {
+        name: 'QA example',
+        info: 'Question answering using Bert',
+        component: 'NLPExample',
+        img: require('../../assets/images/wnn_photo1_fpo.jpg'),
       },
     ],
   },
@@ -68,8 +80,8 @@ const contents = [
 ];
 
 type ExampleProp = {
-  item: {name: string, info: string, component: string, img: any},
-  onSelect: (name: string) => {},
+  item: {name: string; info: string; component: string; img: any};
+  onSelect: (name: string) => {};
 };
 
 const ExampleCard = ({item, onSelect}: ExampleProp) => {
@@ -130,6 +142,7 @@ export default function Examples() {
       />
       <Stack.Screen name="PhotosExample" component={PhotosExample} />
       <Stack.Screen name="CameraExample" component={CameraExample} />
+      <Stack.Screen name="NLPExample" component={NLPExample} />
       <Stack.Screen name="CanvasExample" component={CanvasExample} />
       <Stack.Screen name="AstroBirdExample" component={AstroBirdExample} />
     </Stack.Navigator>

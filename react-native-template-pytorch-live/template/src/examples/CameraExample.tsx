@@ -13,13 +13,15 @@ import {useCallback, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {Camera, Image} from 'react-native-pytorch-core';
 import ImageClass from '../components/ImageClass';
-import {ModelInfo, Models} from '../Models';
+import {ModelInfo, ImageClassificationModels} from '../Models';
 import ModelSelector from '../components/ModelSelector';
 import useImageModelInference from '../useImageModelInference';
 
 export default function CameraExample() {
   const isFocused = useIsFocused();
-  const [activeModelInfo, setActiveModelInfo] = useState<ModelInfo>(Models[0]);
+  const [activeModelInfo, setActiveModelInfo] = useState<ModelInfo>(
+    ImageClassificationModels[0],
+  );
   const {imageClass, inferenceTime, processImage} = useImageModelInference(
     activeModelInfo,
   );
@@ -52,7 +54,7 @@ export default function CameraExample() {
       )}
       <ModelSelector
         style={styles.actions}
-        modelInfos={Models}
+        modelInfos={ImageClassificationModels}
         defaultModelInfo={activeModelInfo}
         onSelectModelInfo={setActiveModelInfo}
       />

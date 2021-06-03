@@ -21,7 +21,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ModelPreloader from './components/ModelPreloader';
 import Demos from './demos/MyDemos';
 import Examples from './examples/Examples';
-import {Models} from './Models';
+import {ImageClassificationModels} from './Models';
 import Toolbox from './toolbox/Toolbox';
 
 // Before rendering any navigation stack
@@ -42,7 +42,7 @@ type ModelPreloaderWrapperProps = {
 function ModelPreloaderWrapper({children}: ModelPreloaderWrapperProps) {
   if (Platform.OS === 'android') {
     return (
-      <ModelPreloader modelInfos={Models} loadAsync={true}>
+      <ModelPreloader modelInfos={ImageClassificationModels} loadAsync={true}>
         {children}
       </ModelPreloader>
     );

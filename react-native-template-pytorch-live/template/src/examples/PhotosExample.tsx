@@ -12,13 +12,15 @@ import {useState, useCallback} from 'react';
 import {StyleSheet} from 'react-native';
 import {ImageUtil} from 'react-native-pytorch-core';
 import ImageClass from '../components/ImageClass';
-import {ModelInfo, Models} from '../Models';
+import {ModelInfo, ImageClassificationModels} from '../Models';
 import ModelSelector from '../components/ModelSelector';
 import PredefinedImageList from '../components/PredefinedImageList';
 import useImageModelInference from '../useImageModelInference';
 
 export default function PhotosExample() {
-  const [activeModelInfo, setActiveModelInfo] = useState<ModelInfo>(Models[0]);
+  const [activeModelInfo, setActiveModelInfo] = useState<ModelInfo>(
+    ImageClassificationModels[0],
+  );
   const {imageClass, inferenceTime, processImage} = useImageModelInference(
     activeModelInfo,
   );
@@ -38,7 +40,7 @@ export default function PhotosExample() {
       <PredefinedImageList onSelectImage={handleImageURL} />
       <ModelSelector
         style={styles.actions}
-        modelInfos={Models}
+        modelInfos={ImageClassificationModels}
         defaultModelInfo={activeModelInfo}
         onSelectModelInfo={setActiveModelInfo}
       />

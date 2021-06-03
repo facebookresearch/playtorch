@@ -14,7 +14,7 @@ export type ModelInfo = {
 
 // Example for how to export a model with the live.spec.json bundled as extra files
 // Google Colab: https://colab.research.google.com/drive/1vGlRddixmdJvyJ0kTl3uYXuXZ8Q2Ir4C
-export const Models: ModelInfo[] = [
+export const ImageClassificationModels: ModelInfo[] = [
   {
     name: 'ResNet 18',
     model: require('../models/resnet18.pt'),
@@ -26,5 +26,12 @@ export const Models: ModelInfo[] = [
   {
     name: 'MobileNet V3 Large',
     model: require('../models/mobilenet_v3_large.pt'),
+  },
+];
+
+export const NLPModels: ModelInfo[] = [
+  {
+    name: 'DistilBertQA',
+    model: require('../models/bert_qa.pt'),
   },
 ];

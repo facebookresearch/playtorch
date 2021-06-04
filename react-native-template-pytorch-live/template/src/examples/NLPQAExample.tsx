@@ -12,7 +12,7 @@ import {useState} from 'react';
 import {
   View,
   TextInput,
-  Button,
+  TouchableOpacity,
   StyleSheet,
   Text,
   ActivityIndicator,
@@ -41,35 +41,49 @@ export default function NLPExample() {
   return (
     <ModelPreloader modelInfos={NLPModels} loadAsync={true}>
       <ScrollView style={styles.container}>
-        <Text style={styles.label}>Text</Text>
-        <TextInput
-          style={styles.textInput}
-          onChangeText={text => setText(text)}
-          multiline={true}
-          placeholder="Text"
-          value={text}
-        />
-        <Text style={styles.label}>Question</Text>
-        <TextInput
-          style={styles.textInput}
-          onChangeText={question => setQuestion(question)}
-          multiline={true}
-          placeholder="Question"
-          value={question}
-        />
-        <Text style={styles.label}>Answer</Text>
-        <Text style={styles.answer}>
-          {isProcessing && <ActivityIndicator size="small" color="tomato" />}
-          {answer}
-        </Text>
-        <Text style={styles.label}>Inference time: {inferenceTime}</Text>
-        <View style={styles.answerButton}>
-          <Button
-            title="Answer Me"
-            color="tomato"
-            disabled={isProcessing}
-            onPress={() => processQA(text, question)}
+        <View style={[styles.row]}>
+          <Text style={styles.label}>Text</Text>
+          <TextInput
+            style={styles.textArea}
+            onChangeText={text => setText(text)}
+            multiline={true}
+            placeholder="Text"
+            autoCorrect={false}
+            value={text}
           />
+        </View>
+        <View style={styles.row}>
+          <Text style={styles.label}>Question</Text>
+          <View style={styles.askBox}>
+            <TextInput
+              style={styles.askInput}
+              onChangeText={question => setQuestion(question)}
+              placeholder="Ask a question..."
+              autoCorrect={false}
+              value={question}
+            />
+
+            <TouchableOpacity
+              disabled={isProcessing}
+              onPress={() => processQA(text, question)}>
+              <View style={styles.askButton}>
+                <Text style={styles.askButtonText}>Ask</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
+        </View>
+        <View
+          style={[styles.row, answer || isProcessing ? {} : styles.rowHidden]}>
+          <Text style={styles.label}>Answer</Text>
+          <Text style={styles.answer}>
+            {isProcessing && <ActivityIndicator size="small" color="tomato" />}
+            {answer}
+          </Text>
+          <Text style={styles.smallLabel}>
+            {answer && !isProcessing
+              ? `Inference time: ${inferenceTime}ms`
+              : ''}
+          </Text>
         </View>
       </ScrollView>
     </ModelPreloader>
@@ -79,27 +93,73 @@ export default function NLPExample() {
 const styles = StyleSheet.create({
   container: {
     padding: 10,
+    backgroundColor: '#ffe9e6',
   },
-  textInput: {
-    borderColor: 'gray',
-    borderRadius: 5,
-    borderWidth: 1,
-    color: 'black',
-    margin: 5,
-    padding: 5,
+  row: {
+    padding: 15,
+    flexDirection: 'column',
+    alignItems: 'flex-start',
   },
-  answer: {
-    borderColor: 'gray',
-    borderRadius: 5,
-    borderWidth: 1,
-    margin: 5,
-    padding: 5,
+  rowHidden: {
+    opacity: 0,
   },
   label: {
+    color: '#334455',
     fontWeight: 'bold',
-    marginLeft: 5,
+    fontSize: 14,
+    marginBottom: 5,
   },
-  answerButton: {
+  textArea: {
+    color: '#112233',
+    borderWidth: 1,
+    borderColor: '#ff4c2c33',
+    flex: 1,
+    padding: 20,
+    backgroundColor: '#ffffff',
+    fontSize: 16,
+    borderRadius: 25,
+  },
+  askInput: {
+    color: '#112233',
+    borderWidth: 0,
+    flex: 1,
+    height: 40,
+    marginLeft: 10,
+    fontSize: 16,
+  },
+  askBox: {
+    flex: 1,
+    flexDirection: 'row',
+    borderWidth: 1,
+    borderColor: '#ff4c2c33',
+    height: 50,
     padding: 5,
+    backgroundColor: '#ffffff',
+    fontSize: 16,
+    marginRight: 5,
+    borderRadius: 25,
+    alignItems: 'center',
+  },
+  askButton: {
+    width: 60,
+    height: 40,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#ff4c2c',
+  },
+  askButtonText: {
+    color: '#ffffff',
+    fontSize: 14,
+    fontWeight: 'bold',
+    marginBottom: 2,
+  },
+  answer: {
+    fontSize: 16,
+    color: '#ff4c2c',
+  },
+  smallLabel: {
+    fontSize: 12,
+    color: '#667788',
   },
 });

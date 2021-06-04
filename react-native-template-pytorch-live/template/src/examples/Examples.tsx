@@ -51,7 +51,7 @@ const contents = [
         name: 'QA example',
         info: 'Question answering using Bert',
         component: 'NLPExample',
-        img: require('../../assets/images/wnn_photo1_fpo.jpg'),
+        img: require('../../assets/images/nlp_screenshot.jpg'),
       },
     ],
   },
@@ -190,8 +190,9 @@ const styles = StyleSheet.create({
   },
   thumb_image: {
     flex: 1,
-    width: undefined,
-    height: undefined,
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
   },
   label: {
     padding: 20,

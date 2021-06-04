@@ -11,7 +11,7 @@
 module.exports = {
   title: 'PyTorch Live',
   tagline: 'Build mobile AI experiences in just a few minutes',
-  url: 'https://your-docusaurus-test-site.com',
+  url: 'https://facebookexperimental.github.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',

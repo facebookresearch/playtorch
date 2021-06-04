@@ -1,8 +1,9 @@
 ---
+id: install-cli
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# Install CLI
 
 Let's set up the build environment (~20 minutes), and then discover your **first mobile AI app in less than 5 minutes**.
 

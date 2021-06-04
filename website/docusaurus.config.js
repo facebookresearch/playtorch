@@ -32,7 +32,7 @@ module.exports = {
       items: [
         {
           type: 'doc',
-          docId: 'introduction',
+          docId: 'tutorials/install-cli',
           position: 'left',
           label: 'Tutorial',
         },
@@ -58,7 +58,7 @@ module.exports = {
           items: [
             {
               label: 'Tutorial',
-              to: '/docs/introduction',
+              to: '/docs/tutorials/image-classification',
             },
           ],
         },

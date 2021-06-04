@@ -19,6 +19,10 @@
  */
 
 module.exports = {
-  docs: ['tutorials/install-cli', 'tutorials/image-classification'],
+  docs: [
+    'tutorials/install-cli',
+    'tutorials/image-classification',
+    'tutorials/prepare-custom-model',
+  ],
   api: ['cli'],
 };

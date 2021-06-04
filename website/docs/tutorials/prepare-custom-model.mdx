@@ -1,0 +1,150 @@
+---
+id: prepare-custom-model
+sidebar_position: 3
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+# Prepare Custom Model
+
+PyTorch Live works with high-level data types such as images and strings. To run inference, these high-level data types need to be transformed into tensors and the model output needs to be transformed into high-level data types. Transforming a high-level data type into a tensor is called `pack` and transforming a tensor into a high-level data type is called `unpack`.
+
+Each model will have a `pack` and an `unpack`. Both are specified in the PyTorch Live Spec (or Live Spec for short). The Live Spec has to be bundled with the model `pt` file as `extra_files`.
+
+This section will guide you step-by-step for how to bundle the Live Spec with `pack` and `unpack` for a classification model, more specifically the MobileNet V3 (small) model.
+
+We can do this bundling step from anywhere in our filesystem that has access to python, but we'll do it in `<PYTORCH_LIVE_PROJECT>/models` so the bundled model is in place and ready to go when we're done.
+
+## Create Live Spec
+
+Create a `live.spec.json` file and insert the following definition.
+
+```json title=live.spec.json
+{
+  "pack": {
+    "type": "tensor_from_image",
+    "image": "image",
+    "transforms": [
+      {
+        "type": "image_to_image",
+        "name": "center_crop",
+        "width": "$cropWidth",
+        "height": "$cropHeight"
+      },
+      {
+        "type": "image_to_image",
+        "name": "scale",
+        "width": "$scaleWidth",
+        "height": "$scaleHeight"
+      },
+      {
+        "type": "image_to_tensor",
+        "name": "rgb_norm",
+        "mean": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "std": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    ]
+  },
+  "unpack": {
+    "type": "tensor",
+    "dtype": "float",
+    "key": "scores"
+  }
+}
+```
+
+## Bundle Live Spec with Model
+
+Next is to download and bundle the Live Spec with the MobileNet V3 model using a Python script.
+
+### Set up Python virtual environment
+
+It is recommended to run the Pyhton script in a virtual environment. Python offers a command to create a virtual environment with the following command.
+
+```shell
+python3 -m venv ~/.torchlive/venv
+source ~/.torchlive/venv/bin/activate
+```
+
+### Install `torch` and `torchvision` dependencies.
+
+The Python script requires `torch` and `torchvision`. Use the Python package manager (`pip`) to install both dependencies.
+
+
+<Tabs
+  defaultValue="venv"
+  values={[
+    {label: 'Virtual Environment', value: 'venv'},
+    {label: 'No Virtual Environment', value: 'no-venv'},
+  ]}>
+  <TabItem value="venv">
+
+  ```shell
+  pip install torch torchvision
+  ```
+
+  </TabItem>
+  <TabItem value="no-venv">
+
+  ```shell
+  pip3 install torch torchvision
+  ```
+
+  </TabItem>
+</Tabs>
+
+
+The following script will download the MobileNet V3 model from the PyTorch Hub, optimize it for mobile use, and bundle the Live Spec as extra file with the `pt` file.
+
+```py title=make_model.py
+from pathlib import Path
+
+import torch
+import torchvision
+from torch.utils.mobile_optimizer import optimize_for_mobile
+
+model = torchvision.models.mobilenet_v3_small(pretrained=True)
+model.eval()
+
+script_model = torch.jit.script(model)
+script_model_opt = optimize_for_mobile(script_model)
+spec = Path("live.spec.json").read_text()
+extra_files = {}
+extra_files["model/live.spec.json"] = spec
+script_model_opt._save_for_lite_interpreter("mobilenet_v3_small.pt", _extra_files=extra_files)
+```
+
+Run Python script to create `mobilenet_v3_small.pt`.
+
+<Tabs
+  defaultValue="venv"
+  values={[
+    {label: 'Virtual Environment', value: 'venv'},
+    {label: 'No Virtual Environment', value: 'no-venv'},
+  ]}>
+  <TabItem value="venv">
+
+  ```shell
+  python make_model.py
+  ```
+
+  </TabItem>
+  <TabItem value="no-venv">
+
+  ```shell
+  python3 make_model.py
+  ```
+
+  </TabItem>
+</Tabs>
+
+If you haven't run the commands in the `<PYTORCH_LIVE_PROJECT>/models` directory, copy the `mobilenet_v3_small.pt` file to the `<PYTORCH_LIVE_PROJECT>/models` directory.

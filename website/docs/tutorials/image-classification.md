@@ -196,6 +196,8 @@ Click on camera capture button and check logged output in terminal.
 
 Fantastic! Now use the `useImageModelInference` hook to run inference on a captured image. The hook provides a `processImage` function and an `imageClass`. Replace the `console.log` with the `processImage` function and pass in the image object. When the inference finishes, the component re-renders with the top class as label.
 
+It will use the `mobilenet_v3_small.pt` model that is already prepared for PyTorch Live. You can follow the [Prepare Custom Model](prepare-custom-model) tutorial to prepare your own classification model and use this model instead for image classification.
+
 ```tsx {4-5,7-10,14,17,24} title="./src/demos/ImageClassificationDemo.tsx"
 import * as React from 'react';
 import {Text, StyleSheet, View} from 'react-native';

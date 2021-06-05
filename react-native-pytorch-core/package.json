@@ -27,7 +27,8 @@
     "lint": "eslint \"**/*.{js,ts,tsx}\"",
     "prepare": "bob build",
     "release": "release-it",
-    "bootstrap": "yarn"
+    "bootstrap": "yarn",
+    "doc": "typedoc --plugin typedoc-plugin-markdown src/index.tsx"
   },
   "keywords": [
     "react-native",
@@ -56,7 +57,7 @@
     "react-native": "0.64.0",
     "react-native-builder-bob": "^0.18.1",
     "release-it": "^14.2.2",
-    "typescript": "^3.8.3"
+    "typescript": "4.2.4"
   },
   "peerDependencies": {
     "react": "*",

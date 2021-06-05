@@ -1,4 +1,5 @@
 
 {
-  "extends": "./tsconfig"
+  "extends": "./tsconfig",
+  "exclude": ["example"]
 }

@@ -5,13 +5,14 @@
   "scripts": {
     "docusaurus": "docusaurus",
     "start": "docusaurus start",
-    "build": "docusaurus build",
+    "build": "yarn install:pytorch-core-deps && docusaurus build",
     "swizzle": "docusaurus swizzle",
     "deploy": "docusaurus deploy",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",
-    "write-heading-ids": "docusaurus write-heading-ids"
+    "write-heading-ids": "docusaurus write-heading-ids",
+    "install:pytorch-core-deps": "(cd ../react-native-pytorch-core && yarn install)"
   },
   "dependencies": {
     "@docusaurus/core": "2.0.0-beta.0",
@@ -24,6 +25,8 @@
     "file-loader": "^6.2.0",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
+    "rehype-katex": "^5.0.0",
+    "remark-math": "3",
     "url-loader": "^4.1.1"
   },
   "browserslist": {
@@ -37,5 +40,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "docusaurus-plugin-typedoc": "^0.14.1",
+    "typedoc": "^0.20.36",
+    "typedoc-plugin-markdown": "^3.9.0",
+    "typedoc-plugin-param-names": "^2.0.0",
+    "typescript": "4.2.4"
   }
 }

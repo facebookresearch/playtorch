@@ -7,6 +7,10 @@
  * @format
  */
 
+const katex = require('rehype-katex');
+const math = require('remark-math');
+const npm2yarn = require('@docusaurus/remark-plugin-npm2yarn');
+
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title: 'PyTorch Live',
@@ -114,9 +118,8 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          remarkPlugins: [
-            [require('@docusaurus/remark-plugin-npm2yarn'), {sync: true}],
-          ],
+          remarkPlugins: [[npm2yarn, {sync: true}], math],
+          rehypePlugins: [katex],
           editUrl:
             'https://github.com/facebookexperimental/pytorch-live/edit/master/website/',
         },
@@ -125,5 +128,43 @@ module.exports = {
         },
       },
     ],
+  ],
+  plugins: [
+    [
+      'docusaurus-plugin-typedoc',
+      {
+        name: 'React Native PyTorch Core',
+        entryPoints: ['../react-native-pytorch-core/src'],
+        out: 'api/core',
+        exclude: [
+          '../react-native-pytorch-core/src/index.tsx',
+          '../react-native-pytorch-core/**/__tests__',
+          '../react-native-pytorch-core/**/example',
+        ],
+        tsconfig: '../react-native-pytorch-core/tsconfig.json',
+        excludePrivate: true,
+        excludeProtected: true,
+        excludeExternals: true,
+        excludeInternal: true,
+        namedParamName: 'props',
+        readme: 'none',
+        plugin: ['typedoc-plugin-param-names'],
+        sidebar: {
+          sidebarFile: 'typedoc-sidebar.js',
+          fullNames: false,
+          indexLabel: 'Overview',
+        },
+        watch: process.env.TYPEDOC_WATCH,
+      },
+    ],
+  ],
+  stylesheets: [
+    {
+      href: 'https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css',
+      type: 'text/css',
+      integrity:
+        'sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc',
+      crossorigin: 'anonymous',
+    },
   ],
 };

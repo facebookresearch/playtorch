@@ -57,6 +57,7 @@ export default function CanvasAnimator() {
         // draw a circle at center
         ctx.fillStyle = time > 10000 ? '#000000' : '#4f25c6';
         ctx.fillCircle(center[0], center[1], radius);
+        ctx.font = '21px sans-serif';
         ctx.fillText(
           `Stopping animation in ${10 - Math.floor(time / 1000)}...`,
           20,

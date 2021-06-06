@@ -16,29 +16,25 @@ import {
   ImageUtil,
   Image as PyTorchImage,
 } from 'react-native-pytorch-core';
+import useImageFromBundle from '../../utils/useImageFromBundle';
+import useImageFromURL from '../../utils/useImageFromURL';
 
 export default function Images() {
   const isFocused = useIsFocused();
-  const [birdImage, setBirdImage] = useState<PyTorchImage>();
-  const [swanImage, setSwanImage] = useState<PyTorchImage>();
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
 
   // `layout` contains canvas properties like width and height
   const [layout, setLayout] = useState<LayoutRectangle | null>(null);
 
-  // an online image from USFWS National Digital Library
+  // load an online image from USFWS National Digital Library
+  const birdImage = useImageFromURL(
+    'https://digitalmedia.fws.gov/digital/api/singleitem/image/natdiglib/6198/default.jpg',
+  );
 
-  useEffect(() => {
-    ImageUtil.fromURL(
-      'https://digitalmedia.fws.gov/digital/api/singleitem/image/natdiglib/6198/default.jpg',
-    ).then(img => setBirdImage(img));
-
-    ImageUtil.fromBundle(require('../../../assets/images/swan.jpg')).then(img =>
-      setSwanImage(img),
-    );
-  }, [setBirdImage, setSwanImage]);
-
-  // local image file
+  // load a local image file
+  const swanImage = useImageFromBundle(
+    require('../../../assets/images/swan.jpg'),
+  );
 
   const handleContext2D = useCallback(
     async (ctx: CanvasRenderingContext2D) => {
@@ -64,7 +60,7 @@ export default function Images() {
           (size[1] - (size[0] - marginH * 2) / swanAspectRatio) / 2;
 
         ctx.drawImage(swanImage, 0, 0);
-        ctx.fillStyle = '#000000BB';
+        ctx.fillStyle = '#000000bb';
         ctx.fillRect(0, 0, size[0], size[1]);
         ctx.drawImage(
           swanImage,

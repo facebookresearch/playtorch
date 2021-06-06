@@ -73,7 +73,7 @@ export default function NLPExample() {
           </View>
         </View>
         <View
-          style={[styles.row, answer || isProcessing ? {} : styles.rowHidden]}>
+          style={[styles.row, !answer && !isProcessing && styles.rowHidden]}>
           <Text style={styles.label}>Answer</Text>
           <Text style={styles.answer}>
             {isProcessing && <ActivityIndicator size="small" color="tomato" />}

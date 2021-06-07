@@ -247,7 +247,7 @@ public class CanvasRenderingContext2D {
 
   public void drawImage(Bitmap bitmap, float dx, float dy) {
     Matrix matrix = new Matrix();
-    matrix.postScale(mPixelDensity, mPixelDensity, 1.0f, 1.0f);
+    matrix.postScale(mPixelDensity, mPixelDensity);
     matrix.postTranslate(dpToPx(dx), dpToPx(dy));
     mCanvas.drawBitmap(bitmap, matrix, null);
   }

@@ -32,8 +32,11 @@ import CanvasMiterLimit from './canvas/CanvasMiterLimit';
 import CanvasMoveTo from './canvas/CanvasMoveTo';
 import CanvasText from './canvas/CanvasText';
 import CanvasTextAlign from './canvas/CanvasTextAlign';
-import ImageScale from './apiTest/ImageScale';
 
+import UIStarter from './ui/UIStarter';
+import UICard from './ui/UICard';
+
+import ImageScale from './apiTest/ImageScale';
 import CanvasArc from './apiTest/CanvasArc';
 import CanvasClearRect from './apiTest/CanvasClearRect';
 import CanvasFillRect from './apiTest/CanvasFillRect';
@@ -61,6 +64,24 @@ export type ToolSection = {
 }[];
 
 const tools: ToolSection = [
+  {
+    title: 'UI',
+    data: [
+      {
+        icon: <Icon name="image-outline" size={32} color="tomato" />,
+        title: 'UI Starter',
+        subtitle: 'This template helps you start with building UI quickly',
+        component: UIStarter,
+      },
+      {
+        icon: <Icon name="image-outline" size={32} color="tomato" />,
+        title: 'UI Card',
+        subtitle: 'An example gallery of image cards',
+        component: UICard,
+      },
+    ],
+  },
+
   {
     title: 'Canvas',
     data: [

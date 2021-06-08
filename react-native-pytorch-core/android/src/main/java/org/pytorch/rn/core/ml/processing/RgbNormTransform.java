@@ -25,8 +25,8 @@ class RgbNormTransform implements IImageToTensorTransform {
 
   public static RgbNormTransform parse(JSONObject jobject) throws JSONException {
     return new RgbNormTransform(
-        IValuePackerImpl.readFloatArray(jobject, "mean"),
-        IValuePackerImpl.readFloatArray(jobject, "std"));
+        BaseIValuePacker.readFloatArray(jobject, "mean"),
+        BaseIValuePacker.readFloatArray(jobject, "std"));
   }
 
   @Override

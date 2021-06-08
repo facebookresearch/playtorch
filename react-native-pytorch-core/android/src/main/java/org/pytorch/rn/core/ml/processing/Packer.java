@@ -8,14 +8,12 @@
 package org.pytorch.rn.core.ml.processing;
 
 import com.facebook.react.bridge.ReadableMap;
+import java.io.IOException;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.pytorch.IValue;
 
-public interface IIValuePacker {
-  IValue pack(final ReadableMap params, PackerContext packerContext) throws Exception;
-
-  ReadableMap unpack(final IValue output, PackerContext packerContext) throws Exception;
-
-  PackerContext newContext();
-
-  void doRegister();
+public interface Packer {
+  IValue pack(final JSONObject jobject, final ReadableMap params, final PackerContext packerContext)
+      throws JSONException, IOException;
 }

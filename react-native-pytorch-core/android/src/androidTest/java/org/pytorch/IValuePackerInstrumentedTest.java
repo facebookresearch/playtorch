@@ -20,18 +20,24 @@ import com.facebook.soloader.SoLoader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import javax.annotation.Nullable;
+import org.json.JSONException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.pytorch.rn.core.image.Image;
 import org.pytorch.rn.core.javascript.JSContext;
+import org.pytorch.rn.core.ml.MobileModelModule;
+import org.pytorch.rn.core.ml.processing.BaseIValuePacker;
+import org.pytorch.rn.core.ml.processing.GPT2Tokenizer;
 import org.pytorch.rn.core.ml.processing.IIValuePacker;
-import org.pytorch.rn.core.ml.processing.IValuePackerImpl;
 import org.pytorch.rn.core.ml.processing.PackerContext;
+import org.pytorch.rn.core.ml.processing.PackerRegistry;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
@@ -86,8 +92,11 @@ public class IValuePackerInstrumentedTest {
     Bitmap bitmap = Bitmap.createBitmap(224, 224, Bitmap.Config.ARGB_8888);
     JSContext.NativeJSRef ref = JSContext.wrapObject(new Image(bitmap));
     params.putMap("image1", ref.getJSRef());
-    final IIValuePacker packer = new IValuePackerImpl(readAsset("body_tracking_spec.json"));
-    final PackerContext packerContext = new PackerContext();
+
+    final String spec = readAsset("body_tracking_spec.json");
+    final IIValuePacker packer = MobileModelModule.getPacker(spec);
+    final PackerContext packerContext = packer.newContext();
+
     final IValue result = packer.pack(params, packerContext);
     final ReadableMap map = packer.unpack(result, packerContext);
     final ReadableArray image1Array = map.getArray("image1");
@@ -126,8 +135,11 @@ public class IValuePackerInstrumentedTest {
     final IValue ivalue =
         IValue.tupleFrom(
             IValue.from(n), IValue.from(bboxes), IValue.from(scores), IValue.from(indices));
-    final IIValuePacker packer = new IValuePackerImpl(readAsset("body_tracking_spec2.json"));
-    final PackerContext packerContext = new PackerContext();
+
+    final String spec = readAsset("body_tracking_spec2.json");
+    final IIValuePacker packer = MobileModelModule.getPacker(spec);
+    final PackerContext packerContext = packer.newContext();
+
     final ReadableMap map = packer.unpack(ivalue, packerContext);
     final int unpack_n = map.getInt("n");
     final double[] unpack_bboxes = doubleArrayFromReadableArray(map.getArray("bboxes"));
@@ -152,15 +164,15 @@ public class IValuePackerInstrumentedTest {
 
   @Test
   public void bertTest() throws Exception {
-    String specSrcJson = readAsset("bert_qa_spec.json");
-    final IIValuePacker packer = new IValuePackerImpl(specSrcJson);
+    final String spec = readAsset("bert_qa_spec.json");
+    final IIValuePacker packer = MobileModelModule.getPacker(spec);
 
     final JavaOnlyMap params = new JavaOnlyMap();
     final String testText = "[CLS] Who was Jim Henson ? [SEP] Jim Henson was a puppeteer [SEP]";
     params.putString("string", testText);
     params.putInt("model_input_length", 50);
 
-    final PackerContext packerContext = new PackerContext();
+    final PackerContext packerContext = packer.newContext();
     IValue ivalue = packer.pack(params, packerContext);
 
     long[] data = ivalue.toTensor().getDataAsLongArray();
@@ -197,12 +209,13 @@ public class IValuePackerInstrumentedTest {
 
   @Test
   public void gpt2PackTest() throws Exception {
-    final IIValuePacker packer = new IValuePackerImpl(readAsset("gpt2_spec.json"));
+    final String spec = readAsset("gpt2_spec.json");
+    final IIValuePacker packer = MobileModelModule.getPacker(spec);
 
     final JavaOnlyMap params = new JavaOnlyMap();
     params.putString("string", "Umka is a white fluffy pillow.");
 
-    PackerContext packerContext = new PackerContext();
+    PackerContext packerContext = packer.newContext();
     IValue ivalue = packer.pack(params, packerContext);
     long[] data = ivalue.toTensor().getDataAsLongArray();
     final long[] expected = new long[] {37280, 4914, 318, 257, 2330, 39145, 28774, 13};
@@ -211,15 +224,66 @@ public class IValuePackerInstrumentedTest {
 
   @Test
   public void gpt2UnpackTest() throws Exception {
-    final IIValuePacker packer = new IValuePackerImpl(readAsset("gpt2_spec.json"));
+    final String spec = readAsset("gpt2_spec.json");
+    final IIValuePacker packer = MobileModelModule.getPacker(spec);
     final long[] data = new long[] {37280, 4914, 318, 257, 2330, 39145, 28774, 13};
 
-    PackerContext packerContext = new PackerContext();
+    PackerContext packerContext = packer.newContext();
     final ReadableMap map =
         packer.unpack(IValue.from(Tensor.fromBlob(data, new long[] {1, 8})), packerContext);
 
-    String text = map.getString("text");
-    String expected = "Umka is a white fluffy pillow.";
-    Assert.assertEquals(expected, text);
+    Assert.assertEquals("Umka is a white fluffy pillow.", map.getString("text"));
+  }
+
+  public static class TestCustomPacker extends BaseIValuePacker {
+
+    public TestCustomPacker(@Nullable String specSrc) throws JSONException {
+      super(specSrc);
+      // Init additional resources
+    }
+
+    @Override
+    protected void register(final PackerRegistry registry) {
+      super.register(registry);
+      // Register additional packers/unpackers
+      registry
+          .register(
+              "tensor_from_string_custom",
+              (jobject, params, packerContext) -> {
+                final long[] tokenIds =
+                    getGPT2Tokenizer(packerContext).tokenize(jobject.getString("string"));
+                return IValue.from(Tensor.fromBlob(tokenIds, new long[] {1, tokenIds.length}));
+              })
+          .register(
+              "tensor_to_string_custom",
+              (ivalue, jobject, map, packerContext) -> {
+                final long[] tokenIds = ivalue.toTensor().getDataAsLongArray();
+                map.putString(
+                    jobject.getString("key"), getGPT2Tokenizer(packerContext).decode(tokenIds));
+              });
+    }
+
+    private GPT2Tokenizer getGPT2Tokenizer(PackerContext packerContext)
+        throws JSONException, UnsupportedEncodingException {
+      GPT2Tokenizer gpt2Tokenizer = (GPT2Tokenizer) registry.get("gpt2_tokenizer_custom");
+      if (gpt2Tokenizer == null) {
+        gpt2Tokenizer =
+            new GPT2Tokenizer(packerContext.specSrcJson.getJSONObject("vocabulary_gpt2_custom"));
+        registry.store("gpt2_tokenizer_custom", gpt2Tokenizer);
+      }
+      return gpt2Tokenizer;
+    }
+  }
+
+  @Test
+  public void gpt2CustomUnpackTest() throws Exception {
+    final String spec = readAsset("gpt2_spec_custompacker.json");
+    final IIValuePacker packer = MobileModelModule.getPacker(spec);
+    final long[] data = new long[] {37280, 4914, 318, 257, 2330, 39145, 28774, 13};
+    PackerContext packerContext = packer.newContext();
+    final ReadableMap map =
+        packer.unpack(IValue.from(Tensor.fromBlob(data, new long[] {1, 8})), packerContext);
+
+    Assert.assertEquals("Umka is a white fluffy pillow.", map.getString("text"));
   }
 }

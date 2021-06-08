@@ -8,12 +8,14 @@
 package org.pytorch.rn.core.ml.processing;
 
 import java.util.HashMap;
+import org.json.JSONObject;
 
 public class PackerContext {
-  private final HashMap<String, Object> mMap;
+  private final HashMap<String, Object> mMap = new HashMap<>();
+  public final JSONObject specSrcJson;
 
-  public PackerContext() {
-    this.mMap = new HashMap<String, Object>();
+  PackerContext(JSONObject specSrcJson) {
+    this.specSrcJson = specSrcJson;
   }
 
   public void store(String key, Object value) {

@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.SystemClock;
 import android.util.Log;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.experimental.UseExperimental;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
@@ -25,6 +26,8 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
@@ -33,12 +36,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.pytorch.Device;
 import org.pytorch.IValue;
 import org.pytorch.LiteModuleLoader;
 import org.pytorch.Module;
+import org.pytorch.rn.core.ml.processing.BaseIValuePacker;
 import org.pytorch.rn.core.ml.processing.IIValuePacker;
-import org.pytorch.rn.core.ml.processing.IValuePackerImpl;
 import org.pytorch.rn.core.ml.processing.PackerContext;
 
 public class MobileModelModule extends ReactContextBaseJavaModule {
@@ -48,7 +52,7 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
   private ReactApplicationContext mReactContext;
 
   ExecutorService executorService = Executors.newFixedThreadPool(4);
-  private final HashMap<String, ModuleAndSpec> mModulesAndSpecs = new HashMap<>();
+  private final HashMap<String, ModuleHolder> mModulesAndSpecs = new HashMap<>();
 
   public MobileModelModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -69,7 +73,12 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
             Log.d(REACT_MODULE, "Preload model: " + modelUri);
             fetchCacheAndLoadModel(modelUri);
             promise.resolve(null);
-          } catch (IOException | JSONException e) {
+          } catch (JSONException
+              | InstantiationException
+              | InvocationTargetException
+              | NoSuchMethodException
+              | IllegalAccessException
+              | ClassNotFoundException e) {
             promise.reject(e);
           }
         });
@@ -77,20 +86,19 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
 
   @ReactMethod
   @UseExperimental(markerClass = androidx.camera.core.ExperimentalGetImage.class)
-  public void execute(final String modelUri, final ReadableMap params, final Promise promise)
-      throws IOException {
+  public void execute(final String modelUri, final ReadableMap params, final Promise promise) {
     executorService.execute(
         () -> {
           try {
-            ModuleAndSpec moduleAndSpec = mModulesAndSpecs.get(modelUri);
-            if (moduleAndSpec == null) {
-              moduleAndSpec = fetchCacheAndLoadModel(modelUri);
+            ModuleHolder moduleHolder = mModulesAndSpecs.get(modelUri);
+            if (moduleHolder == null) {
+              moduleHolder = fetchCacheAndLoadModel(modelUri);
             }
             final long startTime = SystemClock.elapsedRealtime();
-            PackerContext packerContext = new PackerContext();
-            IValue packedValue = moduleAndSpec.packer.pack(params, packerContext);
-            IValue forwardResult = moduleAndSpec.module.forward(packedValue);
-            ReadableMap result = moduleAndSpec.packer.unpack(forwardResult, packerContext);
+            final PackerContext packerContext = moduleHolder.packer.newContext();
+            IValue packedValue = moduleHolder.packer.pack(params, packerContext);
+            IValue forwardResult = moduleHolder.module.forward(packedValue);
+            ReadableMap result = moduleHolder.packer.unpack(forwardResult, packerContext);
             final long inferenceTime = SystemClock.elapsedRealtime() - startTime;
 
             WritableMap inferenceResult = Arguments.createMap();
@@ -98,14 +106,15 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
             inferenceResult.putDouble("inferenceTime", inferenceTime);
             promise.resolve(inferenceResult);
           } catch (Exception e) {
-            Log.e(REACT_MODULE, e.toString());
+            Log.e(REACT_MODULE, "Error on model fetch and forward:", e);
             promise.reject(e);
           }
         });
   }
 
-  private ModuleAndSpec fetchCacheAndLoadModel(final String modelUri)
-      throws IOException, JSONException {
+  private ModuleHolder fetchCacheAndLoadModel(final String modelUri)
+      throws JSONException, ClassNotFoundException, NoSuchMethodException, InstantiationException,
+          IllegalAccessException, InvocationTargetException {
     Log.d(REACT_MODULE, "Load model: " + modelUri);
 
     Uri uri = Uri.parse(modelUri);
@@ -159,9 +168,9 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
       }
     }
 
-    ModuleAndSpec moduleAndSpec = new ModuleAndSpec(module, spec);
-    mModulesAndSpecs.put(modelUri, moduleAndSpec);
-    return moduleAndSpec;
+    ModuleHolder moduleHolder = new ModuleHolder(module, spec);
+    mModulesAndSpecs.put(modelUri, moduleHolder);
+    return moduleHolder;
   }
 
   private void downloadFile(Uri uri, File targetFile) throws IOException {
@@ -177,19 +186,45 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
     inputStream.close();
   }
 
+  static IIValuePacker newPacker(final String customPackerClass, final String spec)
+      throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
+          InvocationTargetException, InstantiationException {
+    final Class clazz = Class.forName(customPackerClass);
+    final Constructor<?> ctor = clazz.getConstructor(String.class);
+    return (IIValuePacker) ctor.newInstance(spec);
+  }
+
+  public static IIValuePacker getPacker(@Nullable String spec)
+      throws JSONException, ClassNotFoundException, NoSuchMethodException,
+          InvocationTargetException, InstantiationException, IllegalAccessException {
+    if (spec == null) {
+      return null;
+    }
+
+    final JSONObject specJson = new JSONObject(spec);
+    final IIValuePacker packer =
+        specJson.has(BaseIValuePacker.JSON_CUSTOM_PACKER_CLASS)
+            ? newPacker(specJson.getString(BaseIValuePacker.JSON_CUSTOM_PACKER_CLASS), spec)
+            : new BaseIValuePacker(spec);
+    packer.doRegister();
+    return packer;
+  }
+
   /**
    * Struct to hold the mobile model and the spec to pack/unpack high-level data-types from PyTorch
    * Live React Native.
+   *
+   * <p>Class is public only for testing.
    */
-  private static class ModuleAndSpec {
+  public static class ModuleHolder {
     Module module;
-    String spec;
     IIValuePacker packer;
 
-    protected ModuleAndSpec(Module module, String spec) throws JSONException {
+    protected ModuleHolder(Module module, @Nullable String spec)
+        throws JSONException, ClassNotFoundException, NoSuchMethodException,
+            InvocationTargetException, InstantiationException, IllegalAccessException {
       this.module = module;
-      this.spec = spec;
-      this.packer = new IValuePackerImpl(spec);
+      this.packer = getPacker(spec);
     }
   }
 }

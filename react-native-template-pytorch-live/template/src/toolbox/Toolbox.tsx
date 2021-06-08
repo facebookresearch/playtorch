@@ -263,10 +263,6 @@ const tools: ToolSection = [
   },
 ];
 
-// for (let i = 2; i <= 100; i++) {
-//   tools.push({title: `Tool ${i}`, subtitle: `Subtitle tool ${i}`});
-// }
-
 type ToolboxParamList = {
   API: undefined;
   ToolView: {

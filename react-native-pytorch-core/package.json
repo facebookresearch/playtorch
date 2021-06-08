@@ -2,6 +2,9 @@
   "name": "react-native-pytorch-core",
   "version": "0.1.0",
   "description": "PyTorch core library for React Native",
+  "license": "MIT",
+  "author": "Facebook, Inc.",
+  "homepage": "https://pytorch.org/live",
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
@@ -54,7 +57,7 @@
     "pod-install": "^0.1.0",
     "prettier": "^2.0.5",
     "react": "17.0.1",
-    "react-native": "0.64.0",
+    "react-native": "^0.64.2",
     "react-native-builder-bob": "^0.18.1",
     "release-it": "^14.2.2",
     "typescript": "4.2.4"

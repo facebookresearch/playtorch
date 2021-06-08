@@ -11,6 +11,7 @@
 		13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB01A68108700A75B9A /* AppDelegate.m */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
+		381721E4266F2E4F00DBB29A /* DummySwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381721E3266F2E4F00DBB29A /* DummySwift.swift */; };
 		4BA584F472C5FCAFB1349858 /* libPods-PyTorchLiveExample-PyTorchLiveExampleTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = ECD7C5D88AA5EDCE231D09BA /* libPods-PyTorchLiveExample-PyTorchLiveExampleTests.a */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
 		FA43E67F6285E495B2E5F773 /* libPods-PyTorchLiveExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 71B00998D66D815B501CDD71 /* libPods-PyTorchLiveExample.a */; };
@@ -37,6 +38,7 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = PyTorchLiveExample/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = PyTorchLiveExample/main.m; sourceTree = "<group>"; };
 		290F80057DAFB74C892F0E15 /* Pods-PyTorchLiveExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PyTorchLiveExample.release.xcconfig"; path = "Target Support Files/Pods-PyTorchLiveExample/Pods-PyTorchLiveExample.release.xcconfig"; sourceTree = "<group>"; };
+		381721E3266F2E4F00DBB29A /* DummySwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummySwift.swift; sourceTree = "<group>"; };
 		4B0502A83E43836CCFD3B155 /* Pods-PyTorchLiveExample-PyTorchLiveExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PyTorchLiveExample-PyTorchLiveExampleTests.release.xcconfig"; path = "Target Support Files/Pods-PyTorchLiveExample-PyTorchLiveExampleTests/Pods-PyTorchLiveExample-PyTorchLiveExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		71B00998D66D815B501CDD71 /* libPods-PyTorchLiveExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PyTorchLiveExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PyTorchLiveExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -92,6 +94,7 @@
 				13B07FB61A68108700A75B9A /* Info.plist */,
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
+				381721E3266F2E4F00DBB29A /* DummySwift.swift */,
 			);
 			name = PyTorchLiveExample;
 			sourceTree = "<group>";
@@ -207,7 +210,7 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						LastSwiftMigration = 1120;
+						LastSwiftMigration = 1250;
 					};
 				};
 			};
@@ -411,6 +414,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				381721E4266F2E4F00DBB29A /* DummySwift.swift in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -430,6 +434,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = B2803210F7E787CD98D1ABA0 /* Pods-PyTorchLiveExample-PyTorchLiveExampleTests.debug.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -457,6 +462,7 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4B0502A83E43836CCFD3B155 /* Pods-PyTorchLiveExample-PyTorchLiveExampleTests.release.xcconfig */;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				INFOPLIST_FILE = PyTorchLiveExampleTests/Info.plist;

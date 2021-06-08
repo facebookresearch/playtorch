@@ -16,7 +16,7 @@ switch(process.platform) {
         execSync(
             'cd ./models && python3 -m venv ./venv \
             && source ./venv/bin/activate \
-            && pip install torch torchvision \
+            && pip install torch torchvision transformers \
             && python make_models.py'
         )
         break;

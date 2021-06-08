@@ -64,6 +64,10 @@ module.exports = {
               label: 'Tutorial',
               to: '/docs/tutorials/image-classification',
             },
+            {
+              label: 'Model Specification',
+              to: '/docs/tutorials/model-spec',
+            },
           ],
         },
         {

@@ -23,6 +23,7 @@ module.exports = {
     'tutorials/install-cli',
     'tutorials/image-classification',
     'tutorials/prepare-custom-model',
+    'tutorials/model-spec',
   ],
   api: [
     'cli',

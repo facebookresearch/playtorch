@@ -48,6 +48,22 @@ export interface Image extends NativeJSRef {
   getWidth(): number;
 
   /**
+   * Get the natural height of an image (in pixel).
+   */
+  getNaturalHeight(): number;
+
+  /**
+   * Get the natural width of an image (in pixel).
+   */
+  getNaturalWidth(): number;
+
+  /**
+   * Get the pixel density for this image. The `width` and `height` multiplied
+   * by the `pixelDensity` is `naturalWidth` and `naturalHeight`.
+   */
+  getPixelDensity(): number;
+
+  /**
    * Until explicitly released, an [[Image]] will have a reference in memory.
    * Not calling [[Image.release]] can eventually result in an
    * `OutOfMemoryException`.
@@ -85,6 +101,15 @@ export const wrapRef = (ref: NativeJSRef): Image => ({
   },
   getHeight(): number {
     return ImageModule.getHeight(ref);
+  },
+  getNaturalWidth(): number {
+    return ImageModule.getNaturalWidth(ref);
+  },
+  getNaturalHeight(): number {
+    return ImageModule.getNaturalHeight(ref);
+  },
+  getPixelDensity(): number {
+    return ImageModule.getPixelDensity(ref);
   },
   async scale(sx: number, sy: number): Promise<Image> {
     const scaledRef = await ImageModule.scale(ref, sx, sy);

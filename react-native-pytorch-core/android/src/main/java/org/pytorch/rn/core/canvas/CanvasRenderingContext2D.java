@@ -22,6 +22,7 @@ import android.util.DisplayMetrics;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.uimanager.ReactInvalidPropertyException;
 import java.util.Stack;
+import org.pytorch.rn.core.image.IImage;
 import org.pytorch.rn.core.image.ImageUtils;
 
 public class CanvasRenderingContext2D {
@@ -246,14 +247,16 @@ public class CanvasRenderingContext2D {
     mCanvas.drawCircle(dpToPx(x), dpToPx(y), dpToPx(radius), mFillPaint);
   }
 
-  public void drawImage(Bitmap bitmap, float dx, float dy) {
+  public void drawImage(IImage image, float dx, float dy) {
+    float imagePixelDensity = image.getPixelDensity();
     Matrix matrix = new Matrix();
-    matrix.postScale(mPixelDensity, mPixelDensity);
+    matrix.postScale(mPixelDensity / imagePixelDensity, mPixelDensity / imagePixelDensity);
     matrix.postTranslate(dpToPx(dx), dpToPx(dy));
-    mCanvas.drawBitmap(bitmap, matrix, null);
+    mCanvas.drawBitmap(image.getBitmap(), matrix, null);
   }
 
-  public void drawImage(Bitmap bitmap, float dx, float dy, float dWidth, float dHeight) {
+  public void drawImage(IImage image, float dx, float dy, float dWidth, float dHeight) {
+    Bitmap bitmap = image.getBitmap();
     int sWidth = bitmap.getWidth();
     int sHeight = bitmap.getHeight();
     float scaleX = dpToPx(dWidth) / sWidth;
@@ -266,7 +269,7 @@ public class CanvasRenderingContext2D {
   }
 
   public void drawImage(
-      Bitmap bitmap,
+      IImage image,
       float sx,
       float sy,
       float sWidth,
@@ -275,6 +278,7 @@ public class CanvasRenderingContext2D {
       float dy,
       float dWidth,
       float dHeight) {
+    Bitmap bitmap = image.getBitmap();
     // Extract source x,y,width,height from original bitmap into destination bitmap
     Bitmap destBitmap =
         Bitmap.createBitmap(bitmap, (int) sx, (int) sy, (int) sWidth, (int) sHeight);
@@ -294,14 +298,19 @@ public class CanvasRenderingContext2D {
     int width = (int) dpToPx(sw);
     int height = (int) dpToPx(sh);
 
-    Matrix matrix = new Matrix();
-    matrix.postScale(1 / mPixelDensity, 1 / mPixelDensity);
-
-    Bitmap bitmap = Bitmap.createBitmap(mBitmap, x, y, width, height, matrix, true);
+    Bitmap bitmap = Bitmap.createBitmap(mBitmap, x, y, width, height);
     byte[] data = ImageUtils.bitmapToRGBA(bitmap);
-    // Use initial width (sw) and height (sh) because after the post scale, the image will have
-    // these dimensions
-    return new ImageData((int) sw, (int) sh, data);
+    return new ImageData(width, height, data);
+  }
+
+  public void putImageData(ImageData imageData, float dx, float dy) {
+    // This method is not affected by the canvas transformation matrix. We save the canvas transform
+    // and restore it afterwards.
+    mCanvas.save();
+    Bitmap bitmap =
+        ImageUtils.bitmapFromRGBA(imageData.getWidth(), imageData.getHeight(), imageData.getData());
+    mCanvas.drawBitmap(bitmap, dpToPx(dx), dpToPx(dy), null);
+    mCanvas.restore();
   }
 
   public void setFont(final ReadableMap font) {

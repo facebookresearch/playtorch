@@ -293,17 +293,17 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
           if (image != null) {
 
             if (dWidth_sWidth < 0 || dHeight_sHeight < 0) {
-              ctx.drawImage(image.getBitmap(), (float) dx_sx, (float) dy_sy);
+              ctx.drawImage(image, (float) dx_sx, (float) dy_sy);
             } else if (dx < 0 || dy < 0) {
               ctx.drawImage(
-                  image.getBitmap(),
+                  image,
                   (float) dx_sx,
                   (float) dy_sy,
                   (float) dWidth_sWidth,
                   (float) dHeight_sHeight);
             } else {
               ctx.drawImage(
-                  image.getBitmap(),
+                  image,
                   (float) dx_sx,
                   (float) dy_sy,
                   (float) dWidth_sWidth,
@@ -326,6 +326,16 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
           ImageData imageData = ctx.getImageData((float) sx, (float) sy, (float) sw, (float) sh);
           JSContext.NativeJSRef imageDataRef = JSContext.wrapObject(imageData);
           promise.resolve(imageDataRef.getJSRef());
+        });
+  }
+
+  @ReactMethod
+  public void putImageData(ReadableMap canvasRef, ReadableMap imageDataRef, double dx, double dy) {
+    mMainHandler.post(
+        () -> {
+          CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
+          ImageData imageData = JSContext.unwrapObject(imageDataRef);
+          ctx.putImageData(imageData, (float) dx, (float) dy);
         });
   }
 

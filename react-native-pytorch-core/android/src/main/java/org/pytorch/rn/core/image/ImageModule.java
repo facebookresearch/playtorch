@@ -30,8 +30,11 @@ public class ImageModule extends ReactContextBaseJavaModule {
 
   public static final String REACT_MODULE = "PyTorchCoreImageModule";
 
-  public ImageModule(ReactApplicationContext context) {
-    super(context);
+  private ReactApplicationContext mReactContext;
+
+  public ImageModule(ReactApplicationContext reactContext) {
+    super(reactContext);
+    mReactContext = reactContext;
   }
 
   @NonNull
@@ -56,6 +59,24 @@ public class ImageModule extends ReactContextBaseJavaModule {
   public int getHeight(ReadableMap imageRef) {
     IImage image = JSContext.unwrapObject(imageRef);
     return image.getHeight();
+  }
+
+  @ReactMethod(isBlockingSynchronousMethod = true)
+  public float getNaturalWidth(ReadableMap imageRef) {
+    IImage image = JSContext.unwrapObject(imageRef);
+    return image.getNaturalWidth();
+  }
+
+  @ReactMethod(isBlockingSynchronousMethod = true)
+  public float getNaturalHeight(ReadableMap imageRef) {
+    IImage image = JSContext.unwrapObject(imageRef);
+    return image.getNaturalHeight();
+  }
+
+  @ReactMethod(isBlockingSynchronousMethod = true)
+  public float getPixelDensity(ReadableMap imageRef) {
+    IImage image = JSContext.unwrapObject(imageRef);
+    return image.getPixelDensity();
   }
 
   @ReactMethod
@@ -122,9 +143,8 @@ public class ImageModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void fromImageData(final ReadableMap imageDataRef, Promise promise) {
     ImageData imageData = JSContext.unwrapObject(imageDataRef);
-    Bitmap bitmap =
-        ImageUtils.bitmapFromRGBA(imageData.getWidth(), imageData.getHeight(), imageData.getData());
-    IImage image = new Image(bitmap);
+    float pixelDensity = mReactContext.getResources().getDisplayMetrics().density;
+    IImage image = new Image(imageData, pixelDensity);
     JSContext.NativeJSRef ref = JSContext.wrapObject(image);
     promise.resolve(ref.getJSRef());
   }

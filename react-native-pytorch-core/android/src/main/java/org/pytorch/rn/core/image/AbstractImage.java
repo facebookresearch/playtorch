@@ -13,6 +13,21 @@ import android.graphics.Matrix;
 public abstract class AbstractImage implements IImage {
 
   @Override
+  public float getPixelDensity() {
+    return 1.0f;
+  }
+
+  @Override
+  public int getWidth() {
+    return Math.round(getNaturalWidth() / getPixelDensity());
+  }
+
+  @Override
+  public int getHeight() {
+    return Math.round(getNaturalHeight() / getPixelDensity());
+  }
+
+  @Override
   public IImage scale(float sx, float sy) {
     Bitmap bitmap = getBitmap();
     int width = getWidth();

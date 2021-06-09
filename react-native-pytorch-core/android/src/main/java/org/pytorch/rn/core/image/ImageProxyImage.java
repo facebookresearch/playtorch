@@ -25,12 +25,12 @@ public class ImageProxyImage extends AbstractImage {
   }
 
   @Override
-  public int getWidth() {
+  public float getNaturalWidth() {
     return mImageProxy.getWidth();
   }
 
   @Override
-  public int getHeight() {
+  public float getNaturalHeight() {
     return mImageProxy.getHeight();
   }
 

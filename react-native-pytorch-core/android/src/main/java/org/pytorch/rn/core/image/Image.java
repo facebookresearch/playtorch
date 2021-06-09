@@ -10,6 +10,7 @@ package org.pytorch.rn.core.image;
 import android.content.Context;
 import android.graphics.Bitmap;
 import androidx.camera.core.ImageProxy;
+import org.pytorch.rn.core.canvas.ImageData;
 
 public class Image implements IImage {
   private final IImage mImage;
@@ -22,6 +23,15 @@ public class Image implements IImage {
     mImage = new ImageProxyImage(imageProxy, context);
   }
 
+  public Image(ImageData imageData, float pixelDensity) {
+    mImage = new ImageDataImage(imageData, pixelDensity);
+  }
+
+  @Override
+  public float getPixelDensity() {
+    return mImage.getPixelDensity();
+  }
+
   @Override
   public int getWidth() {
     return mImage.getWidth();
@@ -30,6 +40,16 @@ public class Image implements IImage {
   @Override
   public int getHeight() {
     return mImage.getHeight();
+  }
+
+  @Override
+  public float getNaturalWidth() {
+    return mImage.getNaturalWidth();
+  }
+
+  @Override
+  public float getNaturalHeight() {
+    return mImage.getNaturalHeight();
   }
 
   @Override

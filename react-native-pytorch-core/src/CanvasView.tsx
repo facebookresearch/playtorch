@@ -459,6 +459,32 @@ export interface CanvasRenderingContext2D {
   moveTo(x: number, y: number): void;
 
   /**
+   * The `putImageData()` function of the Canvas 2D API paints data from the
+   * given [[ImageData]] object onto the canvas. If a dirty rectangle is
+   * provided, only the pixels from that rectangle are painted. This function
+   * is not affected by the canvas transformation matrix.
+   *
+   * :::note
+   *
+   * Image data can be retrieved from a canvas using the `getImageData()`
+   * function.
+   *
+   * :::
+   *
+   * :::caution
+   *
+   * The `putImageData()` does not implement `dirtyX`, `dirtyY`, `dirtyWidth`,
+   * and `dirtyHeight` params.
+   *
+   * :::
+   *
+   * @param imageData An [[ImageData]] object containing the array of pixel values.
+   * @param dx Horizontal position (x coordinate) at which to place the image data in the destination canvas.
+   * @param dy Vertical position (y coordinate) at which to place the image data in the destination canvas.
+   */
+  putImageData(imageData: ImageData, dx: number, dy: number): void;
+
+  /**
    * The `rect()` method of the Canvas 2D API adds a rectangle to the current
    * path.
    *
@@ -806,6 +832,9 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
     },
     moveTo(x: number, y: number): void {
       CanvasRenderingContext2DModule.moveTo(ref, x, y);
+    },
+    putImageData(imageData: ImageData, dx: number, dy: number): void {
+      CanvasRenderingContext2DModule.putImageData(ref, imageData, dx, dy);
     },
     rect(x: number, y: number, width: number, height: number): void {
       CanvasRenderingContext2DModule.rect(ref, x, y, width, height);

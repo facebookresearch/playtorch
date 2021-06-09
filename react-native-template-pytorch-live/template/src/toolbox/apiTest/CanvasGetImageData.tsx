@@ -36,6 +36,8 @@ export default function CanvasGetImageData() {
     if (ctx != null) {
       ctx.clear();
 
+      ctx.strokeStyle = 'black';
+
       // Draw shapes
       for (let i = 0; i <= 3; i++) {
         for (let j = 0; j <= 2; j++) {
@@ -60,8 +62,11 @@ export default function CanvasGetImageData() {
       const imageData = await ctx.getImageData(25, 25, 100, 150);
       ctx.strokeStyle = 'red';
       ctx.strokeRect(25, 25, 100, 150);
+
+      ctx.putImageData(imageData, 200, 25);
+
       const image: Image = await ImageUtil.fromImageData(imageData);
-      ctx.drawImage(image, 200, 25);
+      ctx.drawImage(image, 200, 225);
 
       ctx.invalidate();
     }

@@ -18,12 +18,12 @@ public class BitmapImage extends AbstractImage {
   }
 
   @Override
-  public int getWidth() {
+  public float getNaturalWidth() {
     return mBitmap.getWidth();
   }
 
   @Override
-  public int getHeight() {
+  public float getNaturalHeight() {
     return mBitmap.getHeight();
   }
 

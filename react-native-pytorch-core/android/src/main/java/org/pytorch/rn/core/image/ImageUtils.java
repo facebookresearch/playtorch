@@ -43,6 +43,44 @@ public class ImageUtils {
     throw new ImageException(String.format("unsupported image format %s", format));
   }
 
+  public static byte[] bitmapToRGBA(final Bitmap bitmap) {
+    int[] pixels = new int[bitmap.getWidth() * bitmap.getHeight()];
+    byte[] bytes = new byte[pixels.length * 4];
+    bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
+    int i = 0;
+    for (int pixel : pixels) {
+      // Get components assuming is ARGB
+      int A = (pixel >> 24) & 0xff;
+      int R = (pixel >> 16) & 0xff;
+      int G = (pixel >> 8) & 0xff;
+      int B = pixel & 0xff;
+      bytes[i++] = (byte) R;
+      bytes[i++] = (byte) G;
+      bytes[i++] = (byte) B;
+      bytes[i++] = (byte) A;
+    }
+    return bytes;
+  }
+
+  public static Bitmap bitmapFromRGBA(final int width, final int height, final byte[] bytes) {
+    int[] pixels = new int[bytes.length / 4];
+    int j = 0;
+
+    for (int i = 0; i < pixels.length; i++) {
+      int R = bytes[j++] & 0xff;
+      int G = bytes[j++] & 0xff;
+      int B = bytes[j++] & 0xff;
+      int A = bytes[j++] & 0xff;
+
+      int pixel = (A << 24) | (R << 16) | (G << 8) | B;
+      pixels[i] = pixel;
+    }
+
+    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+    bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+    return bitmap;
+  }
+
   /**
    * Convert an image in YUV_420_888 format to bitmap. The code was adapted from the following
    * website: {@link

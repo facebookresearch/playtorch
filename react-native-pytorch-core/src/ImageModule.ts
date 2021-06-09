@@ -13,6 +13,7 @@ import {
   ImageResolvedAssetSource,
   NativeModules,
 } from 'react-native';
+import type { ImageData } from './CanvasView';
 import type {NativeJSRef} from './NativeJSRef';
 
 const {resolveAssetSource} = RNImage;
@@ -145,4 +146,16 @@ export const ImageUtil = {
     const ref: NativeJSRef = await ImageModule.fromBundle(source.uri);
     return wrapRef(ref);
   },
+
+  /**
+   * Transforms an [[ImageData]] into an [[Image]] object.
+   *
+   * @param imageData The ImageData that will be transformed into an [[Image]].
+   */
+  async fromImageData(imageData: ImageData): Promise<Image> {
+    // Only send NativeJSRef ID to native and omit other fields
+    const imageDataRef: NativeJSRef = {ID: imageData.ID};
+    const ref: NativeJSRef = await ImageModule.fromImageData(imageDataRef);
+    return wrapRef(ref);
+  }
 };

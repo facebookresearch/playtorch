@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.nio.file.StandardCopyOption;
+import org.pytorch.rn.core.canvas.ImageData;
 import org.pytorch.rn.core.javascript.JSContext;
 
 public class ImageModule extends ReactContextBaseJavaModule {
@@ -113,6 +114,16 @@ public class ImageModule extends ReactContextBaseJavaModule {
     }
 
     Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+    IImage image = new Image(bitmap);
+    JSContext.NativeJSRef ref = JSContext.wrapObject(image);
+    promise.resolve(ref.getJSRef());
+  }
+
+  @ReactMethod
+  public void fromImageData(final ReadableMap imageDataRef, Promise promise) {
+    ImageData imageData = JSContext.unwrapObject(imageDataRef);
+    Bitmap bitmap =
+        ImageUtils.bitmapFromRGBA(imageData.getWidth(), imageData.getHeight(), imageData.getData());
     IImage image = new Image(bitmap);
     JSContext.NativeJSRef ref = JSContext.wrapObject(image);
     promise.resolve(ref.getJSRef());

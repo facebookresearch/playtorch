@@ -318,6 +318,18 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void getImageData(
+      ReadableMap canvasRef, double sx, double sy, double sw, double sh, Promise promise) {
+    mMainHandler.post(
+        () -> {
+          CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
+          ImageData imageData = ctx.getImageData((float) sx, (float) sy, (float) sw, (float) sh);
+          JSContext.NativeJSRef imageDataRef = JSContext.wrapObject(imageData);
+          promise.resolve(imageDataRef.getJSRef());
+        });
+  }
+
+  @ReactMethod
   public void setFont(ReadableMap canvasRef, ReadableMap font) {
     mMainHandler.post(
         () -> {

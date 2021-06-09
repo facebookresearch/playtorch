@@ -18,6 +18,12 @@ const {
   PyTorchCoreCanvasRenderingContext2DModule: CanvasRenderingContext2DModule,
 } = NativeModules;
 
+export interface ImageData extends NativeJSRef {
+  width: number,
+  height: number,
+  data: Uint8ClampedArray,
+}
+
 /**
  * * `"butt"` The ends of lines are squared off at the endpoints. Default value.
  * * `"round"` The ends of lines are rounded.
@@ -396,6 +402,35 @@ export interface CanvasRenderingContext2D {
   fillText(text: string, x: number, y: number): void;
 
   /**
+   * The `getImageData()` of the Canvas 2D API returns an [[ImageData]] object
+   * representing the underlying pixel data for a specified portion of the
+   * canvas.
+   *
+   * :::caution
+   *
+   * The `getImageData()` function differs from the 2dcontext specification and
+   * is subject to change. The function is async and returns a [[Promise]] with
+   * an [[ImageData]] rather than synchronously returning the [[ImageData]]. It
+   * currently does not support working with the [[ImageData.data]] of the
+   * returned [[ImageData]] object.
+   *
+   * The following is **not** yet implemented:
+   *
+   * This function is not affected by the canvas's transformation matrix. If
+   * the specified rectangle extends outside the bounds of the canvas, the
+   * pixels outside the canvas are transparent black in the returned
+   * [[ImageData]] object.
+   *
+   * :::
+   *
+   * @param sx The x-axis coordinate of the top-left corner of the rectangle from which the [[ImageData]] will be extracted.
+   * @param sy The y-axis coordinate of the top-left corner of the rectangle from which the [[ImageData]] will be extracted.
+   * @param sw The width of the rectangle from which the [[ImageData]] will be extracted. Positive values are to the right, and negative to the left.
+   * @param sh The height of the rectangle from which the [[ImageData]] will be extracted. Positive values are down, and negative are up.
+   */
+  getImageData(sx: number, sy: number, sw: number, sh: number): Promise<ImageData>;
+
+  /**
    * Invalidate the canvas resulting in a repaint.
    */
   invalidate(): void;
@@ -746,6 +781,22 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
     },
     fillText(text: string, x: number, y: number): void {
       CanvasRenderingContext2DModule.fillText(ref, text, x, y);
+    },
+    async getImageData(sx: number, sy: number, sw: number, sh: number): Promise<ImageData> {
+      const imageDataRef = await CanvasRenderingContext2DModule.getImageData(ref, sx, sy, sw, sh);
+      return ({
+        ...imageDataRef,
+        get width(): number {
+          return sw;
+        },
+        get height(): number {
+          return sh;
+        },
+        get data(): Uint8ClampedArray {
+          // TODO(T92409860) Implement ImageData.data
+          return new Uint8ClampedArray();
+        }
+      });
     },
     invalidate(): void {
       CanvasRenderingContext2DModule.invalidate(ref);

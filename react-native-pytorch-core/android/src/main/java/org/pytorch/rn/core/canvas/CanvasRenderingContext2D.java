@@ -22,6 +22,7 @@ import android.util.DisplayMetrics;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.uimanager.ReactInvalidPropertyException;
 import java.util.Stack;
+import org.pytorch.rn.core.image.ImageUtils;
 
 public class CanvasRenderingContext2D {
   private final DrawingCanvasView mDrawingCanvasView;
@@ -285,6 +286,22 @@ public class CanvasRenderingContext2D {
     matrix.postScale(scaleX, scaleY);
     matrix.postTranslate(dpToPx(dx), dpToPx(dy));
     mCanvas.drawBitmap(destBitmap, matrix, null);
+  }
+
+  public ImageData getImageData(float sx, float sy, float sw, float sh) {
+    int x = (int) dpToPx(sx);
+    int y = (int) dpToPx(sy);
+    int width = (int) dpToPx(sw);
+    int height = (int) dpToPx(sh);
+
+    Matrix matrix = new Matrix();
+    matrix.postScale(1 / mPixelDensity, 1 / mPixelDensity);
+
+    Bitmap bitmap = Bitmap.createBitmap(mBitmap, x, y, width, height, matrix, true);
+    byte[] data = ImageUtils.bitmapToRGBA(bitmap);
+    // Use initial width (sw) and height (sh) because after the post scale, the image will have
+    // these dimensions
+    return new ImageData((int) sw, (int) sh, data);
   }
 
   public void setFont(final ReadableMap font) {

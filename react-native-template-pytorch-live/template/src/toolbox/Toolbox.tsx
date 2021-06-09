@@ -50,6 +50,7 @@ import CanvasTranslate from './apiTest/CanvasTranslate';
 
 import ToolboxContext, {useToolboxContext} from './ToolboxContext';
 import ToolboxList from './ToolboxList';
+import CanvasGetImageData from './apiTest/CanvasGetImageData';
 
 export type Tool = {
   icon?: JSX.Element;
@@ -258,6 +259,12 @@ const tools: ToolSection = [
         title: 'Image Scale',
         subtitle: 'Scaling images',
         component: ImageScale,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#getImageData',
+        subtitle: 'Retrieve ImageData and draw as image on a canvas',
+        component: CanvasGetImageData,
       },
     ],
   },

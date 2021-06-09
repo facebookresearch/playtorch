@@ -9,6 +9,11 @@ package org.pytorch;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Rect;
+import androidx.annotation.ColorInt;
 import androidx.test.InstrumentationRegistry;
 import androidx.test.filters.SmallTest;
 import androidx.test.runner.AndroidJUnit4;
@@ -24,7 +29,9 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 import javax.annotation.Nullable;
 import org.json.JSONException;
 import org.junit.Assert;
@@ -285,5 +292,53 @@ public class IValuePackerInstrumentedTest {
         packer.unpack(IValue.from(Tensor.fromBlob(data, new long[] {1, 8})), packerContext);
 
     Assert.assertEquals("Umka is a white fluffy pillow.", map.getString("text"));
+  }
+
+  private static String colorHexString(@ColorInt int color) {
+    return String.format("#%06X", (0xFFFFFF & color));
+  }
+
+  @Test
+  public void mnist() throws Exception {
+    final String spec = readAsset("mnist.json");
+    final IIValuePacker packer = MobileModelModule.getPacker(spec);
+    final JavaOnlyMap params = new JavaOnlyMap();
+    Bitmap bitmap = Bitmap.createBitmap(224, 224, Bitmap.Config.ARGB_8888);
+
+    Canvas canvas = new Canvas(bitmap);
+    Paint paintBg = new Paint();
+    final @ColorInt int colorBg = Color.BLUE;
+    final @ColorInt int colorFg = Color.YELLOW;
+    paintBg.setColor(colorBg);
+    canvas.drawRect(new Rect(0, 0, 228, 228), paintBg);
+    Paint paintFg = new Paint();
+    paintFg.setColor(colorFg);
+    paintFg.setStrokeWidth(40.f);
+    canvas.drawLine(112, 40, 112, 228 - 40, paintFg);
+
+    JSContext.NativeJSRef ref = JSContext.wrapObject(new Image(bitmap));
+    params.putMap("image", ref.getJSRef());
+    params.putString("colorBackground", colorHexString(colorBg));
+    params.putString("colorForeground", colorHexString(colorFg));
+    params.putInt("crop_width", 28);
+    params.putInt("crop_height", 28);
+    params.putInt("scale_width", 28);
+    params.putInt("scale_height", 28);
+
+    PackerContext packerContext = packer.newContext();
+    IValue packRes = packer.pack(params, packerContext);
+    final float[] data = packRes.toTensor().getDataAsFloatArray();
+
+    Assert.assertEquals(28 * 28, data.length);
+    final Set<Float> set = new HashSet<>();
+    for (float f : data) {
+      set.add(f);
+    }
+    Assert.assertEquals(2, set.size());
+    for (float f : set) {
+      float v = 0.3081f * f + 0.1307f;
+      Assert.assertTrue(
+          Math.abs(v - 1.f) < DOUBLE_EQUALS_DELTA || Math.abs(v) < DOUBLE_EQUALS_DELTA);
+    }
   }
 }

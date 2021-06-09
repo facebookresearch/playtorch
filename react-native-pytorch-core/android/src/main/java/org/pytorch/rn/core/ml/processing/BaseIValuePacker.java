@@ -325,6 +325,9 @@ public class BaseIValuePacker implements IIValuePacker {
           case "rgb_norm":
             transform = RgbNormTransform.parse(jobject);
             break;
+          case "greyscale_norm":
+            transform = GreyScaleNormTransform.parse(jobject);
+            break;
         }
         if (transform == null) {
           throw new IllegalArgumentException("Unknown image_to_tensor transform");

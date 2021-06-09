@@ -32,16 +32,27 @@ class CenterCropTransform implements IImageTransform {
     final int width = bitmap.getWidth();
     final int height = bitmap.getHeight();
 
-    if (outWidth > width) {
-      throw new IllegalArgumentException("output width cannot be larger than image width");
-    }
-    if (outHeight > height) {
-      throw new IllegalArgumentException("output height cannot be larger than image height");
+    final float ratio = width / height;
+    final float cropRatio = outWidth / outHeight;
+    int cropWidth;
+    int cropHeight;
+    if (cropRatio > ratio) {
+      // landscape
+      cropWidth = width;
+      cropHeight = (int) Math.floor(cropWidth / cropRatio);
+    } else {
+      // portrait
+      cropHeight = height;
+      cropWidth = (int) Math.floor(cropHeight * cropRatio);
     }
 
-    final int offsetX = (width - outWidth) / 2;
-    final int offsetY = (height - outHeight) / 2;
+    if (cropWidth > width || cropHeight > height) {
+      throw new IllegalStateException();
+    }
 
-    return Bitmap.createBitmap(bitmap, offsetX, offsetY, outWidth, outHeight);
+    final int offsetX = (width - cropWidth) / 2;
+    final int offsetY = (height - cropHeight) / 2;
+
+    return Bitmap.createBitmap(bitmap, offsetX, offsetY, cropWidth, cropHeight);
   }
 }

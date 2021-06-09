@@ -39,6 +39,7 @@ export class Animator {
   }
 
   start(animateFn: AnimateFunction, frameRate: number = 60) {
+    this.stop();
     this.isDone = false;
     this.frameCount = 0;
     const now = Date.now();

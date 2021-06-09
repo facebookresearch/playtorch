@@ -22,14 +22,11 @@ import CanvasShapes from './canvas/CanvasShapes';
 import CanvasStarter from './canvas/CanvasStarter';
 import CanvasAnimator from './canvas/CanvasAnimator';
 import CanvasTransform from './canvas/CanvasTransform';
+import CanvasDrawing from './canvas/CanvasDrawing';
 import Images from './canvas/Images';
 import CanvasArcMatrix from './canvas/CanvasArcMatrix';
 import CanvasClosePath from './canvas/CanvasClosePath';
-import CanvasDrawImage from './canvas/CanvasDrawImage';
-import CanvasLineCap from './canvas/CanvasLineCap';
-import CanvasLineJoin from './canvas/CanvasLineJoin';
-import CanvasMiterLimit from './canvas/CanvasMiterLimit';
-import CanvasMoveTo from './canvas/CanvasMoveTo';
+import CanvasDrawImage from './apiTest/CanvasDrawImage';
 import CanvasText from './canvas/CanvasText';
 import CanvasTextAlign from './canvas/CanvasTextAlign';
 
@@ -47,6 +44,10 @@ import CanvasSaveRestore from './apiTest/CanvasSaveRestore';
 import CanvasSetTransform from './apiTest/CanvasSetTransform';
 import CanvasScale from './apiTest/CanvasScale';
 import CanvasTranslate from './apiTest/CanvasTranslate';
+import CanvasLineCap from './apiTest/CanvasLineCap';
+import CanvasLineJoin from './apiTest/CanvasLineJoin';
+import CanvasMiterLimit from './apiTest/CanvasMiterLimit';
+import CanvasMoveTo from './apiTest/CanvasMoveTo';
 
 import ToolboxContext, {useToolboxContext} from './ToolboxContext';
 import ToolboxList from './ToolboxList';
@@ -112,6 +113,12 @@ const tools: ToolSection = [
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas Drawing',
+        subtitle: 'Basic interactive drawing on canvas',
+        component: CanvasDrawing,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
         title: 'Canvas#closePath',
         subtitle: 'Close path on a canvas',
         component: CanvasClosePath,
@@ -121,36 +128,6 @@ const tools: ToolSection = [
         title: 'Canvas Arc Matrix',
         subtitle: 'Drawing an arcs matrix on a canvas',
         component: CanvasArcMatrix,
-      },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas#moveTo',
-        subtitle: 'Drawing lines on a canvas',
-        component: CanvasMoveTo,
-      },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas#lineCap',
-        subtitle: 'Drawing lines with line cap on a canvas',
-        component: CanvasLineCap,
-      },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas#lineJoin',
-        subtitle: 'Drawing lines with line join on a canvas',
-        component: CanvasLineJoin,
-      },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas#miterLimit',
-        subtitle: 'Drawing lines with miter limit on a canvas',
-        component: CanvasMiterLimit,
-      },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas#drawImage',
-        subtitle: 'Drawing images on a canvas',
-        component: CanvasDrawImage,
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
@@ -255,6 +232,30 @@ const tools: ToolSection = [
         component: CanvasTranslate,
       },
       {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#moveTo',
+        subtitle: 'Drawing lines on a canvas',
+        component: CanvasMoveTo,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#lineCap',
+        subtitle: 'Drawing lines with line cap on a canvas',
+        component: CanvasLineCap,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#lineJoin',
+        subtitle: 'Drawing lines with line join on a canvas',
+        component: CanvasLineJoin,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#miterLimit',
+        subtitle: 'Drawing lines with miter limit on a canvas',
+        component: CanvasMiterLimit,
+      },
+      {
         icon: <Icon name="image-outline" size={32} color="tomato" />,
         title: 'Image Scale',
         subtitle: 'Scaling images',
@@ -265,6 +266,12 @@ const tools: ToolSection = [
         title: 'Canvas#getImageData',
         subtitle: 'Retrieve ImageData and draw as image on a canvas',
         component: CanvasGetImageData,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#drawImage',
+        subtitle: 'Drawing images on a canvas',
+        component: CanvasDrawImage,
       },
     ],
   },

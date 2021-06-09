@@ -73,6 +73,9 @@ export default function CanvasAnimator() {
         ctx.invalidate();
       });
     }
+
+    // Stop animator when exiting (unmount)
+    return () => animator.stop();
   }, [animator, ctx, layout]); // update only when layout or context changes
 
   if (!isFocused) {

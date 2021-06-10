@@ -715,6 +715,8 @@ export interface CanvasProps extends ViewProps {
 const INVALID_VALUE_NULLABLE = -1;
 
 const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
+  let lineCap: LineCap | null = null;
+  let lineJoin: LineJoin | null = null;
   return {
     set font(value: string) {
       const font = CSSFontUtils.parse(value);
@@ -730,10 +732,16 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
       CanvasRenderingContext2DModule.setFillStyle(ref, color);
     },
     set lineCap(value: LineCap) {
-      CanvasRenderingContext2DModule.setLineCap(ref, value);
+      if (value !== lineCap) {
+        lineCap = value;
+        CanvasRenderingContext2DModule.setLineCap(ref, value);
+      }
     },
     set lineJoin(value: LineJoin) {
-      CanvasRenderingContext2DModule.setLineJoin(ref, value);
+      if (lineJoin !== value) {
+        lineJoin = value;
+        CanvasRenderingContext2DModule.setLineJoin(ref, value);
+      }
     },
     set lineWidth(width: number) {
       CanvasRenderingContext2DModule.setLineWidth(ref, width);

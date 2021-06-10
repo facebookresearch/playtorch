@@ -123,8 +123,15 @@ public class CanvasRenderingContext2D {
         throw new ReactInvalidPropertyException("lineCap", lineCap, "butt | round | square");
     }
 
-    mStrokePaint.setStrokeCap(cap);
-    mTextFillPaint.setStrokeCap(cap);
+    Paint.Cap strokeCap = mStrokePaint.getStrokeCap();
+    if (!cap.equals(strokeCap)) {
+      mStrokePaint.setStrokeCap(cap);
+    }
+
+    Paint.Cap textCap = mTextFillPaint.getStrokeCap();
+    if (!cap.equals(textCap)) {
+      mTextFillPaint.setStrokeCap(cap);
+    }
   }
 
   public void setLineJoin(String lineJoin) {
@@ -143,8 +150,15 @@ public class CanvasRenderingContext2D {
         throw new ReactInvalidPropertyException("lineJoin", lineJoin, "bevel | round | miter");
     }
 
-    mStrokePaint.setStrokeJoin(join);
-    mTextFillPaint.setStrokeJoin(join);
+    Paint.Join strokeCap = mStrokePaint.getStrokeJoin();
+    if (!join.equals(strokeCap)) {
+      mStrokePaint.setStrokeJoin(join);
+    }
+
+    Paint.Join textCap = mTextFillPaint.getStrokeJoin();
+    if (!join.equals(textCap)) {
+      mTextFillPaint.setStrokeJoin(join);
+    }
   }
 
   public void setMiterLimit(final float miterLimit) {

@@ -15,10 +15,118 @@ import React, {
   useMemo,
   useRef,
 } from 'react';
-import {StyleSheet, LayoutRectangle} from 'react-native';
-import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
-import {event} from 'react-native-reanimated';
+import {StyleSheet, LayoutRectangle, Text, View} from 'react-native';
+import {
+  Canvas,
+  CanvasRenderingContext2D,
+  Image,
+  ImageUtil,
+  MobileModel,
+} from 'react-native-pytorch-core';
 import {Animator} from '../../utils/Animator';
+
+const mnistModel = require('../../../models/mnist.pt');
+
+/**
+ * The React hook provides MNIST model inference on an input image.
+ */
+function useMNISTModel() {
+  const processImage = useCallback(async (image: Image) => {
+    // Runs model inference on input image
+    const {
+      result: {scores},
+    } = await MobileModel.execute<{scores: number[]}>(mnistModel, {
+      image,
+      crop_width: 1,
+      crop_height: 1,
+      scale_width: 28,
+      scale_height: 28,
+      colorBackground: '#4f25c6',
+      colorForeground: '#ffffff',
+    });
+
+    // Get index of max score. The max index determines the most likely number
+    let maxScore = -Number.MAX_VALUE;
+    let maxScoreIdx = -1;
+    for (let i = 0; i < scores.length; i++) {
+      if (scores[i] > maxScore) {
+        maxScore = scores[i];
+        maxScoreIdx = i;
+      }
+    }
+    return maxScoreIdx;
+  }, []);
+
+  return {
+    processImage,
+  };
+}
+
+/**
+ * The React hook provides MNIST inference using the image data extracted from
+ * a canvas.
+ *
+ * @param layout The layout for the canvas
+ */
+function useMNISTCanvasInference(layout: LayoutRectangle | null) {
+  const [result, setResult] = useState('');
+  const isRunningInferenceRef = useRef(false);
+  const {processImage} = useMNISTModel();
+  const classify = useCallback(
+    async (ctx: CanvasRenderingContext2D, forceRun: boolean = false) => {
+      // Return immediately if layout is not available or if an inference is
+      // already in-flight. Ignore in-flight inference if `forceRun` is set to
+      // true.
+      if (layout === null || (isRunningInferenceRef.current && !forceRun)) {
+        return null;
+      }
+
+      // Set inference running if not force run
+      if (!forceRun) {
+        isRunningInferenceRef.current = true;
+      }
+
+      // Get canvas size
+      const size = [layout.width, layout.height];
+
+      // Get image data center crop
+      const imageData = await ctx.getImageData(
+        0,
+        size[1] / 2 - size[0] / 2,
+        size[0],
+        size[0],
+      );
+
+      // Convert image data to image.
+      const image: Image = await ImageUtil.fromImageData(imageData);
+
+      // Release image data to free memory
+      imageData.release();
+
+      // Run MNIST inference on the image
+      const result = await processImage(image);
+
+      // Release image to free memory
+      image.release();
+
+      // Set result state to force re-render of component that uses this hook
+      setResult(`${result}`);
+
+      // If not force run, add a little timeout to give device time to process
+      // other things
+      if (!forceRun) {
+        setTimeout(() => {
+          isRunningInferenceRef.current = false;
+        }, 100);
+      }
+    },
+    [isRunningInferenceRef, layout, processImage, setResult],
+  );
+  return {
+    result,
+    classify,
+  };
+}
 
 // This is an example of creating a simple animation using Animator utility class
 export default function CanvasAnimator() {
@@ -30,20 +138,14 @@ export default function CanvasAnimator() {
   // `ctx` is drawing context to draw shapes
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
 
-  // handler to get drawing context when canvas is ready. See <Canvas onContext2D={...}> below
-  const handleContext2D = useCallback(
-    async (ctx: CanvasRenderingContext2D) => {
-      setCtx(ctx);
-    },
-    [setCtx],
-  );
+  const {classify, result} = useMNISTCanvasInference(layout);
 
+  const drawingRef = useRef(false);
   const trailRef = useRef<number[][]>([]);
-  const [drawing, setDrawing] = useState(false);
 
   // handlers for touch events
   const handleMove = useCallback(
-    event => {
+    async event => {
       const position = [
         event.nativeEvent.locationX,
         event.nativeEvent.locationY,
@@ -56,47 +158,65 @@ export default function CanvasAnimator() {
         // add a point to trail if distance from last point > 5
         if (dx * dx + dy * dy > 25) {
           trail.push(position);
+          if (ctx != null) {
+            classify(ctx);
+          }
         }
       } else {
         trail.push(position);
       }
     },
-    [trailRef],
+    [trailRef, classify, ctx],
   );
 
-  const handleStart = useCallback(event => setDrawing(true), [setDrawing]);
-  const handleEnd = useCallback(event => setDrawing(false), [setDrawing]);
+  const handleStart = useCallback(() => (drawingRef.current = true), [
+    drawingRef,
+  ]);
+  const handleEnd = useCallback(async () => {
+    drawingRef.current = false;
+    if (ctx != null) {
+      await classify(ctx, true);
+    }
+  }, [drawingRef, classify]);
 
   // Instantiate an Animator. `useMemo` is used for React optimization.
   const animator = useMemo(() => new Animator(), []);
 
   useLayoutEffect(() => {
     if (ctx != null) {
-      animator.start((time, frames, frameTime) => {
-        // Here we use `layout` to calculate center position
+      animator.start(() => {
         const trail = trailRef.current;
         if (trail != null) {
+          // Here we use `layout` to get the canvas size
           const size = [layout?.width || 0, layout?.height || 0];
-          const center = size.map(s => s / 2);
 
           // clear previous canvas drawing and then redraw
-          ctx.clear();
-
           // fill background by drawing a rect
-          ctx.fillStyle = '#4f25c6';
+          ctx.fillStyle = 'black';
           ctx.fillRect(0, 0, size[0], size[1]);
+          ctx.fillStyle = '#4f25c6';
+          ctx.fillRect(0, size[1] / 2 - size[0] / 2, size[0], size[0]);
+          ctx.strokeStyle = 'white';
+          const borderWidth = 4;
+          ctx.lineWidth = borderWidth;
+          ctx.strokeRect(
+            borderWidth / 2,
+            size[1] / 2 - size[0] / 2,
+            size[0] - borderWidth,
+            size[0],
+          );
 
           // Draw text when there's no drawing
           if (trail.length === 0) {
             ctx.fillStyle = '#ffe9e6';
-            ctx.font = 'bold 50px sans-serif';
-            ctx.fillText('Draw', 20, 70);
-            ctx.fillText('Something', 20, 125);
+            ctx.font = 'bold 40px sans-serif';
+            ctx.fillText('Draw', 20, 50);
+            ctx.fillText('Something', 20, 100);
           }
 
           // Draw the trail
           ctx.strokeStyle = '#fff';
-          ctx.lineWidth = 15;
+          ctx.lineWidth = 30;
           ctx.lineJoin = 'round';
           ctx.lineCap = 'round';
           ctx.miterLimit = 1;
@@ -111,10 +231,9 @@ export default function CanvasAnimator() {
 
           ctx.stroke();
 
-          if (!drawing || trail.length > 100) {
-            if (trail.length > 0) {
-              trail.shift();
-            }
+          if (!drawingRef.current && trail.length > 0) {
+            // Shrink trail in a logarithmic size each animation frame
+            trail.splice(0, Math.max(Math.round(Math.log(trail.length)), 1));
           }
 
           // Need to include this at the end, for now.
@@ -125,23 +244,40 @@ export default function CanvasAnimator() {
 
     // Stop animator when exiting (unmount)
     return () => animator.stop();
-  }, [animator, ctx, layout, drawing, trailRef]); // update only when layout or context changes
+  }, [animator, ctx, drawingRef, layout, trailRef]); // update only when layout or context changes
 
   if (!isFocused) {
     return null;
   }
 
   return (
-    <Canvas
-      style={StyleSheet.absoluteFill}
-      onContext2D={handleContext2D}
-      onLayout={event => {
-        const {layout} = event.nativeEvent;
-        setLayout(layout);
-      }}
-      onTouchMove={handleMove}
-      onTouchStart={handleStart}
-      onTouchEnd={handleEnd}
-    />
+    <>
+      <Canvas
+        style={StyleSheet.absoluteFill}
+        onContext2D={setCtx}
+        onLayout={event => {
+          const {layout} = event.nativeEvent;
+          setLayout(layout);
+        }}
+        onTouchMove={handleMove}
+        onTouchStart={handleStart}
+        onTouchEnd={handleEnd}
+      />
+      <View style={styles.resultView} pointerEvents="none">
+        <Text style={styles.result}>{result}</Text>
+      </View>
+    </>
   );
 }
+
+const styles = StyleSheet.create({
+  resultView: {
+    position: 'absolute',
+    bottom: 0,
+    alignSelf: 'center',
+  },
+  result: {
+    fontSize: 96,
+    color: 'white',
+  },
+});

@@ -9,19 +9,26 @@
 
 import * as React from 'react';
 import {useCallback} from 'react';
-import {NativeModules, processColor, requireNativeComponent, ViewProps} from 'react-native';
+import {
+  NativeModules,
+  processColor,
+  requireNativeComponent,
+  ViewProps,
+} from 'react-native';
 import type {Image} from './ImageModule';
 import type {NativeJSRef} from './NativeJSRef';
 import * as CSSFontUtils from './utils/CSSFontUtils';
 
 const {
   PyTorchCoreCanvasRenderingContext2DModule: CanvasRenderingContext2DModule,
+  PyTorchCoreImageDataModule: ImageDataModule
 } = NativeModules;
 
 export interface ImageData extends NativeJSRef {
-  width: number,
-  height: number,
-  data: Uint8ClampedArray,
+  width: number;
+  height: number;
+  data: Uint8ClampedArray;
+  release(): Promise<void>;
 }
 
 /**
@@ -46,7 +53,7 @@ type LineJoin = 'bevel' | 'round' | 'miter';
  * * `"right"` The text is right-aligned.
  * * `"center"` The text is centered.
  */
-type TextAlign = "left" | "right" | "center";
+type TextAlign = 'left' | 'right' | 'center';
 
 /**
  * The Canvas 2D API provided by the React Native PyTorch Core canvas
@@ -428,7 +435,12 @@ export interface CanvasRenderingContext2D {
    * @param sw The width of the rectangle from which the [[ImageData]] will be extracted. Positive values are to the right, and negative to the left.
    * @param sh The height of the rectangle from which the [[ImageData]] will be extracted. Positive values are down, and negative are up.
    */
-  getImageData(sx: number, sy: number, sw: number, sh: number): Promise<ImageData>;
+  getImageData(
+    sx: number,
+    sy: number,
+    sw: number,
+    sh: number,
+  ): Promise<ImageData>;
 
   /**
    * Invalidate the canvas resulting in a repaint.
@@ -808,9 +820,20 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
     fillText(text: string, x: number, y: number): void {
       CanvasRenderingContext2DModule.fillText(ref, text, x, y);
     },
-    async getImageData(sx: number, sy: number, sw: number, sh: number): Promise<ImageData> {
-      const imageDataRef = await CanvasRenderingContext2DModule.getImageData(ref, sx, sy, sw, sh);
-      return ({
+    async getImageData(
+      sx: number,
+      sy: number,
+      sw: number,
+      sh: number,
+    ): Promise<ImageData> {
+      const imageDataRef = await CanvasRenderingContext2DModule.getImageData(
+        ref,
+        sx,
+        sy,
+        sw,
+        sh,
+      );
+      return {
         ...imageDataRef,
         get width(): number {
           return sw;
@@ -821,8 +844,11 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
         get data(): Uint8ClampedArray {
           // TODO(T92409860) Implement ImageData.data
           return new Uint8ClampedArray();
+        },
+        async release(): Promise<void> {
+          return await ImageDataModule.release(imageDataRef);
         }
-      });
+      };
     },
     invalidate(): void {
       CanvasRenderingContext2DModule.invalidate(ref);

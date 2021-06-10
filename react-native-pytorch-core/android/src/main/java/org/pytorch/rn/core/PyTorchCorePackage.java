@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import org.pytorch.rn.core.camera.CameraManager;
 import org.pytorch.rn.core.canvas.CanvasManager;
 import org.pytorch.rn.core.canvas.CanvasRenderingContext2DModule;
+import org.pytorch.rn.core.canvas.ImageDataModule;
 import org.pytorch.rn.core.image.ImageModule;
 import org.pytorch.rn.core.ml.MobileModelModule;
 
@@ -27,6 +28,7 @@ public class PyTorchCorePackage implements ReactPackage {
     return Arrays.<NativeModule>asList(
         new MobileModelModule(reactContext),
         new ImageModule(reactContext),
+        new ImageDataModule(reactContext),
         new CanvasRenderingContext2DModule(reactContext));
   }
 

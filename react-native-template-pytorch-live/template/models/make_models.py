@@ -3,6 +3,9 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+import tempfile
+import urllib
+import zipfile
 from pathlib import Path
 
 import torch
@@ -38,6 +41,21 @@ def export_image_classification_models():
         bundle_live_spec_and_export_model(name, script_model)
 
 
+def export_mnist_model():
+    print("Exporting MNIST model")
+
+    filehandle, _ = urllib.request.urlretrieve(
+        "https://torchserve.pytorch.org/mar_files/mnist_scripted_v2.mar"
+    )
+
+    with tempfile.TemporaryDirectory() as tempdir:
+        zip_file_object = zipfile.ZipFile(filehandle, "r")
+        zip_file_object.extract("mnist_script.pt", tempdir)
+        model = torch.jit.load(f"{tempdir}/mnist_script.pt")
+        script_model = torch.jit.script(model)
+        bundle_live_spec_and_export_model("mnist", script_model)
+
+
 def export_nlp_models():
     print("Exporting NLP models")
 
@@ -69,6 +87,7 @@ def export_nlp_models():
 
 def main():
     export_image_classification_models()
+    export_mnist_model()
     export_nlp_models()
 
 

@@ -1,0 +1,33 @@
+{
+  "pack": {
+    "type": "tensor_from_image",
+    "image": "image",
+    "transforms": [
+      {
+        "type": "image_to_image",
+        "name": "center_crop",
+        "width": "$crop_width",
+        "height": "$crop_height"
+      },
+      {
+        "type": "image_to_image",
+        "name": "scale",
+        "width": "$scale_width",
+        "height": "$scale_height"
+      },
+      {
+        "type": "image_to_tensor",
+        "name": "greyscale_norm",
+        "colorBackground": "$colorBackground",
+        "colorForeground": "$colorForeground",
+        "mean": 0.1307,
+        "std": 0.3081
+      }
+    ]
+  },
+  "unpack": {
+    "type": "tensor",
+    "dtype": "float",
+    "key": "scores"
+  }
+}

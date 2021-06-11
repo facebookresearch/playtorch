@@ -7,10 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-
-		5E555C0D2413F4C50049A1A2 /* PyTorchCore.m in Sources */ = {isa = PBXBuildFile; fileRef = B3E7B5891CC2AC0600A0062D /* PyTorchCore.m */; };
-		F4FF95D7245B92E800C19C63 /*  PyTorchCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /*  PyTorchCore.swift */; };
-
+		F4FF95D7245B92E800C19C63 /* PyTorchCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* PyTorchCore.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,11 +24,15 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libPyTorchCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPyTorchCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
-
+		8DF4B1602669754F009CCD14 /* DrawingCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvasView.swift; sourceTree = "<group>"; };
+		8DF4B161266975B3009CCD14 /* CanvasManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CanvasManager.m; sourceTree = "<group>"; };
+		8DF4B162266979F5009CCD14 /* CanvasManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasManager.swift; sourceTree = "<group>"; };
+		8DF4B167266AA70A009CCD14 /* CanvasRenderingContext2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasRenderingContext2D.swift; sourceTree = "<group>"; };
+		8DF4B168266AA771009CCD14 /* CanvasRenderingContext2DModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CanvasRenderingContext2DModule.m; sourceTree = "<group>"; };
+		8DF4B16A266FCE5A009CCD14 /* JSContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSContext.swift; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* PyTorchCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PyTorchCore.m; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* PyTorchCore-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PyTorchCore-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4FF95D6245B92E800C19C63 /* PyTorchCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PyTorchCore.swift; sourceTree = "<group>"; };
-
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,11 +57,15 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-
+				8DF4B16A266FCE5A009CCD14 /* JSContext.swift */,
+				8DF4B168266AA771009CCD14 /* CanvasRenderingContext2DModule.m */,
+				8DF4B167266AA70A009CCD14 /* CanvasRenderingContext2D.swift */,
+				8DF4B162266979F5009CCD14 /* CanvasManager.swift */,
+				8DF4B161266975B3009CCD14 /* CanvasManager.m */,
+				8DF4B1602669754F009CCD14 /* DrawingCanvasView.swift */,
 				F4FF95D6245B92E800C19C63 /* PyTorchCore.swift */,
 				B3E7B5891CC2AC0600A0062D /* PyTorchCore.m */,
 				F4FF95D5245B92E700C19C63 /* PyTorchCore-Bridging-Header.h */,
-
 				134814211AA4EA7D00B7C361 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -122,10 +127,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-
 				F4FF95D7245B92E800C19C63 /* PyTorchCore.swift in Sources */,
-				B3E7B58A1CC2AC0600A0062D /* PyTorchCore.m in Sources */,
-
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -238,11 +240,9 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = PyTorchCore;
 				SKIP_INSTALL = YES;
-
 				SWIFT_OBJC_BRIDGING_HEADER = "PyTorchCore-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
-
 			};
 			name = Debug;
 		};
@@ -259,10 +259,8 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = PyTorchCore;
 				SKIP_INSTALL = YES;
-
 				SWIFT_OBJC_BRIDGING_HEADER = "PyTorchCore-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
-
 			};
 			name = Release;
 		};

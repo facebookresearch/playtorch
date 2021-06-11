@@ -42,6 +42,7 @@
 		4B0502A83E43836CCFD3B155 /* Pods-PyTorchLiveExample-PyTorchLiveExampleTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PyTorchLiveExample-PyTorchLiveExampleTests.release.xcconfig"; path = "Target Support Files/Pods-PyTorchLiveExample-PyTorchLiveExampleTests/Pods-PyTorchLiveExample-PyTorchLiveExampleTests.release.xcconfig"; sourceTree = "<group>"; };
 		71B00998D66D815B501CDD71 /* libPods-PyTorchLiveExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PyTorchLiveExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PyTorchLiveExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		8DF4B164266A5C48009CCD14 /* PyTorchLiveExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PyTorchLiveExample-Bridging-Header.h"; sourceTree = "<group>"; };
 		B2803210F7E787CD98D1ABA0 /* Pods-PyTorchLiveExample-PyTorchLiveExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PyTorchLiveExample-PyTorchLiveExampleTests.debug.xcconfig"; path = "Target Support Files/Pods-PyTorchLiveExample-PyTorchLiveExampleTests/Pods-PyTorchLiveExample-PyTorchLiveExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		EC7BF5520F047691AA20A13E /* Pods-PyTorchLiveExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PyTorchLiveExample.debug.xcconfig"; path = "Target Support Files/Pods-PyTorchLiveExample/Pods-PyTorchLiveExample.debug.xcconfig"; sourceTree = "<group>"; };
 		ECD7C5D88AA5EDCE231D09BA /* libPods-PyTorchLiveExample-PyTorchLiveExampleTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PyTorchLiveExample-PyTorchLiveExampleTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -95,6 +96,7 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				381721E3266F2E4F00DBB29A /* DummySwift.swift */,
+				8DF4B164266A5C48009CCD14 /* PyTorchLiveExample-Bridging-Header.h */,
 			);
 			name = PyTorchLiveExample;
 			sourceTree = "<group>";
@@ -507,6 +509,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.pytorch.live.example.PyTorchLiveExample;
 				PRODUCT_NAME = PyTorchLiveExample;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
+				SWIFT_OBJC_BRIDGING_HEADER = "PyTorchLiveExample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -536,6 +539,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.pytorch.live.example.PyTorchLiveExample;
 				PRODUCT_NAME = PyTorchLiveExample;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
+				SWIFT_OBJC_BRIDGING_HEADER = "PyTorchLiveExample-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

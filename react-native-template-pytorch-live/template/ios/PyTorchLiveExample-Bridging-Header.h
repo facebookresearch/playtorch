@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import Foundation
+//
+//  Use this file to import your target's public headers that you would like to expose to Swift.
+//
 
-//Created this file to fix the error Could not find or use auto-linked library 'swiftWebKit'
-//https://github.com/facebookarchive/react-native-fbsdk/issues/755

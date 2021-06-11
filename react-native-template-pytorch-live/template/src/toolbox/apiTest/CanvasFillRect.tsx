@@ -28,12 +28,12 @@ export default function CanvasFillRect() {
   useLayoutEffect(() => {
     const ctx = drawingContext;
     if (ctx != null) {
-      ctx.clear();
 
-      ctx.fillStyle = 'green';
-      ctx.fillRect(20, 10, 150, 100);
+      ctx.strokeRect(20, 10, 150, 100);
+      ctx.strokeRect(180, 10, 150, 100);
+      ctx.fillRect(150, 90, 20, 20);
+      ctx.fillRect(310, 90, 20, 20);
 
-      ctx.invalidate();
     }
   }, [drawingContext]);
 

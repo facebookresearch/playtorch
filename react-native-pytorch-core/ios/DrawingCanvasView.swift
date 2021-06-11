@@ -16,6 +16,7 @@ class DrawingCanvasView: UIView {
 
     var strokeRectangles = [CGRect]()
     var fillRectangles = [CGRect]()
+    var arcs = [CGArc]()
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,6 +33,11 @@ class DrawingCanvasView: UIView {
 
         guard let context = UIGraphicsGetCurrentContext() else { return }
 
+        for arc in arcs {
+            context.addArc(center: arc.center, radius: arc.radius, startAngle: arc.startAngle, endAngle: arc.endAngle, clockwise: arc.clockwise)
+            context.strokePath()
+        }
+
         context.addRects(strokeRectangles)
         context.strokePath()
 
@@ -45,6 +51,17 @@ class DrawingCanvasView: UIView {
         unwrappedOnContext2D(["ID" : ref[JSContext.ID_KEY]])
     }
 
+    func arc(x: CGFloat, y: CGFloat, radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat, counterclockwise: Bool) {
+        //Apple's arc asks for clockwise, CanvasRenderingContext asks for counterclockwise
+        let arc = CGArc(x: x, y: y, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: !counterclockwise)
+        arcs.append(arc)
+
+        //invalidates view so that it needs to be redrawn
+        let rect = CGRect(x: x-radius, y: y-radius, width: 2*radius, height: 2*radius)
+        DispatchQueue.main.async {
+            self.setNeedsDisplay(rect)
+        }
+    }
 
     func strokeRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
         //create CGRect and add it to list
@@ -68,11 +85,26 @@ class DrawingCanvasView: UIView {
         }
     }
 
-    func invalidate(){
+    func invalidate() {
         DispatchQueue.main.async {
             self.setNeedsDisplay()
         }
     }
 
+    struct CGArc {
+        public var center: CGPoint
+        public var radius: CGFloat
+        public var startAngle: CGFloat
+        public var endAngle: CGFloat
+        public var clockwise: Bool
+
+        init(x: CGFloat, y: CGFloat, radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat, clockwise: Bool) {
+            self.center = CGPoint(x: x, y: y)
+            self.radius = radius
+            self.startAngle = startAngle
+            self.endAngle = endAngle
+            self.clockwise = clockwise
+        }
+    }
 
 }

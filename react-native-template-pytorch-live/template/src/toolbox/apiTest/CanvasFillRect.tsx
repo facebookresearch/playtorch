@@ -34,6 +34,7 @@ export default function CanvasFillRect() {
       ctx.fillRect(150, 90, 20, 20);
       ctx.fillRect(310, 90, 20, 20);
 
+      ctx.arc(175, 180, 100, 0, Math.PI, true);
     }
   }, [drawingContext]);
 

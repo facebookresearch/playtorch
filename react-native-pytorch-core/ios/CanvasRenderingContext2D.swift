@@ -35,6 +35,23 @@ class CanvasRenderingContext2D: NSObject {
         }
     }
 
+    @objc
+    func arc(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, radius: NSNumber, startAngle: NSNumber, endAngle: NSNumber, counterclockwise: Bool) {
+        do {
+            try arcWithErrorHandling(canvasRef, x: x, y: y, radius: radius, startAngle: startAngle, endAngle: endAngle, counterclockwise: counterclockwise)
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform arc")
+        }
+    }
+
+    func arcWithErrorHandling(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, radius: NSNumber, startAngle: NSNumber, endAngle: NSNumber, counterclockwise: Bool) throws {
+        let castedCanvasRef = canvasRef as? [ String : String ]
+        guard let ref = castedCanvasRef else { throw CanvasRenderingContext2DError.castingDict }
+        let castedCanvasView = try JSContext.unwrapObject(jsRef: ref) as? DrawingCanvasView
+        guard let canvasView =  castedCanvasView else { throw CanvasRenderingContext2DError.castingView }
+        canvasView.arc(x: CGFloat(x), y: CGFloat(y), radius: CGFloat(radius), startAngle: CGFloat(startAngle), endAngle: CGFloat(endAngle), counterclockwise: counterclockwise)
+    }
 
     func fillRectWithErrorHandling(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber) throws {
         let castedCanvasRef = canvasRef as? [ String : String ]

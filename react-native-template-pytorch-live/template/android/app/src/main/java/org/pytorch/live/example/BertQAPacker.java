@@ -13,13 +13,19 @@ import java.util.Arrays;
 import java.util.Map;
 import javax.annotation.Nullable;
 import org.json.JSONException;
+import org.json.JSONObject;
 import org.pytorch.IValue;
+import org.pytorch.Tensor;
 import org.pytorch.rn.core.ml.processing.BaseIValuePacker;
 import org.pytorch.rn.core.ml.processing.BertTokenizer;
 import org.pytorch.rn.core.ml.processing.PackerContext;
 import org.pytorch.rn.core.ml.processing.PackerRegistry;
 
 public class BertQAPacker extends BaseIValuePacker {
+  private static final String JSON_VOCABULARY_BERT = "vocabulary_bert";
+
+  private static final String JSON_STRING = "string";
+
   public BertQAPacker(@Nullable String specSrc) throws JSONException {
     super(specSrc);
   }
@@ -27,18 +33,13 @@ public class BertQAPacker extends BaseIValuePacker {
   @Override
   protected void register(final PackerRegistry registry) {
     super.register(registry);
-    registry
-        .register(
-            "bert_decode_qa_answer_custom",
-            (ivalue, jobject, map, packerContext) ->
-                map.putString(jobject.getString("key"), decodeBertQAAnswer(ivalue, packerContext)))
-        .register(
-            "tensor_to_string_custom",
-            (ivalue, jobject, map, packerContext) -> {
-              final long[] tokenIds = ivalue.toTensor().getDataAsLongArray();
-              map.putString(
-                  jobject.getString("key"), getBertTokenizer(packerContext).decode(tokenIds));
-            });
+    registry.register(
+        "tensor_from_string_custom",
+        (jobject, params, packerContext) -> packString(jobject, packerContext));
+    registry.register(
+        "bert_decode_qa_answer_custom",
+        (ivalue, jobject, map, packerContext) ->
+            map.putString(jobject.getString("key"), decodeBertQAAnswer(ivalue, packerContext)));
   }
 
   private BertTokenizer getBertTokenizer(PackerContext packerContext)
@@ -62,6 +63,24 @@ public class BertQAPacker extends BaseIValuePacker {
       }
     }
     return ret;
+  }
+
+  private IValue packString(final JSONObject jobject, final PackerContext packerContext)
+      throws JSONException, IOException {
+    final String tokenizer = jobject.getString("tokenizer");
+    if ("bert".equals(tokenizer)) {
+      if (!packerContext.specSrcJson.has(JSON_VOCABULARY_BERT)) {
+        throw new IllegalStateException("Spec missing bert vocabulary");
+      }
+
+      final long[] tokenIds =
+          getBertTokenizer(packerContext)
+              .tokenize(jobject.getString(JSON_STRING), jobject.getInt("model_input_length"));
+      packerContext.store("token_ids", tokenIds);
+      return IValue.from(Tensor.fromBlob(tokenIds, new long[] {1, tokenIds.length}));
+    }
+
+    throw new IllegalStateException("Unknown tokenizer");
   }
 
   private String decodeBertQAAnswer(final IValue ivalue, final PackerContext packerContext)

@@ -22,6 +22,7 @@ module.exports = {
   docs: [
     'tutorials/install-cli',
     'tutorials/image-classification',
+    'tutorials/question-answering',
     'tutorials/prepare-custom-model',
     'tutorials/model-spec',
   ],

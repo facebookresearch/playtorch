@@ -7,7 +7,7 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #25c2a0;
+  --ifm-color-primary: #EE4C2C;
   --ifm-color-primary-dark: rgb(33, 175, 144);
   --ifm-color-primary-darker: rgb(31, 165, 136);
   --ifm-color-primary-darkest: rgb(26, 136, 112);
@@ -15,6 +15,12 @@
   --ifm-color-primary-lighter: rgb(102, 212, 189);
   --ifm-color-primary-lightest: rgb(146, 224, 208);
   --ifm-code-font-size: 95%;
+  --ifm-button-border-color: #EE4C2C;
+}
+
+.button--lg {
+  --ifm-button-size-multiplier: 1.25;
+  --ifm-button-font-weight: var(--ifm-font-weight-semibold);
 }
 
 .docusaurus-highlight-code-line {
@@ -51,4 +57,13 @@ html[data-theme='dark'] .header-github-link:before {
 
 html[data-theme='dark'] .docusaurus-highlight-code-line {
   background-color: rgba(0, 0, 0, 0.3);
+}
+
+.hero__title {
+  font-size: 4.5rem;
+}
+
+.p__value_props {
+  font-size: 1.25rem;
+  font-weight: var(--ifm-font-weight-semibold);
 }

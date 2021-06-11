@@ -7,50 +7,48 @@
 
 import React from 'react';
 import clsx from 'clsx';
+import Link from '@docusaurus/Link';
 import styles from './HomepageFeatures.module.css';
 
 const FeatureList = [
   {
-    title: 'Easy to Use',
-    Svg: require('../../static/img/undraw_docusaurus_mountain.svg').default,
-    description: (
+    title: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        PyTorch Live helps you build mobile AI experiences in just a few minutes.
       </>
     ),
+    description: 'Get started',
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('../../static/img/undraw_docusaurus_tree.svg').default,
-    description: (
+    title: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Use React Native templates to quickly build visual, interactive UI.
       </>
     ),
+    description: 'Tutorials',
   },
   {
-    title: 'Powered by React',
-    Svg: require('../../static/img/undraw_docusaurus_react.svg').default,
-    description: (
+    title: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Easily integrate open source, mobile ML models into your projects.
       </>
     ),
+    description: 'API',
   },
 ];
 
-function Feature({Svg, title, description}) {
+function Feature({title, description}) {
   return (
-    <div className={clsx('col col--4')}>
-      <div className="text--center">
-        <Svg className={styles.featureSvg} alt={title} />
-      </div>
+    <div className={clsx('col col--3')}>
       <div className="text--center padding-horiz--md">
-        <h3>{title}</h3>
-        <p>{description}</p>
+        <p className="p__value_props">{title}</p>
+        <div className={styles.button}>
+          <Link
+            className="button button--outline button--lg"
+            to="/docs/tutorials/install-cli">
+            {description}
+          </Link>
+        </div>
       </div>
     </div>
   );
@@ -69,3 +67,5 @@ export default function HomepageFeatures() {
     </section>
   );
 }
+
+//<Svg className={styles.featureSvg} alt={title} />

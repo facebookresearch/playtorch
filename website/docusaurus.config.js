@@ -13,8 +13,7 @@ const npm2yarn = require('@docusaurus/remark-plugin-npm2yarn');
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: 'PyTorch Live',
-  tagline: 'Build mobile AI experiences in just a few minutes',
+  title: 'Making AI easier to use, for everyone.',
   url: 'https://facebookexperimental.github.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -28,10 +27,10 @@ module.exports = {
       darkTheme: require('prism-react-renderer/themes/dracula'),
     },
     navbar: {
-      title: 'PyTorch Live',
+      title: '',
       logo: {
         alt: 'PyTorch Live Logo',
-        src: 'img/logo.svg',
+        src: 'img/PyTorchLive_Logo.png',
       },
       items: [
         {

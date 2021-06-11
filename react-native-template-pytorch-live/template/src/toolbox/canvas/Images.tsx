@@ -28,12 +28,12 @@ export default function Images() {
 
   // load an online image from USFWS National Digital Library
   const birdImage = useImageFromURL(
-    'https://digitalmedia.fws.gov/digital/api/singleitem/image/natdiglib/6198/default.jpg',
+    'https://digitalmedia.fws.gov/digital/api/singleitem/image/natdiglib/28807/default.jpg',
   );
 
   // load a local image file
-  const swanImage = useImageFromBundle(
-    require('../../../assets/images/swan.jpg'),
+  const flamingoImage = useImageFromBundle(
+    require('../../../assets/images/flamingo.jpg'),
   );
 
   const handleContext2D = useCallback(
@@ -48,29 +48,29 @@ export default function Images() {
       // clear previous canvas drawing and then redraw
       ctx.clear();
 
-      if (birdImage != null && swanImage != null) {
+      if (birdImage != null && flamingoImage != null) {
         // Here we use `layout` to calculate center position
         const size = [layout?.width || 0, layout?.height || 0];
 
-        // draw two swan images on canvas
+        // draw two flamingo images on canvas
         // calculate margins to center an image on canvas
-        const swanAspectRatio = swanImage.getWidth() / swanImage.getHeight();
+        const aspectRatio =
+          flamingoImage.getWidth() / flamingoImage.getHeight();
         const marginH = 20;
-        const marginV =
-          (size[1] - (size[0] - marginH * 2) / swanAspectRatio) / 2;
+        const marginV = (size[1] - (size[0] - marginH * 2) / aspectRatio) / 2;
 
-        ctx.drawImage(swanImage, 0, 0);
+        ctx.drawImage(flamingoImage, 0, 0);
         ctx.fillStyle = '#000000bb';
         ctx.fillRect(0, 0, size[0], size[1]);
         ctx.drawImage(
-          swanImage,
+          flamingoImage,
           marginH,
           marginV,
           size[0] - marginH * 2,
           size[1] - marginV * 2,
         );
 
-        // draw three bird images (cropped) on canvas
+        // draw bird images (cropped) on canvas
         const birdImageMargin = 20;
         const cropSize = 200;
         const targetSize = 50;
@@ -78,30 +78,30 @@ export default function Images() {
           birdImage,
           birdImageMargin,
           birdImageMargin,
-          targetSize,
-          targetSize,
+          targetSize / 1.5,
+          targetSize / 1.5,
         );
         ctx.drawImage(
           birdImage,
-          birdImage.getWidth() / 2,
-          birdImage.getHeight() / 2,
+          birdImage.getWidth() / 3,
+          birdImage.getHeight() / 3,
           cropSize,
           cropSize,
-          85,
+          64,
           birdImageMargin,
           targetSize,
           targetSize,
         );
         ctx.drawImage(
           birdImage,
-          birdImage.getWidth() / 2,
-          birdImage.getHeight() / 2,
+          birdImage.getWidth() / 3,
+          birdImage.getHeight() / 3,
           cropSize,
           cropSize,
-          150,
+          125,
           birdImageMargin,
-          targetSize * 2,
-          targetSize,
+          targetSize * 1.5,
+          targetSize * 1.5,
         );
       } else {
         ctx.fillStyle = '#000000';
@@ -111,7 +111,7 @@ export default function Images() {
       // Need to include this at the end, for now.
       ctx.invalidate();
     }
-  }, [ctx, birdImage, swanImage]);
+  }, [ctx, birdImage, flamingoImage]);
 
   if (!isFocused) {
     return null;
@@ -131,7 +131,7 @@ export default function Images() {
       <View style={{flex: 1, padding: 0, backgroundColor: '#000000'}}>
         <Image
           style={{width: '100%', height: '100%', resizeMode: 'cover'}}
-          source={require('../../../assets/images/duck.jpg')}
+          source={require('../../../assets/images/zebra.jpg')}
         />
       </View>
     </View>

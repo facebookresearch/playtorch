@@ -9,7 +9,7 @@
 
 import * as React from 'react';
 import {StyleProp, ViewStyle} from 'react-native';
-import {View, Button, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {ModelInfo} from '../Models';
 
 type Props = {
@@ -33,17 +33,19 @@ export default function ModelSelector({
     onSelectModelInfo(model);
   }
   return (
-    <View style={style}>
+    <View style={[styles.row, style]}>
       {modelInfos.map(modelInfo => {
+        const selected = modelInfo.name === selectedModelInfo.name;
         return (
-          <View style={styles.button} key={modelInfo.name}>
-            <Button
-              title={modelInfo.name}
-              color="tomato"
-              disabled={modelInfo.name === selectedModelInfo.name}
-              onPress={() => handleSelectModel(modelInfo)}
-            />
-          </View>
+          <TouchableOpacity
+            style={[styles.button, selected && styles.buttonSelect]}
+            key={modelInfo.name}
+            disabled={selected}
+            onPress={() => handleSelectModel(modelInfo)}>
+            <Text style={[styles.label, selected && styles.labelSelect]}>
+              {modelInfo.name}
+            </Text>
+          </TouchableOpacity>
         );
       })}
     </View>
@@ -51,7 +53,25 @@ export default function ModelSelector({
 }
 
 const styles = StyleSheet.create({
+  row: {
+    borderBottomWidth: 2,
+    borderBottomColor: '#ff4c2c',
+  },
   button: {
-    marginBottom: 5,
+    backgroundColor: '#fff',
+    flexGrow: 1,
+  },
+  buttonSelect: {
+    backgroundColor: '#ff4c2c',
+  },
+  label: {
+    alignSelf: 'center',
+    marginVertical: 20,
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: '#678',
+  },
+  labelSelect: {
+    color: '#fff',
   },
 });

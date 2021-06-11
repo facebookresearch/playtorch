@@ -68,8 +68,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   actions: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
+    flexDirection: 'row',
   },
 });

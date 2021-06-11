@@ -34,11 +34,11 @@ export default function ImageScale() {
 
   useEffect(() => {
     (async () => {
-      const loadedCatImage = await ImageUtil.fromBundle(
-        require('../../../assets/images/cat.jpg'),
+      const loadedTeapotImage = await ImageUtil.fromBundle(
+        require('../../../assets/images/teapot.jpg'),
       );
-      setCatImage(loadedCatImage);
-      const loadedScaledCatImage = await loadedCatImage.scale(0.25, 0.5);
+      setCatImage(loadedTeapotImage);
+      const loadedScaledCatImage = await loadedTeapotImage.scale(0.25, 0.5);
       setScaledCatImage(loadedScaledCatImage);
     })();
   }, [setCatImage, setScaledCatImage]);

@@ -8,15 +8,24 @@
  */
 
 import * as React from 'react';
-import {FlatList, Image, StyleSheet, TouchableHighlight} from 'react-native';
+import {
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableHighlight,
+  View,
+  Text,
+} from 'react-native';
 
 const images = [
-  'https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/golden-retriever-royalty-free-image-506756303-1560962726.jpg?crop=0.672xw:1.00xh;0.166xw,0&resize=640:*',
-  'https://cdn.mos.cms.futurecdn.net/mEuBJTDhXuTfSKdLefzSKg.jpg',
-  'https://www.hppr.org/sites/hppr/files/201904/ls_hedgehog.jpg',
-  'https://wehco.media.clients.ellingtoncms.com/img/photos/2019/06/17/resized_250499-1b-deer-0618_85-26607_t800.JPG?90232451fbcadccc64a17de7521d859a8f88077d',
-  'https://ymcagbw.org/sites/default/files/styles/node_blog/public/2020-03/short-tailed_weasel.jpg?h=974e650f&itok=mPFDLcOm',
-  'https://www.mymove.com/wp-content/uploads/2020/08/GettyImages-980510606-1-scaled.jpg',
+  'https://ids.si.edu/ids/deliveryService?max_w=800&id=NZP-20090127-0422MM-000002',
+  'https://ids.si.edu/ids/deliveryService?max_w=800&id=NZP-20060712-061JC',
+  'https://ids.si.edu/ids/deliveryService?max_w=800&id=SG-2016-0174A-101',
+  'https://ids.si.edu/ids/deliveryService?max_w=800&id=NASM-A19670093000-NASM2018-10363-000001',
+  'https://www.nps.gov/npgallery/GetAsset/3d0a37ab-9b32-4644-931c-7d145c90b995/',
+  'https://ids.si.edu/ids/deliveryService?max_w=800&id=CHSDM-7B301B2FFD322_03',
+  'https://ids.si.edu/ids/deliveryService?max_w=800&id=ACM-acmobj-200400070001-r9',
+  '',
 ];
 
 type Props = {
@@ -24,11 +33,20 @@ type Props = {
 };
 
 export default function PredefinedImageList({onSelectImage}: Props) {
-  const renderItem = ({item: imageUri}: any) => (
-    <TouchableHighlight onPress={() => onSelectImage(imageUri)}>
-      <Image style={styles.image} source={{uri: imageUri}} />
-    </TouchableHighlight>
-  );
+  const renderItem = ({item: imageUri}: any) =>
+    imageUri ? (
+      <TouchableHighlight onPress={() => onSelectImage(imageUri)}>
+        <Image style={styles.image} source={{uri: imageUri}} />
+      </TouchableHighlight>
+    ) : (
+      <View style={styles.placeholder}>
+        <Text style={styles.placeholderText}>
+          <Text style={{fontWeight: 'bold'}}>Tip:</Text> You can edit
+          PredefinedImageList.tsx to add or change the images in the `images`
+          array.
+        </Text>
+      </View>
+    );
 
   return (
     <FlatList
@@ -43,11 +61,25 @@ export default function PredefinedImageList({onSelectImage}: Props) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   },
   image: {
     width: '100%',
     height: 300,
     resizeMode: 'cover',
+  },
+  placeholder: {
+    height: 300,
+    backgroundColor: '#e1e3e9',
+    padding: 20,
+  },
+  placeholderText: {
+    color: '#667788',
+    fontSize: 16,
+    lineHeight: 21,
   },
 });

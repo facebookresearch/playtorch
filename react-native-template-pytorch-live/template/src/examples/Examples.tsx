@@ -32,15 +32,15 @@ const contents = [
     data: [
       {
         name: 'Photo example',
-        info: 'Identify animals in an example',
+        info: 'Identify the contents in a photo',
         component: 'PhotosExample',
-        img: require('../../assets/images/wnn_photo1_fpo.jpg'),
+        img: require('../../assets/images/plane.jpg'),
       },
       {
         name: 'Camera example',
         info: 'Identify objects in the camera',
         component: 'CameraExample',
-        img: require('../../assets/images/wnn_photo2_fpo.jpg'),
+        img: require('../../assets/images/flamingo.jpg'),
       },
     ],
   },

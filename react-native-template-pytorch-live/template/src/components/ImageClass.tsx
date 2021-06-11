@@ -25,9 +25,10 @@ export default function ImageClass({style, imageClass, inferenceTime}: Props) {
   return (
     <View style={style}>
       <View style={styles.imageClasses}>
-        <Text style={styles.labels} numberOfLines={1} ellipsizeMode="middle">
-          {imageClass} ({inferenceTime}ms)
+        <Text style={styles.labels} numberOfLines={2} ellipsizeMode="tail">
+          {imageClass}
         </Text>
+        <Text style={styles.small}>Time taken: {inferenceTime}ms</Text>
       </View>
     </View>
   );
@@ -35,17 +36,15 @@ export default function ImageClass({style, imageClass, inferenceTime}: Props) {
 
 const styles = StyleSheet.create({
   imageClasses: {
-    position: 'absolute',
     backgroundColor: 'white',
-    borderRadius: 50,
     padding: 20,
-    width: '90%',
-    alignSelf: 'center',
-    bottom: 120,
   },
   labels: {
-    textAlign: 'center',
     fontWeight: 'bold',
     fontSize: 20,
+  },
+  small: {
+    fontSize: 11,
+    color: '#678',
   },
 });

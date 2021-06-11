@@ -9,7 +9,7 @@
 
 import * as React from 'react';
 import {useState, useCallback} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View, Text} from 'react-native';
 import {ImageUtil} from 'react-native-pytorch-core';
 import ImageClass from '../components/ImageClass';
 import {ModelInfo, ImageClassificationModels} from '../Models';
@@ -30,29 +30,57 @@ export default function PhotosExample() {
       (async () => {
         const image = await ImageUtil.fromURL(url);
         processImage(image);
+        setHint(false);
       })();
     },
     [processImage],
   );
 
+  const [hint, setHint] = useState(true);
+
   return (
     <>
       <PredefinedImageList onSelectImage={handleImageURL} />
-      <ModelSelector
-        style={styles.actions}
-        modelInfos={ImageClassificationModels}
-        defaultModelInfo={activeModelInfo}
-        onSelectModelInfo={setActiveModelInfo}
-      />
-      <ImageClass imageClass={imageClass} inferenceTime={inferenceTime} />
+      <View style={styles.info}>
+        <ModelSelector
+          style={styles.actions}
+          modelInfos={ImageClassificationModels}
+          defaultModelInfo={activeModelInfo}
+          onSelectModelInfo={setActiveModelInfo}
+        />
+        <ImageClass imageClass={imageClass} inferenceTime={inferenceTime} />
+      </View>
+      <View style={[styles.hint, {opacity: hint ? 1 : 0}]}>
+        <Text style={styles.hintText}>
+          Click an image to test the current model
+        </Text>
+      </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  info: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+  },
   actions: {
+    flexDirection: 'row',
+  },
+  hint: {
     position: 'absolute',
     top: 20,
-    left: 20,
+    height: 50,
+    paddingHorizontal: 25,
+    borderRadius: 25,
+    backgroundColor: '#000',
+    justifyContent: 'center',
+    alignSelf: 'center',
+  },
+  hintText: {
+    color: '#fff',
+    fontSize: 14,
   },
 });

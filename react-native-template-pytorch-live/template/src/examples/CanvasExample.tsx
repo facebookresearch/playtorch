@@ -38,9 +38,11 @@ export default function CanvasExample() {
     image.release();
   }, []);
 
-  const catImage = useImageFromBundle(require('../../assets/images/cat.jpg'));
-  const capybaraImage = useImageFromURL(
-    'https://cdn.britannica.com/79/191679-050-C7114D2B/Adult-capybara.jpg',
+  const pandaImage = useImageFromBundle(
+    require('../../assets/images/panda.jpg'),
+  );
+  const flamingoImage = useImageFromURL(
+    'https://ids.si.edu/ids/deliveryService?max_w=800&id=NZP-20090127-0422MM-000002',
   );
 
   function handleCameraState() {
@@ -75,23 +77,23 @@ export default function CanvasExample() {
         const cos = Math.cos(2 * Math.PI * step);
         const sin = Math.sin(2 * Math.PI * step);
 
-        if (catImage != null) {
+        if (pandaImage != null) {
           let x5 = 100 + 600 * cos;
           let y5 = 400 + 400 * -sin;
-          ctx.drawImage(catImage, x5, y5);
+          ctx.drawImage(pandaImage, x5, y5);
 
           let x6 = 300 + 200 * cos;
-          ctx.drawImage(catImage, x6, x6, 200, 100);
+          ctx.drawImage(pandaImage, x6, x6, 200, 100);
 
           let x7 = 400 + 200 * -cos;
           let y7 = 800 + 300 * -sin;
-          ctx.drawImage(catImage, 350, 130, 100, 100, x7, y7, 200, 200);
+          ctx.drawImage(pandaImage, 350, 130, 100, 100, x7, y7, 200, 200);
         }
 
-        if (capybaraImage != null) {
+        if (flamingoImage != null) {
           let x7 = 240 + 200 * -cos;
           let y7 = 1300 + 100 * sin;
-          ctx.drawImage(capybaraImage, x7, y7, 500, 300);
+          ctx.drawImage(flamingoImage, x7, y7, 500, 300);
         }
 
         let x1 = 500 + 200 * cos;
@@ -190,7 +192,7 @@ export default function CanvasExample() {
         cancelAnimationFrame(rafHandle);
       }
     };
-  }, [drawingContext, catImage, capybaraImage]);
+  }, [drawingContext, pandaImage, flamingoImage]);
 
   if (!isFocused) {
     return null;

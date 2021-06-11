@@ -19,11 +19,11 @@ export default function CanvasDrawImage() {
     CanvasRenderingContext2D
   >();
 
-  const catImage = useImageFromURL(
-    'https://ichef.bbci.co.uk/news/976/cpsprodpb/12A9B/production/_111434467_gettyimages-1143489763.jpg',
+  const flamingoImage = useImageFromURL(
+    'https://ids.si.edu/ids/deliveryService?max_w=800&id=NZP-20090127-0422MM-000002',
   );
-  const capybaraImage = useImageFromURL(
-    'https://cdn.britannica.com/79/191679-050-C7114D2B/Adult-capybara.jpg',
+  const birdImage = useImageFromURL(
+    'https://digitalmedia.fws.gov/digital/api/singleitem/image/natdiglib/6198/default.jpg',
   );
 
   const handleContext2D = useCallback(
@@ -38,19 +38,19 @@ export default function CanvasDrawImage() {
     if (ctx != null) {
       ctx.clear();
 
-      if (catImage != null) {
-        ctx.drawImage(catImage, 10, 10);
-        ctx.drawImage(catImage, 50, 50, 200, 100);
-        ctx.drawImage(catImage, 350, 130, 100, 100, 50, 200, 100, 100);
+      if (flamingoImage != null) {
+        ctx.drawImage(flamingoImage, 10, 10);
+        ctx.drawImage(flamingoImage, 50, 50, 200, 100);
+        ctx.drawImage(flamingoImage, 350, 130, 100, 100, 50, 200, 100, 100);
       }
 
-      if (capybaraImage != null) {
-        ctx.drawImage(capybaraImage, 50, 350, 300, 200);
+      if (birdImage != null) {
+        ctx.drawImage(birdImage, 50, 350, 300, 200);
       }
 
       ctx.invalidate();
     }
-  }, [drawingContext, catImage, capybaraImage]);
+  }, [drawingContext, flamingoImage, birdImage]);
 
   if (!isFocused) {
     return null;

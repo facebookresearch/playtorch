@@ -7,7 +7,7 @@
     "start": "docusaurus start",
     "build": "yarn install:pytorch-core-deps && docusaurus build",
     "swizzle": "docusaurus swizzle",
-    "deploy": "docusaurus deploy",
+    "deploy": "yarn install:pytorch-core-deps && docusaurus deploy",
     "clear": "docusaurus clear",
     "serve": "docusaurus serve",
     "write-translations": "docusaurus write-translations",

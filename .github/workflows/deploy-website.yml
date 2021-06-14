@@ -1,17 +1,18 @@
-name: website
+name: Deploy Website
 
 on:
-  pull_request:
+  push:
     branches: [main]
     paths:
       - 'website/**'
-  push:
+  pull_request:
     branches: [main]
     paths:
       - 'website/**'
 
 jobs:
   checks:
+    name: Check Build
     if: github.event_name != 'push'
     runs-on: ubuntu-latest
     defaults:
@@ -22,17 +23,13 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
       - name: Test Build
-        run: |
-          if [ -e yarn.lock ]; then
-          yarn install --frozen-lockfile
-          elif [ -e package-lock.json ]; then
-          npm ci
-          else
-          npm i
-          fi
-          npm run build
+        run: yarn run build
+
   gh-release:
+    name: Build & Deploy
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     defaults:
@@ -43,21 +40,12 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: '12.x'
-      - uses: webfactory/ssh-agent@v0.5.0
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      - name: Build
+        run: yarn run build
+      - name: Deploy 🚀
+        uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
-          ssh-private-key: ${{ secrets.GH_PAGES_DEPLOY }}
-      - name: Release to GitHub Pages
-        env:
-          USE_SSH: true
-          GIT_USER: git
-        run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "gh-actions"
-          if [ -e yarn.lock ]; then
-          yarn install --frozen-lockfile
-          elif [ -e package-lock.json ]; then
-          npm ci
-          else
-          npm i
-          fi
-          npm run deploy
+          branch: gh-pages
+          folder: website/build

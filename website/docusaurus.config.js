@@ -18,7 +18,7 @@ module.exports = {
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
-  favicon: 'img/favicon.ico',
+  favicon: 'img/PyTorch_Symbol_01_OrangeOnTransparent.png',
   organizationName: 'facebookexperimental',
   projectName: 'pytorch-live',
   themeConfig: {

@@ -9,6 +9,7 @@ import React from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import styles from './HomepageFeatures.module.css';
+import useBaseUrl from '@docusaurus/useBaseUrl';
 
 const FeatureList = [
   {
@@ -39,7 +40,7 @@ const FeatureList = [
 
 function Feature({title, description}) {
   return (
-    <div className={clsx('col col--3')}>
+    <div className={clsx('col col--4')}>
       <div className="text--center padding-horiz--md">
         <p className="p__value_props">{title}</p>
         <div className={styles.button}>
@@ -63,9 +64,38 @@ export default function HomepageFeatures() {
             <Feature key={idx} {...props} />
           ))}
         </div>
+        <HomepageVisual />
       </div>
     </section>
   );
 }
 
-//<Svg className={styles.featureSvg} alt={title} />
+function HomepageCLIDemoVideo() {
+  const imgSrc = useBaseUrl('../../static/img/cli.gif');
+  return <img src={imgSrc} alt="PyTorch Live demo video" />;
+};
+
+export function HomepageVisual() {
+  return (
+    <div className="col padding-top--xl">
+      <HomepageCLIDemoVideo />
+    </div>
+  );
+}
+
+export function HomepageDemos() {
+  return (
+    <div className="container padding-top--lg">
+      <div className="col center">
+        <h1>Demos made with PyTorch Live</h1>
+      </div>
+      <div className="row">
+        {FeatureList.map((props, idx) => (
+          <Feature key={idx} {...props} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+//

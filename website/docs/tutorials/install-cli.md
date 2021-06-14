@@ -7,9 +7,19 @@ sidebar_position: 1
 
 Let's set up the build environment (~20 minutes), and then discover your **first mobile AI app in less than 5 minutes**.
 
+The instructions on this page will guide you through installing the PyTorch Live CLI (i.e., `torchlive CLI`), initializing your first PyTorch Live project and running it on the Android emulator.
+
+## Prerequisites
+
+The PyTorch Live requires Node.js to run. More specifically, it requires `npx` which is part of the Node.js installation. You can download Node.js LTS from the [official Node.js website](https://nodejs.org/) or use Homebrew to install `node` (i.e., Node.js).
+
+```sh
+brew install node
+```
+
 ## Set up build environment (~20 minutes)
 
-The torchlive CLI provides a setup routine to install all required build dependencies including the OpenJDK, Android SDK, Android SDK Manager, Android Virtual Device Manager, Android Emulator, Node.js, Yarn, Watchman and it installs a default emulator device ready to be used with PyTorch Live projects.
+The torchlive CLI provides a setup routine to install all required build dependencies including the OpenJDK, Android SDK, Android SDK Manager, Android Virtual Device Manager, Android Emulator, Yarn, Watchman and it installs a default emulator device ready to be used with PyTorch Live projects.
 
 Setup the build environment using the **setup-dev** command:
 

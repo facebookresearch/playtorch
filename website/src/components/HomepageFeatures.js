@@ -3,36 +3,34 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @format
  */
 
 import React from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import styles from './HomepageFeatures.module.css';
-import useBaseUrl from '@docusaurus/useBaseUrl';
 
 const FeatureList = [
   {
     title: (
       <>
-        PyTorch Live helps you build mobile AI experiences in just a few minutes.
+        PyTorch Live helps you build mobile AI experiences in just a few
+        minutes.
       </>
     ),
     description: 'Get started',
   },
   {
     title: (
-      <>
-        Use React Native templates to quickly build visual, interactive UI.
-      </>
+      <>Use React Native templates to quickly build visual, interactive UI.</>
     ),
     description: 'Tutorials',
   },
   {
     title: (
-      <>
-        Easily integrate open source, mobile ML models into your projects.
-      </>
+      <>Easily integrate open source, mobile ML models into your projects.</>
     ),
     description: 'API',
   },
@@ -70,15 +68,32 @@ export default function HomepageFeatures() {
   );
 }
 
-function HomepageCLIDemoVideo() {
-  const imgSrc = useBaseUrl('../../static/img/cli.gif');
-  return <img src={imgSrc} alt="PyTorch Live demo video" />;
-};
+function HomepageHeroVideo() {
+  return (
+    <video
+      controls={false}
+      autoPlay={true}
+      loop={true}
+      muted={true}
+      className="video__hero_video"
+      alt="PyTorch Live demo video">
+      <source
+        src={require('@site/static/video/hero_video.webm').default}
+        type="video/webm"
+      />
+      <source
+        src={require('@site/static/video/hero_video.mp4').default}
+        type="video/mp4"
+      />
+      Sorry, your browser doesn't support embedded videos.
+    </video>
+  );
+}
 
 export function HomepageVisual() {
   return (
     <div className="col padding-top--xl">
-      <HomepageCLIDemoVideo />
+      <HomepageHeroVideo />
     </div>
   );
 }
@@ -97,5 +112,3 @@ export function HomepageDemos() {
     </div>
   );
 }
-
-//

@@ -67,3 +67,8 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   font-size: 1.25rem;
   font-weight: var(--ifm-font-weight-semibold);
 }
+
+.video__hero_video {
+  width: 100%;
+  height: auto;
+}

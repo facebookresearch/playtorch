@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a href="https://reactnative.dev/">
+  <a href="http://facebookexperimental.github.io/pytorch-live/">
     PyTorch Live
   </a>
 </h1>

@@ -21,7 +21,7 @@ import * as CSSFontUtils from './utils/CSSFontUtils';
 
 const {
   PyTorchCoreCanvasRenderingContext2DModule: CanvasRenderingContext2DModule,
-  PyTorchCoreImageDataModule: ImageDataModule
+  PyTorchCoreImageDataModule: ImageDataModule,
 } = NativeModules;
 
 export interface ImageData extends NativeJSRef {
@@ -717,6 +717,9 @@ const INVALID_VALUE_NULLABLE = -1;
 const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
   let lineCap: LineCap | null = null;
   let lineJoin: LineJoin | null = null;
+  let lineWidth: number | null = null;
+  let miterLimit: number | null = null;
+  let textAlign: TextAlign | null = null;
   return {
     set font(value: string) {
       const font = CSSFontUtils.parse(value);
@@ -744,10 +747,16 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
       }
     },
     set lineWidth(width: number) {
-      CanvasRenderingContext2DModule.setLineWidth(ref, width);
+      if (lineWidth !== width) {
+        lineWidth = width;
+        CanvasRenderingContext2DModule.setLineWidth(ref, width);
+      }
     },
     set miterLimit(value: number) {
-      CanvasRenderingContext2DModule.setMiterLimit(ref, value);
+      if (miterLimit !== value) {
+        miterLimit = value;
+        CanvasRenderingContext2DModule.setMiterLimit(ref, value);
+      }
     },
     set strokeStyle(value: string) {
       const color = processColor(value);
@@ -757,7 +766,10 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
       CanvasRenderingContext2DModule.setStrokeStyle(ref, color);
     },
     set textAlign(value: TextAlign) {
-      CanvasRenderingContext2DModule.setTextAlign(ref, value);
+      if (textAlign !== value) {
+        textAlign = value;
+        CanvasRenderingContext2DModule.setTextAlign(ref, value);
+      }
     },
     arc(
       x: number,
@@ -855,7 +867,7 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
         },
         async release(): Promise<void> {
           return await ImageDataModule.release(imageDataRef);
-        }
+        },
       };
     },
     invalidate(): void {

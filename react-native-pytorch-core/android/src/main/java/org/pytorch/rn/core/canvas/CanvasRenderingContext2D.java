@@ -167,18 +167,24 @@ public class CanvasRenderingContext2D {
   }
 
   public void setTextAlign(final String textAlign) {
+    Paint.Align align = null;
     switch (textAlign) {
       case "left":
-        mTextFillPaint.setTextAlign(Paint.Align.LEFT);
+        align = Paint.Align.LEFT;
         break;
       case "center":
-        mTextFillPaint.setTextAlign(Paint.Align.CENTER);
+        align = Paint.Align.CENTER;
         break;
       case "right":
-        mTextFillPaint.setTextAlign(Paint.Align.RIGHT);
+        align = Paint.Align.RIGHT;
         break;
       default:
         throw new ReactInvalidPropertyException("textAlign", textAlign, "left | center | right");
+    }
+
+    Paint.Align currentAlign = mTextFillPaint.getTextAlign();
+    if (!align.equals(currentAlign)) {
+      mTextFillPaint.setTextAlign(align);
     }
   }
 

@@ -25,6 +25,7 @@ import CameraExample from './CameraExample';
 import CanvasExample from './CanvasExample';
 import NLPExample from './NLPQAExample';
 import PhotosExample from './PhotosExample';
+import MNISTExample from './MNISTExample';
 
 const contents = [
   {
@@ -41,6 +42,13 @@ const contents = [
         info: 'Identify objects in the camera',
         component: 'CameraExample',
         img: require('../../assets/images/flamingo.jpg'),
+      },
+      {
+        name: 'MNIST example',
+        info:
+          'An end-to-end example of implementing a custom model in a fun demo',
+        component: 'MNISTExample',
+        img: require('../../assets/images/mnist.jpg'),
       },
     ],
   },
@@ -140,6 +148,7 @@ export default function Examples() {
         options={{headerShown: false}}
         component={ExampleScreen}
       />
+      <Stack.Screen name="MNISTExample" component={MNISTExample} />
       <Stack.Screen name="PhotosExample" component={PhotosExample} />
       <Stack.Screen name="CameraExample" component={CameraExample} />
       <Stack.Screen name="NLPExample" component={NLPExample} />

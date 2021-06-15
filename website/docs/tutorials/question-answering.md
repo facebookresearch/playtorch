@@ -39,6 +39,12 @@ npx torchlive-cli run-android
 
 ![](/img/tutorial/question_answering_tutorial1.png "The PyTorch Live app running in a virtual device emulator")
 
+:::tip
+
+Keep the app open and running! Any code change will immediately be reflected after saving.
+
+:::
+
 ## Question Answering Demo
 
 Let's get started with the UI for the question answering. Create a file `QuestionAnsweringDemo.tsx` in `./src/demos`, copy and paste the code below, and save the file. The initial code creates a component rendering two text inputs, a button, and a text with `Question Answering`.
@@ -63,6 +69,12 @@ export default function QuestionAnsweringDemo() {
 
 For the `QuestionAnsweringDemo` component to render in the `QuestionAnsweringTutorial` app, add it to the `MyDemos` component.
 
+:::note
+
+The `MyDemos.tsx` already contains code. Replace the code with the code below.
+
+:::
+
 ```tsx title="./src/demos/MyDemos.tsx"
 import * as React from 'react';
 import QuestionAnsweringDemo from './QuestionAnsweringDemo';
@@ -75,6 +87,12 @@ export default function MyDemos() {
 ```
 
 ![](/img/tutorial/question_answering_tutorial2.png)
+
+:::caution
+
+Tap on the "My Demos" tab to view your changes.
+
+:::
 
 ### Style the component
 

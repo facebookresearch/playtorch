@@ -39,6 +39,12 @@ npx torchlive-cli run-android
 
 ![](/img/tutorial/image_classification_tutorial1.png "The PyTorch Live app running in a virtual device emulator")
 
+:::tip
+
+Keep the app open and running! Any code change will immediately be reflected after saving.
+
+:::
+
 ## Image Classification Demo
 
 Let's get started with the UI for the image classification. Create a file `ImageClassificationDemo.tsx` in `./src/demos`, copy and paste the code below, and save the file. The initial code creates a component rendering `Image Classification`.
@@ -58,6 +64,12 @@ export default function ImageClassifactionDemo() {
 
 For the `ImageClassificationDemo` component to render in the `ImageClassificationTutorial` app, add it to the `MyDemos` component.
 
+:::note
+
+The `MyDemos.tsx` already contains code. Replace the code with the code below.
+
+:::
+
 ```tsx title="./src/demos/MyDemos.tsx"
 import * as React from 'react';
 import ImageClassifactionDemo from './ImageClassificationDemo';
@@ -70,6 +82,12 @@ export default function MyDemos() {
 ```
 
 ![](/img/tutorial/image_classification_tutorial2.png)
+
+:::caution
+
+Tap on the "My Demos" tab to view your changes.
+
+:::
 
 ### Style the component
 

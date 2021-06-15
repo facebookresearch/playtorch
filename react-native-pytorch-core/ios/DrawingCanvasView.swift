@@ -13,10 +13,12 @@ class DrawingCanvasView: UIView {
 
     @objc public var onContext2D: RCTBubblingEventBlock?
     var ref: [String:String] = [:] //initialized to allow using self in init()
+    var currentColor = UIColor.black.cgColor
+    var savedState: UIImage?
+    var renderer = UIGraphicsImageRenderer(size: CGSize(width: UIScreen.main.bounds.width, height: UIScreen.main.bounds.height))
 
-    var strokeRectangles = [CGRect]()
-    var fillRectangles = [CGRect]()
-    var arcs = [CGArc]()
+    var stagedRects = [CGRect]()
+    var stagedArcs = [Arc]()
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -30,19 +32,9 @@ class DrawingCanvasView: UIView {
 
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-
-        guard let context = UIGraphicsGetCurrentContext() else { return }
-
-        for arc in arcs {
-            context.addArc(center: arc.center, radius: arc.radius, startAngle: arc.startAngle, endAngle: arc.endAngle, clockwise: arc.clockwise)
-            context.strokePath()
+        if let img = savedState {
+            img.draw(in: rect)
         }
-
-        context.addRects(strokeRectangles)
-        context.strokePath()
-
-        context.addRects(fillRectangles)
-        context.drawPath(using: .fillStroke)
 
     }
 
@@ -52,37 +44,37 @@ class DrawingCanvasView: UIView {
     }
 
     func arc(x: CGFloat, y: CGFloat, radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat, counterclockwise: Bool) {
-        //Apple's arc asks for clockwise, CanvasRenderingContext asks for counterclockwise
-        let arc = CGArc(x: x, y: y, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: !counterclockwise)
-        arcs.append(arc)
-
-        //invalidates view so that it needs to be redrawn
-        let rect = CGRect(x: x-radius, y: y-radius, width: 2*radius, height: 2*radius)
-        DispatchQueue.main.async {
-            self.setNeedsDisplay(rect)
-        }
+        stagedArcs.append(Arc(x: x, y: y, radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: counterclockwise)) //seems counterintuitve, but is the only way to get it to match web canvas
     }
 
     func strokeRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
-        //create CGRect and add it to list
         let rect = CGRect(x: x, y: y, width: width, height: height)
-        strokeRectangles.append(rect)
-
-        //invalidates view so that it needs to be redrawn
-        DispatchQueue.main.async {
-            self.setNeedsDisplay(rect)
+        savedState = renderer.image { context in
+            if let img = savedState {
+                img.draw(in: UIScreen.main.bounds)
+            }
+            context.cgContext.addRect(rect)
+            context.cgContext.strokePath()
         }
+        invalidate(rect)
     }
 
     func fillRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
+        let rect = CGRect(x: x, y: y, width: width, height: height)
+        savedState = renderer.image { context in
+            if let img = savedState {
+                img.draw(in: UIScreen.main.bounds)
+            }
+            context.cgContext.addRect(rect)
+            context.cgContext.drawPath(using: .fillStroke)
+        }
+        invalidate(rect)
+    }
+
+    func rect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
         //create CGRect and add it to list
         let rect = CGRect(x: x, y: y, width: width, height: height)
-        fillRectangles.append(rect)
-
-        //invalidates view so that it needs to be redrawn
-        DispatchQueue.main.async {
-            self.setNeedsDisplay(rect)
-        }
+        stagedRects.append(rect)
     }
 
     func invalidate() {
@@ -91,7 +83,49 @@ class DrawingCanvasView: UIView {
         }
     }
 
-    struct CGArc {
+    func invalidate(_ rect: CGRect) {
+        DispatchQueue.main.async {
+            self.setNeedsDisplay(rect)
+        }
+    }
+
+    func clear() {
+        savedState = renderer.image { context in }
+        invalidate()
+    }
+
+    func clearRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
+        let rect = CGRect(x: x, y: y, width: width, height: height)
+        savedState = renderer.image { context in
+            if let img = savedState {
+                img.draw(in: UIScreen.main.bounds)
+            }
+            context.cgContext.setBlendMode(CGBlendMode.clear)
+            context.cgContext.addRect(rect)
+            context.cgContext.drawPath(using: .fillStroke)
+        }
+        invalidate(rect)
+    }
+
+    func stroke(){
+        savedState = renderer.image { context in
+            if let img = savedState {
+                img.draw(in: UIScreen.main.bounds)
+            }
+            for arc in stagedArcs {
+                context.cgContext.addArc(center: arc.center, radius: arc.radius, startAngle: arc.startAngle, endAngle: arc.endAngle, clockwise: arc.clockwise)
+            }
+            for rect in stagedRects {
+                context.cgContext.addRect(rect)
+            }
+            context.cgContext.strokePath()
+        }
+        stagedArcs = [Arc]()
+        stagedRects = [CGRect]()
+        invalidate()
+    }
+
+    struct Arc {
         public var center: CGPoint
         public var radius: CGFloat
         public var startAngle: CGFloat
@@ -106,5 +140,4 @@ class DrawingCanvasView: UIView {
             self.clockwise = clockwise
         }
     }
-
 }

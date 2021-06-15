@@ -28,13 +28,21 @@ export default function CanvasFillRect() {
   useLayoutEffect(() => {
     const ctx = drawingContext;
     if (ctx != null) {
+      ctx.clear();
 
-      ctx.strokeRect(20, 10, 150, 100);
-      ctx.strokeRect(180, 10, 150, 100);
-      ctx.fillRect(150, 90, 20, 20);
-      ctx.fillRect(310, 90, 20, 20);
+      ctx.fillRect(20, 10, 150, 100);
+      ctx.fillRect(180, 10, 150, 100);
+      ctx.clearRect(150, 90, 20, 20);
+      ctx.clearRect(310, 90, 20, 20);
+      ctx.arc(175, 180, 100, 0, Math.PI, false);
+      setTimeout(() => {
+        ctx.stroke();
+      }, 1000);
+      setTimeout(() => {
+        ctx.clear();
+      }, 2000);
 
-      ctx.arc(175, 180, 100, 0, Math.PI, true);
+      ctx.invalidate();
     }
   }, [drawingContext]);
 

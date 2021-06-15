@@ -1,4 +1,43 @@
-# PyTorch Live
+<h1 align="center">
+  <a href="https://reactnative.dev/">
+    PyTorch Live
+  </a>
+</h1>
+
+<p align="center">
+  <strong>Making AI easier to use, for everyone.</strong>
+</p>
+
+[![Deploy Website](https://github.com/facebookexperimental/pytorch-live/actions/workflows/deploy-website.yml/badge.svg)](https://github.com/facebookexperimental/pytorch-live/actions/workflows/deploy-website.yml) [![Torchlive CLI](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-cli.yml/badge.svg)](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-cli.yml) [![Build Android Template App](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-android.yml/badge.svg)](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-android.yml)
+
+<p>
+  <a href="https://www.npmjs.org/package/react-native-pytorch-core">
+    <img src="https://img.shields.io/npm/v/react-native-pytorch-core?label=react-native-pytorch-core" alt="Current React Native PyTorch Core npm package version." />
+  </a>
+  <a href="https://www.npmjs.org/package/torchlive-cli">
+    <img src="https://img.shields.io/npm/v/torchlive-cli?label=torchlive-cli" alt="Current PyTorch Live CLI npm package version." />
+  </a>
+  <a href="https://www.npmjs.org/package/react-native-template-pytorch-live">
+    <img src="https://img.shields.io/npm/v/react-native-template-pytorch-live?label=react-native-template-pytorch-live" alt="Current React Native PyTorch Live template npm package version." />
+  </a>
+</p>
+
+<p>
+  <a href="https://github.com/facebook/react-native/blob/master/LICENSE">
+    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="PyTorch Live is released under the MIT license." />
+  </a>
+</p>
+
+<h3 align="center">
+  <a href="http://facebookexperimental.github.io/pytorch-live/docs/tutorials/install-cli">Getting Started</a>
+  <span> · </span>
+  <a href="http://facebookexperimental.github.io/pytorch-live/docs/tutorials/image-classification">Tutorials</a>
+  <span> · </span>
+  <a href="http://facebookexperimental.github.io/pytorch-live/docs/api/cli">API</a>
+</h3>
+
+----------------------
+
 PyTorch Live is an open source playground for everyone to discover, build, test and share on-device AI demos built on PyTorch.
 
 This monorepo includes the PyTorch Live command line interface (i.e., `torchlive`), a React Native package to interface with PyTorch Mobile, and a React Native template with examples ready to be deployed on mobile devices.
@@ -10,91 +49,21 @@ This monorepo includes the PyTorch Live command line interface (i.e., `torchlive
 - [Code of Conduct](#code-of-conduct)
 - [License](#-license)
 
-## Requirements
-PyTorch Live apps may target Android 5.0 (API 29) or newer. You may use Windows, macOS, or Linux as your development operating system, though building and running the PyTorch Live CLI is limited to macOS.
+## 📋 Requirements
+PyTorch Live apps may target Android 10.0 (API 29) or newer. You may use Windows, macOS, or Linux as your development operating system, though building and running the PyTorch Live CLI is limited to macOS.
 
-## Building your first PyTorch Live app
-The following steps will guide you through an install of the PyTorch Live dependencies, how to initialize your first PyTorch Live project, and how to run the initial project in an emulator or on your device.
+## 🎉 Building your first PyTorch Live app
+Follow the [Getting Started guide](http://facebookexperimental.github.io/pytorch-live/docs/tutorials/install-cli). PyTorch Live offers a CLI with convenient commands to install development dependencies and initialize new projects. We also have a few tutorials for you to keep going after getting started:
 
-### 1. Install PyTorch Live CLI
-Install the PyTorch Live CLI from npmjs.
+* [Image Classification](http://facebookexperimental.github.io/pytorch-live/docs/tutorials/image-classification)
+* [Question Answering](http://facebookexperimental.github.io/pytorch-live/docs/tutorials/question-answering)
+* [Prepare Custom Model](http://facebookexperimental.github.io/pytorch-live/docs/tutorials/prepare-custom-model)
 
-Node:
-```sh
-npm install -g torchlive-cli
-```
+## 📖 Documentation
 
-Yarn:
-```sh
-yarn global add torchlive-cli
-```
+The full documentation for React Native can be found on our [website](http://facebookexperimental.github.io/pytorch-live/).
 
-### 2. Install Build Dependencies
-The PyTorch Live CLI provides a setup routine to install all required build dependencies including the OpenJDK, Android SDK, Android SDK Manager, Android Virtual Device Manager, Android Emulator, Node.js, Yarn, Watchman and it installs a default emulator device ready to be used with PyTorch Live projects.
-
-```sh
-torchlive setup-dev
-```
-
-NOTE: The command requires `sudo` access and can take approximately 20 minutes to complete. This depends on your laptop configuration and what dependencies have been installed previously.
-
-If everything goes well, the terminal will looks similar to the following output.
-
-**Expected output**
-```sh
-$ torchlive setup-dev
-  _                 _     _ _
- | |_ ___  _ __ ___| |__ | (_)_   _____
- | __/ _ \| '__/ __| '_ \| | \ \ / / _ \
- | || (_) | | | (__| | | | | |\ V /  __/
-  \__\___/|_|  \___|_| |_|_|_| \_/ \___|
-
-torchlive version 0.0.1-ac3c51619
-Password:
-↓ Homebrew (null) [SKIPPED]
-✔ OpenJDK (1.8.0)
-✔ Watchman (4.9.0)
-✔ Node (16.1.0)
-✔ Yarn (1.22.10)
-✔ Android SDK
-✔ Android SDK Manager
-✔ Android Emulator
-✔ Android Emulator Skin
-```
-
-### 3. Initialize Your First PyTorch Live Project
-For PyTorch Live, we provide a basic React Native template with a few examples for PyTorch Mobile vision models such as Resnet18 or MobileNetV3. Use the `torchlive init` command to initialize your first PyTorch Live project.
-
-```sh
-torchlive init MyFirstProject
-```
-
-**Expected output**
-```sh
-$ torchlive init MyFirstProject
-  _                 _     _ _
- | |_ ___  _ __ ___| |__ | (_)_   _____
- | __/ _ \| '__/ __| '_ \| | \ \ / / _ \
- | || (_) | | | (__| | | | | |\ V /  __/
-  \__\___/|_|  \___|_| |_|_|_| \_/ \___|
-
-torchlive version 0.0.1-ac3c51619
-✔ project MyFirstProject
-```
-
-### 4. Run Your First Project in the Emulator or on Your Device
-```sh
-cd MyFirstProject
-torchlive run-android
-```
-
-If you want to deploy the app on your own device, you have to put it into developer mode.
-
->On Android 4.1 and lower, the Developer options screen is available by default. On Android 4.2 and higher, you must enable this screen. To enable developer options, tap the Build Number option 7 times.
-
-More details are on the Android [configure on-device developer options](https://developer.android.com/studio/debug/dev-options).
-
-## How to Contribute
+## 👏 How to Contribute
 The main purpose of this repository is to continue evolving PyTorch Live. We want to make contributing to this project as easy and transparent as possible, and we are grateful to the community for contributing bug fixes and improvements. Read below to learn how you can take part in improving PyTorch Live.
 
 ### [Code of Conduct][code]

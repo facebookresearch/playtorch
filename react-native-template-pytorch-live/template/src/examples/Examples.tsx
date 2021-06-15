@@ -60,9 +60,9 @@ const contents = [
     data: [
       {
         name: 'Canvas example',
-        info: 'Draw something!',
+        info: 'An interactive composition that demonstrates canvas features',
         component: 'CanvasExample',
-        img: require('../../assets/images/wnn_photo3_fpo.jpg'),
+        img: require('../../assets/images/canvas_example.jpg'),
       },
     ],
   },

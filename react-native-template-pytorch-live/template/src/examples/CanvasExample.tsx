@@ -8,240 +8,210 @@
  */
 
 import {useIsFocused} from '@react-navigation/native';
-import React, {useCallback, useLayoutEffect, useRef, useState} from 'react';
-import {Button, LayoutChangeEvent, StyleSheet, View} from 'react-native';
-import {
-  Camera,
-  Canvas,
-  CanvasRenderingContext2D,
-  Image,
-} from 'react-native-pytorch-core';
+import React, {
+  useCallback,
+  useLayoutEffect,
+  useState,
+  useMemo,
+  useRef,
+} from 'react';
+import {StyleSheet, LayoutRectangle} from 'react-native';
+import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
+import {Animator} from '../utils/Animator';
 import useImageFromBundle from '../utils/useImageFromBundle';
-import useImageFromURL from '../utils/useImageFromURL';
 
-export default function CanvasExample() {
+// This is an example of creating an interactive composition in canvas.
+// Also check out the individual canvas examples in Toolbox folder.
+
+export default function CanvasAnimator() {
   const isFocused = useIsFocused();
-  const canvasRef = useRef();
-  const [isCameraActive, setIsCameraActive] = useState<boolean>(false);
-  const [drawingContext, setDrawingContext] = useState<
-    CanvasRenderingContext2D
-  >();
 
+  // `layout` contains canvas properties like width and height
+  const [layout, setLayout] = useState<LayoutRectangle | null>(null);
+
+  // `ctx` is drawing context to draw shapes
+  const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
+
+  // handler to get drawing context when canvas is ready. See <Canvas onContext2D={...}> below
   const handleContext2D = useCallback(
     async (ctx: CanvasRenderingContext2D) => {
-      setDrawingContext(ctx);
+      setCtx(ctx);
     },
-    [setDrawingContext],
+    [setCtx],
   );
 
-  const handleFrame = useCallback((image: Image) => {
-    image.release();
-  }, []);
+  // load a local image file
+  const fish = useImageFromBundle(require('../../assets/images/fish_bg.png'));
 
-  const pandaImage = useImageFromBundle(
-    require('../../assets/images/panda.jpg'),
-  );
-  const flamingoImage = useImageFromURL(
-    'https://ids.si.edu/ids/deliveryService?max_w=800&id=NZP-20090127-0422MM-000002',
-  );
+  // Instantiate an Animator. `useMemo` is used for React optimization.
+  const animator = useMemo(() => new Animator(), []);
 
-  function handleCameraState() {
-    setIsCameraActive(value => !value);
-  }
+  // 'refs' let us store mutable variables in React that are not part of the app states
+  const trailRef = useRef<number[][]>([]);
+  const bubbleRef = useRef<number[][]>([]);
+
+  // handlers for touch events
+  const handleMove = useCallback(
+    event => {
+      const position = [
+        event.nativeEvent.locationX,
+        event.nativeEvent.locationY,
+      ];
+
+      // Based on the current touch position, add a trail point and a bubble
+      const trail = trailRef.current;
+      const bubbles = bubbleRef.current;
+
+      if (trail.length > 0) {
+        const lastPosition: number[] = trail[trail.length - 1];
+        const dx = position[0] - lastPosition[0];
+        const dy = position[1] - lastPosition[1];
+
+        // add trail point and bubble if distance from last point > 5
+        if (dx * dx + dy * dy > 25) {
+          trail.push(position.slice());
+          if (bubbles.length < 25) {
+            bubbles.push(position.slice());
+          }
+        }
+        if (trail.length > 80) {
+          trail.shift();
+        }
+      } else {
+        trail.push(position);
+      }
+    },
+    [trailRef, bubbleRef],
+  );
 
   useLayoutEffect(() => {
-    const ctx = drawingContext;
-    let rafHandle: any = null;
-    let i = 0;
-    let steps = 360;
+    if (ctx != null) {
+      animator.start((time, frames, frameTime) => {
+        // Here we use `layout` to calculate center position
+        const size = [layout?.width || 0, layout?.height || 0];
+        const center = size.map(s => s / 2);
 
-    const fpsTime = 1000 / 60;
-    let lastTime: number | null = null;
-    let isRunningAnimation = true;
+        // get the current ref
+        const trail = trailRef.current;
+        const bubbles = bubbleRef.current;
 
-    async function animate(time: number) {
-      if (lastTime != null) {
-        if (time - lastTime < fpsTime) {
-          if (isRunningAnimation) {
-            rafHandle = requestAnimationFrame(animate);
+        if (trail != null && bubbles != null) {
+          // calculate radius based on time (cycle every 3 sec)
+          const t = (time % 10000) / 10000;
+          const tt = t > 0.5 ? 2 - t * 2 : t * 2;
+          const radius = (center[0] / 2) * tt * tt + 50;
+
+          // fill background by drawing a semi-transparent rect, instead of using ctx.clear() to clear canvas
+          // this will create a kind of "motion blur" effect on canvas
+          ctx.fillStyle = '#FFCAC266';
+          ctx.textAlign = 'center';
+          ctx.fillRect(0, 0, size[0], size[1]);
+
+          let offsetX = 0;
+          let offsetY = 0;
+
+          if (trail.length > 0) {
+            offsetX = (trail[trail.length - 1][0] - center[0]) / 20;
+            offsetY = (trail[trail.length - 1][1] - center[0]) / 20;
+
+            // draw trail
+            ctx.strokeStyle = '#0066ff';
+            ctx.lineWidth = 90;
+            ctx.beginPath();
+            ctx.moveTo(trail[0][0], trail[0][1]);
+            for (let i = 1; i < trail.length; i++) {
+              ctx.lineTo(trail[i][0], trail[i][1]);
+            }
+            ctx.stroke();
+
+            // draw texts that shift positions based on user's touch position
+            ctx.font = 'bold 14px sans-serif';
+            ctx.fillStyle = '#000000';
+            ctx.fillText(
+              "You can't step into the same river twice",
+              center[0],
+              40,
+            );
+
+            ctx.fillStyle = '#00000099';
+            ctx.font = 'bold 21px sans-serif';
+            ctx.fillText(
+              "For it isn't the same river",
+              center[0] + offsetX * 2,
+              center[1] + offsetY / 2,
+            );
+
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 21px sans-serif';
+            ctx.fillText(
+              "and you aren't the same person",
+              center[0] + offsetY * 2,
+              center[1] + 30 - offsetX / 2,
+            );
+          } else {
+            ctx.fillStyle = '#00000033';
+            ctx.font = 'bold 16px sans-serif';
+            ctx.fillText('Draw something to start...', center[0], 40);
           }
-          return;
-        }
-      }
-      lastTime = time;
 
-      if (ctx != null) {
-        ctx.clear();
+          // draw fish image while maintaining aspect ratio
+          if (fish) {
+            const aspectRatio = fish.getWidth() / fish.getHeight();
+            const marginH = -100;
+            const marginV =
+              (size[1] - (size[0] - marginH * 2) / aspectRatio) / 2;
 
-        const step = i / steps;
-        const cos = Math.cos(2 * Math.PI * step);
-        const sin = Math.sin(2 * Math.PI * step);
-
-        if (pandaImage != null) {
-          let x5 = 100 + 600 * cos;
-          let y5 = 400 + 400 * -sin;
-          ctx.drawImage(pandaImage, x5, y5);
-
-          let x6 = 300 + 200 * cos;
-          ctx.drawImage(pandaImage, x6, x6, 200, 100);
-
-          let x7 = 400 + 200 * -cos;
-          let y7 = 800 + 300 * -sin;
-          ctx.drawImage(pandaImage, 350, 130, 100, 100, x7, y7, 200, 200);
-        }
-
-        if (flamingoImage != null) {
-          let x7 = 240 + 200 * -cos;
-          let y7 = 1300 + 100 * sin;
-          ctx.drawImage(flamingoImage, x7, y7, 500, 300);
-        }
-
-        let x1 = 500 + 200 * cos;
-        let y1 = 500 + 200 * sin;
-        ctx.fillStyle = '#800080';
-        ctx.fillCircle(x1, y1, 50);
-        ctx.strokeStyle = '#000000';
-        ctx.lineWidth = 15;
-        ctx.drawCircle(x1, y1, 50);
-
-        let x2 = 500 + 300 * -cos;
-        let y2 = 1000 + 400 * sin;
-        ctx.fillStyle = '#ff6347';
-        ctx.fillCircle(x2, y2, 80);
-
-        let x3 = 500 + 300 * cos;
-        let y3 = 1200 + 400 * -sin;
-        ctx.fillStyle = '#00bfff';
-        ctx.fillCircle(x3, y3, 90);
-        ctx.strokeStyle = '#00ff00';
-        ctx.lineWidth = 25;
-        ctx.drawCircle(x3, y3, 90);
-
-        let x4 = 600 + 300 * -cos;
-        let y4 = 700 + 400 * -sin;
-        ctx.fillStyle = '#fb0fff';
-        ctx.fillRect(x4, y4, 60, 80);
-        ctx.strokeStyle = '#00ffff';
-        ctx.lineWidth = 15;
-        ctx.strokeRect(x4, y4, 60, 80);
-
-        ctx.fillStyle = 'red';
-        ctx.fillRect(100, 500, 100, 140);
-        ctx.clearRect(110, 520, 80, 100);
-
-        ctx.fillStyle = 'green';
-        ctx.fillRect(100, 700, 100, 140);
-        ctx.clearRect(120, 710, 50, 80);
-
-        const offsetX = 100;
-        let offsetY = 150;
-        const radius = 30;
-        const gridSize = 80;
-
-        ctx.lineWidth = 10;
-
-        ctx.strokeStyle = '#00ff00';
-        for (let row = 0; row < 10; row++) {
-          const startAngle = row * 0.5 * Math.PI;
-          for (let col = 0; col < 10; col++) {
-            const endAngle = col * 0.5 * Math.PI;
-            ctx.arc(
-              col * gridSize + offsetX + 60,
-              row * gridSize + offsetY + 60,
-              radius,
-              startAngle,
-              endAngle,
-              false,
+            ctx.drawImage(
+              fish,
+              marginH + offsetX + radius,
+              marginV + offsetY + radius,
+              size[0] - (marginH + offsetX + radius) * 2,
+              size[1] - (marginV + offsetY / 4 + radius) * 2,
             );
           }
-        }
 
-        offsetY = 1050;
-        ctx.strokeStyle = '#ff00ff';
-        for (let row = 0; row < 10; row++) {
-          const startAngle = row * 0.5 * Math.PI;
-          for (let col = 0; col < 10; col++) {
-            const endAngle = col * 0.5 * Math.PI;
-            ctx.arc(
-              col * gridSize + offsetX + 60,
-              row * gridSize + offsetY + 60,
-              radius,
-              startAngle,
-              endAngle,
-              true,
-            );
+          // draw bubbles
+          ctx.strokeStyle = '#00000099';
+          ctx.fillStyle = '#fff';
+          ctx.lineWidth = 2;
+          const twoPI = 2 * Math.PI;
+
+          for (let i = 0; i < bubbles.length; i++) {
+            ctx.beginPath();
+            bubbles[i][1] -= (i % 2) + 2;
+            bubbles[i][0] += Math.random() * 2 - Math.random() * 2;
+            ctx.arc(bubbles[i][0], bubbles[i][1], 3 + (i % 5), 0, twoPI);
+            ctx.stroke();
+            ctx.fill();
+
+            if (bubbles[i][1] < 0) {
+              bubbles.splice(i, 1);
+            }
           }
         }
 
+        // Need to include this at the end, for now.
         ctx.invalidate();
-
-        i++;
-        i %= steps;
-
-        if (isRunningAnimation) {
-          rafHandle = requestAnimationFrame(animate);
-        }
-      }
+      });
     }
 
-    rafHandle = requestAnimationFrame(animate);
-
-    return function() {
-      isRunningAnimation = false;
-      if (rafHandle != null) {
-        cancelAnimationFrame(rafHandle);
-      }
-    };
-  }, [drawingContext, pandaImage, flamingoImage]);
+    // Stop animator when exiting (unmount)
+    return () => animator.stop();
+  }, [animator, ctx, layout, trailRef, bubbleRef, fish]); // update only when layout or context changes
 
   if (!isFocused) {
     return null;
   }
 
   return (
-    <View style={styles.container}>
-      {isCameraActive && (
-        <Camera
-          style={styles.camera}
-          onFrame={handleFrame}
-          hideCaptureButton={true}
-        />
-      )}
-      <Canvas style={styles.canvas} onContext2D={handleContext2D} />
-      <View style={styles.actions}>
-        <Button
-          color="tomato"
-          title={isCameraActive ? 'Disable Camera' : 'Enable Camera'}
-          onPress={handleCameraState}
-        />
-      </View>
-    </View>
+    <Canvas
+      style={StyleSheet.absoluteFill}
+      onContext2D={handleContext2D}
+      onLayout={event => {
+        const {layout} = event.nativeEvent;
+        setLayout(layout);
+      }}
+      onTouchMove={handleMove}
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  camera: {
-    flex: 1,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    height: '100%',
-    width: '100%',
-  },
-  canvas: {
-    flex: 1,
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    height: '100%',
-    width: '100%',
-  },
-  actions: {
-    position: 'absolute',
-    top: 20,
-    left: 20,
-  },
-});

@@ -21,30 +21,31 @@ const FeatureList = [
       </>
     ),
     description: 'Get started',
+    to: '/docs/tutorials/install-cli',
   },
   {
     title: (
       <>Use React Native templates to quickly build visual, interactive UI.</>
     ),
     description: 'Tutorials',
+    to: '/docs/tutorials/image-classification',
   },
   {
     title: (
       <>Easily integrate open source, mobile ML models into your projects.</>
     ),
     description: 'API',
+    to: '/docs/api/core',
   },
 ];
 
-function Feature({title, description}) {
+function Feature({title, description, to}) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center padding-horiz--md">
         <p className="p__value_props">{title}</p>
         <div className={styles.button}>
-          <Link
-            className="button button--outline button--lg"
-            to="/docs/tutorials/install-cli">
+          <Link className="button button--outline button--lg" to={to}>
             {description}
           </Link>
         </div>

@@ -1,0 +1,52 @@
+name: Torchlive CLI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-cli.yml'
+      - 'torchlive-cli/**'
+  pull_request:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-cli.yml'
+      - 'torchlive-cli/**'
+
+jobs:
+  build:
+    name: Build & Test
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./torchlive-cli
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      - name: Test Build
+        run: yarn run build
+      - name: Unit Test
+        run: yarn run test
+
+  setup-dev:
+    name: Setup Development Environment
+    runs-on: macos-latest
+    defaults:
+      run:
+        working-directory: ./torchlive-cli
+    steps:
+      - uses: actions/checkout@v1
+      - uses: actions/setup-node@v1
+        with:
+          node-version: '12.x'
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      - name: Test Build
+        run: yarn run build
+      - name: Setup Dev
+        run: yarn run start setup-dev
+      - name: Doctor
+        run: yarn run start doctor

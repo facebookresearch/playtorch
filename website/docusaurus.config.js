@@ -42,7 +42,7 @@ module.exports = {
         {
           type: 'doc',
           position: 'left',
-          docId: 'cli',
+          docId: 'api/core/index',
           label: 'API',
         },
         {
@@ -65,7 +65,7 @@ module.exports = {
             },
             {
               label: 'Model Specification',
-              to: '/docs/tutorials/model-spec',
+              to: '/docs/api/model-spec',
             },
           ],
         },

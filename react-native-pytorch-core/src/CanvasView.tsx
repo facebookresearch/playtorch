@@ -886,6 +886,37 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
       CanvasRenderingContext2DModule.rect(ref, x, y, width, height);
     },
     async restore(): Promise<void> {
+      // The local values for the canvas context properties need to be reset on
+      // `ctx.restore()`. If they aren't reset, the values for these properties
+      // might be different native than in JavaScript and can cause issues
+      // where the native functions aren't called and therefore leading to
+      // different rendering outcomes on web canvas than in this native canvas
+      // implementation.
+      //
+      // In the example below, the second red `strokeRect` should fully cover
+      // the lime `strokeRect`. Without this reset, the `lineWidth` for the red
+      // `strokeRect` will be  1px instead of `10px`.
+      //
+      // ```typescript
+      // ctx.save();
+      // ctx.lineWidth = 10;
+      // ctx.strokeStyle = 'lime';
+      // ctx.strokeRect(10, 10, 40, 40);
+      // ctx.restore();
+      //
+      // ctx.save();
+      // ctx.lineWidth = 10;
+      // ctx.strokeStyle = 'red';
+      // ctx.strokeRect(10, 10, 40, 40);
+      // ctx.restore();
+      // ctx.invalidate();
+      // ```
+      //
+      lineCap = null;
+      lineJoin = null;
+      lineWidth = null;
+      miterLimit = null;
+      textAlign = null;
       await CanvasRenderingContext2DModule.restore(ref);
     },
     rotate(

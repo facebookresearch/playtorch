@@ -443,11 +443,15 @@ public class CanvasRenderingContext2D {
    * <p>{@link https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/save}
    */
   protected void save() {
+    // The Canvas.save() only saves current matrix and clip, so we have to separately save
+    // additional drawing state.
     CanvasState savedState = new CanvasState(mStrokePaint, mFillPaint);
+    // Create new paint objects with current paint state.
+    mStrokePaint = new Paint(mStrokePaint);
+    mFillPaint = new Paint(mFillPaint);
+
     mCanvas.save();
     mSavedStates.push(savedState);
-    // Reset paint to initial values
-    initPaint();
   }
 
   protected void restore() {

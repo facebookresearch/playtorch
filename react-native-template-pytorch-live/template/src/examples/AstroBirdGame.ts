@@ -12,7 +12,7 @@ import {
   Image,
   ImageUtil,
 } from 'react-native-pytorch-core';
-import GameLoop from './GameLoop';
+import GameLoop from '../utils/GameLoop';
 
 type Pipe = {
   x: number;
@@ -260,7 +260,7 @@ export default class AstroBirdGame extends GameLoop {
 
   async _loadBirdImage(): Promise<void> {
     const birdImage = await ImageUtil.fromBundle(
-      require('../../../assets/astrobird/bird.png'),
+      require('../../assets/astrobird/bird.png'),
     );
     const width = birdImage.getWidth();
     const height = birdImage.getHeight();
@@ -283,7 +283,7 @@ export default class AstroBirdGame extends GameLoop {
 
   async _loadLandImage(): Promise<void> {
     const landImage = await ImageUtil.fromBundle(
-      require('../../../assets/astrobird/land.png'),
+      require('../../assets/astrobird/land.png'),
     );
     this.landImage = await landImage.scale(
       (this.canvasWidth * (1 + this.landXBuffer)) / landImage.getWidth(),
@@ -295,7 +295,7 @@ export default class AstroBirdGame extends GameLoop {
 
   async _loadBackgroundImage(): Promise<void> {
     const backgroundImage = await ImageUtil.fromBundle(
-      require('../../../assets/astrobird/background.png'),
+      require('../../assets/astrobird/background.png'),
     );
     this.backgroundImage = await backgroundImage.scale(
       this.canvasWidth / backgroundImage.getWidth(),
@@ -306,7 +306,7 @@ export default class AstroBirdGame extends GameLoop {
 
   async _loadInstructionsImage(): Promise<void> {
     const instructionsImage = await ImageUtil.fromBundle(
-      require('../../../assets/astrobird/instructions.png'),
+      require('../../assets/astrobird/instructions.png'),
     );
     this.instructionsImage = await instructionsImage.scale(
       this.birdImageScale,
@@ -316,7 +316,7 @@ export default class AstroBirdGame extends GameLoop {
 
   async _loadPipeImage(): Promise<void> {
     const pipeImage = await ImageUtil.fromBundle(
-      require('../../../assets/astrobird/pipe.png'),
+      require('../../assets/astrobird/pipe.png'),
     );
     this.pipeImage = await pipeImage.scale(
       (this.canvasWidth * this.pipeWidth) / pipeImage.getWidth(),
@@ -328,7 +328,7 @@ export default class AstroBirdGame extends GameLoop {
 
   async _loadPipeUpImage(): Promise<void> {
     const pipeUpImage = await ImageUtil.fromBundle(
-      require('../../../assets/astrobird/pipe_up.png'),
+      require('../../assets/astrobird/pipe_up.png'),
     );
     this.pipeUpImage = await pipeUpImage.scale(
       (this.canvasWidth * this.pipeWidth) / pipeUpImage.getWidth(),
@@ -339,7 +339,7 @@ export default class AstroBirdGame extends GameLoop {
 
   async _loadPipeDownImage(): Promise<void> {
     const pipeDownImage = await ImageUtil.fromBundle(
-      require('../../../assets/astrobird/pipe_down.png'),
+      require('../../assets/astrobird/pipe_down.png'),
     );
     this.pipeDownImage = await pipeDownImage.scale(
       (this.canvasWidth * this.pipeWidth) / pipeDownImage.getWidth(),

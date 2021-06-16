@@ -13,7 +13,7 @@ import {useCallback, useState} from 'react';
 import {LayoutRectangle, Text} from 'react-native';
 import {Button, StyleSheet, View} from 'react-native';
 import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
-import AstroBirdGame from '../toolbox/canvas/AstroBirdGame';
+import AstroBirdGame from './AstroBirdGame';
 
 export default function AstroBirdExample() {
   const [isTryAgainVisible, setIsTryAgainVisible] = useState<boolean>(false);

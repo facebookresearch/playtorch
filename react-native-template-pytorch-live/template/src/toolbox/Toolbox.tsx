@@ -24,11 +24,6 @@ import CanvasAnimator from './canvas/CanvasAnimator';
 import CanvasTransform from './canvas/CanvasTransform';
 import CanvasDrawing from './canvas/CanvasDrawing';
 import Images from './canvas/Images';
-import CanvasArcMatrix from './canvas/CanvasArcMatrix';
-import CanvasClosePath from './canvas/CanvasClosePath';
-import CanvasDrawImage from './apiTest/CanvasDrawImage';
-import CanvasText from './canvas/CanvasText';
-import CanvasTextAlign from './canvas/CanvasTextAlign';
 
 import UIStarter from './ui/UIStarter';
 import UICard from './ui/UICard';
@@ -46,8 +41,14 @@ import CanvasScale from './apiTest/CanvasScale';
 import CanvasTranslate from './apiTest/CanvasTranslate';
 import CanvasLineCap from './apiTest/CanvasLineCap';
 import CanvasLineJoin from './apiTest/CanvasLineJoin';
+import CanvasClosePath from './apiTest/CanvasClosePath';
 import CanvasMiterLimit from './apiTest/CanvasMiterLimit';
 import CanvasMoveTo from './apiTest/CanvasMoveTo';
+import CanvasDrawImage from './apiTest/CanvasDrawImage';
+import CanvasText from './apiTest/CanvasText';
+import CanvasTextAlign from './apiTest/CanvasTextAlign';
+import CanvasArcMatrix from './apiTest/CanvasArcMatrix';
+
 
 import ToolboxContext, {useToolboxContext} from './ToolboxContext';
 import ToolboxList from './ToolboxList';
@@ -117,30 +118,6 @@ const tools: ToolSection = [
         subtitle: 'Basic interactive drawing on canvas',
         component: CanvasDrawing,
       },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas#closePath',
-        subtitle: 'Close path on a canvas',
-        component: CanvasClosePath,
-      },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas Arc Matrix',
-        subtitle: 'Drawing an arcs matrix on a canvas',
-        component: CanvasArcMatrix,
-      },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas Text',
-        subtitle: 'Drawing text on canvas',
-        component: CanvasText,
-      },
-      {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
-        title: 'Canvas#textAlign',
-        subtitle: 'Drawing aligned text on canvas',
-        component: CanvasTextAlign,
-      },
     ],
   },
 
@@ -194,6 +171,12 @@ const tools: ToolSection = [
         title: 'Canvas#arc',
         subtitle: 'Drawing arc/circles on a canvas',
         component: CanvasArc,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas Arc Matrix',
+        subtitle: 'Drawing an arcs matrix on a canvas',
+        component: CanvasArcMatrix,
       },
       {
         icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
@@ -256,6 +239,12 @@ const tools: ToolSection = [
         component: CanvasMiterLimit,
       },
       {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#closePath',
+        subtitle: 'Close path on a canvas',
+        component: CanvasClosePath,
+      },
+      {
         icon: <Icon name="image-outline" size={32} color="tomato" />,
         title: 'Image Scale',
         subtitle: 'Scaling images',
@@ -273,6 +262,19 @@ const tools: ToolSection = [
         subtitle: 'Drawing images on a canvas',
         component: CanvasDrawImage,
       },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas Text',
+        subtitle: 'Drawing text on canvas',
+        component: CanvasText,
+      },
+      {
+        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        title: 'Canvas#textAlign',
+        subtitle: 'Drawing aligned text on canvas',
+        component: CanvasTextAlign,
+      },
+
     ],
   },
 ];

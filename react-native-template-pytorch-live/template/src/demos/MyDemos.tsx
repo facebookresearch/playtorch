@@ -13,11 +13,13 @@ import {Text, StyleSheet, View} from 'react-native';
 export default function MyDemos() {
   return (
     <View style={styles.bg}>
+      <Text style={styles.heading}>Your Demos</Text>
       <Text style={styles.info}>
-        Try your own demos by adding them into the "src/demos" folder.
+        Build your own demos and add them in the "src/demos" folder.
       </Text>
       <Text style={styles.info}>
-        Learn more at https://live.pytorch.org/tutorials.
+        To learn more, review the Image Classification tutorial in our
+        documentation.
       </Text>
     </View>
   );
@@ -30,11 +32,16 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     height: '100%',
   },
-
+  heading: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    color: '#ffffff',
+    marginBottom: 25,
+  },
   info: {
-    fontSize: 18,
-    color: '#fff',
-    lineHeight: 24,
-    marginBottom: 21,
+    fontSize: 16,
+    color: '#ffffffaa',
+    lineHeight: 21,
+    marginBottom: 12,
   },
 });

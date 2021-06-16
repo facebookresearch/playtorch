@@ -33,7 +33,7 @@ export default function ToolboxList({tools, onSelect}: Props) {
 
   const renderItem = useCallback(
     ({item, index, section}) => {
-      const {title, subtitle} = item;
+      const {title, subtitle, apiTest} = item;
       let cornerStyle = styles.listItemContainer;
       if (index === 0) {
         cornerStyle = styles.listItemContainerTop;
@@ -50,7 +50,9 @@ export default function ToolboxList({tools, onSelect}: Props) {
             onSelect(item);
           }}>
           <View style={styles.listItem}>
-            <View style={styles.listItemThumbnail}>{item.icon}</View>
+            <View style={[styles.listItemThumbnail, apiTest && styles.apiTest]}>
+              {item.icon}
+            </View>
             <View style={styles.listItemText}>
               <Text style={styles.listItemTitle}>{title}</Text>
               <Text style={styles.listItemInfo}>{subtitle}</Text>
@@ -130,11 +132,14 @@ const styles = StyleSheet.create({
   listItemThumbnail: {
     flex: 1,
     width: 50,
-    backgroundColor: '#cde',
+    backgroundColor: '#ee4c2c',
     alignSelf: 'stretch',
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 90,
+  },
+  apiTest: {
+    backgroundColor: '#99aabb',
   },
   listItemTitle: {
     fontWeight: 'bold',

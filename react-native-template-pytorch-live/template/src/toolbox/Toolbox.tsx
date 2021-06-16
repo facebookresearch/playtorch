@@ -13,7 +13,7 @@ import {
 } from '@react-navigation/stack';
 import * as React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
-import Icon from 'react-native-vector-icons/Ionicons';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import CameraFrameByFrame from './camera/CameraFrameByFrame';
 import CameraTakePicture from './camera/CameraTakePicture';
@@ -49,7 +49,6 @@ import CanvasText from './apiTest/CanvasText';
 import CanvasTextAlign from './apiTest/CanvasTextAlign';
 import CanvasArcMatrix from './apiTest/CanvasArcMatrix';
 
-
 import ToolboxContext, {useToolboxContext} from './ToolboxContext';
 import ToolboxList from './ToolboxList';
 import CanvasGetImageData from './apiTest/CanvasGetImageData';
@@ -58,6 +57,7 @@ export type Tool = {
   icon?: JSX.Element;
   title: string;
   subtitle: string;
+  apiTest?: boolean;
   component?: React.ComponentType<any>;
 };
 
@@ -71,13 +71,13 @@ const tools: ToolSection = [
     title: 'UI',
     data: [
       {
-        icon: <Icon name="image-outline" size={32} color="tomato" />,
+        icon: <Icon name="format-float-left" size={32} color="white" />,
         title: 'UI Starter',
         subtitle: 'This template helps you start with building UI quickly',
         component: UIStarter,
       },
       {
-        icon: <Icon name="image-outline" size={32} color="tomato" />,
+        icon: <Icon name="format-float-left" size={32} color="white" />,
         title: 'UI Card',
         subtitle: 'An example gallery of image cards',
         component: UICard,
@@ -89,31 +89,31 @@ const tools: ToolSection = [
     title: 'Canvas',
     data: [
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="shape-plus" size={32} color="white" />,
         title: 'Canvas Starter',
         subtitle: 'This template helps you start with canvas drawing quickly',
         component: CanvasStarter,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="shape-plus" size={32} color="white" />,
         title: 'Canvas Shapes',
         subtitle: 'Drawing shapes on a canvas',
         component: CanvasShapes,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="shape-plus" size={32} color="white" />,
         title: 'Canvas Animator',
-        subtitle: 'Animator test',
+        subtitle: 'An easy way to create animations',
         component: CanvasAnimator,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="shape-plus" size={32} color="white" />,
         title: 'Canvas Transform',
         subtitle: 'Affine transforms like scale, rotate, and skew',
         component: CanvasTransform,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="shape-plus" size={32} color="white" />,
         title: 'Canvas Drawing',
         subtitle: 'Basic interactive drawing on canvas',
         component: CanvasDrawing,
@@ -125,19 +125,19 @@ const tools: ToolSection = [
     title: 'Camera and Images',
     data: [
       {
-        icon: <Icon name="image-outline" size={32} color="tomato" />,
+        icon: <Icon name="image-size-select-actual" size={32} color="white" />,
         title: 'Images',
         subtitle: 'Different ways to display images',
         component: Images,
       },
       {
-        icon: <Icon name="videocam-outline" size={32} color="tomato" />,
+        icon: <Icon name="video" size={32} color="white" />,
         title: 'Camera Frame By Frame',
         subtitle: 'Frame by frame processing of camera images',
         component: CameraFrameByFrame,
       },
       {
-        icon: <Icon name="videocam-outline" size={32} color="tomato" />,
+        icon: <Icon name="camera" size={32} color="white" />,
         title: 'Camera Take Picture',
         subtitle: 'Take picture processing',
         component: CameraTakePicture,
@@ -149,132 +149,152 @@ const tools: ToolSection = [
     title: 'API Test',
     data: [
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas#rect',
         subtitle: 'Drawing rect on a canvas',
+        apiTest: true,
         component: CanvasRect,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas#fillRect',
         subtitle: 'Drawing filled rect on a canvas',
+        apiTest: true,
         component: CanvasFillRect,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas#clearRect',
         subtitle: 'Clear rect on a canvas',
+        apiTest: true,
         component: CanvasClearRect,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas#arc',
         subtitle: 'Drawing arc/circles on a canvas',
+        apiTest: true,
         component: CanvasArc,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas Arc Matrix',
         subtitle: 'Drawing an arcs matrix on a canvas',
+        apiTest: true,
         component: CanvasArcMatrix,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas Animation',
         subtitle: 'Animate drawings on canvas',
+        apiTest: true,
         component: CanvasAnimation,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas Save and Restore',
         subtitle: 'Save, draw, and restore context',
         component: CanvasSaveRestore,
+        apiTest: true,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas Set Transform',
         subtitle: 'Draw with transform',
+        apiTest: true,
         component: CanvasSetTransform,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas Scale',
         subtitle: 'Drawing with scale on canvas',
+        apiTest: true,
         component: CanvasScale,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas Rotate',
         subtitle: 'Drawing with rotate on canvas',
+        apiTest: true,
         component: CanvasRotate,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas Translate',
         subtitle: 'Drawing with translate on canvas',
+        apiTest: true,
         component: CanvasTranslate,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas#moveTo',
         subtitle: 'Drawing lines on a canvas',
+        apiTest: true,
         component: CanvasMoveTo,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas#lineCap',
         subtitle: 'Drawing lines with line cap on a canvas',
+        apiTest: true,
         component: CanvasLineCap,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas#lineJoin',
         subtitle: 'Drawing lines with line join on a canvas',
+        apiTest: true,
         component: CanvasLineJoin,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas#miterLimit',
         subtitle: 'Drawing lines with miter limit on a canvas',
+        apiTest: true,
         component: CanvasMiterLimit,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas#closePath',
         subtitle: 'Close path on a canvas',
+        apiTest: true,
         component: CanvasClosePath,
       },
       {
-        icon: <Icon name="image-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Image Scale',
         subtitle: 'Scaling images',
+        apiTest: true,
         component: ImageScale,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas#getImageData',
         subtitle: 'Retrieve ImageData and draw as image on a canvas',
+        apiTest: true,
         component: CanvasGetImageData,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas#drawImage',
         subtitle: 'Drawing images on a canvas',
+        apiTest: true,
         component: CanvasDrawImage,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas Text',
         subtitle: 'Drawing text on canvas',
+        apiTest: true,
         component: CanvasText,
       },
       {
-        icon: <Icon name="color-palette-outline" size={32} color="tomato" />,
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Canvas#textAlign',
         subtitle: 'Drawing aligned text on canvas',
+        apiTest: true,
         component: CanvasTextAlign,
       },
-
     ],
   },
 ];

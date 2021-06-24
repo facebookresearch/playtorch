@@ -134,6 +134,7 @@ class DrawingCanvasView: UIView {
             context.cgContext.setStrokeColor(currentState.strokeStyle)
             context.cgContext.setLineWidth(currentState.lineWidth)
             context.cgContext.setLineCap(currentState.lineCap)
+            context.cgContext.setLineJoin(currentState.lineJoin)
             context.cgContext.strokePath()
         }
         let startPoint = path.currentPoint
@@ -209,19 +210,34 @@ class DrawingCanvasView: UIView {
         }
     }
 
+    func setLineJoin(lineJoin: String){
+        switch lineJoin {
+        case "miter":
+            currentState.lineJoin = CGLineJoin.miter
+        case "round":
+            currentState.lineJoin = CGLineJoin.round
+        case "bevel":
+            currentState.lineJoin = CGLineJoin.bevel
+        default:
+            print("Invalid value, could not set line join")
+        }
+    }
+
     struct CanvasState {
         public var transformation: CGAffineTransform
         public var strokeStyle: CGColor
         public var fillStyle: CGColor
         public var lineWidth: CGFloat
         public var lineCap: CGLineCap
+        public var lineJoin: CGLineJoin
 
-        init(transformation: CGAffineTransform = CGAffineTransform.identity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1, lineCap: CGLineCap = CGLineCap.butt) {
+        init(transformation: CGAffineTransform = CGAffineTransform.identity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1, lineCap: CGLineCap = CGLineCap.butt, lineJoin: CGLineJoin = CGLineJoin.miter) {
             self.transformation = transformation
             self.strokeStyle = strokeStyle
             self.fillStyle = fillStyle
             self.lineWidth = lineWidth
             self.lineCap = lineCap
+            self.lineJoin = lineJoin
         }
     }
 

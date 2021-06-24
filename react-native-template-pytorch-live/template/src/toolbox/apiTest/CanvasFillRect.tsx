@@ -34,7 +34,7 @@ export default function CanvasFillRect() {
       ctx.fillStyle = '#8442f5';
       ctx.strokeStyle = '#e3aa39';
       ctx.lineWidth = 20;
-      ctx.lineCap = 'butt';
+      ctx.lineJoin = 'bevel';
       // ctx.setTransform(1, 0.2, 0.8, 1, 0, 0);
       // ctx.rect(0, 0, 100, 100);
       // ctx.save();
@@ -45,6 +45,7 @@ export default function CanvasFillRect() {
       // ctx.translate(0, 200);
       // ctx.rect(0, 0, 100, 100);
       ctx.arc(200, 200, 100, 0, Math.PI, false);
+      ctx.arc(200, 200, 75, 0, Math.PI, true);
       ctx.stroke();
     }
   }, [drawingContext]);

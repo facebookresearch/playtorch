@@ -225,4 +225,17 @@ class CanvasRenderingContext2D: NSObject {
             print("Could not perform setLineCap")
         }
     }
+
+    @objc
+    func setLineJoin(_ canvasRef: NSDictionary, lineJoin: NSString) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            if let lj = lineJoin as? String {
+                canvasView.setLineJoin(lineJoin: lj)
+            }
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform setLineJoin")
+        }
+    }
 }

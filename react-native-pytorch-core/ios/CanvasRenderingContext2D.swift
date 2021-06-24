@@ -159,6 +159,28 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
+    func setFillStyle(_ canvasRef: NSDictionary, color: CGColor) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            canvasView.setFillStyle(color: color)
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform setFillStyle")
+        }
+    }
+
+    @objc
+    func setStrokeStyle(_ canvasRef: NSDictionary, color: CGColor) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            canvasView.setStrokeStyle(color: color)
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform setStrokeStyle")
+        }
+    }
+
+    @objc
     func setLineWidth(_ canvasRef: NSDictionary, lineWidth: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)

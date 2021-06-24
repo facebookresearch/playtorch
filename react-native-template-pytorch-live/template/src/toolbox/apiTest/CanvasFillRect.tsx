@@ -31,13 +31,14 @@ export default function CanvasFillRect() {
       ctx.clear();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
 
+      ctx.fillStyle = '#8442f5';
+      ctx.strokeStyle = '#e3aa39';
       ctx.lineWidth = 3;
       ctx.setTransform(1, 0.2, 0.8, 1, 0, 0);
-      ctx.rect(0, 0, 100, 100);
+      ctx.fillRect(0, 0, 100, 100);
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.translate(0, 200);
-      ctx.rect(0, 0, 100, 100);
-      ctx.stroke();
+      ctx.strokeRect(0, 0, 100, 100);
     }
   }, [drawingContext]);
 

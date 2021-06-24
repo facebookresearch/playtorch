@@ -64,6 +64,7 @@ class DrawingCanvasView: UIView {
             if let img = canvasImage {
                 img.draw(in: boundsRect)
             }
+            context.cgContext.setStrokeColor(currentState.strokeStyle)
             context.cgContext.concatenate(currentState.transformation)
             context.cgContext.addRect(rect)
             context.cgContext.setLineWidth(currentState.lineWidth)
@@ -78,6 +79,7 @@ class DrawingCanvasView: UIView {
             if let img = canvasImage {
                 img.draw(in: boundsRect)
             }
+            context.cgContext.setFillColor(currentState.fillStyle)
             context.cgContext.concatenate(currentState.transformation)
             context.cgContext.addRect(rect)
             context.cgContext.fillPath(using: .evenOdd) //maybe change to winding
@@ -128,6 +130,7 @@ class DrawingCanvasView: UIView {
                 img.draw(in: boundsRect)
             }
             context.cgContext.addPath(path)
+            context.cgContext.setStrokeColor(currentState.strokeStyle)
             context.cgContext.setLineWidth(currentState.lineWidth)
             context.cgContext.strokePath()
         }
@@ -143,6 +146,7 @@ class DrawingCanvasView: UIView {
                 img.draw(in: UIScreen.main.bounds)
             }
             context.cgContext.addPath(path)
+            context.cgContext.setFillColor(currentState.fillStyle)
             context.cgContext.fillPath()
         }
         let startPoint = path.currentPoint
@@ -168,16 +172,29 @@ class DrawingCanvasView: UIView {
         currentState.transformation = CGAffineTransform(a: a, b: b, c: c, d: d, tx: e, ty: f)
     }
 
+    func setFillStyle(color: CGColor){
+        currentState.fillStyle = color
+    }
+
+    func setStrokeStyle(color: CGColor){
+        currentState.strokeStyle = color
+
+    }
+
     func setLineWidth(lineWidth: CGFloat){
         currentState.lineWidth = lineWidth
     }
 
     struct CanvasState {
         public var transformation: CGAffineTransform
+        public var strokeStyle: CGColor
+        public var fillStyle: CGColor
         public var lineWidth: CGFloat
 
-        init(transformation: CGAffineTransform = CGAffineTransform.identity, lineWidth: CGFloat = 1){
+        init(transformation: CGAffineTransform = CGAffineTransform.identity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1){
             self.transformation = transformation
+            self.strokeStyle = strokeStyle
+            self.fillStyle = fillStyle
             self.lineWidth = lineWidth
         }
     }

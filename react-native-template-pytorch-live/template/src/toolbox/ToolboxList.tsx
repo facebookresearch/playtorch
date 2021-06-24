@@ -15,6 +15,7 @@ import {
   Text,
   TouchableOpacity,
   View,
+  Image,
 } from 'react-native';
 import {Tool, ToolSection} from './Toolbox';
 import {useToolboxContext} from './ToolboxContext';
@@ -65,15 +66,22 @@ export default function ToolboxList({tools, onSelect}: Props) {
   );
 
   return (
-    <SectionList
-      style={styles.container}
-      sections={tools}
-      renderItem={renderItem}
-      renderSectionHeader={({section: {title}}) => (
-        <Text style={styles.sectionTitle}>{title}</Text>
-      )}
-      keyExtractor={({title}) => `${title}`}
-    />
+    <>
+      <View style={styles.full}>
+        <Image
+          style={styles.gradient}
+          source={require('../../assets/images/gradient_bg3.png')}></Image>
+      </View>
+      <SectionList
+        style={styles.container}
+        sections={tools}
+        renderItem={renderItem}
+        renderSectionHeader={({section: {title}}) => (
+          <Text style={styles.sectionTitle}>{title}</Text>
+        )}
+        keyExtractor={({title}) => `${title}`}
+      />
+    </>
   );
 }
 
@@ -81,9 +89,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     flexDirection: 'column',
+    alignSelf: 'stretch',
     paddingLeft: 40,
     paddingRight: 40,
-    backgroundColor: '#60f',
   },
   separator: {
     height: 1,
@@ -92,10 +100,10 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 13,
     color: '#fff',
+    letterSpacing: 5,
     textTransform: 'uppercase',
-    fontWeight: 'bold',
     marginTop: 40,
-    marginBottom: 15,
+    marginBottom: 20,
   },
   listItemContainer: {
     backgroundColor: '#fff',
@@ -132,14 +140,14 @@ const styles = StyleSheet.create({
   listItemThumbnail: {
     flex: 1,
     width: 50,
-    backgroundColor: '#ee4c2c',
+    backgroundColor: '#e32d5b',
     alignSelf: 'stretch',
     alignItems: 'center',
     justifyContent: 'center',
     minHeight: 90,
   },
   apiTest: {
-    backgroundColor: '#99aabb',
+    backgroundColor: '#2b2b2b',
   },
   listItemTitle: {
     fontWeight: 'bold',
@@ -150,5 +158,18 @@ const styles = StyleSheet.create({
   listItemInfo: {
     fontSize: 12,
     color: '#678',
+  },
+  full: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#78569e',
+  },
+  gradient: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'stretch',
   },
 });

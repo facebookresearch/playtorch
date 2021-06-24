@@ -29,7 +29,7 @@ import MNISTExample from './MNISTExample';
 
 const contents = [
   {
-    title: 'Image Classification',
+    title: 'VISION',
     data: [
       {
         name: 'Photo example',
@@ -120,17 +120,24 @@ const ExampleSection = ({title}: {title: string}) => {
 
 function ExampleScreen({navigation}: any) {
   return (
-    <SectionList
-      style={styles.bg}
-      sections={contents}
-      keyExtractor={(item, index) => item.name + index}
-      renderItem={({item}) => (
-        <ExampleCard item={item} onSelect={navigation.navigate} />
-      )}
-      renderSectionHeader={({section: {title}}) => (
-        <ExampleSection title={title} />
-      )}
-    />
+    <>
+      <View style={styles.full}>
+        <Image
+          style={styles.gradient}
+          source={require('../../assets/images/gradient_bg1.png')}></Image>
+      </View>
+      <SectionList
+        style={styles.container}
+        sections={contents}
+        keyExtractor={(item, index) => item.name + index}
+        renderItem={({item}) => (
+          <ExampleCard item={item} onSelect={navigation.navigate} />
+        )}
+        renderSectionHeader={({section: {title}}) => (
+          <ExampleSection title={title} />
+        )}
+      />
+    </>
   );
 }
 
@@ -159,12 +166,12 @@ export default function Examples() {
 }
 
 const styles = StyleSheet.create({
-  bg: {
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    alignSelf: 'stretch',
     paddingLeft: 40,
     paddingRight: 40,
-    backgroundColor: '#60f',
-    alignSelf: 'stretch',
-    height: '100%',
   },
   category: {
     marginTop: 40,
@@ -172,9 +179,9 @@ const styles = StyleSheet.create({
   },
   categoryLabel: {
     fontSize: 13,
+    letterSpacing: 5,
     color: '#fff',
     textTransform: 'uppercase',
-    fontWeight: 'bold',
   },
   card: {
     overflow: 'hidden',
@@ -217,5 +224,18 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 13,
     color: '#345',
+  },
+  full: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: '#c34166',
+  },
+  gradient: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'stretch',
   },
 });

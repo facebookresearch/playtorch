@@ -19,7 +19,7 @@ import {
 import {enableScreens} from 'react-native-screens';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import ModelPreloader from './components/ModelPreloader';
-import Demos from './demos/MyDemos';
+import MyDemos from './demos/MyDemos';
 import Examples from './examples/Examples';
 import {ImageClassificationModels} from './Models';
 import Toolbox from './toolbox/Toolbox';
@@ -74,14 +74,14 @@ function AppWithNavigation() {
             style: {
               backgroundColor: '#000',
               borderTopWidth: 0,
-              height: 60 + insets.bottom,
+              height: 65 + insets.bottom,
               paddingTop: 10,
             },
             labelStyle: {
               height: 22,
             },
           }}>
-          <Tab.Screen name="My Demos" component={Demos} />
+          <Tab.Screen name="My Demos" component={MyDemos} />
           <Tab.Screen name="Examples" component={Examples} />
           <Tab.Screen name="Toolbox" component={Toolbox} />
         </Tab.Navigator>

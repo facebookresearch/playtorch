@@ -159,6 +159,28 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
+    func save(_ canvasRef: NSDictionary) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            canvasView.save()
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform save")
+        }
+    }
+
+    @objc
+    func restore(_ canvasRef: NSDictionary) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            canvasView.restore()
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform save")
+        }
+    }
+
+    @objc
     func setFillStyle(_ canvasRef: NSDictionary, color: CGColor) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)

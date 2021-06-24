@@ -35,9 +35,12 @@ export default function CanvasFillRect() {
       ctx.strokeStyle = '#e3aa39';
       ctx.lineWidth = 3;
       ctx.setTransform(1, 0.2, 0.8, 1, 0, 0);
-      ctx.fillRect(0, 0, 100, 100);
+      ctx.save();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.translate(0, 200);
+      ctx.fillStyle = '#000000';
+      ctx.strokeStyle = '#000000';
+      ctx.restore();
+      ctx.fillRect(0, 0, 100, 100);
       ctx.strokeRect(0, 0, 100, 100);
     }
   }, [drawingContext]);

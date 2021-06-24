@@ -26,6 +26,8 @@ RCT_EXTERN_METHOD(translate:(nonnull NSDictionary)canvasRef x:(nonnull NSNumber)
 RCT_EXTERN_METHOD(setTransform:(nonnull NSDictionary)canvasRef a:(nonnull NSNumber)a b:(nonnull NSNumber)b c:(nonnull NSNumber)c d:(nonnull NSNumber)d e:(nonnull NSNumber)e f:(nonnull NSNumber)f);
 RCT_EXTERN_METHOD(setFillStyle:(nonnull NSDictionary)canvasRef color:(nonnull CGColor)color);
 RCT_EXTERN_METHOD(setStrokeStyle:(nonnull NSDictionary)canvasRef color:(nonnull CGColor)color);
+RCT_EXTERN_METHOD(save:(nonnull NSDictionary)canvasRef);
+RCT_EXTERN_METHOD(restore:(nonnull NSDictionary)canvasRef);
 RCT_EXTERN_METHOD(setLineWidth:(nonnull NSDictionary)canvasRef lineWidth:(nonnull NSNumber)lineWidth);
                   
 @end

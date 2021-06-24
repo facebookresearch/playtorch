@@ -17,6 +17,7 @@ class DrawingCanvasView: UIView {
     var ref: [String:String] = [:] // initialized to allow using self in init()
     var renderer = UIGraphicsImageRenderer(size: UIScreen.main.bounds.size)
     var canvasImage: UIImage?
+    var stateStack = Stack()
     var path = CGMutablePath()
     var boundsRect = UIScreen.main.bounds
     var currentState = CanvasState()
@@ -178,7 +179,16 @@ class DrawingCanvasView: UIView {
 
     func setStrokeStyle(color: CGColor){
         currentState.strokeStyle = color
+    }
 
+    func save(){
+        stateStack.push(state: currentState)
+    }
+
+    func restore() {
+        if let s = stateStack.pop() {
+            currentState = s
+        }
     }
 
     func setLineWidth(lineWidth: CGFloat){
@@ -196,6 +206,23 @@ class DrawingCanvasView: UIView {
             self.strokeStyle = strokeStyle
             self.fillStyle = fillStyle
             self.lineWidth = lineWidth
+        }
+    }
+
+    class Stack{
+        var stateArray = [CanvasState]()
+
+        func push(state: CanvasState) {
+            stateArray.append(state)
+        }
+
+        func pop() -> CanvasState? {
+            if stateArray.last != nil {
+                return stateArray.removeLast()
+            }
+            else {
+                return nil
+            }
         }
     }
 }

@@ -15,12 +15,11 @@ class DrawingCanvasView: UIView {
     @objc public var width: NSNumber?
     @objc public var height: NSNumber?
     var ref: [String:String] = [:] // initialized to allow using self in init()
-    var currentColor = UIColor.black.cgColor
-    var savedState: UIImage?
     var renderer = UIGraphicsImageRenderer(size: UIScreen.main.bounds.size)
+    var canvasImage: UIImage?
     var path = CGMutablePath()
-    var currentTransformation = CGAffineTransform.identity
     var boundsRect = UIScreen.main.bounds
+    var currentState = CanvasState()
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -34,7 +33,7 @@ class DrawingCanvasView: UIView {
 
     override func draw(_ rect: CGRect) {
         super.draw(rect)
-        if let img = savedState {
+        if let img = canvasImage {
             img.draw(in: boundsRect)
         }
     }
@@ -56,31 +55,31 @@ class DrawingCanvasView: UIView {
     }
 
     func arc(x: CGFloat, y: CGFloat, radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat, counterclockwise: Bool) {
-        path.addArc(center: CGPoint(x:x, y: y), radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: counterclockwise, transform: currentTransformation) // seems counterintuitve, but is the only way to get it to match web canvas
+        path.addArc(center: CGPoint(x:x, y: y), radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: counterclockwise, transform: currentState.transformation) // seems counterintuitve, but is the only way to get it to match web canvas
     }
 
     func strokeRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
         let rect = CGRect(x: x, y: y, width: width, height: height)
-        savedState = renderer.image { context in
-            if let img = savedState {
+        canvasImage = renderer.image { context in
+            if let img = canvasImage {
                 img.draw(in: boundsRect)
             }
-            context.cgContext.concatenate(currentTransformation)
+            context.cgContext.concatenate(currentState.transformation)
             context.cgContext.addRect(rect)
             context.cgContext.strokePath()
         }
-        invalidate(rect)
+        invalidate()
     }
 
     func fillRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
         let rect = CGRect(x: x, y: y, width: width, height: height)
-        savedState = renderer.image { context in
-            if let img = savedState {
+        canvasImage = renderer.image { context in
+            if let img = canvasImage {
                 img.draw(in: boundsRect)
             }
-            context.cgContext.concatenate(currentTransformation)
+            context.cgContext.concatenate(currentState.transformation)
             context.cgContext.addRect(rect)
-            context.cgContext.drawPath(using: .fillStroke)
+            context.cgContext.fillPath(using: .evenOdd) //maybe change to winding
         }
         invalidate()
     }
@@ -88,7 +87,7 @@ class DrawingCanvasView: UIView {
     func rect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
         // create CGRect and add it to list
         let rect = CGRect(x: x, y: y, width: width, height: height)
-        path.addRect(rect, transform: currentTransformation)
+        path.addRect(rect, transform: currentState.transformation)
     }
 
     func invalidate() {
@@ -104,27 +103,27 @@ class DrawingCanvasView: UIView {
     }
 
     func clear() {
-        savedState = renderer.image { context in }
+        canvasImage = renderer.image { context in }
         invalidate()
     }
 
     func clearRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
         let rect = CGRect(x: x, y: y, width: width, height: height)
-        savedState = renderer.image { context in
-            if let img = savedState {
+        canvasImage = renderer.image { context in
+            if let img = canvasImage {
                 img.draw(in: boundsRect)
             }
-            context.cgContext.concatenate(currentTransformation)
+            context.cgContext.concatenate(currentState.transformation)
             context.cgContext.setBlendMode(CGBlendMode.clear)
             context.cgContext.addRect(rect)
-            context.cgContext.drawPath(using: .fillStroke)
+            context.cgContext.fillPath()
         }
         invalidate(rect)
     }
 
     func stroke(){
-        savedState = renderer.image { context in
-            if let img = savedState {
+        canvasImage = renderer.image { context in
+            if let img = canvasImage {
                 img.draw(in: boundsRect)
             }
             context.cgContext.addPath(path)
@@ -136,20 +135,42 @@ class DrawingCanvasView: UIView {
         invalidate()
     }
 
+    func fill(){
+        canvasImage = renderer.image { context in
+            if let img = canvasImage {
+                img.draw(in: UIScreen.main.bounds)
+            }
+            context.cgContext.addPath(path)
+            context.cgContext.fillPath()
+        }
+        let startPoint = path.currentPoint
+        path = CGMutablePath()
+        path.move(to: startPoint, transform: CGAffineTransform.identity)
+        invalidate()
+    }
+
     func scale(x: CGFloat, y: CGFloat) {
-        currentTransformation = currentTransformation.scaledBy(x: x, y: y)
+        currentState.transformation = currentState.transformation.scaledBy(x: x, y: y)
     }
 
     func rotate(angle: CGFloat) {
-        currentTransformation = currentTransformation.rotated(by: angle)
+        currentState.transformation = currentState.transformation.rotated(by: angle)
     }
 
     func translate(x: CGFloat, y: CGFloat) {
-        currentTransformation = currentTransformation.translatedBy(x: x, y: y)
+        currentState.transformation = currentState.transformation.translatedBy(x: x, y: y)
     }
 
     func setTransform(a: CGFloat, b: CGFloat, c: CGFloat, d: CGFloat, e: CGFloat, f: CGFloat){
         // Note that the Apple CGAffineTransform matrix is the transpose of the matrix used by PyTorch Live, but so is their labeling
-        currentTransformation = CGAffineTransform(a: a, b: b, c: c, d: d, tx: e, ty: f)
+        currentState.transformation = CGAffineTransform(a: a, b: b, c: c, d: d, tx: e, ty: f)
+    }
+
+    struct CanvasState {
+        public var transformation: CGAffineTransform
+
+        init(transformation: CGAffineTransform = CGAffineTransform.identity, lineWidth: CGFloat = 1){
+            self.transformation = transformation
+        }
     }
 }

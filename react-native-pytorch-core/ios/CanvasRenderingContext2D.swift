@@ -154,7 +154,7 @@ class CanvasRenderingContext2D: NSObject {
             canvasView.setTransform(a: CGFloat(a), b: CGFloat(b), c: CGFloat(c), d: CGFloat(d), e: CGFloat(e), f: CGFloat(f))
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform translate")
+            print("Could not perform setTransform")
         }
     }
 }

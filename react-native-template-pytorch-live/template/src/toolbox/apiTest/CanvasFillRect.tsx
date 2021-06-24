@@ -28,12 +28,42 @@ export default function CanvasFillRect() {
   useLayoutEffect(() => {
     const ctx = drawingContext;
     if (ctx != null) {
-      ctx.rect(5, 5, 50, 50);
-      ctx.rect(60, 5, 50, 50);
-      ctx.rotate((10 * Math.PI) / 180);
-      ctx.arc(58, 60, 20, 0, Math.PI, false);
-      ctx.stroke();
-      ctx.invalidate();
+      ctx.clear();
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+      // ctx.scale(1, 2);
+      // ctx.rect(20, 10, 150, 100);
+      // ctx.rect(150, 90, 20, 20);
+      // ctx.translate(25, 25);
+      // ctx.rect(180, 10, 150, 100);
+      // ctx.rect(310, 90, 20, 20);
+      // ctx.stroke();
+      // ctx.rotate((10 * Math.PI) / 180);
+      // ctx.arc(58, 60, 20, 0, Math.PI, false);
+      // ctx.stroke();
+      // ctx.invalidate();
+
+      // ctx.strokeRect(20, 10, 150, 100);
+      // ctx.strokeRect(180, 10, 150, 100);
+      // ctx.fillRect(150, 90, 20, 20);
+      // ctx.fillRect(310, 90, 20, 20);
+      // ctx.arc(175, 180, 100, 0, Math.PI, false);
+      // ctx.stroke();
+
+      // ctx.scale(1, 2);
+      // ctx.fillRect(20, 10, 150, 100);
+      // ctx.clearRect(150, 90, 20, 20);
+      // ctx.translate(25, 25);
+      // ctx.fillRect(180, 10, 150, 100);
+      // ctx.clearRect(310, 90, 20, 20);
+      // ctx.rotate((10 * Math.PI) / 180);
+      // ctx.arc(175, 150, 100, 0, Math.PI, false);
+      // ctx.stroke();
+
+      ctx.setTransform(1, 0.2, 0.8, 1, 0, 0);
+      ctx.fillRect(0, 0, 100, 100);
+
+      // ctx.setTransform(1, 0, 0, 1, 0, 0);
     }
   }, [drawingContext]);
 
@@ -47,6 +77,6 @@ export default function CanvasFillRect() {
 const styles = StyleSheet.create({
   canvas: {
     width: 200,
-    height: 100,
+    height: 200,
   },
 });

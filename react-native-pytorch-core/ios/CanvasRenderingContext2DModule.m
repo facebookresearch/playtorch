@@ -23,6 +23,7 @@ RCT_EXTERN_METHOD(stroke:(nonnull NSDictionary)canvasRef);
 RCT_EXTERN_METHOD(scale:(nonnull NSDictionary)canvasRef x:(nonnull NSNumber)x y:(nonnull NSNumber)y);
 RCT_EXTERN_METHOD(rotate:(nonnull NSDictionary)canvasRef angle:(nonnull NSNumber)angle x:(nonnull NSNumber)x y:(nonnull NSNumber)y)
 RCT_EXTERN_METHOD(translate:(nonnull NSDictionary)canvasRef x:(nonnull NSNumber)x y:(nonnull NSNumber)y);
+RCT_EXTERN_METHOD(setTransform:(nonnull NSDictionary)canvasRef a:(nonnull NSNumber)a b:(nonnull NSNumber)b c:(nonnull NSNumber)c d:(nonnull NSNumber)d e:(nonnull NSNumber)e f:(nonnull NSNumber)f);
                   
 @end
 

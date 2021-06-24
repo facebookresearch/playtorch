@@ -14,7 +14,7 @@ class DrawingCanvasView: UIView {
     @objc public var onContext2D: RCTBubblingEventBlock?
     @objc public var width: NSNumber?
     @objc public var height: NSNumber?
-    var ref: [String:String] = [:] //initialized to allow using self in init()
+    var ref: [String:String] = [:] // initialized to allow using self in init()
     var currentColor = UIColor.black.cgColor
     var savedState: UIImage?
     var renderer = UIGraphicsImageRenderer(size: UIScreen.main.bounds.size)
@@ -56,7 +56,7 @@ class DrawingCanvasView: UIView {
     }
 
     func arc(x: CGFloat, y: CGFloat, radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat, counterclockwise: Bool) {
-        path.addArc(center: CGPoint(x:x, y: y), radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: counterclockwise, transform: currentTransformation) //seems counterintuitve, but is the only way to get it to match web canvas
+        path.addArc(center: CGPoint(x:x, y: y), radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: counterclockwise, transform: currentTransformation) // seems counterintuitve, but is the only way to get it to match web canvas
     }
 
     func strokeRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
@@ -82,11 +82,11 @@ class DrawingCanvasView: UIView {
             context.cgContext.addRect(rect)
             context.cgContext.drawPath(using: .fillStroke)
         }
-        invalidate(rect)
+        invalidate()
     }
 
     func rect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
-        //create CGRect and add it to list
+        // create CGRect and add it to list
         let rect = CGRect(x: x, y: y, width: width, height: height)
         path.addRect(rect, transform: currentTransformation)
     }
@@ -146,5 +146,10 @@ class DrawingCanvasView: UIView {
 
     func translate(x: CGFloat, y: CGFloat) {
         currentTransformation = currentTransformation.translatedBy(x: x, y: y)
+    }
+
+    func setTransform(a: CGFloat, b: CGFloat, c: CGFloat, d: CGFloat, e: CGFloat, f: CGFloat){
+        // Note that the Apple CGAffineTransform matrix is the transpose of the matrix used by PyTorch Live, but so is their labeling
+        currentTransformation = CGAffineTransform(a: a, b: b, c: c, d: d, tx: e, ty: f)
     }
 }

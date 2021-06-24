@@ -10,4 +10,6 @@
 
 @interface RCT_EXTERN_REMAP_MODULE(PyTorchCoreCanvasView, CanvasManager, RCTViewManager)
 RCT_EXPORT_VIEW_PROPERTY(onContext2D, RCTBubblingEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(width, NSNumber)
+RCT_EXPORT_VIEW_PROPERTY(height, NSNumber)
 @end

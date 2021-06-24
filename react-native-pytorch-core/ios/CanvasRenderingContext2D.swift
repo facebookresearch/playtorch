@@ -110,4 +110,40 @@ class CanvasRenderingContext2D: NSObject {
         guard let canvasView = castedCanvasView else { throw CanvasRenderingContext2DError.castingView }
         return canvasView
     }
+
+    @objc
+    func scale(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            canvasView.scale(x: CGFloat(x), y: CGFloat(y))
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform scale")
+        }
+    }
+
+    @objc
+    func rotate(_ canvasRef: NSDictionary, angle: NSNumber, x: NSNumber, y: NSNumber) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            if(Int(x) >= 0 && Int(y) >= 0){
+                canvasView.translate(x: CGFloat(x), y: CGFloat(y))
+            }
+            canvasView.rotate(angle: CGFloat(angle))
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform rotate")
+        }
+    }
+
+    @objc
+    func translate(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            canvasView.translate(x: CGFloat(x), y: CGFloat(y))
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform translate")
+        }
+    }
 }

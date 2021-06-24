@@ -133,6 +133,7 @@ class DrawingCanvasView: UIView {
             context.cgContext.addPath(path)
             context.cgContext.setStrokeColor(currentState.strokeStyle)
             context.cgContext.setLineWidth(currentState.lineWidth)
+            context.cgContext.setLineCap(currentState.lineCap)
             context.cgContext.strokePath()
         }
         let startPoint = path.currentPoint
@@ -195,17 +196,32 @@ class DrawingCanvasView: UIView {
         currentState.lineWidth = lineWidth
     }
 
+    func setLineCap(lineCap: String){
+        switch lineCap {
+        case "butt":
+            currentState.lineCap = CGLineCap.butt
+        case "round":
+            currentState.lineCap = CGLineCap.round
+        case "square":
+            currentState.lineCap = CGLineCap.square
+        default:
+            print("Invalid value, could not set line cap")
+        }
+    }
+
     struct CanvasState {
         public var transformation: CGAffineTransform
         public var strokeStyle: CGColor
         public var fillStyle: CGColor
         public var lineWidth: CGFloat
+        public var lineCap: CGLineCap
 
-        init(transformation: CGAffineTransform = CGAffineTransform.identity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1){
+        init(transformation: CGAffineTransform = CGAffineTransform.identity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1, lineCap: CGLineCap = CGLineCap.butt) {
             self.transformation = transformation
             self.strokeStyle = strokeStyle
             self.fillStyle = fillStyle
             self.lineWidth = lineWidth
+            self.lineCap = lineCap
         }
     }
 

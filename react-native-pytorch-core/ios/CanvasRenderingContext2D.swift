@@ -212,4 +212,17 @@ class CanvasRenderingContext2D: NSObject {
             print("Could not perform setLineWidth")
         }
     }
+
+    @objc
+    func setLineCap(_ canvasRef: NSDictionary, lineCap: NSString) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            if let lc = lineCap as? String {
+                canvasView.setLineCap(lineCap: lc)
+            }
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform setLineCap")
+        }
+    }
 }

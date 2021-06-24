@@ -32,8 +32,9 @@ export default function CanvasFillRect() {
       ctx.setTransform(1, 0, 0, 1, 0, 0);
 
       ctx.fillStyle = '#8442f5';
-      ctx.strokeStyle = '#e3aa39';
-      ctx.lineWidth = 20;
+      ctx.strokeStyle = '#8442f5';
+      ctx.lineWidth = 10;
+      ctx.lineJoin = 'round';
       ctx.miterLimit = 1;
       ctx.arc(200, 200, 100, 0, Math.PI, false);
       ctx.arc(200, 200, 75, 0, Math.PI, true);

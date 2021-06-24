@@ -65,10 +65,9 @@ class DrawingCanvasView: UIView {
             if let img = canvasImage {
                 img.draw(in: boundsRect)
             }
-            context.cgContext.setStrokeColor(currentState.strokeStyle)
+            context.cgContext.setStyle(state: currentState)
             context.cgContext.concatenate(currentState.transformation)
             context.cgContext.addRect(rect)
-            context.cgContext.setLineWidth(currentState.lineWidth)
             context.cgContext.strokePath()
         }
         invalidate()
@@ -80,10 +79,10 @@ class DrawingCanvasView: UIView {
             if let img = canvasImage {
                 img.draw(in: boundsRect)
             }
-            context.cgContext.setFillColor(currentState.fillStyle)
+            context.cgContext.setStyle(state: currentState)
             context.cgContext.concatenate(currentState.transformation)
             context.cgContext.addRect(rect)
-            context.cgContext.fillPath(using: .evenOdd) //maybe change to winding
+            context.cgContext.fillPath()
         }
         invalidate()
     }
@@ -131,10 +130,7 @@ class DrawingCanvasView: UIView {
                 img.draw(in: boundsRect)
             }
             context.cgContext.addPath(path)
-            context.cgContext.setStrokeColor(currentState.strokeStyle)
-            context.cgContext.setLineWidth(currentState.lineWidth)
-            context.cgContext.setLineCap(currentState.lineCap)
-            context.cgContext.setLineJoin(currentState.lineJoin)
+            context.cgContext.setStyle(state: currentState)
             context.cgContext.strokePath()
         }
         let startPoint = path.currentPoint
@@ -149,7 +145,7 @@ class DrawingCanvasView: UIView {
                 img.draw(in: UIScreen.main.bounds)
             }
             context.cgContext.addPath(path)
-            context.cgContext.setFillColor(currentState.fillStyle)
+            context.cgContext.setStyle(state: currentState)
             context.cgContext.fillPath()
         }
         let startPoint = path.currentPoint
@@ -223,22 +219,8 @@ class DrawingCanvasView: UIView {
         }
     }
 
-    struct CanvasState {
-        public var transformation: CGAffineTransform
-        public var strokeStyle: CGColor
-        public var fillStyle: CGColor
-        public var lineWidth: CGFloat
-        public var lineCap: CGLineCap
-        public var lineJoin: CGLineJoin
-
-        init(transformation: CGAffineTransform = CGAffineTransform.identity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1, lineCap: CGLineCap = CGLineCap.butt, lineJoin: CGLineJoin = CGLineJoin.miter) {
-            self.transformation = transformation
-            self.strokeStyle = strokeStyle
-            self.fillStyle = fillStyle
-            self.lineWidth = lineWidth
-            self.lineCap = lineCap
-            self.lineJoin = lineJoin
-        }
+    func setMiterLimit(miterLimit: CGFloat){
+        currentState.miterLimit = miterLimit
     }
 
     class Stack{
@@ -256,5 +238,25 @@ class DrawingCanvasView: UIView {
                 return nil
             }
         }
+    }
+}
+
+struct CanvasState {
+    public var transformation: CGAffineTransform
+    public var strokeStyle: CGColor
+    public var fillStyle: CGColor
+    public var lineWidth: CGFloat
+    public var lineCap: CGLineCap
+    public var lineJoin: CGLineJoin
+    public var miterLimit: CGFloat
+
+    init(transformation: CGAffineTransform = CGAffineTransform.identity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1, lineCap: CGLineCap = CGLineCap.butt, lineJoin: CGLineJoin = CGLineJoin.miter, miterLimit: CGFloat = 10) {
+        self.transformation = transformation
+        self.strokeStyle = strokeStyle
+        self.fillStyle = fillStyle
+        self.lineWidth = lineWidth
+        self.lineCap = lineCap
+        self.lineJoin = lineJoin
+        self.miterLimit = miterLimit
     }
 }

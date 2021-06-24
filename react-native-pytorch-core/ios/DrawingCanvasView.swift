@@ -66,6 +66,7 @@ class DrawingCanvasView: UIView {
             }
             context.cgContext.concatenate(currentState.transformation)
             context.cgContext.addRect(rect)
+            context.cgContext.setLineWidth(currentState.lineWidth)
             context.cgContext.strokePath()
         }
         invalidate()
@@ -127,6 +128,7 @@ class DrawingCanvasView: UIView {
                 img.draw(in: boundsRect)
             }
             context.cgContext.addPath(path)
+            context.cgContext.setLineWidth(currentState.lineWidth)
             context.cgContext.strokePath()
         }
         let startPoint = path.currentPoint
@@ -166,11 +168,17 @@ class DrawingCanvasView: UIView {
         currentState.transformation = CGAffineTransform(a: a, b: b, c: c, d: d, tx: e, ty: f)
     }
 
+    func setLineWidth(lineWidth: CGFloat){
+        currentState.lineWidth = lineWidth
+    }
+
     struct CanvasState {
         public var transformation: CGAffineTransform
+        public var lineWidth: CGFloat
 
         init(transformation: CGAffineTransform = CGAffineTransform.identity, lineWidth: CGFloat = 1){
             self.transformation = transformation
+            self.lineWidth = lineWidth
         }
     }
 }

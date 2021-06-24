@@ -157,4 +157,15 @@ class CanvasRenderingContext2D: NSObject {
             print("Could not perform setTransform")
         }
     }
+
+    @objc
+    func setLineWidth(_ canvasRef: NSDictionary, lineWidth: NSNumber) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            canvasView.setLineWidth(lineWidth: CGFloat(lineWidth))
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform setLineWidth")
+        }
+    }
 }

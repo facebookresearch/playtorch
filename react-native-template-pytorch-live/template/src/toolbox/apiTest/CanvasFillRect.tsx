@@ -31,6 +31,7 @@ export default function CanvasFillRect() {
       ctx.clear();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
 
+      ctx.lineWidth = 3;
       ctx.setTransform(1, 0.2, 0.8, 1, 0, 0);
       ctx.rect(0, 0, 100, 100);
       ctx.setTransform(1, 0, 0, 1, 0, 0);

@@ -9,35 +9,32 @@ buildscript {
   // Buildscript is evaluated before everything else so we can't use getExtOrDefault
   def kotlin_version = rootProject.ext.has("kotlinVersion") ? rootProject.ext.get("kotlinVersion") : project.properties["PyTorchCore_kotlinVersion"]
 
-  repositories {
-    google()
-    jcenter()
-  }
-
-  dependencies {
-    classpath "com.android.tools.build:gradle:3.2.1"
-    // noinspection DifferentKotlinGradleVersion
-    classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+  if (project == rootProject) {
+    repositories {
+      google()
+      jcenter()
+    }
+    dependencies {
+      classpath "com.android.tools.build:gradle:3.5.3"
+      // noinspection DifferentKotlinGradleVersion
+      classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+    }
   }
 }
 
 apply plugin: "com.android.library"
 apply plugin: "kotlin-android"
 
-def getExtOrDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : project.properties["PyTorchCore_" + name]
-}
-
-def getExtOrIntegerDefault(name) {
-  return rootProject.ext.has(name) ? rootProject.ext.get(name) : (project.properties["PyTorchCore_" + name]).toInteger()
+def safeExtGet(prop, fallback) {
+    rootProject.ext.has(prop) ? rootProject.ext.get(prop) : fallback
 }
 
 android {
-  compileSdkVersion getExtOrIntegerDefault("compileSdkVersion")
-  buildToolsVersion getExtOrDefault("buildToolsVersion")
+  compileSdkVersion safeExtGet('PyTorchCore_compileSdkVersion', 29)
+  buildToolsVersion safeExtGet('PyTorchCore_buildToolsVersion', '29.0.2')
   defaultConfig {
-    minSdkVersion 28
-    targetSdkVersion getExtOrIntegerDefault("targetSdkVersion")
+    minSdkVersion safeExtGet('PyTorchCore_minSdkVersion', 28)
+    targetSdkVersion safeExtGet('PyTorchCore_targetSdkVersion', 29)
     versionCode 1
     versionName "1.0"
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -52,7 +49,7 @@ android {
     }
   }
   lintOptions {
-    disable "GradleCompatible"
+   disable 'GradleCompatible'
   }
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
@@ -61,74 +58,14 @@ android {
 }
 
 repositories {
-  mavenCentral()
-  jcenter()
-  google()
-
-  def found = false
-  def defaultDir = null
-  def androidSourcesName = "React Native sources"
-
-  if (rootProject.ext.has("reactNativeAndroidRoot")) {
-    defaultDir = rootProject.ext.get("reactNativeAndroidRoot")
-  } else {
-    defaultDir = new File(
-            projectDir,
-            "/../../../node_modules/react-native/android"
-    )
-  }
-
-  if (defaultDir.exists()) {
+    mavenCentral()
+    mavenLocal()
     maven {
-      url defaultDir.toString()
-      name androidSourcesName
+        // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+        url("$rootDir/../node_modules/react-native/android")
     }
-
-    logger.info(":${project.name}:reactNativeAndroidRoot ${defaultDir.canonicalPath}")
-    found = true
-  } else {
-    def parentDir = rootProject.projectDir
-
-    1.upto(5, {
-      if (found) return true
-      parentDir = parentDir.parentFile
-
-      def androidSourcesDir = new File(
-              parentDir,
-              "node_modules/react-native"
-      )
-
-      def androidPrebuiltBinaryDir = new File(
-              parentDir,
-              "node_modules/react-native/android"
-      )
-
-      if (androidPrebuiltBinaryDir.exists()) {
-        maven {
-          url androidPrebuiltBinaryDir.toString()
-          name androidSourcesName
-        }
-
-        logger.info(":${project.name}:reactNativeAndroidRoot ${androidPrebuiltBinaryDir.canonicalPath}")
-        found = true
-      } else if (androidSourcesDir.exists()) {
-        maven {
-          url androidSourcesDir.toString()
-          name androidSourcesName
-        }
-
-        logger.info(":${project.name}:reactNativeAndroidRoot ${androidSourcesDir.canonicalPath}")
-        found = true
-      }
-    })
-  }
-
-  if (!found) {
-    throw new GradleException(
-            "${project.name}: unable to locate React Native android sources. " +
-                    "Ensure you have you installed React Native as a dependency in your project and try again."
-    )
-  }
+    google()
+    jcenter()
 
   // Repository holding the PyTorch Mobile libraries for Android
   maven {
@@ -136,14 +73,13 @@ repositories {
   }
 }
 
-def kotlin_version = getExtOrDefault('kotlinVersion')
-
+def kotlin_version = safeExtGet('PyTorchCore_kotlinVersion', '1.3.50')
 dependencies {
   implementation "org.pytorch:pytorch_android:1.10.0-SNAPSHOT"
   implementation "org.pytorch:pytorch_android_torchvision:1.10.0-SNAPSHOT"
 
-  // noinspection GradleDynamicVersion
-  api "com.facebook.react:react-native:+"
+  //noinspection GradleDynamicVersion
+  api "com.facebook.react:react-native:+"  // From node_modules
   implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
   implementation "androidx.appcompat:appcompat:1.2.0"
   implementation "com.android.support.constraint:constraint-layout:2.0.4"

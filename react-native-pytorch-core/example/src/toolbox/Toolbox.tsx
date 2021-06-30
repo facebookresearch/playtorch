@@ -39,6 +39,7 @@ import CanvasArcMatrix from './apiTest/CanvasArcMatrix';
 import ToolboxContext, {useToolboxContext} from './ToolboxContext';
 import ToolboxList from './ToolboxList';
 import CanvasGetImageData from './apiTest/CanvasGetImageData';
+import Playground from './Playground';
 
 export type Tool = {
   icon?: React.ReactNode;
@@ -54,6 +55,18 @@ export type ToolSection = {
 }[];
 
 const tools: ToolSection = [
+  {
+    title: 'Playground',
+    data: [
+      {
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
+        title: 'Playground',
+        subtitle: 'A playground to experiment with the PyTorch Core API',
+        apiTest: false,
+        component: Playground,
+      },
+    ],
+  },
   {
     title: 'API Test',
     data: [

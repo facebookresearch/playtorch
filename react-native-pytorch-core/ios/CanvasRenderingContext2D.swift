@@ -328,4 +328,15 @@ class CanvasRenderingContext2D: NSObject {
             print("Could not perform fillCircle")
         }
     }
+
+    @objc
+    func fillText(_ canvasRef: NSDictionary, text: NSString, x: NSNumber, y: NSNumber) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            canvasView.fillText(text: text as String, x: CGFloat(x), y: CGFloat(y))
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform fillText")
+        }
+    }
 }

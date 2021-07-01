@@ -257,6 +257,24 @@ class DrawingCanvasView: UIView {
         invalidate()
     }
 
+    func fillText(text: String, x: CGFloat, y: CGFloat){
+        let textPath = CGMutablePath()
+        textPath.addRect(boundsRect)
+        let attrString = NSAttributedString(string: text)
+        let frameSetter = CTFramesetterCreateWithAttributedString(attrString as CFAttributedString)
+        let frame = CTFramesetterCreateFrame(frameSetter, CFRangeMake(0, attrString.length), textPath, nil)
+        canvasImage = renderer.image { context in
+            if let img = canvasImage {
+                img.draw(in: boundsRect)
+            }
+            context.cgContext.textMatrix = .identity
+            context.cgContext.translateBy(x: x, y: boundsRect.size.height + y)
+            context.cgContext.scaleBy(x: 1, y: -1)
+            CTFrameDraw(frame, context.cgContext)
+        }
+        invalidate()
+    }
+
     class Stack{
         var stateArray = [CanvasState]()
 

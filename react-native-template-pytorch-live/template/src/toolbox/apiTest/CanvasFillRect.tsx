@@ -31,15 +31,8 @@ export default function CanvasFillRect() {
       ctx.clear();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.beginPath();
-      ctx.fillStyle = '#000000';
-      ctx.strokeStyle = '#000000';
-      ctx.lineWidth = 20;
-      ctx.arc(200, 200, 100, 0, Math.PI, false);
-      ctx.moveTo(200, 200);
-      ctx.lineTo(200, 100);
-      ctx.stroke();
-      ctx.fillCircle(100, 100, 50);
-      //ctx.stroke();
+      ctx.lineWidth = 1;
+      ctx.fillText('Hello World', 100, 75);
     }
   }, [drawingContext]);
 
@@ -52,7 +45,7 @@ export default function CanvasFillRect() {
 
 const styles = StyleSheet.create({
   canvas: {
-    width: 400,
-    height: 700,
+    width: 300,
+    height: 600,
   },
 });

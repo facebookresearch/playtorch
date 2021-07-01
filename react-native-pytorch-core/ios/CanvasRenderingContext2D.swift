@@ -103,6 +103,17 @@ class CanvasRenderingContext2D: NSObject {
         }
     }
 
+    @objc
+    func fill(_ canvasRef: NSDictionary){
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            canvasView.fill()
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform fill")
+        }
+    }
+
     func unwrapCanvas(_ canvasRef: NSDictionary) throws -> DrawingCanvasView {
         let castedCanvasRef = canvasRef as? [ String : String ]
         guard let ref =  castedCanvasRef else { throw CanvasRenderingContext2DError.castingDict }

@@ -31,14 +31,15 @@ export default function CanvasFillRect() {
       ctx.clear();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.beginPath();
-
       ctx.fillStyle = '#8442f5';
       ctx.strokeStyle = '#8442f5';
       ctx.lineWidth = 10;
       ctx.lineJoin = 'round';
       ctx.miterLimit = 1;
+      ctx.strokeStyle = '#e3aa39';
+      ctx.lineWidth = 20;
       ctx.arc(200, 200, 100, 0, Math.PI, false);
-      //ctx.closePath();
+      ctx.lineTo(150, 100);
       ctx.stroke();
     }
   }, [drawingContext]);

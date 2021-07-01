@@ -282,4 +282,16 @@ class CanvasRenderingContext2D: NSObject {
             print("Could not perform closePath")
         }
     }
+
+    @objc
+    func lineTo(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            let point = CGPoint(x: CGFloat(x), y: CGFloat(y))
+            canvasView.lineTo(point: point)
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform lineTo")
+        }
+    }
 }

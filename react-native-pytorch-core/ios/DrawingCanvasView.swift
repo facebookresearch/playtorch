@@ -239,6 +239,20 @@ class DrawingCanvasView: UIView {
         path.move(to: point, transform: currentState.transformation)
     }
 
+    func drawCircle(x: CGFloat, y: CGFloat, radius: CGFloat){
+        let rect = CGRect(x: x-radius, y: y-radius, width: 2*radius, height: 2*radius)
+        canvasImage = renderer.image { context in
+            if let img = canvasImage {
+                img.draw(in: boundsRect)
+            }
+            context.cgContext.setStyle(state: currentState)
+            context.cgContext.concatenate(currentState.transformation)
+            context.cgContext.addEllipse(in: rect)
+            context.cgContext.strokePath()
+        }
+        invalidate()
+    }
+
     class Stack{
         var stateArray = [CanvasState]()
 

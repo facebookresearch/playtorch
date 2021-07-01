@@ -166,7 +166,7 @@ class DrawingCanvasView: UIView {
         currentState.transformation = currentState.transformation.translatedBy(x: x, y: y)
     }
 
-    func setTransform(a: CGFloat, b: CGFloat, c: CGFloat, d: CGFloat, e: CGFloat, f: CGFloat){
+    func setTransform(a: CGFloat, b: CGFloat, c: CGFloat, d: CGFloat, e: CGFloat, f: CGFloat) {
         // Note that the Apple CGAffineTransform matrix is the transpose of the matrix used by PyTorch Live, but so is their labeling
         currentState.transformation = CGAffineTransform(a: a, b: b, c: c, d: d, tx: e, ty: f)
     }
@@ -179,7 +179,7 @@ class DrawingCanvasView: UIView {
         currentState.strokeStyle = color
     }
 
-    func save(){
+    func save() {
         stateStack.push(state: currentState)
     }
 
@@ -223,6 +223,32 @@ class DrawingCanvasView: UIView {
         currentState.miterLimit = miterLimit
     }
 
+    @available(iOS 13.0, *)
+    func setFont(font: NSDictionary) {
+        if let fontFamilyArr = font["fontFamily"] as? NSArray, let fontFamily = fontFamilyArr[0] as? String {
+            switch fontFamily {
+            case "serif":
+                if let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).withDesign(.serif) {
+                    currentState.font = UIFont(descriptor: descriptor, size: 0)
+                }
+            case "sans-serif":
+                if let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).withDesign(.rounded) {
+                    currentState.font = UIFont(descriptor: descriptor, size: 0)
+                }
+            case "monospace":
+                if let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).withDesign(.monospaced) {
+                    currentState.font = UIFont(descriptor: descriptor, size: 0)
+                }
+            default:
+                print("Invalid font family")
+            }
+        }
+        if let fontSizeString = font["fontSize"] as? NSString {
+            let fontSize = CGFloat(fontSizeString.floatValue)
+            currentState.font = currentState.font.withSize(fontSize)
+        }
+    }
+
     func beginPath(){
         path = CGMutablePath()
     }
@@ -260,15 +286,18 @@ class DrawingCanvasView: UIView {
     func fillText(text: String, x: CGFloat, y: CGFloat){
         let textPath = CGMutablePath()
         textPath.addRect(boundsRect)
-        let attrString = NSAttributedString(string: text)
+        let attrs = [NSAttributedString.Key.font: currentState.font, NSAttributedString.Key.foregroundColor: currentState.fillStyle] as [NSAttributedString.Key : Any]
+        let attrString = NSAttributedString(string: text, attributes: attrs)
         let frameSetter = CTFramesetterCreateWithAttributedString(attrString as CFAttributedString)
         let frame = CTFramesetterCreateFrame(frameSetter, CFRangeMake(0, attrString.length), textPath, nil)
         canvasImage = renderer.image { context in
             if let img = canvasImage {
                 img.draw(in: boundsRect)
             }
-            context.cgContext.textMatrix = .identity
+            context.cgContext.setStyle(state: currentState)
+            context.cgContext.concatenate(currentState.transformation)
             context.cgContext.translateBy(x: x, y: boundsRect.size.height + y)
+            context.cgContext.textMatrix = .identity
             context.cgContext.scaleBy(x: 1, y: -1)
             CTFrameDraw(frame, context.cgContext)
         }
@@ -301,8 +330,9 @@ struct CanvasState {
     public var lineCap: CGLineCap
     public var lineJoin: CGLineJoin
     public var miterLimit: CGFloat
+    public var font: UIFont
 
-    init(transformation: CGAffineTransform = CGAffineTransform.identity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1, lineCap: CGLineCap = CGLineCap.butt, lineJoin: CGLineJoin = CGLineJoin.miter, miterLimit: CGFloat = 10) {
+    init(transformation: CGAffineTransform = CGAffineTransform.identity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1, lineCap: CGLineCap = CGLineCap.butt, lineJoin: CGLineJoin = CGLineJoin.miter, miterLimit: CGFloat = 10, font: UIFont = .systemFont(ofSize: 10)) {
         self.transformation = transformation
         self.strokeStyle = strokeStyle
         self.fillStyle = fillStyle
@@ -310,5 +340,6 @@ struct CanvasState {
         self.lineCap = lineCap
         self.lineJoin = lineJoin
         self.miterLimit = miterLimit
+        self.font = font
     }
 }

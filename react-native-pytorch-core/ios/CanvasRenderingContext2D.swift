@@ -262,6 +262,22 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
+    func setFont(_ canvasRef: NSDictionary, font: NSDictionary) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            if #available(iOS 13.0, *) {
+                canvasView.setFont(font: font)
+            } else {
+                //TODO(T92857704) Eventually forward Error to React Native using promises
+                print("iOS 13 is unavailable, cannot perform setFont")
+            }
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform setFont")
+        }
+    }
+
+    @objc
     func beginPath(_ canvasRef: NSDictionary) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)

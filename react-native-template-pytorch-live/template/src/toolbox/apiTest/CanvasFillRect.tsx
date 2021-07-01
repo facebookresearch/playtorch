@@ -31,8 +31,10 @@ export default function CanvasFillRect() {
       ctx.clear();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.beginPath();
-      ctx.lineWidth = 1;
-      ctx.fillText('Hello World', 100, 75);
+      ctx.font = '35px monospace';
+      ctx.fillStyle = '#eb4056';
+      ctx.fillText('Happy Friday', 50, 75);
+      ctx.invalidate();
     }
   }, [drawingContext]);
 
@@ -40,7 +42,9 @@ export default function CanvasFillRect() {
     return null;
   }
 
-  return <Canvas style={styles.canvas} onContext2D={handleContext2D} />;
+  return (
+    <Canvas style={StyleSheet.absoluteFill} onContext2D={handleContext2D} />
+  );
 }
 
 const styles = StyleSheet.create({

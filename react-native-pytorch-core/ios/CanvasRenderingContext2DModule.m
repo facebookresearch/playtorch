@@ -33,6 +33,7 @@ RCT_EXTERN_METHOD(setLineWidth:(nonnull NSDictionary)canvasRef lineWidth:(nonnul
 RCT_EXTERN_METHOD(setLineCap:(nonnull NSDictionary)canvasRef lineCap:(nonnull NSString)lineCap);
 RCT_EXTERN_METHOD(setLineJoin:(nonnull NSDictionary)canvasRef lineJoin:(nonnull NSString)lineJoin);
 RCT_EXTERN_METHOD(setMiterLimit:(nonnull NSDictionary)canvasRef miterLimit:(nonnull NSNumber)miterLimit);
+RCT_EXTERN_METHOD(setFont:(nonnull NSDictionary)canvasRef font:(nonnull NSDictionary)font);
 RCT_EXTERN_METHOD(beginPath:(nonnull NSDictionary)canvasRef);
 RCT_EXTERN_METHOD(closePath:(nonnull NSDictionary)canvasRef);
 RCT_EXTERN_METHOD(lineTo:(nonnull NSDictionary)canvasRef x:(nonnull NSNumber)x y:(nonnull NSNumber)y);
@@ -40,6 +41,7 @@ RCT_EXTERN_METHOD(moveTo:(nonnull NSDictionary)canvasRef x:(nonnull NSNumber)x y
 RCT_EXTERN_METHOD(drawCircle:(nonnull NSDictionary)canvasRef x:(nonnull NSNumber)x y:(nonnull NSNumber)y radius:(nonnull NSNumber)radius);
 RCT_EXTERN_METHOD(fillCircle:(nonnull NSDictionary)canvasRef x:(nonnull NSNumber)x y:(nonnull NSNumber)y radius:(nonnull NSNumber)radius);
 RCT_EXTERN_METHOD(fillText:(nonnull NSDictionary)canvasRef text:(nonnull NSString)text x:(nonnull NSNumber)x y:(nonnull NSNumber)y);
+
 
 @end
 

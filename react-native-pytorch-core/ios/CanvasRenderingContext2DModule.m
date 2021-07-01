@@ -32,7 +32,7 @@ RCT_EXTERN_METHOD(restore:(nonnull NSDictionary)canvasRef);
 RCT_EXTERN_METHOD(setLineWidth:(nonnull NSDictionary)canvasRef lineWidth:(nonnull NSNumber)lineWidth);
 RCT_EXTERN_METHOD(setLineCap:(nonnull NSDictionary)canvasRef lineCap:(nonnull NSString)lineCap);
 RCT_EXTERN_METHOD(setLineJoin:(nonnull NSDictionary)canvasRef lineJoin:(nonnull NSString)lineJoin);
-
+RCT_EXTERN_METHOD(beginPath:(nonnull NSDictionary)canvasRef);
                   
 @end
 

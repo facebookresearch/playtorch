@@ -249,4 +249,15 @@ class CanvasRenderingContext2D: NSObject {
             print("Could not perform setLineJoin")
         }
     }
+
+    @objc
+    func beginPath(_ canvasRef: NSDictionary) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            canvasView.beginPath()
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform beginPath")
+        }
+    }
 }

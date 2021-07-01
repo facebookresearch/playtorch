@@ -30,6 +30,7 @@ export default function CanvasFillRect() {
     if (ctx != null) {
       ctx.clear();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.beginPath();
 
       ctx.fillStyle = '#8442f5';
       ctx.strokeStyle = '#8442f5';

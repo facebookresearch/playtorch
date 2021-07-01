@@ -223,6 +223,10 @@ class DrawingCanvasView: UIView {
         currentState.miterLimit = miterLimit
     }
 
+    func beginPath(){
+        path = CGMutablePath()
+    }
+
     class Stack{
         var stateArray = [CanvasState]()
 

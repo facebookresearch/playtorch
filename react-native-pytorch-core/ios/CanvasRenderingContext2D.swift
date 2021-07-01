@@ -355,4 +355,15 @@ class CanvasRenderingContext2D: NSObject {
             print("Could not perform fillText")
         }
     }
+
+    @objc
+    func setTextAlign(_ canvasRef: NSDictionary, textAlign: NSString) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            canvasView.setTextAlign(textAlign: textAlign as String)
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform setTextAlign")
+        }
+    }
 }

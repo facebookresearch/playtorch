@@ -249,6 +249,19 @@ class DrawingCanvasView: UIView {
         }
     }
 
+    func setTextAlign(textAlign: String) {
+        switch textAlign {
+        case "left":
+            currentState.textAlign = NSTextAlignment.left
+        case "right":
+            currentState.textAlign = NSTextAlignment.right
+        case "center":
+            currentState.textAlign = NSTextAlignment.center
+        default:
+            currentState.textAlign = NSTextAlignment.left
+        }
+    }
+
     func beginPath(){
         path = CGMutablePath()
     }
@@ -296,8 +309,17 @@ class DrawingCanvasView: UIView {
             }
             context.cgContext.setStyle(state: currentState)
             context.cgContext.concatenate(currentState.transformation)
-            context.cgContext.translateBy(x: x, y: boundsRect.size.height + y)
             context.cgContext.textMatrix = .identity
+            switch currentState.textAlign {
+            case NSTextAlignment.left:
+                context.cgContext.translateBy(x: x, y: boundsRect.size.height + y)
+            case NSTextAlignment.right:
+                context.cgContext.translateBy(x: x - attrString.size().width, y: boundsRect.size.height + y)
+            case NSTextAlignment.center:
+                context.cgContext.translateBy(x: x - attrString.size().width/2.0, y: boundsRect.size.height + y)
+            default:
+                context.cgContext.translateBy(x: x, y: boundsRect.size.height + y)
+            }
             context.cgContext.scaleBy(x: 1, y: -1)
             CTFrameDraw(frame, context.cgContext)
         }
@@ -331,8 +353,9 @@ struct CanvasState {
     public var lineJoin: CGLineJoin
     public var miterLimit: CGFloat
     public var font: UIFont
+    public var textAlign: NSTextAlignment
 
-    init(transformation: CGAffineTransform = CGAffineTransform.identity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1, lineCap: CGLineCap = CGLineCap.butt, lineJoin: CGLineJoin = CGLineJoin.miter, miterLimit: CGFloat = 10, font: UIFont = .systemFont(ofSize: 10)) {
+    init(transformation: CGAffineTransform = CGAffineTransform.identity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1, lineCap: CGLineCap = CGLineCap.butt, lineJoin: CGLineJoin = CGLineJoin.miter, miterLimit: CGFloat = 10, font: UIFont = .systemFont(ofSize: 10), textAlign: NSTextAlignment = NSTextAlignment.left) {
         self.transformation = transformation
         self.strokeStyle = strokeStyle
         self.fillStyle = fillStyle
@@ -341,5 +364,6 @@ struct CanvasState {
         self.lineJoin = lineJoin
         self.miterLimit = miterLimit
         self.font = font
+        self.textAlign = textAlign
     }
 }

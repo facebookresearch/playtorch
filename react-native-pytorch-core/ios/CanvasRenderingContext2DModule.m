@@ -36,6 +36,7 @@ RCT_EXTERN_METHOD(setMiterLimit:(nonnull NSDictionary)canvasRef miterLimit:(nonn
 RCT_EXTERN_METHOD(beginPath:(nonnull NSDictionary)canvasRef);
 RCT_EXTERN_METHOD(closePath:(nonnull NSDictionary)canvasRef);
 RCT_EXTERN_METHOD(lineTo:(nonnull NSDictionary)canvasRef x:(nonnull NSNumber)x y:(nonnull NSNumber)y);
+RCT_EXTERN_METHOD(moveTo:(nonnull NSDictionary)canvasRef x:(nonnull NSNumber)x y:(nonnull NSNumber)y);
 
                   
 @end

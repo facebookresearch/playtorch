@@ -235,6 +235,10 @@ class DrawingCanvasView: UIView {
         path.addLine(to: point, transform: currentState.transformation)
     }
 
+    func moveTo(point: CGPoint){
+        path.move(to: point, transform: currentState.transformation)
+    }
+
     class Stack{
         var stateArray = [CanvasState]()
 

@@ -39,7 +39,8 @@ export default function CanvasFillRect() {
       ctx.strokeStyle = '#e3aa39';
       ctx.lineWidth = 20;
       ctx.arc(200, 200, 100, 0, Math.PI, false);
-      ctx.lineTo(150, 100);
+      ctx.moveTo(200, 200);
+      ctx.lineTo(200, 100);
       ctx.stroke();
     }
   }, [drawingContext]);

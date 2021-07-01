@@ -227,6 +227,10 @@ class DrawingCanvasView: UIView {
         path = CGMutablePath()
     }
 
+    func closePath(){
+        path.closeSubpath()
+    }
+
     class Stack{
         var stateArray = [CanvasState]()
 

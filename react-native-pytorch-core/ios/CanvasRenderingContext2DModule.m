@@ -34,6 +34,8 @@ RCT_EXTERN_METHOD(setLineCap:(nonnull NSDictionary)canvasRef lineCap:(nonnull NS
 RCT_EXTERN_METHOD(setLineJoin:(nonnull NSDictionary)canvasRef lineJoin:(nonnull NSString)lineJoin);
 RCT_EXTERN_METHOD(setMiterLimit:(nonnull NSDictionary)canvasRef miterLimit:(nonnull NSNumber)miterLimit);
 RCT_EXTERN_METHOD(beginPath:(nonnull NSDictionary)canvasRef);
+RCT_EXTERN_METHOD(closePath:(nonnull NSDictionary)canvasRef);
+
                   
 @end
 

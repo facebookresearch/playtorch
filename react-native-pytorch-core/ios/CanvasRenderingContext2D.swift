@@ -271,4 +271,15 @@ class CanvasRenderingContext2D: NSObject {
             print("Could not perform beginPath")
         }
     }
+
+    @objc
+    func closePath(_ canvasRef: NSDictionary) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            canvasView.closePath()
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform closePath")
+        }
+    }
 }

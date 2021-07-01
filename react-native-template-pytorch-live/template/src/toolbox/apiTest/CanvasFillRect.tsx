@@ -38,7 +38,7 @@ export default function CanvasFillRect() {
       ctx.lineJoin = 'round';
       ctx.miterLimit = 1;
       ctx.arc(200, 200, 100, 0, Math.PI, false);
-      ctx.arc(200, 200, 75, 0, Math.PI, true);
+      //ctx.closePath();
       ctx.stroke();
     }
   }, [drawingContext]);

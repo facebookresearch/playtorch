@@ -31,13 +31,11 @@ export default function CanvasFillRect() {
       ctx.clear();
       ctx.setTransform(1, 0, 0, 1, 0, 0);
       ctx.beginPath();
-      ctx.moveTo(100, 0);
-      ctx.lineTo(100, 200);
-      ctx.stroke();
-      ctx.font = '15px serif';
-      ctx.textAlign = 'right';
+      ctx.font = '50px serif';
       ctx.fillStyle = '#eb4034';
-      ctx.fillText('Happy Friday', 100, 75);
+      ctx.textAlign = 'center';
+      ctx.strokeStyle = '#eb4034';
+      ctx.strokeText('Happy Friday', 200, 75);
       ctx.invalidate();
     }
   }, [drawingContext]);

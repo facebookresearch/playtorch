@@ -296,10 +296,17 @@ class DrawingCanvasView: UIView {
         invalidate()
     }
 
-    func fillText(text: String, x: CGFloat, y: CGFloat){
+    func fillText(text: String, x: CGFloat, y: CGFloat, fill: Bool = true){
         let textPath = CGMutablePath()
         textPath.addRect(boundsRect)
-        let attrs = [NSAttributedString.Key.font: currentState.font, NSAttributedString.Key.foregroundColor: currentState.fillStyle] as [NSAttributedString.Key : Any]
+        var attrs = [NSAttributedString.Key.font: currentState.font] as [NSAttributedString.Key : Any]
+        if(fill) {
+            attrs[ NSAttributedString.Key.foregroundColor ] = currentState.fillStyle
+        } else {
+            attrs[ NSAttributedString.Key.foregroundColor ] = UIColor.clear
+            attrs[ NSAttributedString.Key.strokeColor ] = currentState.strokeStyle
+            attrs[ NSAttributedString.Key.strokeWidth ] = currentState.lineWidth
+        }
         let attrString = NSAttributedString(string: text, attributes: attrs)
         let frameSetter = CTFramesetterCreateWithAttributedString(attrString as CFAttributedString)
         let frame = CTFramesetterCreateFrame(frameSetter, CFRangeMake(0, attrString.length), textPath, nil)
@@ -312,11 +319,11 @@ class DrawingCanvasView: UIView {
             context.cgContext.textMatrix = .identity
             switch currentState.textAlign {
             case NSTextAlignment.left:
-                context.cgContext.translateBy(x: x, y: boundsRect.size.height + y)
+                context.cgContext.translateBy(x: x, y: boundsRect.size.height + y - attrString.size().height)
             case NSTextAlignment.right:
-                context.cgContext.translateBy(x: x - attrString.size().width, y: boundsRect.size.height + y)
+                context.cgContext.translateBy(x: x - attrString.size().width, y: boundsRect.size.height + y - attrString.size().height)
             case NSTextAlignment.center:
-                context.cgContext.translateBy(x: x - attrString.size().width/2.0, y: boundsRect.size.height + y)
+                context.cgContext.translateBy(x: x - attrString.size().width/2.0, y: boundsRect.size.height + y - attrString.size().height)
             default:
                 context.cgContext.translateBy(x: x, y: boundsRect.size.height + y)
             }

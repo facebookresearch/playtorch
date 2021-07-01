@@ -357,6 +357,17 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
+    func strokeText(_ canvasRef: NSDictionary, text: NSString, x: NSNumber, y: NSNumber) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            canvasView.fillText(text: text as String, x: CGFloat(x), y: CGFloat(y), fill: false)
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform strokeText")
+        }
+    }
+
+    @objc
     func setTextAlign(_ canvasRef: NSDictionary, textAlign: NSString) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)

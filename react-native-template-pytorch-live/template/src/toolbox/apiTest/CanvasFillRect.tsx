@@ -38,7 +38,7 @@ export default function CanvasFillRect() {
       ctx.moveTo(200, 200);
       ctx.lineTo(200, 100);
       ctx.stroke();
-      ctx.drawCircle(100, 100, 50);
+      ctx.fillCircle(100, 100, 50);
       //ctx.stroke();
     }
   }, [drawingContext]);

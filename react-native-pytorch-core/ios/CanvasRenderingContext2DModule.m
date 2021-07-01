@@ -38,6 +38,7 @@ RCT_EXTERN_METHOD(closePath:(nonnull NSDictionary)canvasRef);
 RCT_EXTERN_METHOD(lineTo:(nonnull NSDictionary)canvasRef x:(nonnull NSNumber)x y:(nonnull NSNumber)y);
 RCT_EXTERN_METHOD(moveTo:(nonnull NSDictionary)canvasRef x:(nonnull NSNumber)x y:(nonnull NSNumber)y);
 RCT_EXTERN_METHOD(drawCircle:(nonnull NSDictionary)canvasRef x:(nonnull NSNumber)x y:(nonnull NSNumber)y radius:(nonnull NSNumber)radius);
-                  
+RCT_EXTERN_METHOD(fillCircle:(nonnull NSDictionary)canvasRef x:(nonnull NSNumber)x y:(nonnull NSNumber)y radius:(nonnull NSNumber)radius);
+
 @end
 

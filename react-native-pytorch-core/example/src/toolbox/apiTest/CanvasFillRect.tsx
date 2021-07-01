@@ -29,16 +29,11 @@ export default function CanvasFillRect() {
     const ctx = drawingContext;
     if (ctx != null) {
       ctx.clear();
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-      ctx.fillStyle = '#8442f5';
-      ctx.strokeStyle = '#8442f5';
-      ctx.lineWidth = 10;
-      ctx.lineJoin = 'round';
-      ctx.miterLimit = 1;
-      ctx.arc(200, 200, 100, 0, Math.PI, false);
-      ctx.arc(200, 200, 75, 0, Math.PI, true);
-      ctx.stroke();
+      ctx.fillStyle = 'green';
+      ctx.fillRect(20, 10, 150, 100);
+
+      ctx.invalidate();
     }
   }, [drawingContext]);
 
@@ -46,12 +41,7 @@ export default function CanvasFillRect() {
     return null;
   }
 
-  return <Canvas style={styles.canvas} onContext2D={handleContext2D} />;
+  return (
+    <Canvas style={StyleSheet.absoluteFill} onContext2D={handleContext2D} />
+  );
 }
-
-const styles = StyleSheet.create({
-  canvas: {
-    width: 400,
-    height: 700,
-  },
-});

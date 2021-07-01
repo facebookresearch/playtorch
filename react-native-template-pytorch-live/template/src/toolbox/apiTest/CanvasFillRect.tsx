@@ -29,13 +29,10 @@ export default function CanvasFillRect() {
     const ctx = drawingContext;
     if (ctx != null) {
       ctx.clear();
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.beginPath();
-      ctx.font = '50px serif';
-      ctx.fillStyle = '#eb4034';
-      ctx.textAlign = 'center';
-      ctx.strokeStyle = '#eb4034';
-      ctx.strokeText('Happy Friday', 200, 75);
+
+      ctx.fillStyle = 'green';
+      ctx.fillRect(20, 10, 150, 100);
+
       ctx.invalidate();
     }
   }, [drawingContext]);
@@ -48,10 +45,3 @@ export default function CanvasFillRect() {
     <Canvas style={StyleSheet.absoluteFill} onContext2D={handleContext2D} />
   );
 }
-
-const styles = StyleSheet.create({
-  canvas: {
-    width: 300,
-    height: 600,
-  },
-});

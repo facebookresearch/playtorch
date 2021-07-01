@@ -251,6 +251,17 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
+    func setMiterLimit(_ canvasRef: NSDictionary, miterLimit: NSNumber) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            canvasView.setMiterLimit(miterLimit: CGFloat(miterLimit))
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform setMiterLimit")
+        }
+    }
+
+    @objc
     func beginPath(_ canvasRef: NSDictionary) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)

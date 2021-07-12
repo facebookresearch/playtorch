@@ -15,12 +15,10 @@ class DrawingCanvasView: UIView {
     @objc public var width: NSNumber?
     @objc public var height: NSNumber?
     var ref: [String:String] = [:] // initialized to allow using self in init()
-    var renderer = UIGraphicsImageRenderer(size: UIScreen.main.bounds.size)
-    var canvasImage: UIImage?
     var stateStack = Stack()
     var path = CGMutablePath()
-    var boundsRect = UIScreen.main.bounds
     var currentState = CanvasState()
+    var sublayers = [CALayer]()
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -32,57 +30,36 @@ class DrawingCanvasView: UIView {
         ref = JSContext.wrapObject(view: self).getJSRef()
     }
 
-    override func draw(_ rect: CGRect) {
-        super.draw(rect)
-        if let img = canvasImage {
-            img.draw(in: boundsRect)
+    override func draw(_ layer: CALayer, in ctx: CGContext) {
+        for sublayer in sublayers {
+            layer.addSublayer(sublayer)
         }
+        sublayers.removeAll()
     }
 
     override func didSetProps(_ changedProps: [String]!) {
         guard let unwrappedOnContext2D = onContext2D else { return }
         unwrappedOnContext2D(["ID" : ref[JSContext.ID_KEY]])
         if let width = width as? Int, let height = height as? Int {
-            boundsRect = CGRect(x: 0, y: 0, width: width, height: height)
+            let boundsRect = CGRect(x: 0, y: 0, width: width, height: height)
             self.bounds = boundsRect
-            renderer = UIGraphicsImageRenderer(size: boundsRect.size)
         } else {
             print("Could not set width and height of the canvas, using default of fullscreen")
             //TODO(T92857704) Eventually forward Error to React Native using promises
-            boundsRect = UIScreen.main.bounds
+            let boundsRect = UIScreen.main.bounds
             self.bounds = boundsRect
-            renderer = UIGraphicsImageRenderer(size: boundsRect.size)
         }
     }
 
     func arc(x: CGFloat, y: CGFloat, radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat, counterclockwise: Bool) {
-        path.addArc(center: CGPoint(x:x, y: y), radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: counterclockwise, transform: currentState.transformation) // seems counterintuitve, but is the only way to get it to match web canvas
     }
 
     func strokeRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
         let rect = CGRect(x: x, y: y, width: width, height: height)
-        canvasImage = renderer.image { context in
-            if let img = canvasImage {
-                img.draw(in: boundsRect)
-            }
-            context.cgContext.setStyle(state: currentState)
-            context.cgContext.concatenate(currentState.transformation)
-            context.cgContext.addRect(rect)
-            context.cgContext.strokePath()
-        }
     }
 
     func fillRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
         let rect = CGRect(x: x, y: y, width: width, height: height)
-        canvasImage = renderer.image { context in
-            if let img = canvasImage {
-                img.draw(in: boundsRect)
-            }
-            context.cgContext.setStyle(state: currentState)
-            context.cgContext.concatenate(currentState.transformation)
-            context.cgContext.addRect(rect)
-            context.cgContext.fillPath()
-        }
     }
 
     func rect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
@@ -92,57 +69,33 @@ class DrawingCanvasView: UIView {
     }
 
     func invalidate() {
-        DispatchQueue.main.async {
-            self.setNeedsDisplay()
-        }
-    }
-
-    func invalidate(_ rect: CGRect) {
-        DispatchQueue.main.async {
-            self.setNeedsDisplay(rect)
+        DispatchQueue.main.sync {
+            self.layer.setNeedsDisplay()
+            if let sublayers = self.layer.sublayers {
+                for i in sublayers.indices {
+                    self.layer.sublayers?[i].setNeedsDisplay()
+                    print("redrawing sublayer")
+                }
+            }
         }
     }
 
     func clear() {
-        canvasImage = renderer.image { context in }
-    }
-
-    func clearRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
-        let rect = CGRect(x: x, y: y, width: width, height: height)
-        canvasImage = renderer.image { context in
-            if let img = canvasImage {
-                img.draw(in: boundsRect)
-            }
-            context.cgContext.concatenate(currentState.transformation)
-            context.cgContext.setBlendMode(CGBlendMode.clear)
-            context.cgContext.addRect(rect)
-            context.cgContext.fillPath()
+        DispatchQueue.main.async {
+            self.layer.sublayers = nil
         }
     }
 
-    func stroke(){
-        canvasImage = renderer.image { context in
-            if let img = canvasImage {
-                img.draw(in: boundsRect)
-            }
-            context.cgContext.addPath(path)
-            context.cgContext.setStyle(state: currentState)
-            context.cgContext.strokePath()
-        }
+    func clearRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) { // doesn't work yet
+    }
+
+    func stroke() {
         let startPoint = path.currentPoint
         path = CGMutablePath()
         path.move(to: startPoint, transform: CGAffineTransform.identity)
     }
 
-    func fill(){
-        canvasImage = renderer.image { context in
-            if let img = canvasImage {
-                img.draw(in: UIScreen.main.bounds)
-            }
-            context.cgContext.addPath(path)
-            context.cgContext.setStyle(state: currentState)
-            context.cgContext.fillPath()
-        }
+    func fill() {
         let startPoint = path.currentPoint
         path = CGMutablePath()
         path.move(to: startPoint, transform: CGAffineTransform.identity)
@@ -190,11 +143,11 @@ class DrawingCanvasView: UIView {
     func setLineCap(lineCap: String){
         switch lineCap {
         case "butt":
-            currentState.lineCap = CGLineCap.butt
+            currentState.lineCap = CAShapeLayerLineCap.butt
         case "round":
-            currentState.lineCap = CGLineCap.round
+            currentState.lineCap = CAShapeLayerLineCap.round
         case "square":
-            currentState.lineCap = CGLineCap.square
+            currentState.lineCap = CAShapeLayerLineCap.square
         default:
             print("Invalid value, could not set line cap")
         }
@@ -203,11 +156,11 @@ class DrawingCanvasView: UIView {
     func setLineJoin(lineJoin: String){
         switch lineJoin {
         case "miter":
-            currentState.lineJoin = CGLineJoin.miter
+            currentState.lineJoin = CAShapeLayerLineJoin.miter
         case "round":
-            currentState.lineJoin = CGLineJoin.round
+            currentState.lineJoin = CAShapeLayerLineJoin.round
         case "bevel":
-            currentState.lineJoin = CGLineJoin.bevel
+            currentState.lineJoin = CAShapeLayerLineJoin.bevel
         default:
             print("Invalid value, could not set line join")
         }
@@ -272,26 +225,11 @@ class DrawingCanvasView: UIView {
         path.move(to: point, transform: currentState.transformation)
     }
 
-    func drawCircle(x: CGFloat, y: CGFloat, radius: CGFloat, fill: Bool = false){
+    func drawCircle(x: CGFloat, y: CGFloat, radius: CGFloat, fill: Bool = false) {
         let rect = CGRect(x: x-radius, y: y-radius, width: 2*radius, height: 2*radius)
-        canvasImage = renderer.image { context in
-            if let img = canvasImage {
-                img.draw(in: boundsRect)
-            }
-            context.cgContext.setStyle(state: currentState)
-            context.cgContext.concatenate(currentState.transformation)
-            context.cgContext.addEllipse(in: rect)
-            if(fill) {
-                context.cgContext.fillPath()
-            } else {
-                context.cgContext.strokePath()
-            }
-        }
     }
 
-    func fillText(text: String, x: CGFloat, y: CGFloat, fill: Bool = true){
-        let textPath = CGMutablePath()
-        textPath.addRect(boundsRect)
+    func fillText(text: String, x: CGFloat, y: CGFloat, fill: Bool = true) {
         var attrs = [NSAttributedString.Key.font: currentState.font] as [NSAttributedString.Key : Any]
         if(fill) {
             attrs[ NSAttributedString.Key.foregroundColor ] = currentState.fillStyle
@@ -301,31 +239,9 @@ class DrawingCanvasView: UIView {
             attrs[ NSAttributedString.Key.strokeWidth ] = currentState.lineWidth
         }
         let attrString = NSAttributedString(string: text, attributes: attrs)
-        let frameSetter = CTFramesetterCreateWithAttributedString(attrString as CFAttributedString)
-        let frame = CTFramesetterCreateFrame(frameSetter, CFRangeMake(0, attrString.length), textPath, nil)
-        canvasImage = renderer.image { context in
-            if let img = canvasImage {
-                img.draw(in: boundsRect)
-            }
-            context.cgContext.setStyle(state: currentState)
-            context.cgContext.concatenate(currentState.transformation)
-            context.cgContext.textMatrix = .identity
-            switch currentState.textAlign {
-            case NSTextAlignment.left:
-                context.cgContext.translateBy(x: x, y: boundsRect.size.height + y - attrString.size().height)
-            case NSTextAlignment.right:
-                context.cgContext.translateBy(x: x - attrString.size().width, y: boundsRect.size.height + y - attrString.size().height)
-            case NSTextAlignment.center:
-                context.cgContext.translateBy(x: x - attrString.size().width/2.0, y: boundsRect.size.height + y - attrString.size().height)
-            default:
-                context.cgContext.translateBy(x: x, y: boundsRect.size.height + y)
-            }
-            context.cgContext.scaleBy(x: 1, y: -1)
-            CTFrameDraw(frame, context.cgContext)
-        }
     }
 
-    class Stack{
+    class Stack {
         var stateArray = [CanvasState]()
 
         func push(state: CanvasState) {
@@ -348,13 +264,13 @@ struct CanvasState {
     public var strokeStyle: CGColor
     public var fillStyle: CGColor
     public var lineWidth: CGFloat
-    public var lineCap: CGLineCap
-    public var lineJoin: CGLineJoin
+    public var lineCap: CAShapeLayerLineCap
+    public var lineJoin: CAShapeLayerLineJoin
     public var miterLimit: CGFloat
     public var font: UIFont
     public var textAlign: NSTextAlignment
 
-    init(transformation: CGAffineTransform = CGAffineTransform.identity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1, lineCap: CGLineCap = CGLineCap.butt, lineJoin: CGLineJoin = CGLineJoin.miter, miterLimit: CGFloat = 10, font: UIFont = .systemFont(ofSize: 10), textAlign: NSTextAlignment = NSTextAlignment.left) {
+    init(transformation: CGAffineTransform = CGAffineTransform.identity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1, lineCap: CAShapeLayerLineCap = .butt, lineJoin: CAShapeLayerLineJoin = .miter, miterLimit: CGFloat = 10, font: UIFont = .systemFont(ofSize: 10), textAlign: NSTextAlignment = NSTextAlignment.left) {
         self.transformation = transformation
         self.strokeStyle = strokeStyle
         self.fillStyle = fillStyle

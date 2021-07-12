@@ -7,13 +7,14 @@
 
 import Foundation
 
-extension CGContext {
+extension CAShapeLayer {
+
     func setStyle(state: CanvasState){
-        self.setFillColor(state.fillStyle)
-        self.setStrokeColor(state.strokeStyle)
-        self.setLineWidth(state.lineWidth)
-        self.setLineCap(state.lineCap)
-        self.setLineJoin(state.lineJoin)
-        self.setMiterLimit(state.miterLimit)
+        self.fillColor = state.fillStyle
+        self.strokeColor = state.strokeStyle
+        self.lineWidth = state.lineWidth
+        self.lineCap = state.lineCap
+        self.lineJoin = state.lineJoin
+        self.miterLimit = state.miterLimit
     }
 }

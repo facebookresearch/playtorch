@@ -70,7 +70,6 @@ class DrawingCanvasView: UIView {
             context.cgContext.addRect(rect)
             context.cgContext.strokePath()
         }
-        invalidate()
     }
 
     func fillRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
@@ -84,7 +83,6 @@ class DrawingCanvasView: UIView {
             context.cgContext.addRect(rect)
             context.cgContext.fillPath()
         }
-        invalidate()
     }
 
     func rect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
@@ -107,7 +105,6 @@ class DrawingCanvasView: UIView {
 
     func clear() {
         canvasImage = renderer.image { context in }
-        invalidate()
     }
 
     func clearRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
@@ -121,7 +118,6 @@ class DrawingCanvasView: UIView {
             context.cgContext.addRect(rect)
             context.cgContext.fillPath()
         }
-        invalidate(rect)
     }
 
     func stroke(){
@@ -136,7 +132,6 @@ class DrawingCanvasView: UIView {
         let startPoint = path.currentPoint
         path = CGMutablePath()
         path.move(to: startPoint, transform: CGAffineTransform.identity)
-        invalidate()
     }
 
     func fill(){
@@ -151,7 +146,6 @@ class DrawingCanvasView: UIView {
         let startPoint = path.currentPoint
         path = CGMutablePath()
         path.move(to: startPoint, transform: CGAffineTransform.identity)
-        invalidate()
     }
 
     func scale(x: CGFloat, y: CGFloat) {
@@ -293,7 +287,6 @@ class DrawingCanvasView: UIView {
                 context.cgContext.strokePath()
             }
         }
-        invalidate()
     }
 
     func fillText(text: String, x: CGFloat, y: CGFloat, fill: Bool = true){
@@ -330,7 +323,6 @@ class DrawingCanvasView: UIView {
             context.cgContext.scaleBy(x: 1, y: -1)
             CTFrameDraw(frame, context.cgContext)
         }
-        invalidate()
     }
 
     class Stack{

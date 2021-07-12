@@ -10,9 +10,8 @@ import Foundation
 @objc(CanvasManager)
 class CanvasManager: RCTViewManager {
 
-    var canvas = DrawingCanvasView()
-
     override func view() -> UIView! {
+        let canvas = DrawingCanvasView()
         canvas.backgroundColor = .white
         return canvas
     }

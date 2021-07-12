@@ -57,10 +57,24 @@ class DrawingCanvasView: UIView {
 
     func strokeRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
         let rect = CGRect(x: x, y: y, width: width, height: height)
+        let p = CGMutablePath()
+        p.addRect(rect, transform: currentState.transformation)
+        var newLayer = CAShapeLayer()
+        newLayer.setStyle(state: currentState)
+        newLayer.fillColor = UIColor.clear.cgColor
+        newLayer.path = p
+        sublayers.append(newLayer)
     }
 
     func fillRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
         let rect = CGRect(x: x, y: y, width: width, height: height)
+        let p = CGMutablePath()
+        p.addRect(rect, transform: currentState.transformation)
+        var newLayer = CAShapeLayer()
+        newLayer.setStyle(state: currentState)
+        newLayer.lineWidth = 0
+        newLayer.path = p
+        sublayers.append(newLayer)
     }
 
     func rect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {

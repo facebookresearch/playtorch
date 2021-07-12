@@ -90,12 +90,22 @@ class DrawingCanvasView: UIView {
     }
 
     func stroke() {
+        var newLayer = CAShapeLayer()
+        newLayer.setStyle(state: currentState)
+        newLayer.fillColor = UIColor.clear.cgColor
+        newLayer.path = path
+        sublayers.append(newLayer)
         let startPoint = path.currentPoint
         path = CGMutablePath()
         path.move(to: startPoint, transform: CGAffineTransform.identity)
     }
 
     func fill() {
+        var newLayer = CAShapeLayer()
+        newLayer.setStyle(state: currentState)
+        newLayer.lineWidth = 0
+        newLayer.path = path
+        sublayers.append(newLayer)
         let startPoint = path.currentPoint
         path = CGMutablePath()
         path.move(to: startPoint, transform: CGAffineTransform.identity)

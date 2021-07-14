@@ -102,6 +102,10 @@ class DrawingCanvasView: UIView {
     }
 
     func clearRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) { // doesn't work yet
+        let tempColor = currentState.fillStyle
+        currentState.fillStyle = UIColor.white.cgColor
+        fillRect(x:x, y: y, width: width, height: height)
+        currentState.fillStyle = tempColor
     }
 
     func stroke() {

@@ -252,6 +252,17 @@ class DrawingCanvasView: UIView {
 
     func drawCircle(x: CGFloat, y: CGFloat, radius: CGFloat, fill: Bool = false) {
         let rect = CGRect(x: x-radius, y: y-radius, width: 2*radius, height: 2*radius)
+        let p = CGMutablePath()
+        p.addEllipse(in: rect, transform: currentState.transformation)
+        var newLayer = CAShapeLayer()
+        newLayer.setStyle(state: currentState)
+        if fill {
+            newLayer.lineWidth = 0
+        } else {
+            newLayer.fillColor = UIColor.clear.cgColor
+        }
+        newLayer.path = p
+        sublayers.append(newLayer)
     }
 
     func fillText(text: String, x: CGFloat, y: CGFloat, fill: Bool = true) {

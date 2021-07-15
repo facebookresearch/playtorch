@@ -137,7 +137,7 @@ function ToolView() {
   const {activeTool} = useToolboxContext();
   const Component = activeTool?.component;
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.container} bounces={false}>
       {Component && <Component />}
     </ScrollView>
   );

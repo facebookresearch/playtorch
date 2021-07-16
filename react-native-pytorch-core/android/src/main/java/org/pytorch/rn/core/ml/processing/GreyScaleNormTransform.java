@@ -13,6 +13,7 @@ import androidx.annotation.ColorInt;
 import java.nio.FloatBuffer;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.pytorch.MemoryFormat;
 import org.pytorch.Tensor;
 
 public class GreyScaleNormTransform implements IImageToTensorTransform {
@@ -61,7 +62,8 @@ public class GreyScaleNormTransform implements IImageToTensorTransform {
       }
     }
 
-    return Tensor.fromBlob(floatBuffer, new long[] {1, 1, height, width});
+    return Tensor.fromBlob(
+        floatBuffer, new long[] {1, 1, height, width}, MemoryFormat.CHANNELS_LAST);
   }
 
   public static GreyScaleNormTransform parse(JSONObject jobject) throws JSONException {

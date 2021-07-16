@@ -10,6 +10,7 @@ package org.pytorch.rn.core.ml.processing;
 import android.graphics.Bitmap;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.pytorch.MemoryFormat;
 import org.pytorch.Tensor;
 import org.pytorch.torchvision.TensorImageUtils;
 
@@ -31,6 +32,6 @@ class RgbNormTransform implements IImageToTensorTransform {
 
   @Override
   public Tensor transform(Bitmap bitmap) {
-    return TensorImageUtils.bitmapToFloat32Tensor(bitmap, mean, std);
+    return TensorImageUtils.bitmapToFloat32Tensor(bitmap, mean, std, MemoryFormat.CHANNELS_LAST);
   }
 }

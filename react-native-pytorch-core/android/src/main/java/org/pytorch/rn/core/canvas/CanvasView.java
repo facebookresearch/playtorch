@@ -73,5 +73,21 @@ public class CanvasView extends View {
     mRenderingContext.onDraw(canvas);
   }
 
+  public void setOverflow(@Nullable String overflow) {
+    if (overflow == null) {
+      setClipToOutline(true);
+      return;
+    }
+    switch (overflow) {
+      case "visible":
+      case "scroll":
+        setClipToOutline(false);
+        break;
+      case "hidden":
+        setClipToOutline(true);
+        break;
+    }
+  }
+
   // TODO(raedle) onDestroy view, release the NativeJSRef that wraps the context 2d
 }

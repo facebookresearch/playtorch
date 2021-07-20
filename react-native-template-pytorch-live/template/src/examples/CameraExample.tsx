@@ -46,10 +46,11 @@ export default function CameraExample() {
     <>
       {isFocused && (
         <Camera
-          style={styles.camera}
-          onFrame={handleFrame}
-          onCapture={handleCapture}
           hideCaptureButton={true}
+          onCapture={handleCapture}
+          onFrame={handleFrame}
+          style={styles.camera}
+          targetResolution={{width: 480, height: 640}}
         />
       )}
       <ModelSelector

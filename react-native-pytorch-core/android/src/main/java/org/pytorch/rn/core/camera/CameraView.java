@@ -62,6 +62,9 @@ public class CameraView extends ConstraintLayout {
   private final int DURATION = 100;
   private final float SCALE_BUTTON_BY = 1.15f;
 
+  private Camera mCamera;
+  private Size mTargetResolution = new Size(480, 640);
+
   /** Blocking camera operations are performed using this executor */
   private ExecutorService cameraExecutor;
 
@@ -195,6 +198,10 @@ public class CameraView extends ConstraintLayout {
 
   void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
 
+    // Unbind previous use cases. Without this, on unmounting and mounting CameraView again, the
+    // app will crash.
+    cameraProvider.unbindAll();
+
     Preview preview = new Preview.Builder().build();
 
     CameraSelector cameraSelector =
@@ -202,7 +209,7 @@ public class CameraView extends ConstraintLayout {
 
     ImageAnalysis imageAnalysis =
         new ImageAnalysis.Builder()
-            .setTargetResolution(new Size(640, 480))
+            .setTargetResolution(mTargetResolution)
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .build();
 
@@ -216,7 +223,7 @@ public class CameraView extends ConstraintLayout {
               .receiveEvent(CameraView.this.getId(), "onFrame", ref.getJSRef());
         });
 
-    mImageCapture = new ImageCapture.Builder().setTargetResolution(new Size(1280, 720)).build();
+    mImageCapture = new ImageCapture.Builder().setTargetResolution(mTargetResolution).build();
 
     OrientationEventListener orientationEventListener =
         new OrientationEventListener(mReactContext.getApplicationContext()) {
@@ -242,11 +249,7 @@ public class CameraView extends ConstraintLayout {
 
     orientationEventListener.enable();
 
-    // Unbind previous use cases. Without this, on unmounting and mounting CameraView again, the
-    // app will crash.
-    cameraProvider.unbindAll();
-
-    Camera camera =
+    mCamera =
         cameraProvider.bindToLifecycle(
             (LifecycleOwner) mReactContext.getCurrentActivity(),
             cameraSelector,
@@ -273,6 +276,11 @@ public class CameraView extends ConstraintLayout {
         () -> {
           mCaptureButton.setVisibility(hideCaptureButton ? View.INVISIBLE : View.VISIBLE);
         });
+  }
+
+  public void setTargetResolution(Size size) {
+    mTargetResolution = size;
+    startCamera();
   }
 
   private static class ReactNativeCameraPreviewRemeasure

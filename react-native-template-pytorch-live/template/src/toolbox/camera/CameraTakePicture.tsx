@@ -36,7 +36,13 @@ export default function CameraTakePicture() {
 
   return (
     <>
-      {isFocused && <Camera style={styles.camera} onCapture={handleCapture} />}
+      {isFocused && (
+        <Camera
+          onCapture={handleCapture}
+          style={styles.camera}
+          targetResolution={{width: 480, height: 640}}
+        />
+      )}
       <ModelSelector
         style={styles.actions}
         modelInfos={ImageClassificationModels}

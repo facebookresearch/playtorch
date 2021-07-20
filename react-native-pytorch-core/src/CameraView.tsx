@@ -14,6 +14,24 @@ import {Image, wrapRef} from './ImageModule';
 import type {NativeJSRef} from './NativeJSRef';
 
 /**
+ * Camera target resolution. It is not guaranteed that the camera runs at the
+ * set target resolution, and it might pick the closest available resolution.
+ *
+ * {@see https://developer.android.com/reference/androidx/camera/core/ImageAnalysis.Builder#setTargetResolution(android.util.Size)}
+ */
+interface TargetResolution {
+  /**
+   * Camera resolution width in pixels.
+   */
+  width: number;
+
+  /**
+   * Camera resolution height in pixels.
+   */
+  height: number;
+}
+
+/**
  * Properties for the camera.
  *
  * ```typescript
@@ -31,6 +49,14 @@ export interface CameraProps extends ViewProps {
    * a capture button.
    */
   hideCaptureButton?: boolean;
+
+  /**
+   * Camera target resolution. It is not guaranteed that the camera runs at the
+   * set target resolution, and it might pick the closest available resolution.
+   *
+   * {@see https://developer.android.com/reference/androidx/camera/core/ImageAnalysis.Builder#setTargetResolution(android.util.Size)}
+   */
+  targetResolution?: TargetResolution;
 
   /**
    * Callback with an [[Image]] after capture button was pressed.
@@ -95,6 +121,7 @@ export function Camera({
   onFrame,
   onCapture,
   hideCaptureButton,
+  targetResolution,
   ...otherProps
 }: CameraProps) {
   const handleFrame = useCallback(
@@ -125,6 +152,7 @@ export function Camera({
       hideCaptureButton={hideCaptureButton}
       onCapture={handleCapture}
       onFrame={handleFrame}
+      targetResolution={targetResolution}
     />
   );
 }

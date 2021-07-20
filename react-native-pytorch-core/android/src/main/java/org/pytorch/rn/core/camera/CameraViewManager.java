@@ -7,9 +7,11 @@
 
 package org.pytorch.rn.core.camera;
 
+import android.util.Size;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
@@ -55,5 +57,14 @@ public class CameraViewManager extends SimpleViewManager<CameraView> {
   @ReactProp(name = "hideCaptureButton")
   public void setCaptureButtonVisibility(CameraView view, boolean hideCaptureButton) {
     view.setHideCaptureButton(hideCaptureButton);
+  }
+
+  @ReactProp(name = "targetResolution")
+  public void setTargetResolution(CameraView view, @Nullable ReadableMap targetResolution) {
+    if (targetResolution != null) {
+      int width = targetResolution.getInt("width");
+      int height = targetResolution.getInt("height");
+      view.setTargetResolution(new Size(width, height));
+    }
   }
 }

@@ -20,6 +20,7 @@ import android.graphics.Typeface;
 import android.text.TextPaint;
 import android.util.DisplayMetrics;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.uimanager.PixelUtil;
 import com.facebook.react.uimanager.ReactInvalidPropertyException;
 import java.util.Stack;
 import org.pytorch.rn.core.image.IImage;
@@ -27,8 +28,6 @@ import org.pytorch.rn.core.image.ImageUtils;
 
 public class CanvasRenderingContext2D {
   private final DrawingCanvasView mDrawingCanvasView;
-  private final DisplayMetrics mDisplayMetrics;
-  private final float mPixelDensity;
   private final Stack<CanvasState> mSavedStates;
   private Paint mFillPaint;
   private Paint mStrokePaint;
@@ -42,9 +41,6 @@ public class CanvasRenderingContext2D {
   public CanvasRenderingContext2D(DrawingCanvasView drawingCanvasView) {
     mDrawingCanvasView = drawingCanvasView;
     mSavedStates = new Stack<>();
-
-    mDisplayMetrics = mDrawingCanvasView.getResources().getDisplayMetrics();
-    mPixelDensity = mDisplayMetrics.density;
 
     initPaint();
     init();
@@ -63,7 +59,7 @@ public class CanvasRenderingContext2D {
     mStrokePaint.setColor(Color.BLACK);
     mStrokePaint.setStyle(Paint.Style.STROKE);
     // Initialize stroke width to be pixel density, which matches 1px for a web canvas.
-    mStrokePaint.setStrokeWidth(mPixelDensity);
+    mStrokePaint.setStrokeWidth(PixelUtil.toPixelFromDIP(1));
 
     mClearPaint = new Paint();
     mClearPaint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.CLEAR));
@@ -75,16 +71,18 @@ public class CanvasRenderingContext2D {
     mTextFillPaint.set(mFillPaint);
     mTextFillPaint.setStyle(Paint.Style.FILL);
     // The default font size for web canvas is 10px.
-    mTextFillPaint.setTextSize(dpToPx(10));
+    mTextFillPaint.setTextSize(PixelUtil.toPixelFromDIP(10));
     // Initialize stroke width to be pixel density, which matches 1px for a web canvas.
-    mTextFillPaint.setStrokeWidth(mPixelDensity);
+    mTextFillPaint.setStrokeWidth(PixelUtil.toPixelFromDIP(1));
   }
 
   private void init() {
     mPath = new Path();
+
+    DisplayMetrics displayMetrics = mDrawingCanvasView.getResources().getDisplayMetrics();
     mBitmap =
         Bitmap.createBitmap(
-            mDisplayMetrics.widthPixels, mDisplayMetrics.heightPixels, Bitmap.Config.ARGB_8888);
+            displayMetrics.widthPixels, displayMetrics.heightPixels, Bitmap.Config.ARGB_8888);
     mCanvas = new Canvas(mBitmap);
   }
 
@@ -102,7 +100,7 @@ public class CanvasRenderingContext2D {
   }
 
   public void setLineWidth(float width) {
-    final float strokeWidth = dpToPx(width);
+    final float strokeWidth = PixelUtil.toPixelFromDIP(width);
     mStrokePaint.setStrokeWidth(strokeWidth);
     mTextFillPaint.setStrokeWidth(strokeWidth);
   }
@@ -194,16 +192,31 @@ public class CanvasRenderingContext2D {
   }
 
   public void clearRect(float x, float y, float width, float height) {
-    mCanvas.drawRect(dpToPx(x), dpToPx(y), dpToPx(x + width), dpToPx(y + height), mClearPaint);
+    mCanvas.drawRect(
+        PixelUtil.toPixelFromDIP(x),
+        PixelUtil.toPixelFromDIP(y),
+        PixelUtil.toPixelFromDIP(x + width),
+        PixelUtil.toPixelFromDIP(y + height),
+        mClearPaint);
   }
 
   public void strokeRect(float x, float y, float width, float height) {
-    mCanvas.drawRect(dpToPx(x), dpToPx(y), dpToPx(x + width), dpToPx(y + height), mStrokePaint);
+    mCanvas.drawRect(
+        PixelUtil.toPixelFromDIP(x),
+        PixelUtil.toPixelFromDIP(y),
+        PixelUtil.toPixelFromDIP(x + width),
+        PixelUtil.toPixelFromDIP(y + height),
+        mStrokePaint);
   }
 
   public void fillRect(float x, float y, float width, float height) {
     mFillPaint.setStyle(Paint.Style.FILL);
-    mCanvas.drawRect(dpToPx(x), dpToPx(y), dpToPx(x + width), dpToPx(y + height), mFillPaint);
+    mCanvas.drawRect(
+        PixelUtil.toPixelFromDIP(x),
+        PixelUtil.toPixelFromDIP(y),
+        PixelUtil.toPixelFromDIP(x + width),
+        PixelUtil.toPixelFromDIP(y + height),
+        mFillPaint);
   }
 
   public void beginPath() {
@@ -225,7 +238,11 @@ public class CanvasRenderingContext2D {
   public void arc(
       float x, float y, float radius, float startAngle, float endAngle, boolean counterclockwise) {
     RectF rect =
-        new RectF(dpToPx(x - radius), dpToPx(y - radius), dpToPx(x + radius), dpToPx(y + radius));
+        new RectF(
+            PixelUtil.toPixelFromDIP(x - radius),
+            PixelUtil.toPixelFromDIP(y - radius),
+            PixelUtil.toPixelFromDIP(x + radius),
+            PixelUtil.toPixelFromDIP(y + radius));
 
     float PI2 = (float) Math.PI * 2;
 
@@ -248,30 +265,45 @@ public class CanvasRenderingContext2D {
   }
 
   public void rect(float x, float y, float width, float height) {
-    mPath.addRect(dpToPx(x), dpToPx(y), dpToPx(x + width), dpToPx(y + height), Path.Direction.CW);
+    mPath.addRect(
+        PixelUtil.toPixelFromDIP(x),
+        PixelUtil.toPixelFromDIP(y),
+        PixelUtil.toPixelFromDIP(x + width),
+        PixelUtil.toPixelFromDIP(y + height),
+        Path.Direction.CW);
   }
 
   public void lineTo(float x, float y) {
-    mPath.lineTo(dpToPx(x), dpToPx(y));
+    mPath.lineTo(PixelUtil.toPixelFromDIP(x), PixelUtil.toPixelFromDIP(y));
   }
 
   public void moveTo(float x, float y) {
-    mPath.moveTo(dpToPx(x), dpToPx(y));
+    mPath.moveTo(PixelUtil.toPixelFromDIP(x), PixelUtil.toPixelFromDIP(y));
   }
 
   public void drawCircle(float x, float y, float radius) {
-    mCanvas.drawCircle(dpToPx(x), dpToPx(y), dpToPx(radius), mStrokePaint);
+    mCanvas.drawCircle(
+        PixelUtil.toPixelFromDIP(x),
+        PixelUtil.toPixelFromDIP(y),
+        PixelUtil.toPixelFromDIP(radius),
+        mStrokePaint);
   }
 
   public void fillCircle(float x, float y, float radius) {
-    mCanvas.drawCircle(dpToPx(x), dpToPx(y), dpToPx(radius), mFillPaint);
+    mCanvas.drawCircle(
+        PixelUtil.toPixelFromDIP(x),
+        PixelUtil.toPixelFromDIP(y),
+        PixelUtil.toPixelFromDIP(radius),
+        mFillPaint);
   }
 
   public void drawImage(IImage image, float dx, float dy) {
     float imagePixelDensity = image.getPixelDensity();
     Matrix matrix = new Matrix();
-    matrix.postScale(mPixelDensity / imagePixelDensity, mPixelDensity / imagePixelDensity);
-    matrix.postTranslate(dpToPx(dx), dpToPx(dy));
+    matrix.postScale(
+        PixelUtil.getDisplayMetricDensity() / imagePixelDensity,
+        PixelUtil.getDisplayMetricDensity() / imagePixelDensity);
+    matrix.postTranslate(PixelUtil.toPixelFromDIP(dx), PixelUtil.toPixelFromDIP(dy));
     mCanvas.drawBitmap(image.getBitmap(), matrix, null);
   }
 
@@ -279,12 +311,12 @@ public class CanvasRenderingContext2D {
     Bitmap bitmap = image.getBitmap();
     int sWidth = bitmap.getWidth();
     int sHeight = bitmap.getHeight();
-    float scaleX = dpToPx(dWidth) / sWidth;
-    float scaleY = dpToPx(dHeight) / sHeight;
+    float scaleX = PixelUtil.toPixelFromDIP(dWidth) / sWidth;
+    float scaleY = PixelUtil.toPixelFromDIP(dHeight) / sHeight;
 
     Matrix matrix = new Matrix();
     matrix.postScale(scaleX, scaleY);
-    matrix.postTranslate(dpToPx(dx), dpToPx(dy));
+    matrix.postTranslate(PixelUtil.toPixelFromDIP(dx), PixelUtil.toPixelFromDIP(dy));
     mCanvas.drawBitmap(bitmap, matrix, null);
   }
 
@@ -303,20 +335,20 @@ public class CanvasRenderingContext2D {
     Bitmap destBitmap =
         Bitmap.createBitmap(bitmap, (int) sx, (int) sy, (int) sWidth, (int) sHeight);
 
-    float scaleX = dpToPx(dWidth) / sWidth;
-    float scaleY = dpToPx(dHeight) / sHeight;
+    float scaleX = PixelUtil.toPixelFromDIP(dWidth) / sWidth;
+    float scaleY = PixelUtil.toPixelFromDIP(dHeight) / sHeight;
 
     Matrix matrix = new Matrix();
     matrix.postScale(scaleX, scaleY);
-    matrix.postTranslate(dpToPx(dx), dpToPx(dy));
+    matrix.postTranslate(PixelUtil.toPixelFromDIP(dx), PixelUtil.toPixelFromDIP(dy));
     mCanvas.drawBitmap(destBitmap, matrix, null);
   }
 
   public ImageData getImageData(float sx, float sy, float sw, float sh) {
-    int x = (int) dpToPx(sx);
-    int y = (int) dpToPx(sy);
-    int width = (int) dpToPx(sw);
-    int height = (int) dpToPx(sh);
+    int x = (int) PixelUtil.toPixelFromDIP(sx);
+    int y = (int) PixelUtil.toPixelFromDIP(sy);
+    int width = (int) PixelUtil.toPixelFromDIP(sw);
+    int height = (int) PixelUtil.toPixelFromDIP(sh);
 
     Bitmap bitmap = Bitmap.createBitmap(mBitmap, x, y, width, height);
     byte[] data = ImageUtils.bitmapToRGBA(bitmap);
@@ -329,14 +361,14 @@ public class CanvasRenderingContext2D {
     mCanvas.save();
     Bitmap bitmap =
         ImageUtils.bitmapFromRGBA(imageData.getWidth(), imageData.getHeight(), imageData.getData());
-    mCanvas.drawBitmap(bitmap, dpToPx(dx), dpToPx(dy), null);
+    mCanvas.drawBitmap(bitmap, PixelUtil.toPixelFromDIP(dx), PixelUtil.toPixelFromDIP(dy), null);
     mCanvas.restore();
   }
 
   public void setFont(final ReadableMap font) {
     String textSizeString = font.getString("fontSize");
     int textSize = Integer.parseInt(textSizeString.substring(0, textSizeString.length() - 2));
-    mTextFillPaint.setTextSize(dpToPx(textSize));
+    mTextFillPaint.setTextSize(PixelUtil.toPixelFromDIP(textSize));
 
     String fontFamily = font.getArray("fontFamily").getString(0);
     Typeface typeface = Typeface.DEFAULT;
@@ -370,12 +402,14 @@ public class CanvasRenderingContext2D {
 
   public void fillText(String text, float x, float y) {
     mTextFillPaint.setStyle(Paint.Style.FILL);
-    mCanvas.drawText(text, dpToPx(x), dpToPx(y), mTextFillPaint);
+    mCanvas.drawText(
+        text, PixelUtil.toPixelFromDIP(x), PixelUtil.toPixelFromDIP(y), mTextFillPaint);
   }
 
   public void strokeText(String text, float x, float y) {
     mTextFillPaint.setStyle(Paint.Style.STROKE);
-    mCanvas.drawText(text, dpToPx(x), dpToPx(y), mTextFillPaint);
+    mCanvas.drawText(
+        text, PixelUtil.toPixelFromDIP(x), PixelUtil.toPixelFromDIP(y), mTextFillPaint);
   }
 
   /**
@@ -406,7 +440,10 @@ public class CanvasRenderingContext2D {
    */
   protected void setTransform(float a, float b, float c, float d, float e, float f) {
     Matrix matrix = new Matrix();
-    matrix.setValues(new float[] {a, c, dpToPx(e), b, d, dpToPx(f), 0, 0, 1});
+    matrix.setValues(
+        new float[] {
+          a, c, PixelUtil.toPixelFromDIP(e), b, d, PixelUtil.toPixelFromDIP(f), 0, 0, 1
+        });
     mCanvas.setMatrix(matrix);
   }
 
@@ -419,11 +456,12 @@ public class CanvasRenderingContext2D {
   }
 
   protected void rotate(float angle, float x, float y) {
-    mCanvas.rotate(radiansToDegrees(angle), dpToPx(x), dpToPx(y));
+    mCanvas.rotate(
+        radiansToDegrees(angle), PixelUtil.toPixelFromDIP(x), PixelUtil.toPixelFromDIP(y));
   }
 
   protected void translate(float x, float y) {
-    mCanvas.translate(dpToPx(x), dpToPx(y));
+    mCanvas.translate(PixelUtil.toPixelFromDIP(x), PixelUtil.toPixelFromDIP(y));
   }
 
   /**
@@ -469,10 +507,6 @@ public class CanvasRenderingContext2D {
 
   private float radiansToDegrees(float radians) {
     return (float) (radians * 180 / Math.PI);
-  }
-
-  private float dpToPx(float px) {
-    return px * mPixelDensity;
   }
 
   static class CanvasState {

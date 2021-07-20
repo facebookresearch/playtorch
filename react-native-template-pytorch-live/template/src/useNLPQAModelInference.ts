@@ -14,6 +14,10 @@ import {ModelInfo} from './Models';
 
 const MODEL_INPUT_LENGTH = 360;
 
+type NLPQAResult = {
+  answer: string;
+};
+
 export default function useNLPQAModelInference(modelInfo: ModelInfo) {
   const [metrics, setMetrics] = useState<ModelResultMetrics>();
   const [answer, setAnswer] = useState<string>();
@@ -28,7 +32,7 @@ export default function useNLPQAModelInference(modelInfo: ModelInfo) {
       const {
         result: {answer},
         metrics,
-      } = await MobileModel.execute(modelInfo.model, {
+      } = await MobileModel.execute<NLPQAResult>(modelInfo.model, {
         text: inputText,
         modelInputLength: MODEL_INPUT_LENGTH,
       });

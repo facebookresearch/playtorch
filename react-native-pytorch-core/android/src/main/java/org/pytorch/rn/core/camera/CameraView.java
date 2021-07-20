@@ -9,14 +9,12 @@ package org.pytorch.rn.core.camera;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
-import android.animation.ValueAnimator.AnimatorUpdateListener;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.LayerDrawable;
 import android.util.Log;
 import android.util.Size;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.Surface;
@@ -24,7 +22,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
@@ -39,13 +36,8 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
 import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.react.common.MapBuilder;
-import com.facebook.react.uimanager.ThemedReactContext;
-import com.facebook.react.uimanager.ViewGroupManager;
-import com.facebook.react.uimanager.annotations.ReactProp;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.google.common.util.concurrent.ListenableFuture;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -54,22 +46,19 @@ import org.pytorch.rn.core.image.IImage;
 import org.pytorch.rn.core.image.Image;
 import org.pytorch.rn.core.javascript.JSContext;
 
-public class CameraManager extends ViewGroupManager<ConstraintLayout> {
+public class CameraView extends ConstraintLayout {
 
-  public static final String REACT_CLASS = "PyTorchCoreCameraView";
+  public static final String REACT_CLASS = "PyTorchCameraView";
 
   private final String[] REQUIRED_PERMISSIONS = new String[] {Manifest.permission.CAMERA};
 
   private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
   private PreviewView mPreviewView;
   private Button mCaptureButton;
-  private ConstraintLayout mLayout;
   private ImageCapture mImageCapture;
   private ValueAnimator pressAnimation, releaseAnimation;
-  private AnimatorUpdateListener animatorUpdateListener;
   private LayerDrawable mCaptureButtonLayerDrawable;
   private GradientDrawable mCaptureButtonInnerCircle;
-  private int CAMERA_BUTTON_INNER_BORDER_NORMAL, CAMERA_BUTTON_INNER_BORDER_PRESSED;
   private final int DURATION = 100;
   private final float SCALE_BUTTON_BY = 1.15f;
 
@@ -78,27 +67,19 @@ public class CameraManager extends ViewGroupManager<ConstraintLayout> {
 
   private final ReactApplicationContext mReactContext;
 
-  public CameraManager(ReactApplicationContext reactContext) {
-    this.mReactContext = reactContext;
+  public CameraView(ReactApplicationContext context) {
+    super(context);
+    mReactContext = context;
+    init();
   }
 
-  @NonNull
-  @Override
-  public String getName() {
-    return REACT_CLASS;
-  }
-
-  @NonNull
-  @Override
-  protected ConstraintLayout createViewInstance(@NonNull ThemedReactContext reactContext) {
+  private void init() {
     cameraProviderFuture = ProcessCameraProvider.getInstance(mReactContext.getCurrentActivity());
 
     // Initialize our background executor
     cameraExecutor = Executors.newSingleThreadExecutor();
 
-    mLayout =
-        (ConstraintLayout)
-            LayoutInflater.from(reactContext).inflate(R.layout.activity_camera, null);
+    View mLayout = inflate(mReactContext, R.layout.activity_camera, this);
 
     mPreviewView = mLayout.findViewById(R.id.preview_view);
     mCaptureButton = mLayout.findViewById(R.id.capture_button);
@@ -106,7 +87,7 @@ public class CameraManager extends ViewGroupManager<ConstraintLayout> {
     // Initialize drawables to change (inner circle stroke)
     mCaptureButtonLayerDrawable =
         (LayerDrawable)
-            reactContext
+            mReactContext
                 .getResources()
                 .getDrawable(R.drawable.camera_button, mReactContext.getTheme())
                 .mutate();
@@ -116,19 +97,19 @@ public class CameraManager extends ViewGroupManager<ConstraintLayout> {
 
     // Calculate pixel values of borders
     float density = mReactContext.getResources().getDisplayMetrics().density;
-    CAMERA_BUTTON_INNER_BORDER_NORMAL = (int) (density * 18);
-    CAMERA_BUTTON_INNER_BORDER_PRESSED = (int) (density * 24);
+    int cameraButtonInnerBorderNormal = (int) (density * 18);
+    int cameraButtonInnerBorderPressed = (int) (density * 24);
 
     // Initialize Value Animators and Listeners
     // grow means grow border so the circle shrinks
     pressAnimation =
-        ValueAnimator.ofInt(CAMERA_BUTTON_INNER_BORDER_NORMAL, CAMERA_BUTTON_INNER_BORDER_PRESSED)
+        ValueAnimator.ofInt(cameraButtonInnerBorderNormal, cameraButtonInnerBorderPressed)
             .setDuration(DURATION);
     releaseAnimation =
-        ValueAnimator.ofInt(CAMERA_BUTTON_INNER_BORDER_PRESSED, CAMERA_BUTTON_INNER_BORDER_NORMAL)
+        ValueAnimator.ofInt(cameraButtonInnerBorderPressed, cameraButtonInnerBorderNormal)
             .setDuration(DURATION);
 
-    animatorUpdateListener =
+    ValueAnimator.AnimatorUpdateListener animatorUpdateListener =
         new ValueAnimator.AnimatorUpdateListener() {
           @Override
           public void onAnimationUpdate(ValueAnimator updatedAnimation) {
@@ -162,7 +143,7 @@ public class CameraManager extends ViewGroupManager<ConstraintLayout> {
     // issue tracker and is supposedly a bug in how React Native calculates children dimension.
     // A manual remeasure of the layout fixes this.
     // Link to issue: https://issuetracker.google.com/issues/177245493#comment8
-    mPreviewView.setOnHierarchyChangeListener(new ReactNativeCameraPreviewRemeasure());
+    mPreviewView.setOnHierarchyChangeListener(new CameraView.ReactNativeCameraPreviewRemeasure());
 
     if (allPermissionsGranted()) {
       startCamera(); // start camera if permission has been granted by user
@@ -171,22 +152,6 @@ public class CameraManager extends ViewGroupManager<ConstraintLayout> {
       ActivityCompat.requestPermissions(
           mReactContext.getCurrentActivity(), REQUIRED_PERMISSIONS, REQUEST_CODE_PERMISSIONS);
     }
-
-    return mLayout;
-  }
-
-  @Nullable
-  @Override
-  public Map<String, Object> getExportedCustomBubblingEventTypeConstants() {
-    final MapBuilder.Builder<String, Object> builder = MapBuilder.builder();
-    return builder
-        .put(
-            "onFrame",
-            MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onFrame")))
-        .put(
-            "onCapture",
-            MapBuilder.of("phasedRegistrationNames", MapBuilder.of("bubbled", "onCapture")))
-        .build();
   }
 
   private void startCamera() {
@@ -216,7 +181,7 @@ public class CameraManager extends ViewGroupManager<ConstraintLayout> {
               JSContext.NativeJSRef ref = JSContext.wrapObject(image);
               mReactContext
                   .getJSModule(RCTEventEmitter.class)
-                  .receiveEvent(mLayout.getId(), "onCapture", ref.getJSRef());
+                  .receiveEvent(CameraView.this.getId(), "onCapture", ref.getJSRef());
             }
 
             @Override
@@ -228,14 +193,6 @@ public class CameraManager extends ViewGroupManager<ConstraintLayout> {
     }
   }
 
-  @ReactProp(name = "hideCaptureButton")
-  public void setCaptureButtonVisibility(ConstraintLayout view, boolean hideCaptureButton) {
-    mCaptureButton.post(
-        () -> {
-          mCaptureButton.setVisibility(hideCaptureButton ? View.INVISIBLE : View.VISIBLE);
-        });
-  }
-
   void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
 
     Preview preview = new Preview.Builder().build();
@@ -245,7 +202,7 @@ public class CameraManager extends ViewGroupManager<ConstraintLayout> {
 
     ImageAnalysis imageAnalysis =
         new ImageAnalysis.Builder()
-            .setTargetResolution(new Size(1280, 720))
+            .setTargetResolution(new Size(640, 480))
             .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
             .build();
 
@@ -256,7 +213,7 @@ public class CameraManager extends ViewGroupManager<ConstraintLayout> {
           JSContext.NativeJSRef ref = JSContext.wrapObject(image);
           mReactContext
               .getJSModule(RCTEventEmitter.class)
-              .receiveEvent(mLayout.getId(), "onFrame", ref.getJSRef());
+              .receiveEvent(CameraView.this.getId(), "onFrame", ref.getJSRef());
         });
 
     mImageCapture = new ImageCapture.Builder().setTargetResolution(new Size(1280, 720)).build();
@@ -309,6 +266,13 @@ public class CameraManager extends ViewGroupManager<ConstraintLayout> {
       }
     }
     return true;
+  }
+
+  public void setHideCaptureButton(boolean hideCaptureButton) {
+    mCaptureButton.post(
+        () -> {
+          mCaptureButton.setVisibility(hideCaptureButton ? View.INVISIBLE : View.VISIBLE);
+        });
   }
 
   private static class ReactNativeCameraPreviewRemeasure

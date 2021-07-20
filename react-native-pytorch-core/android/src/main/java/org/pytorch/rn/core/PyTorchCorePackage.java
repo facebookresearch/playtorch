@@ -14,7 +14,7 @@ import com.facebook.react.uimanager.ViewManager;
 import java.util.Arrays;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
-import org.pytorch.rn.core.camera.CameraManager;
+import org.pytorch.rn.core.camera.CameraViewManager;
 import org.pytorch.rn.core.canvas.CanvasManager;
 import org.pytorch.rn.core.canvas.CanvasRenderingContext2DModule;
 import org.pytorch.rn.core.canvas.ImageDataModule;
@@ -35,6 +35,6 @@ public class PyTorchCorePackage implements ReactPackage {
   @Override
   public List<ViewManager> createViewManagers(@NotNull ReactApplicationContext reactContext) {
     return Arrays.<ViewManager>asList(
-        new CameraManager(reactContext), new CanvasManager(reactContext));
+        new CameraViewManager(reactContext), new CanvasManager(reactContext));
   }
 }

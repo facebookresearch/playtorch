@@ -127,6 +127,8 @@ public class BaseIValuePacker implements IIValuePacker {
             (ivalue, jobject, map, packerContext) ->
                 map.putBoolean(jobject.getString(JSON_KEY), ivalue.toBool()))
         .register(
+            "argmax", (ivalue, jobject, map, packerContext) -> unpackArgmax(ivalue, jobject, map))
+        .register(
             BaseIValuePacker.JSON_STRING,
             (ivalue, jobject, map, packerContext) ->
                 map.putString(jobject.getString(JSON_KEY), ivalue.toStr()))
@@ -260,6 +262,46 @@ public class BaseIValuePacker implements IIValuePacker {
         return;
       case JSON_LONG:
         map.putArray(key, unpackTensorLongData(ivalue.toTensor().getDataAsLongArray()));
+        return;
+    }
+
+    throw new IllegalArgumentException("Unknown dtype");
+  }
+
+  private static int unpackArgmaxFloatData(float[] data) {
+    float maxValue = -Float.MAX_VALUE;
+    int maxIdx = -1;
+    for (int i = 0; i < data.length; i++) {
+      if (data[i] > maxValue) {
+        maxValue = data[i];
+        maxIdx = i;
+      }
+    }
+    return maxIdx;
+  }
+
+  private static int unpackArgmaxLongData(long[] data) {
+    long maxValue = -Long.MAX_VALUE;
+    int maxIdx = -1;
+    for (int i = 0; i < data.length; i++) {
+      if (data[i] > maxValue) {
+        maxValue = data[i];
+        maxIdx = i;
+      }
+    }
+    return maxIdx;
+  }
+
+  private static void unpackArgmax(
+      final IValue ivalue, final JSONObject jobject, final WritableMap map) throws JSONException {
+    final String key = jobject.getString(JSON_KEY);
+    final String dtype = jobject.getString(JSON_DTYPE);
+    switch (dtype) {
+      case JSON_FLOAT:
+        map.putInt(key, unpackArgmaxFloatData(ivalue.toTensor().getDataAsFloatArray()));
+        return;
+      case JSON_LONG:
+        map.putInt(key, unpackArgmaxLongData(ivalue.toTensor().getDataAsLongArray()));
         return;
     }
 

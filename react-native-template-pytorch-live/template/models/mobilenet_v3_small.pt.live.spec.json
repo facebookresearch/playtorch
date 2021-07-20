@@ -32,8 +32,8 @@
     ]
   },
   "unpack": {
-    "type": "tensor",
+    "type": "argmax",
     "dtype": "float",
-    "key": "scores"
+    "key": "maxIdx"
   }
 }

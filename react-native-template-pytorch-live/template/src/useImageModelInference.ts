@@ -16,7 +16,7 @@ import {ModelInfo} from './Models';
 const MobileNetV3Classes = require('./MobileNetV3Classes');
 
 type ImageClassificationResult = {
-  scores: number[];
+  maxIdx: number;
 };
 
 export default function useImageModelInference(modelInfo: ModelInfo) {
@@ -29,7 +29,7 @@ export default function useImageModelInference(modelInfo: ModelInfo) {
       const height = image.getHeight();
       const size = Math.min(width, height);
       const {
-        result: {scores},
+        result: {maxIdx},
         metrics,
       } = await MobileModel.execute<ImageClassificationResult>(modelInfo.model, {
         image,
@@ -38,15 +38,7 @@ export default function useImageModelInference(modelInfo: ModelInfo) {
         scaleWidth: 224,
         scaleHeight: 224,
       });
-      let maxScore = -Number.MAX_VALUE;
-      let maxScoreIdx = -1;
-      for (let i = 0; i < scores.length; i++) {
-        if (scores[i] > maxScore) {
-          maxScore = scores[i];
-          maxScoreIdx = i;
-        }
-      }
-      const className = MobileNetV3Classes[maxScoreIdx];
+      const className = MobileNetV3Classes[maxIdx];
       setImageClass(className);
       setMetrics(metrics);
     },

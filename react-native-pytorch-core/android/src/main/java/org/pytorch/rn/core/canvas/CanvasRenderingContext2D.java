@@ -27,7 +27,7 @@ import org.pytorch.rn.core.image.IImage;
 import org.pytorch.rn.core.image.ImageUtils;
 
 public class CanvasRenderingContext2D {
-  private final DrawingCanvasView mDrawingCanvasView;
+  private final CanvasView mCanvasView;
   private final Stack<CanvasState> mSavedStates;
   private Paint mFillPaint;
   private Paint mStrokePaint;
@@ -38,8 +38,8 @@ public class CanvasRenderingContext2D {
   private Canvas mCanvas;
   private Path mPath;
 
-  public CanvasRenderingContext2D(DrawingCanvasView drawingCanvasView) {
-    mDrawingCanvasView = drawingCanvasView;
+  public CanvasRenderingContext2D(CanvasView canvasView) {
+    mCanvasView = canvasView;
     mSavedStates = new Stack<>();
 
     initPaint();
@@ -79,7 +79,7 @@ public class CanvasRenderingContext2D {
   private void init() {
     mPath = new Path();
 
-    DisplayMetrics displayMetrics = mDrawingCanvasView.getResources().getDisplayMetrics();
+    DisplayMetrics displayMetrics = mCanvasView.getResources().getDisplayMetrics();
     mBitmap =
         Bitmap.createBitmap(
             displayMetrics.widthPixels, displayMetrics.heightPixels, Bitmap.Config.ARGB_8888);
@@ -502,7 +502,7 @@ public class CanvasRenderingContext2D {
   }
 
   public void invalidate() {
-    mDrawingCanvasView.invalidate();
+    mCanvasView.invalidate();
   }
 
   private float radiansToDegrees(float radians) {

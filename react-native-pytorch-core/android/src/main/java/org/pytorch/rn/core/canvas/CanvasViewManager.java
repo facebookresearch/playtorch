@@ -15,13 +15,13 @@ import com.facebook.react.uimanager.SimpleViewManager;
 import com.facebook.react.uimanager.ThemedReactContext;
 import java.util.Map;
 
-public class CanvasManager extends SimpleViewManager<DrawingCanvasView> {
+public class CanvasViewManager extends SimpleViewManager<CanvasView> {
 
   public static final String REACT_CLASS = "PyTorchCoreCanvasView";
 
   private final ReactApplicationContext mReactContext;
 
-  public CanvasManager(ReactApplicationContext reactContext) {
+  public CanvasViewManager(ReactApplicationContext reactContext) {
     mReactContext = reactContext;
   }
 
@@ -33,8 +33,8 @@ public class CanvasManager extends SimpleViewManager<DrawingCanvasView> {
 
   @NonNull
   @Override
-  protected DrawingCanvasView createViewInstance(@NonNull ThemedReactContext reactContext) {
-    return new DrawingCanvasView(reactContext);
+  protected CanvasView createViewInstance(@NonNull ThemedReactContext reactContext) {
+    return new CanvasView(reactContext);
   }
 
   @Nullable

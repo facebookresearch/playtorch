@@ -17,25 +17,25 @@ import com.facebook.react.bridge.ReactContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 import org.pytorch.rn.core.javascript.JSContext;
 
-public class DrawingCanvasView extends View {
+public class CanvasView extends View {
   private CanvasRenderingContext2D mRenderingContext;
 
-  public DrawingCanvasView(Context context) {
+  public CanvasView(Context context) {
     super(context);
     initialize();
   }
 
-  public DrawingCanvasView(Context context, @Nullable AttributeSet attrs) {
+  public CanvasView(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
     initialize();
   }
 
-  public DrawingCanvasView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+  public CanvasView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
     super(context, attrs, defStyleAttr);
     initialize();
   }
 
-  public DrawingCanvasView(
+  public CanvasView(
       Context context, @Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
     super(context, attrs, defStyleAttr, defStyleRes);
     initialize();

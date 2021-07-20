@@ -31,12 +31,9 @@ export default function NLPExample() {
   const [activeModelInfo, setActiveModelInfo] = useState<ModelInfo>(
     NLPModels[0],
   );
-  const {
-    answer,
-    inferenceTime,
-    isProcessing,
-    processQA,
-  } = useNLPQAModelInference(activeModelInfo);
+  const {answer, metrics, isProcessing, processQA} = useNLPQAModelInference(
+    activeModelInfo,
+  );
 
   return (
     <ModelPreloader modelInfos={NLPModels} loadAsync={true}>
@@ -79,11 +76,12 @@ export default function NLPExample() {
             {isProcessing && <ActivityIndicator size="small" color="tomato" />}
             {answer}
           </Text>
-          <Text style={styles.smallLabel}>
-            {answer && !isProcessing
-              ? `Inference time: ${inferenceTime}ms`
-              : ''}
-          </Text>
+          {answer != null && !isProcessing && (
+            <Text style={styles.smallLabel}>
+              Time taken: {metrics?.totalTime}ms (p={metrics?.packTime}/i=
+              {metrics?.inferenceTime}/u={metrics?.unpackTime})
+            </Text>
+          )}
         </View>
       </ScrollView>
     </ModelPreloader>
@@ -161,5 +159,6 @@ const styles = StyleSheet.create({
   smallLabel: {
     fontSize: 12,
     color: '#667788',
+    fontFamily: 'monospace',
   },
 });

@@ -10,12 +10,17 @@
 import {useCallback, useState} from 'react';
 
 import {Image, MobileModel} from 'react-native-pytorch-core';
+import {ModelResultMetrics} from 'react-native-pytorch-core/lib/typescript/MobileModelModule';
 import {ModelInfo} from './Models';
 
 const MobileNetV3Classes = require('./MobileNetV3Classes');
 
+type ImageClassificationResult = {
+  scores: number[];
+};
+
 export default function useImageModelInference(modelInfo: ModelInfo) {
-  const [inferenceTime, setInferenceTime] = useState<number>();
+  const [metrics, setMetrics] = useState<ModelResultMetrics>();
   const [imageClass, setImageClass] = useState<string>();
 
   const processImage = useCallback(
@@ -24,9 +29,9 @@ export default function useImageModelInference(modelInfo: ModelInfo) {
       const height = image.getHeight();
       const size = Math.min(width, height);
       const {
-        result: {scores: scores},
-        inferenceTime: time,
-      } = await MobileModel.execute(modelInfo.model, {
+        result: {scores},
+        metrics,
+      } = await MobileModel.execute<ImageClassificationResult>(modelInfo.model, {
         image,
         cropWidth: size,
         cropHeight: size,
@@ -43,14 +48,14 @@ export default function useImageModelInference(modelInfo: ModelInfo) {
       }
       const className = MobileNetV3Classes[maxScoreIdx];
       setImageClass(className);
-      setInferenceTime(time);
+      setMetrics(metrics);
     },
-    [modelInfo.model, setImageClass, setInferenceTime],
+    [modelInfo.model, setImageClass, setMetrics],
   );
 
   return {
     imageClass,
-    inferenceTime,
+    metrics,
     processImage,
   };
 }

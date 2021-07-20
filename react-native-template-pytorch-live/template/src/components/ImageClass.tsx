@@ -11,14 +11,15 @@ import * as React from 'react';
 import {StyleProp} from 'react-native';
 import {StyleSheet, ViewStyle} from 'react-native';
 import {Text, View} from 'react-native';
+import {ModelResultMetrics} from 'react-native-pytorch-core/lib/typescript/MobileModelModule';
 
 type Props = {
   imageClass?: string;
-  inferenceTime?: number;
+  metrics?: ModelResultMetrics;
   style?: StyleProp<ViewStyle>;
 };
 
-export default function ImageClass({style, imageClass, inferenceTime}: Props) {
+export default function ImageClass({imageClass, metrics, style}: Props) {
   if (imageClass == null) {
     return null;
   }
@@ -28,7 +29,10 @@ export default function ImageClass({style, imageClass, inferenceTime}: Props) {
         <Text style={styles.labels} numberOfLines={2} ellipsizeMode="tail">
           {imageClass}
         </Text>
-        <Text style={styles.small}>Time taken: {inferenceTime}ms</Text>
+        <Text style={styles.small}>
+          Time taken: {metrics?.totalTime}ms (p={metrics?.packTime}/i=
+          {metrics?.inferenceTime}/u={metrics?.unpackTime})
+        </Text>
       </View>
     </View>
   );
@@ -46,5 +50,6 @@ const styles = StyleSheet.create({
   small: {
     fontSize: 11,
     color: '#678',
+    fontFamily: 'monospace',
   },
 });

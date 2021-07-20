@@ -41,6 +41,25 @@ const getModelAssetSource = (
   return source;
 };
 
+export interface ModelResultMetrics {
+  /**
+   * The pack time, model inference time, and unpack time in milliseconds.
+   */
+  totalTime: number;
+  /**
+   * The model inference time in milliseconds.
+   */
+  inferenceTime: number;
+  /**
+   * The pack time in milliseconds.
+   */
+  packTime: number;
+  /**
+   * The unpack time in milliseconds.
+   */
+  unpackTime: number;
+}
+
 /**
  * Result of model inference. Each model result has the inference time and the
  * model result. The model result depends on the model and is therefore
@@ -55,9 +74,9 @@ export interface ModelResult<T> {
   result: T;
 
   /**
-   * The model inference time in milliseconds.
+   * The model result metrics, e.g., including inference time in milliseconds.
    */
-  inferenceTime: number;
+  metrics: ModelResultMetrics;
 }
 
 /**

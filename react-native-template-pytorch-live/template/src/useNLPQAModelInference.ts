@@ -9,12 +9,13 @@
 
 import {useCallback, useState} from 'react';
 import {MobileModel} from 'react-native-pytorch-core';
+import {ModelResultMetrics} from 'react-native-pytorch-core/lib/typescript/MobileModelModule';
 import {ModelInfo} from './Models';
 
 const MODEL_INPUT_LENGTH = 360;
 
 export default function useNLPQAModelInference(modelInfo: ModelInfo) {
-  const [inferenceTime, setInferenceTime] = useState<number>();
+  const [metrics, setMetrics] = useState<ModelResultMetrics>();
   const [answer, setAnswer] = useState<string>();
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
@@ -26,22 +27,22 @@ export default function useNLPQAModelInference(modelInfo: ModelInfo) {
       const inputText = `[CLS] ${question} [SEP] ${text} [SEP]`;
       const {
         result: {answer},
-        inferenceTime,
+        metrics,
       } = await MobileModel.execute(modelInfo.model, {
         text: inputText,
         modelInputLength: MODEL_INPUT_LENGTH,
       });
 
       setAnswer(answer);
-      setInferenceTime(inferenceTime);
+      setMetrics(metrics);
       setIsProcessing(false);
     },
-    [setIsProcessing, setAnswer, setInferenceTime],
+    [setIsProcessing, setAnswer, setMetrics],
   );
 
   return {
     answer,
-    inferenceTime,
+    metrics,
     isProcessing,
     processQA,
   };

@@ -22,7 +22,7 @@ export default function CameraFrameByFrame() {
   const [activeModelInfo, setActiveModelInfo] = useState<ModelInfo>(
     ImageClassificationModels[0],
   );
-  const {imageClass, inferenceTime, processImage} = useImageModelInference(
+  const {imageClass, metrics, processImage} = useImageModelInference(
     activeModelInfo,
   );
 
@@ -49,7 +49,7 @@ export default function CameraFrameByFrame() {
         defaultModelInfo={activeModelInfo}
         onSelectModelInfo={setActiveModelInfo}
       />
-      <ImageClass imageClass={imageClass} inferenceTime={inferenceTime} />
+      <ImageClass imageClass={imageClass} metrics={metrics} />
     </>
   );
 }

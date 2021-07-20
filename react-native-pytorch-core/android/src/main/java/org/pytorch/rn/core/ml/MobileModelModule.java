@@ -94,16 +94,30 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
             if (moduleHolder == null) {
               moduleHolder = fetchCacheAndLoadModel(modelUri);
             }
-            final long startTime = SystemClock.elapsedRealtime();
             final PackerContext packerContext = moduleHolder.packer.newContext();
-            IValue packedValue = moduleHolder.packer.pack(params, packerContext);
-            IValue forwardResult = moduleHolder.module.forward(packedValue);
-            ReadableMap result = moduleHolder.packer.unpack(forwardResult, packerContext);
-            final long inferenceTime = SystemClock.elapsedRealtime() - startTime;
+
+            final long packStartTime = SystemClock.elapsedRealtime();
+            final IValue packedValue = moduleHolder.packer.pack(params, packerContext);
+            final long packTime = SystemClock.elapsedRealtime() - packStartTime;
+
+            final long inferenceStartTime = SystemClock.elapsedRealtime();
+            final IValue forwardResult = moduleHolder.module.forward(packedValue);
+            final long inferenceTime = SystemClock.elapsedRealtime() - inferenceStartTime;
+
+            final long unpackStartTime = SystemClock.elapsedRealtime();
+            final ReadableMap result = moduleHolder.packer.unpack(forwardResult, packerContext);
+            final long unpackTime = SystemClock.elapsedRealtime() - unpackStartTime;
 
             WritableMap inferenceResult = Arguments.createMap();
             inferenceResult.putMap("result", result);
-            inferenceResult.putDouble("inferenceTime", inferenceTime);
+
+            WritableMap metrics = Arguments.createMap();
+            metrics.putDouble("totalTime", packTime + inferenceTime + unpackTime);
+            metrics.putDouble("packTime", packTime);
+            metrics.putDouble("inferenceTime", inferenceTime);
+            metrics.putDouble("unpackTime", unpackTime);
+            inferenceResult.putMap("metrics", metrics);
+
             promise.resolve(inferenceResult);
           } catch (Exception e) {
             Log.e(REACT_MODULE, "Error on model fetch and forward:", e);

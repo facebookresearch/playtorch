@@ -21,7 +21,7 @@ export default function PhotosExample() {
   const [activeModelInfo, setActiveModelInfo] = useState<ModelInfo>(
     ImageClassificationModels[0],
   );
-  const {imageClass, inferenceTime, processImage} = useImageModelInference(
+  const {imageClass, metrics, processImage} = useImageModelInference(
     activeModelInfo,
   );
 
@@ -48,7 +48,7 @@ export default function PhotosExample() {
           defaultModelInfo={activeModelInfo}
           onSelectModelInfo={setActiveModelInfo}
         />
-        <ImageClass imageClass={imageClass} inferenceTime={inferenceTime} />
+        <ImageClass imageClass={imageClass} metrics={metrics} />
       </View>
       <View style={[styles.hint, {opacity: hint ? 1 : 0}]}>
         <Text style={styles.hintText}>

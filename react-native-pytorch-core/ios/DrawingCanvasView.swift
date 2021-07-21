@@ -47,10 +47,13 @@ class DrawingCanvasView: UIView {
             let boundsRect = CGRect(x: 0, y: 0, width: width, height: height)
             self.bounds = boundsRect
         } else {
-            print("Could not set width and height of the canvas, using default of fullscreen")
             //TODO(T92857704) Eventually forward Error to React Native using promises
-            let boundsRect = UIScreen.main.bounds
-            self.bounds = boundsRect
+            if let boundsRect = self.superview?.bounds {
+                self.bounds = boundsRect
+            } else {
+                let boundsRect = UIScreen.main.bounds
+                self.bounds = boundsRect
+            }
         }
     }
 

@@ -20,6 +20,7 @@ class DrawingCanvasView: UIView {
     var currentState = CanvasState()
     var sublayers = [CALayer]()
     var scale: CGFloat?
+    var needsDraw: Bool = false
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -41,6 +42,7 @@ class DrawingCanvasView: UIView {
         if #available(iOS 11.0, *) {
             flattenLayer()
         }
+        needsDraw = false
     }
 
     override func didSetProps(_ changedProps: [String]!) {
@@ -61,46 +63,45 @@ class DrawingCanvasView: UIView {
     }
 
     func arc(x: CGFloat, y: CGFloat, radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat, counterclockwise: Bool) {
-        path.addArc(center: CGPoint(x:x, y: y), radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: counterclockwise, transform: currentState.transformation) // seems counterintuitve to set clockwise to counterclockwise, but is the only way to get it to match web canvas
+        path.addArc(center: CGPoint(x:x, y: y), radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: counterclockwise) // seems counterintuitve to set clockwise to counterclockwise, but is the only way to get it to match web canvas
     }
 
     func strokeRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
         let rect = CGRect(x: x, y: y, width: width, height: height)
-        let p = CGMutablePath()
-        p.addRect(rect, transform: currentState.transformation)
+        let path = CGMutablePath()
+        path.addRect(rect)
         let newLayer = CAShapeLayer()
         newLayer.setStyle(state: currentState)
         newLayer.fillColor = UIColor.clear.cgColor
-        newLayer.path = p
+        newLayer.path = path
         sublayers.append(newLayer)
     }
 
     func fillRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
         let rect = CGRect(x: x, y: y, width: width, height: height)
-        let p = CGMutablePath()
-        p.addRect(rect, transform: currentState.transformation)
+        let path = CGMutablePath()
+        path.addRect(rect)
         let newLayer = CAShapeLayer()
         newLayer.setStyle(state: currentState)
         newLayer.lineWidth = 0
-        newLayer.path = p
+        newLayer.path = path
         sublayers.append(newLayer)
     }
 
     func rect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
         // create CGRect and add it to list
         let rect = CGRect(x: x, y: y, width: width, height: height)
-        path.addRect(rect, transform: currentState.transformation)
+        path.addRect(rect)
     }
 
     func invalidate() {
-        DispatchQueue.main.sync {
+        // The invalidate has been called previously and the canvas hasn't redrawn yet -- no need to call needs display again.
+        if (needsDraw) {
+            return
+        }
+        needsDraw = true
+        DispatchQueue.main.async {
             self.layer.setNeedsDisplay()
-            if let sublayers = self.layer.sublayers {
-                for i in sublayers.indices {
-                    self.layer.sublayers?[i].setNeedsDisplay()
-                    print("redrawing sublayer")
-                }
-            }
         }
     }
 
@@ -124,9 +125,7 @@ class DrawingCanvasView: UIView {
         newLayer.path = path
         newLayer.frame = newLayer.contentsRect
         sublayers.append(newLayer)
-        let startPoint = path.currentPoint
         path = CGMutablePath()
-        path.move(to: startPoint, transform: CGAffineTransform.identity)
     }
 
     func fill() {
@@ -136,26 +135,25 @@ class DrawingCanvasView: UIView {
         newLayer.path = path
         newLayer.frame = newLayer.contentsRect
         sublayers.append(newLayer)
-        let startPoint = path.currentPoint
         path = CGMutablePath()
-        path.move(to: startPoint, transform: CGAffineTransform.identity)
     }
 
     func scale(x: CGFloat, y: CGFloat) {
-        currentState.transformation = currentState.transformation.scaledBy(x: x, y: y)
+        currentState.transform = CATransform3DScale(currentState.transform, x, y, 1.0)
     }
 
     func rotate(angle: CGFloat) {
-        currentState.transformation = currentState.transformation.rotated(by: angle)
+        // If the vector has zero length, the behavior is undefined: t = rotation(angle, x, y, z) * t.
+        currentState.transform = CATransform3DRotate(currentState.transform, angle, 0.0, 0.0, 1.0)
     }
 
     func translate(x: CGFloat, y: CGFloat) {
-        currentState.transformation = currentState.transformation.translatedBy(x: x, y: y)
+        currentState.transform = CATransform3DTranslate(currentState.transform, x, y, 0.0)
     }
 
     func setTransform(a: CGFloat, b: CGFloat, c: CGFloat, d: CGFloat, e: CGFloat, f: CGFloat) {
+        currentState.transform = CATransform3DMakeAffineTransform(CGAffineTransform(a: a, b: b, c: c, d: d, tx: e, ty: f))
         // Note that the Apple CGAffineTransform matrix is the transpose of the matrix used by PyTorch Live, but so is their labeling
-        currentState.transformation = CGAffineTransform(a: a, b: b, c: c, d: d, tx: e, ty: f)
     }
 
     func setFillStyle(color: CGColor){
@@ -168,6 +166,7 @@ class DrawingCanvasView: UIView {
 
     func save() {
         stateStack.push(state: currentState)
+        currentState = CanvasState(state: currentState)
     }
 
     func restore() {
@@ -272,17 +271,17 @@ class DrawingCanvasView: UIView {
     }
 
     func lineTo(point: CGPoint){
-        path.addLine(to: point, transform: currentState.transformation)
+        path.addLine(to: point)
     }
 
     func moveTo(point: CGPoint){
-        path.move(to: point, transform: currentState.transformation)
+        path.move(to: point)
     }
 
     func drawCircle(x: CGFloat, y: CGFloat, radius: CGFloat, fill: Bool = false) {
         let rect = CGRect(x: x-radius, y: y-radius, width: 2*radius, height: 2*radius)
-        let p = CGMutablePath()
-        p.addEllipse(in: rect, transform: currentState.transformation)
+        let path = CGMutablePath()
+        path.addEllipse(in: rect)
         let newLayer = CAShapeLayer()
         newLayer.setStyle(state: currentState)
         if fill {
@@ -290,7 +289,7 @@ class DrawingCanvasView: UIView {
         } else {
             newLayer.fillColor = UIColor.clear.cgColor
         }
-        newLayer.path = p
+        newLayer.path = path
         sublayers.append(newLayer)
     }
 
@@ -316,7 +315,7 @@ class DrawingCanvasView: UIView {
         let attrString = NSAttributedString(string: text, attributes: attrs)
         let newLayer = CATextLayer()
         newLayer.string = attrString
-        newLayer.setAffineTransform(currentState.transformation)
+        newLayer.transform = currentState.transform
         switch currentState.textAlign {
         case NSTextAlignment.left:
             newLayer.frame = CGRect(x: x, y: y - attrString.size().height, width: attrString.size().width, height: attrString.size().height)
@@ -398,7 +397,7 @@ class DrawingCanvasView: UIView {
 }
 
 struct CanvasState {
-    public var transformation: CGAffineTransform
+    public var transform: CATransform3D
     public var strokeStyle: CGColor
     public var fillStyle: CGColor
     public var lineWidth: CGFloat
@@ -408,8 +407,8 @@ struct CanvasState {
     public var font: UIFont
     public var textAlign: NSTextAlignment
 
-    init(transformation: CGAffineTransform = CGAffineTransform.identity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1, lineCap: CAShapeLayerLineCap = .butt, lineJoin: CAShapeLayerLineJoin = .miter, miterLimit: CGFloat = 10, font: UIFont = .systemFont(ofSize: 10), textAlign: NSTextAlignment = NSTextAlignment.left) {
-        self.transformation = transformation
+    init(transform: CATransform3D = CATransform3DIdentity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1, lineCap: CAShapeLayerLineCap = .butt, lineJoin: CAShapeLayerLineJoin = .miter, miterLimit: CGFloat = 10, font: UIFont = .systemFont(ofSize: 10), textAlign: NSTextAlignment = NSTextAlignment.left) {
+        self.transform = transform
         self.strokeStyle = strokeStyle
         self.fillStyle = fillStyle
         self.lineWidth = lineWidth
@@ -418,5 +417,17 @@ struct CanvasState {
         self.miterLimit = miterLimit
         self.font = font
         self.textAlign = textAlign
+    }
+
+    init(state: CanvasState) {
+        self.transform = CATransform3DConcat(state.transform, CATransform3DIdentity)
+        self.strokeStyle = state.strokeStyle.copy()!
+        self.fillStyle = state.fillStyle.copy()!
+        self.lineWidth = CGFloat(state.lineWidth)
+        self.lineCap = CAShapeLayerLineCap(rawValue: state.lineCap.rawValue)
+        self.lineJoin =  CAShapeLayerLineJoin(rawValue: state.lineJoin.rawValue)
+        self.miterLimit = CGFloat(state.miterLimit)
+        self.font = state.font.copy() as! UIFont
+        self.textAlign = state.textAlign
     }
 }

@@ -10,6 +10,7 @@ import Foundation
 extension CAShapeLayer {
 
     func setStyle(state: CanvasState){
+        self.transform = state.transform
         self.fillColor = state.fillStyle
         self.strokeColor = state.strokeStyle
         self.lineWidth = state.lineWidth

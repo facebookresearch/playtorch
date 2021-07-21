@@ -35,11 +35,11 @@ class JSContext {
 
     //TODO(T92662670) Implement release in JSContext for iOS
 
-    public static func wrapObject(view: UIView) -> NativeJSRef {
-        return NativeJSRef(view: view)
+    public static func wrapObject(object: Any) -> NativeJSRef {
+        return NativeJSRef(object: object)
     }
 
-    public static func unwrapObject(jsRef: [String:String]) throws -> UIView {
+    public static func unwrapObject(jsRef: [String:String]) throws -> Any {
         guard let id = jsRef[ID_KEY] else { throw JSContextError.invalidParam }
         let ref = try JSContext.getRef(id: id)
         return ref.getObject()
@@ -48,11 +48,11 @@ class JSContext {
     class NativeJSRef {
         //initialized mId and mJSRef to empty values to allow self to be used to set id in init()
         private var mId: String = ""
-        private var mObject: UIView
+        private var mObject: Any
         private var mJSRef: [String : String] = [:]
 
-        init(view: UIView){
-            mObject = view
+        init(object: Any){
+            mObject = object
             mId = JSContext.setRef(ref: self)
             mJSRef[JSContext.ID_KEY] = mId
         }
@@ -61,7 +61,7 @@ class JSContext {
             return mJSRef
         }
 
-        public func getObject() -> UIView {
+        public func getObject() -> Any {
             return mObject
         }
 

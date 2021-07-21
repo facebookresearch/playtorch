@@ -23,14 +23,14 @@ class DrawingCanvasView: UIView {
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
-        ref = JSContext.wrapObject(view: self).getJSRef()
         self.scale = UIScreen.main.scale
+        ref = JSContext.wrapObject(object: self).getJSRef()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        ref = JSContext.wrapObject(view: self).getJSRef()
         self.scale = UIScreen.main.scale
+        ref = JSContext.wrapObject(object: self).getJSRef()
     }
 
     override func draw(_ layer: CALayer, in ctx: CGContext) {

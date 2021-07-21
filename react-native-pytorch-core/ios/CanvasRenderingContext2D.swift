@@ -145,9 +145,12 @@ class CanvasRenderingContext2D: NSObject {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             if(Int(truncating: x) >= 0 && Int(truncating: y) >= 0){
-                canvasView.translate(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
+                canvasView.translate(x: -1 * CGFloat(truncating: x), y: -1 * CGFloat(truncating: y))
             }
             canvasView.rotate(angle: CGFloat(truncating: angle))
+            if(Int(truncating: x) >= 0 && Int(truncating: y) >= 0){
+                canvasView.translate(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
+            }
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform rotate")

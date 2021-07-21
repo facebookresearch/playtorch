@@ -28,18 +28,22 @@ class JSContext {
         return unwrappedNativeJSRef
     }
 
-    public static func get(jsRef: [String:String]) throws -> NativeJSRef {
+    public static func get(jsRef: [ String : String ]) throws -> NativeJSRef {
         guard let id = jsRef[ID_KEY] else { throw JSContextError.invalidParam }
         return try JSContext.getRef(id: id)
     }
 
+    public static func release(jsRef: [ String : String ]) throws {
+        guard let id = jsRef[ID_KEY] else { throw JSContextError.invalidParam }
+        refs.removeValue(forKey: id)?.release()
+    }
     //TODO(T92662670) Implement release in JSContext for iOS
 
     public static func wrapObject(object: Any) -> NativeJSRef {
         return NativeJSRef(object: object)
     }
 
-    public static func unwrapObject(jsRef: [String:String]) throws -> Any {
+    public static func unwrapObject(jsRef: [ String : String ]) throws -> Any {
         guard let id = jsRef[ID_KEY] else { throw JSContextError.invalidParam }
         let ref = try JSContext.getRef(id: id)
         return ref.getObject()
@@ -47,24 +51,28 @@ class JSContext {
 
     class NativeJSRef {
         //initialized mId and mJSRef to empty values to allow self to be used to set id in init()
-        private var mId: String = ""
-        private var mObject: Any
-        private var mJSRef: [String : String] = [:]
+        private var mId: String? = ""
+        private var mObject: Any?
+        private var mJSRef: [String : String]? = [:]
 
         init(object: Any){
             mObject = object
             mId = JSContext.setRef(ref: self)
-            mJSRef[JSContext.ID_KEY] = mId
+            mJSRef?[JSContext.ID_KEY] = mId
         }
 
         public func getJSRef() -> [String:String] {
-            return mJSRef
+            return mJSRef ?? [:]
         }
 
         public func getObject() -> Any {
             return mObject
         }
 
-        //TODO(T92662670) Implement release in NativeJSRef for iOS
+        public func release() {
+            mId = nil
+            mObject = nil
+            mJSRef = nil
+        }//TODO(T92662670) Implement release in NativeJSRef for iOS
     }
 }

@@ -23,12 +23,16 @@ class DrawingCanvasView: UIView {
     var needsDraw: Bool = false
     var shapeLayers = [CAShapeLayer] ()
     var drawingLayer = CATransformLayer()
+    let deletionQueue = DispatchQueue(label: "deletionQueue", qos: .userInitiated, attributes: .concurrent)
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
         self.scale = UIScreen.main.scale
         drawingLayer.bounds = layer.bounds
         ref = JSContext.wrapObject(object: self).getJSRef()
+        deletionQueue.async {
+            CATransaction.flush()
+        }
     }
 
     required init?(coder aDecoder: NSCoder) {
@@ -36,6 +40,9 @@ class DrawingCanvasView: UIView {
         self.scale = UIScreen.main.scale
         drawingLayer.bounds = layer.bounds
         ref = JSContext.wrapObject(object: self).getJSRef()
+        deletionQueue.async {
+            CATransaction.flush()
+        }
     }
 
     override func draw(_ layer: CALayer, in ctx: CGContext) {
@@ -49,6 +56,9 @@ class DrawingCanvasView: UIView {
             flattenLayer()
         }
         needsDraw = false
+        deletionQueue.async {
+            CATransaction.flush()
+        }
     }
 
     override func didSetProps(_ changedProps: [String]!) {
@@ -82,6 +92,9 @@ class DrawingCanvasView: UIView {
         newLayer.path = p
         newLayer.transform = currentState.transform
         sublayers.append(newLayer)
+        deletionQueue.async {
+            CATransaction.flush()
+        }
     }
 
     func fillRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
@@ -94,6 +107,9 @@ class DrawingCanvasView: UIView {
         newLayer.path = p
         newLayer.transform = currentState.transform
         sublayers.append(newLayer)
+        deletionQueue.async {
+            CATransaction.flush()
+        }
     }
 
     func rect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
@@ -110,6 +126,9 @@ class DrawingCanvasView: UIView {
         needsDraw = true
         DispatchQueue.main.async {
             self.layer.setNeedsDisplay()
+            self.deletionQueue.async {
+                CATransaction.flush()
+            }
         }
     }
 
@@ -117,8 +136,14 @@ class DrawingCanvasView: UIView {
         drawingLayer.sublayers?.removeAll()
         DispatchQueue.main.async {
             self.layer.sublayers?.removeAll()
+            self.deletionQueue.async {
+                CATransaction.flush()
+            }
         }
         sublayers.removeAll()
+        deletionQueue.async {
+            CATransaction.flush()
+        }
     }
 
     func clearRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) { // doesn't work yet
@@ -141,10 +166,16 @@ class DrawingCanvasView: UIView {
             sublayer.frame = sublayer.contentsRect
             newLayer.addSublayer(sublayer)
             newShapeLayers.append(copyShapeLayer(layer: sublayer))
+            deletionQueue.async {
+                CATransaction.flush()
+            }
         }
         shapeLayers.removeAll()
         shapeLayers = newShapeLayers
         sublayers.append(newLayer)
+        deletionQueue.async {
+            CATransaction.flush()
+        }
     }
 
     func fill() {
@@ -160,16 +191,25 @@ class DrawingCanvasView: UIView {
             sublayer.frame = sublayer.contentsRect
             newLayer.addSublayer(sublayer)
             newShapeLayers.append(copyShapeLayer(layer: sublayer))
+            deletionQueue.async {
+                CATransaction.flush()
+            }
         }
         shapeLayers.removeAll()
         shapeLayers = newShapeLayers
         sublayers.append(newLayer)
+        deletionQueue.async {
+            CATransaction.flush()
+        }
     }
 
     func copyShapeLayer(layer: CAShapeLayer) -> CAShapeLayer {
         let newLayer = CAShapeLayer()
         newLayer.transform = layer.transform
         newLayer.path = layer.path
+        deletionQueue.async {
+            CATransaction.flush()
+        }
         return newLayer
     }
 
@@ -348,6 +388,9 @@ class DrawingCanvasView: UIView {
         newLayer.path = p
         newLayer.transform = currentState.transform
         sublayers.append(newLayer)
+        deletionQueue.async {
+            CATransaction.flush()
+        }
     }
 
     func fillText(text: String, x: CGFloat, y: CGFloat, fill: Bool = true) {
@@ -387,6 +430,9 @@ class DrawingCanvasView: UIView {
             }
         }
         sublayers.append(newLayer)
+        deletionQueue.async {
+            CATransaction.flush()
+        }
     }
 
     func drawImage(image: BitmapImage, dx: CGFloat, dy: CGFloat) {
@@ -395,6 +441,9 @@ class DrawingCanvasView: UIView {
         newLayer.transform = currentState.transform
         newLayer.frame = CGRect(x: dx, y: dy, width: CGFloat(image.getWidth()), height: CGFloat(image.getHeight()))
         sublayers.append(newLayer)
+        deletionQueue.async {
+            CATransaction.flush()
+        }
     }
 
     func drawImage(image: BitmapImage, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) {
@@ -403,6 +452,9 @@ class DrawingCanvasView: UIView {
         newLayer.transform = currentState.transform
         newLayer.frame = CGRect(x: dx, y: dy, width: dWidth, height: dHeight)
         sublayers.append(newLayer)
+        deletionQueue.async {
+            CATransaction.flush()
+        }
     }
 
     func drawImage(image: BitmapImage, sx: CGFloat, sy: CGFloat, sWidth: CGFloat, sHeight: CGFloat, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) {
@@ -418,6 +470,9 @@ class DrawingCanvasView: UIView {
             }
         }
         sublayers.append(newLayer)
+        deletionQueue.async {
+            CATransaction.flush()
+        }
     }
 
     @available(iOS 11.0, *)
@@ -441,6 +496,9 @@ class DrawingCanvasView: UIView {
         let startPoint = path.currentPoint
         path = CGMutablePath()
         path.move(to: startPoint, transform: CATransform3DGetAffineTransform(currentState.transform))
+        deletionQueue.async {
+            CATransaction.flush()
+        }
     }
 
     class Stack {

@@ -62,7 +62,7 @@ class DrawingCanvasView: UIView {
         let rect = CGRect(x: x, y: y, width: width, height: height)
         let p = CGMutablePath()
         p.addRect(rect, transform: currentState.transformation)
-        var newLayer = CAShapeLayer()
+        let newLayer = CAShapeLayer()
         newLayer.setStyle(state: currentState)
         newLayer.fillColor = UIColor.clear.cgColor
         newLayer.path = p
@@ -73,7 +73,7 @@ class DrawingCanvasView: UIView {
         let rect = CGRect(x: x, y: y, width: width, height: height)
         let p = CGMutablePath()
         p.addRect(rect, transform: currentState.transformation)
-        var newLayer = CAShapeLayer()
+        let newLayer = CAShapeLayer()
         newLayer.setStyle(state: currentState)
         newLayer.lineWidth = 0
         newLayer.path = p
@@ -112,10 +112,11 @@ class DrawingCanvasView: UIView {
     }
 
     func stroke() {
-        var newLayer = CAShapeLayer()
+        let newLayer = CAShapeLayer()
         newLayer.setStyle(state: currentState)
         newLayer.fillColor = UIColor.clear.cgColor
         newLayer.path = path
+        newLayer.frame = newLayer.contentsRect
         sublayers.append(newLayer)
         let startPoint = path.currentPoint
         path = CGMutablePath()
@@ -123,10 +124,11 @@ class DrawingCanvasView: UIView {
     }
 
     func fill() {
-        var newLayer = CAShapeLayer()
+        let newLayer = CAShapeLayer()
         newLayer.setStyle(state: currentState)
         newLayer.lineWidth = 0
         newLayer.path = path
+        newLayer.frame = newLayer.contentsRect
         sublayers.append(newLayer)
         let startPoint = path.currentPoint
         path = CGMutablePath()
@@ -275,7 +277,7 @@ class DrawingCanvasView: UIView {
         let rect = CGRect(x: x-radius, y: y-radius, width: 2*radius, height: 2*radius)
         let p = CGMutablePath()
         p.addEllipse(in: rect, transform: currentState.transformation)
-        var newLayer = CAShapeLayer()
+        let newLayer = CAShapeLayer()
         newLayer.setStyle(state: currentState)
         if fill {
             newLayer.lineWidth = 0

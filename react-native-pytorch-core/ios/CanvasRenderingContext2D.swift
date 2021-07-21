@@ -19,7 +19,7 @@ class CanvasRenderingContext2D: NSObject {
     func fillRect(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.fillRect(x: CGFloat(x), y: CGFloat(y), width: CGFloat(width), height: CGFloat(height))
+            canvasView.fillRect(x: CGFloat(truncating: x), y: CGFloat(truncating: y), width: CGFloat(truncating: width), height: CGFloat(truncating: height))
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform fillRect")
@@ -30,7 +30,7 @@ class CanvasRenderingContext2D: NSObject {
     func strokeRect(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.strokeRect(x: CGFloat(x), y: CGFloat(y), width: CGFloat(width), height: CGFloat(height))
+            canvasView.strokeRect(x: CGFloat(truncating: x), y: CGFloat(truncating: y), width: CGFloat(truncating: width), height: CGFloat(truncating: height))
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform strokeRect")
@@ -41,7 +41,7 @@ class CanvasRenderingContext2D: NSObject {
     func rect(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.rect(x: CGFloat(x), y: CGFloat(y), width: CGFloat(width), height: CGFloat(height))
+            canvasView.rect(x: CGFloat(truncating: x), y: CGFloat(truncating: y), width: CGFloat(truncating: width), height: CGFloat(truncating: height))
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform strokeRect")
@@ -52,7 +52,7 @@ class CanvasRenderingContext2D: NSObject {
     func arc(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, radius: NSNumber, startAngle: NSNumber, endAngle: NSNumber, counterclockwise: Bool) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.arc(x: CGFloat(x), y: CGFloat(y), radius: CGFloat(radius), startAngle: CGFloat(startAngle), endAngle: CGFloat(endAngle), counterclockwise: counterclockwise)
+            canvasView.arc(x: CGFloat(truncating: x), y: CGFloat(truncating: y), radius: CGFloat(truncating: radius), startAngle: CGFloat(truncating: startAngle), endAngle: CGFloat(truncating: endAngle), counterclockwise: counterclockwise)
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform arc")
@@ -63,7 +63,7 @@ class CanvasRenderingContext2D: NSObject {
     func clearRect(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.clearRect(x: CGFloat(x), y: CGFloat(y), width: CGFloat(width), height: CGFloat(height))
+            canvasView.clearRect(x: CGFloat(truncating: x), y: CGFloat(truncating: y), width: CGFloat(truncating: width), height: CGFloat(truncating: height))
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform clearRect")
@@ -126,7 +126,7 @@ class CanvasRenderingContext2D: NSObject {
     func scale(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.scale(x: CGFloat(x), y: CGFloat(y))
+            canvasView.scale(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform scale")
@@ -137,10 +137,10 @@ class CanvasRenderingContext2D: NSObject {
     func rotate(_ canvasRef: NSDictionary, angle: NSNumber, x: NSNumber, y: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            if(Int(x) >= 0 && Int(y) >= 0){
-                canvasView.translate(x: CGFloat(x), y: CGFloat(y))
+            if(Int(truncating: x) >= 0 && Int(truncating: y) >= 0){
+                canvasView.translate(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
             }
-            canvasView.rotate(angle: CGFloat(angle))
+            canvasView.rotate(angle: CGFloat(truncating: angle))
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform rotate")
@@ -151,7 +151,7 @@ class CanvasRenderingContext2D: NSObject {
     func translate(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.translate(x: CGFloat(x), y: CGFloat(y))
+            canvasView.translate(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform translate")
@@ -162,7 +162,7 @@ class CanvasRenderingContext2D: NSObject {
     func setTransform(_ canvasRef: NSDictionary, a: NSNumber, b: NSNumber, c: NSNumber, d: NSNumber, e: NSNumber, f: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.setTransform(a: CGFloat(a), b: CGFloat(b), c: CGFloat(c), d: CGFloat(d), e: CGFloat(e), f: CGFloat(f))
+            canvasView.setTransform(a: CGFloat(truncating: a), b: CGFloat(truncating: b), c: CGFloat(truncating: c), d: CGFloat(truncating: d), e: CGFloat(truncating: e), f: CGFloat(truncating: f))
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform setTransform")
@@ -217,7 +217,7 @@ class CanvasRenderingContext2D: NSObject {
     func setLineWidth(_ canvasRef: NSDictionary, lineWidth: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.setLineWidth(lineWidth: CGFloat(lineWidth))
+            canvasView.setLineWidth(lineWidth: CGFloat(truncating: lineWidth))
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform setLineWidth")
@@ -254,7 +254,7 @@ class CanvasRenderingContext2D: NSObject {
     func setMiterLimit(_ canvasRef: NSDictionary, miterLimit: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.setMiterLimit(miterLimit: CGFloat(miterLimit))
+            canvasView.setMiterLimit(miterLimit: CGFloat(truncating: miterLimit))
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform setMiterLimit")
@@ -303,7 +303,7 @@ class CanvasRenderingContext2D: NSObject {
     func lineTo(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            let point = CGPoint(x: CGFloat(x), y: CGFloat(y))
+            let point = CGPoint(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
             canvasView.lineTo(point: point)
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
@@ -315,7 +315,7 @@ class CanvasRenderingContext2D: NSObject {
     func moveTo(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            let point = CGPoint(x: CGFloat(x), y: CGFloat(y))
+            let point = CGPoint(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
             canvasView.moveTo(point: point)
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
@@ -327,7 +327,7 @@ class CanvasRenderingContext2D: NSObject {
     func drawCircle(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, radius: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.drawCircle(x: CGFloat(x), y: CGFloat(y), radius: CGFloat(radius))
+            canvasView.drawCircle(x: CGFloat(truncating: x), y: CGFloat(truncating: y), radius: CGFloat(truncating: radius))
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform drawCircle")
@@ -338,7 +338,7 @@ class CanvasRenderingContext2D: NSObject {
     func fillCircle(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, radius: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.drawCircle(x: CGFloat(x), y: CGFloat(y), radius: CGFloat(radius), fill: true)
+            canvasView.drawCircle(x: CGFloat(truncating: x), y: CGFloat(truncating: y), radius: CGFloat(truncating: radius), fill: true)
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform fillCircle")
@@ -349,7 +349,7 @@ class CanvasRenderingContext2D: NSObject {
     func fillText(_ canvasRef: NSDictionary, text: NSString, x: NSNumber, y: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.fillText(text: text as String, x: CGFloat(x), y: CGFloat(y))
+            canvasView.fillText(text: text as String, x: CGFloat(truncating: x), y: CGFloat(truncating: y))
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform fillText")
@@ -360,7 +360,7 @@ class CanvasRenderingContext2D: NSObject {
     func strokeText(_ canvasRef: NSDictionary, text: NSString, x: NSNumber, y: NSNumber) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.fillText(text: text as String, x: CGFloat(x), y: CGFloat(y), fill: false)
+            canvasView.fillText(text: text as String, x: CGFloat(truncating: x), y: CGFloat(truncating: y), fill: false)
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform strokeText")

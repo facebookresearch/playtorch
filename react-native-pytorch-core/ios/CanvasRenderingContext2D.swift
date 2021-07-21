@@ -235,9 +235,7 @@ class CanvasRenderingContext2D: NSObject {
     func setLineCap(_ canvasRef: NSDictionary, lineCap: NSString) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            if let lc = lineCap as? String {
-                canvasView.setLineCap(lineCap: lc)
-            }
+            canvasView.setLineCap(lineCap: lineCap as String)
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform setLineCap")
@@ -248,9 +246,7 @@ class CanvasRenderingContext2D: NSObject {
     func setLineJoin(_ canvasRef: NSDictionary, lineJoin: NSString) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            if let lj = lineJoin as? String {
-                canvasView.setLineJoin(lineJoin: lj)
-            }
+            canvasView.setLineJoin(lineJoin: lineJoin as String)
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform setLineJoin")

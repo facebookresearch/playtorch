@@ -68,23 +68,24 @@ class DrawingCanvasView: UIView {
 
     func strokeRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
         let rect = CGRect(x: x, y: y, width: width, height: height)
-        let path = CGMutablePath()
-        path.addRect(rect)
+        let p = CGMutablePath()
+        p.addRect(rect)
         let newLayer = CAShapeLayer()
         newLayer.setStyle(state: currentState)
         newLayer.fillColor = UIColor.clear.cgColor
-        newLayer.path = path
+        newLayer.path = p
+        newLayer.transform = currentState.transform
         sublayers.append(newLayer)
     }
 
     func fillRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
         let rect = CGRect(x: x, y: y, width: width, height: height)
-        let path = CGMutablePath()
-        path.addRect(rect)
+        let p = CGMutablePath()
+        p.addRect(rect)
         let newLayer = CAShapeLayer()
         newLayer.setStyle(state: currentState)
         newLayer.lineWidth = 0
-        newLayer.path = path
+        newLayer.path = p
         sublayers.append(newLayer)
     }
 
@@ -175,11 +176,11 @@ class DrawingCanvasView: UIView {
         }
     }
 
-    func setLineWidth(lineWidth: CGFloat){
+    func setLineWidth(lineWidth: CGFloat) {
         currentState.lineWidth = lineWidth
     }
 
-    func setLineCap(lineCap: String){
+    func setLineCap(lineCap: String) {
         switch lineCap {
         case "butt":
             currentState.lineCap = CAShapeLayerLineCap.butt
@@ -192,7 +193,7 @@ class DrawingCanvasView: UIView {
         }
     }
 
-    func setLineJoin(lineJoin: String){
+    func setLineJoin(lineJoin: String) {
         switch lineJoin {
         case "miter":
             currentState.lineJoin = CAShapeLayerLineJoin.miter
@@ -205,7 +206,7 @@ class DrawingCanvasView: UIView {
         }
     }
 
-    func setMiterLimit(miterLimit: CGFloat){
+    func setMiterLimit(miterLimit: CGFloat) {
         currentState.miterLimit = miterLimit
     }
 
@@ -280,8 +281,8 @@ class DrawingCanvasView: UIView {
 
     func drawCircle(x: CGFloat, y: CGFloat, radius: CGFloat, fill: Bool = false) {
         let rect = CGRect(x: x-radius, y: y-radius, width: 2*radius, height: 2*radius)
-        let path = CGMutablePath()
-        path.addEllipse(in: rect)
+        let p = CGMutablePath()
+        p.addEllipse(in: rect)
         let newLayer = CAShapeLayer()
         newLayer.setStyle(state: currentState)
         if fill {
@@ -289,7 +290,7 @@ class DrawingCanvasView: UIView {
         } else {
             newLayer.fillColor = UIColor.clear.cgColor
         }
-        newLayer.path = path
+        newLayer.path = p
         sublayers.append(newLayer)
     }
 

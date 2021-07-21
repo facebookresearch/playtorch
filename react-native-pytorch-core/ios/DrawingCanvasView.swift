@@ -212,37 +212,45 @@ class DrawingCanvasView: UIView {
 
     @available(iOS 13.0, *)
     func setFont(font: NSDictionary) {
-        var descriptor: UIFontDescriptor? = nil
+        var fontName = ""
+        var serif = false
 
         if let fontFamilyArr = font["fontFamily"] as? NSArray, let fontFamily = fontFamilyArr[0] as? String {
             switch fontFamily {
             case "serif":
-                descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).withDesign(.serif)
+                fontName = "TimesNewRomanPS-"
+                serif = true
             case "sans-serif":
-                descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).withDesign(.rounded)
+                fontName = "HelveticaNeue-"
             case "monospace":
-                descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).withDesign(.monospaced)
+                fontName = "Menlo-"
             default:
-                descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).withDesign(.rounded)
+                fontName = "Helvetica-"
                 print("Invalid font family... using default of sans-serif")
-            }
-        }
-
-        if let fontStyle = font["fontStyle"] as? NSString {
-            if (fontStyle == "italic") {
-                descriptor = descriptor?.withSymbolicTraits(.traitItalic)
             }
         }
 
         if let fontWeight = font["fontWeight"] as? NSString {
             if (fontWeight == "bold") {
-                descriptor = descriptor?.withSymbolicTraits(.traitBold)
+                fontName += "Bold"
             }
         }
 
-        if let descriptor = descriptor {
-            currentState.font = UIFont(descriptor: descriptor, size: 0)
+        if let fontStyle = font["fontStyle"] as? NSString {
+            if (fontStyle == "italic") {
+                fontName += "Italic"
+            }
         }
+
+        if fontName.last == "-" {
+            fontName.removeLast()
+        }
+
+        if serif {
+            fontName += "MT"
+        }
+
+        currentState.font = UIFont(name: fontName, size: 10.0) ?? .systemFont(ofSize: 10)
 
         if let fontSizeString = font["fontSize"] as? NSString {
             let fontSize = CGFloat(fontSizeString.floatValue)
@@ -304,29 +312,23 @@ class DrawingCanvasView: UIView {
             attrs[ NSAttributedString.Key.strokeWidth ] = currentState.lineWidth
         }
 
-        if currentState.font.fontDescriptor.symbolicTraits.contains(.traitBold) {
-            let boldTrait = UIFontDescriptor.SymbolicTraits.traitBold
-        }
-
-        if currentState.font.fontDescriptor.symbolicTraits.contains(.traitItalic) {
-            let italicTrait = UIFontDescriptor.SymbolicTraits.traitBold
-
-        }
-
         let attrString = NSAttributedString(string: text, attributes: attrs)
         let newLayer = CATextLayer()
         newLayer.string = attrString
         newLayer.transform = currentState.transform
+        let textWidth = attrString.size().width + currentState.lineWidth
+        let textHeight = attrString.size().height
+        var offsetX = CGFloat(0) //default value for textAlign left (so not needed in switch case)
+        let offsetY = -1 * textHeight
         switch currentState.textAlign {
-        case NSTextAlignment.left:
-            newLayer.frame = CGRect(x: x, y: y - attrString.size().height, width: attrString.size().width, height: attrString.size().height)
         case NSTextAlignment.right:
-            newLayer.frame = CGRect(x: x - attrString.size().width, y: y, width: attrString.size().width, height: attrString.size().height)
+            offsetX = -1 * textWidth
         case NSTextAlignment.center:
-            newLayer.frame = CGRect(x: x - attrString.size().width/2.0, y: y, width: attrString.size().width, height: attrString.size().height)
+            offsetX = -1 * textWidth/2.0
         default:
-            newLayer.frame = CGRect(x: x, y: y - attrString.size().height, width: attrString.size().width, height: attrString.size().height)
+            offsetX = 0 //this is a duplicate of what is already stored in offsetX, but switch case must be exhaustive and each case must have at least one executable statement?
         }
+        newLayer.frame = CGRect(x: x + offsetX, y: y + offsetY, width: textWidth, height: textHeight)
         if let scale = scale {
             DispatchQueue.main.sync {
                 newLayer.contentsScale = scale

@@ -19,15 +19,18 @@ class DrawingCanvasView: UIView {
     var path = CGMutablePath()
     var currentState = CanvasState()
     var sublayers = [CALayer]()
+    var scale: CGFloat?
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
         ref = JSContext.wrapObject(view: self).getJSRef()
+        self.scale = UIScreen.main.scale
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         ref = JSContext.wrapObject(view: self).getJSRef()
+        self.scale = UIScreen.main.scale
     }
 
     override func draw(_ layer: CALayer, in ctx: CGContext) {
@@ -201,24 +204,38 @@ class DrawingCanvasView: UIView {
 
     @available(iOS 13.0, *)
     func setFont(font: NSDictionary) {
+        var descriptor: UIFontDescriptor? = nil
+
         if let fontFamilyArr = font["fontFamily"] as? NSArray, let fontFamily = fontFamilyArr[0] as? String {
             switch fontFamily {
             case "serif":
-                if let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).withDesign(.serif) {
-                    currentState.font = UIFont(descriptor: descriptor, size: 0)
-                }
+                descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).withDesign(.serif)
             case "sans-serif":
-                if let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).withDesign(.rounded) {
-                    currentState.font = UIFont(descriptor: descriptor, size: 0)
-                }
+                descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).withDesign(.rounded)
             case "monospace":
-                if let descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).withDesign(.monospaced) {
-                    currentState.font = UIFont(descriptor: descriptor, size: 0)
-                }
+                descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).withDesign(.monospaced)
             default:
-                print("Invalid font family")
+                descriptor = UIFontDescriptor.preferredFontDescriptor(withTextStyle: .body).withDesign(.rounded)
+                print("Invalid font family... using default of sans-serif")
             }
         }
+
+        if let fontStyle = font["fontStyle"] as? NSString {
+            if (fontStyle == "italic") {
+                descriptor = descriptor?.withSymbolicTraits(.traitItalic)
+            }
+        }
+
+        if let fontWeight = font["fontWeight"] as? NSString {
+            if (fontWeight == "bold") {
+                descriptor = descriptor?.withSymbolicTraits(.traitBold)
+            }
+        }
+
+        if let descriptor = descriptor {
+            currentState.font = UIFont(descriptor: descriptor, size: 0)
+        }
+
         if let fontSizeString = font["fontSize"] as? NSString {
             let fontSize = CGFloat(fontSizeString.floatValue)
             currentState.font = currentState.font.withSize(fontSize)
@@ -278,7 +295,40 @@ class DrawingCanvasView: UIView {
             attrs[ NSAttributedString.Key.strokeColor ] = currentState.strokeStyle
             attrs[ NSAttributedString.Key.strokeWidth ] = currentState.lineWidth
         }
+
+        if currentState.font.fontDescriptor.symbolicTraits.contains(.traitBold) {
+            let boldTrait = UIFontDescriptor.SymbolicTraits.traitBold
+        }
+
+        if currentState.font.fontDescriptor.symbolicTraits.contains(.traitItalic) {
+            let italicTrait = UIFontDescriptor.SymbolicTraits.traitBold
+
+        }
+
         let attrString = NSAttributedString(string: text, attributes: attrs)
+        let newLayer = CATextLayer()
+        newLayer.string = attrString
+        newLayer.setAffineTransform(currentState.transformation)
+        switch currentState.textAlign {
+        case NSTextAlignment.left:
+            newLayer.frame = CGRect(x: x, y: y - attrString.size().height, width: attrString.size().width, height: attrString.size().height)
+        case NSTextAlignment.right:
+            newLayer.frame = CGRect(x: x - attrString.size().width, y: y, width: attrString.size().width, height: attrString.size().height)
+        case NSTextAlignment.center:
+            newLayer.frame = CGRect(x: x - attrString.size().width/2.0, y: y, width: attrString.size().width, height: attrString.size().height)
+        default:
+            newLayer.frame = CGRect(x: x, y: y - attrString.size().height, width: attrString.size().width, height: attrString.size().height)
+        }
+        if let scale = scale {
+            DispatchQueue.main.sync {
+                newLayer.contentsScale = scale
+            }
+        } else {
+            DispatchQueue.main.sync {
+                newLayer.contentsScale = UIScreen.main.scale
+            }
+        }
+        sublayers.append(newLayer)
     }
 
     class Stack {

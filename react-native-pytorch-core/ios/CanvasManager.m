@@ -12,4 +12,5 @@
 RCT_EXPORT_VIEW_PROPERTY(onContext2D, RCTBubblingEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(width, NSNumber)
 RCT_EXPORT_VIEW_PROPERTY(height, NSNumber)
+RCT_EXTERN_METHOD(requiresMainQueueSetup)
 @end

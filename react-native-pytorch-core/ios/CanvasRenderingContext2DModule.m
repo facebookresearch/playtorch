@@ -43,7 +43,7 @@ RCT_EXTERN_METHOD(fillCircle:(nonnull NSDictionary)canvasRef x:(nonnull NSNumber
 RCT_EXTERN_METHOD(fillText:(nonnull NSDictionary)canvasRef text:(nonnull NSString)text x:(nonnull NSNumber)x y:(nonnull NSNumber)y);
 RCT_EXTERN_METHOD(strokeText:(nonnull NSDictionary)canvasRef text:(nonnull NSString)text x:(nonnull NSNumber)x y:(nonnull NSNumber)y);
 RCT_EXTERN_METHOD(setTextAlign:(nonnull NSDictionary)canvasRef textAlign:(nonnull NSString)textAlign);
-
+RCT_EXTERN_METHOD(drawImage:(nonnull NSDictionary)canvasRef image:(nonnull NSDictionary)image sx:(nonnull NSNumber)sx sy:(nonnull NSNumber)sy sWidth:(nonnull NSNumber)sWidth sHeight:(nonnull NSNumber)sHeight dx:(nonnull NSNumber)dx dy:(nonnull NSNumber)dy dWidth:(nonnull NSNumber)dWidth dHeight:(nonnull NSNumber)dHeight);
 
 @end
 

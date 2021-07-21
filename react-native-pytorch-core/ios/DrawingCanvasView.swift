@@ -333,6 +333,34 @@ class DrawingCanvasView: UIView {
         sublayers.append(newLayer)
     }
 
+    func drawImage(image: BitmapImage, dx: CGFloat, dy: CGFloat) {
+        let newLayer = CALayer()
+        newLayer.contents = image.getBitmap()
+        newLayer.frame = CGRect(x: dx, y: dy, width: CGFloat(image.getWidth()), height: CGFloat(image.getHeight()))
+        sublayers.append(newLayer)
+    }
+
+    func drawImage(image: BitmapImage, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) {
+        let newLayer = CALayer()
+        newLayer.contents = image.getBitmap()
+        newLayer.frame = CGRect(x: dx, y: dy, width: dWidth, height: dHeight)
+        sublayers.append(newLayer)
+    }
+
+    func drawImage(image: BitmapImage, sx: CGFloat, sy: CGFloat, sWidth: CGFloat, sHeight: CGFloat, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) {
+        let newLayer = CALayer()
+        if let croppedImage = image.getBitmap().cropping(to: CGRect(x: sx, y: sy, width: sWidth, height: sHeight)) {
+            if(dWidth != -1 && dHeight != -1) {
+                newLayer.contents = croppedImage
+                newLayer.frame = CGRect(x: dx, y: dy, width: dWidth, height: dHeight)
+            } else {
+                newLayer.contents = image.getBitmap()
+                newLayer.frame = CGRect(x: dx, y: dy, width: CGFloat(image.getWidth()), height: CGFloat(image.getHeight()))
+            }
+        }
+        sublayers.append(newLayer)
+    }
+
     class Stack {
         var stateArray = [CanvasState]()
 

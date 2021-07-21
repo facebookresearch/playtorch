@@ -11,7 +11,7 @@ import Foundation
 class CanvasRenderingContext2D: NSObject {
 
     enum CanvasRenderingContext2DError : Error {
-        case castingView
+        case castingObject
         case castingDict
     }
 
@@ -118,8 +118,15 @@ class CanvasRenderingContext2D: NSObject {
         let castedCanvasRef = canvasRef as? [ String : String ]
         guard let ref =  castedCanvasRef else { throw CanvasRenderingContext2DError.castingDict }
         let castedCanvasView = try JSContext.unwrapObject(jsRef: ref) as? DrawingCanvasView
-        guard let canvasView = castedCanvasView else { throw CanvasRenderingContext2DError.castingView }
+        guard let canvasView = castedCanvasView else { throw CanvasRenderingContext2DError.castingObject }
         return canvasView
+    }
+
+    func unwrapImage(_ imageRef: NSDictionary) throws -> BitmapImage {
+        guard let ref = imageRef["ID"] as? String else { throw CanvasRenderingContext2DError.castingDict }
+        let castedImage = try JSContext.unwrapObject(jsRef: ["ID": ref]) as? BitmapImage
+        guard let image = castedImage else { throw CanvasRenderingContext2DError.castingObject }
+        return image
     }
 
     @objc
@@ -375,6 +382,24 @@ class CanvasRenderingContext2D: NSObject {
         } catch {
             //TODO(T92857704) Eventually forward Error to React Native using promises
             print("Could not perform setTextAlign")
+        }
+    }
+
+    @objc
+    func drawImage(_ canvasRef: NSDictionary, image: NSDictionary, sx: NSNumber, sy: NSNumber, sWidth: NSNumber, sHeight: NSNumber, dx: NSNumber, dy: NSNumber, dWidth: NSNumber, dHeight: NSNumber) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            let image = try unwrapImage(image)
+            if (dWidth == -1 && sWidth == -1) {
+                canvasView.drawImage(image: image, dx: CGFloat(truncating: sx), dy: CGFloat(truncating: sy))
+            } else if (dx == -1) {
+                canvasView.drawImage(image: image, dx: CGFloat(truncating: sx), dy: CGFloat(truncating: sy), dWidth: CGFloat(truncating: sWidth), dHeight: CGFloat(truncating: sHeight))
+            } else {
+                canvasView.drawImage(image: image, sx: CGFloat(truncating: sx), sy: CGFloat(truncating: sy), sWidth: CGFloat(truncating: sWidth), sHeight: CGFloat(truncating: sHeight), dx: CGFloat(truncating: dx), dy: CGFloat(truncating: dy), dWidth: CGFloat(truncating: dWidth), dHeight: CGFloat(truncating: dHeight))
+            }
+        } catch {
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+            print("Could not perform drawImage")
         }
     }
 }

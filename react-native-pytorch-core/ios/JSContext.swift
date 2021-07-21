@@ -15,7 +15,7 @@ class JSContext {
 
     public static var ID_KEY = "ID"
 
-    private static var refs: [String: NativeJSRef] = [:]
+    public static var refs: [String: NativeJSRef] = [:]
 
     public static func setRef(ref: NativeJSRef) -> String {
         let id = UUID().uuidString

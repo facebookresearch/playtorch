@@ -11,12 +11,20 @@ import {useIsFocused} from '@react-navigation/native';
 import React, {useCallback, useLayoutEffect, useState} from 'react';
 import {StyleSheet} from 'react-native';
 import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
+import useImageFromURL from '../utils/useImageFromURL';
 
-export default function Playground() {
+export default function CanvasDrawImage() {
   const isFocused = useIsFocused();
   const [drawingContext, setDrawingContext] = useState<
     CanvasRenderingContext2D
   >();
+
+  const flamingoImage = useImageFromURL(
+    'https://ids.si.edu/ids/deliveryService?max_w=800&id=NZP-20090127-0422MM-000002',
+  );
+  const birdImage = useImageFromURL(
+    'https://digitalmedia.fws.gov/digital/api/singleitem/image/natdiglib/6198/default.jpg',
+  );
 
   const handleContext2D = useCallback(
     async (ctx: CanvasRenderingContext2D) => {
@@ -29,29 +37,26 @@ export default function Playground() {
     const ctx = drawingContext;
     if (ctx != null) {
       ctx.clear();
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
 
-      ctx.fillStyle = '#8442f5';
-      ctx.strokeStyle = '#8442f5';
-      ctx.lineWidth = 10;
-      ctx.lineJoin = 'round';
-      ctx.miterLimit = 1;
-      ctx.arc(200, 200, 100, 0, Math.PI, false);
-      ctx.arc(200, 200, 75, 0, Math.PI, true);
-      ctx.stroke();
+      if (flamingoImage != null) {
+        ctx.drawImage(flamingoImage, 10, 10);
+        ctx.drawImage(flamingoImage, 50, 50, 200, 100);
+        ctx.drawImage(flamingoImage, 350, 130, 100, 100, 50, 200, 100, 100);
+      }
+
+      if (birdImage != null) {
+        ctx.drawImage(birdImage, 50, 350, 300, 200);
+      }
+
+      ctx.invalidate();
     }
-  }, [drawingContext]);
+  }, [drawingContext, flamingoImage, birdImage]);
 
   if (!isFocused) {
     return null;
   }
 
-  return <Canvas style={styles.canvas} onContext2D={handleContext2D} />;
+  return (
+    <Canvas style={StyleSheet.absoluteFill} onContext2D={handleContext2D} />
+  );
 }
-
-const styles = StyleSheet.create({
-  canvas: {
-    width: 400,
-    height: 700,
-  },
-});

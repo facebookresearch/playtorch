@@ -38,6 +38,9 @@ class DrawingCanvasView: UIView {
             layer.addSublayer(sublayer)
         }
         sublayers.removeAll()
+        if #available(iOS 11.0, *) {
+            flattenLayer()
+        }
     }
 
     override func didSetProps(_ changedProps: [String]!) {
@@ -362,6 +365,18 @@ class DrawingCanvasView: UIView {
             }
         }
         sublayers.append(newLayer)
+    }
+
+    @available(iOS 11.0, *)
+    func flattenLayer() {
+        //see https://medium.com/@almalehdev/high-performance-drawing-on-ios-part-2-2cb2bc957f6
+        let currentLayer = self.layer.presentation()
+        if let flattenedLayer = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(
+            NSKeyedArchiver.archivedData(withRootObject: currentLayer, requiringSecureCoding: false))
+            as? CAShapeLayer {
+                self.layer.sublayers = nil
+                self.layer.sublayers?.append(flattenedLayer)
+        }
     }
 
     class Stack {

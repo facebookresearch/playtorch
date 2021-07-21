@@ -5,8 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <React/RCTBridgeModule.h>
-#import <React/RCTViewManager.h>
-#import <React/RCTEventEmitter.h>
-#import <React/RCTConvert.h>
-#import "Macros.h"
+#import <Foundation/Foundation.h>
+
+NS_ASSUME_NONNULL_BEGIN
+
+@interface Macros : NSObject
++ (UIImage *) toUIImage: (NSDictionary *) imageRef;
+@end
+
+NS_ASSUME_NONNULL_END

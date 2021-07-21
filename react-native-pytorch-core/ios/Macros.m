@@ -5,8 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <React/RCTBridgeModule.h>
-#import <React/RCTViewManager.h>
-#import <React/RCTEventEmitter.h>
-#import <React/RCTConvert.h>
 #import "Macros.h"
+#import <React/RCTConvert.h>
+
+@implementation Macros
++ (UIImage *) toUIImage: (NSDictionary *) imageRef {
+    UIImage *uiImage = [RCTConvert UIImage: imageRef];
+    return uiImage;
+}
+@end

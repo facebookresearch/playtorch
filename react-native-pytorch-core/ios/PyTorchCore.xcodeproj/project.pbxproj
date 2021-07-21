@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8D46482626976E8300549A74 /* Macros.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D46482526976E8300549A74 /* Macros.m */; };
 		F4FF95D7245B92E800C19C63 /* PyTorchCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* PyTorchCore.swift */; };
 /* End PBXBuildFile section */
 
@@ -24,6 +25,11 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libPyTorchCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPyTorchCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		8D46481A268E4D8800549A74 /* ImageModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageModule.swift; sourceTree = "<group>"; };
+		8D46481B268E4E1900549A74 /* ImageModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageModule.m; sourceTree = "<group>"; };
+		8D46481C268E4EB800549A74 /* BitmapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitmapImage.swift; sourceTree = "<group>"; };
+		8D46482426976E8300549A74 /* Macros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
+		8D46482526976E8300549A74 /* Macros.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Macros.m; sourceTree = "<group>"; };
 		8DF4B1602669754F009CCD14 /* DrawingCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvasView.swift; sourceTree = "<group>"; };
 		8DF4B161266975B3009CCD14 /* CanvasManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CanvasManager.m; sourceTree = "<group>"; };
 		8DF4B162266979F5009CCD14 /* CanvasManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasManager.swift; sourceTree = "<group>"; };
@@ -57,6 +63,11 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				8D46482426976E8300549A74 /* Macros.h */,
+				8D46482526976E8300549A74 /* Macros.m */,
+				8D46481C268E4EB800549A74 /* BitmapImage.swift */,
+				8D46481B268E4E1900549A74 /* ImageModule.m */,
+				8D46481A268E4D8800549A74 /* ImageModule.swift */,
 				8DF4B16A266FCE5A009CCD14 /* JSContext.swift */,
 				8DF4B168266AA771009CCD14 /* CanvasRenderingContext2DModule.m */,
 				8DF4B167266AA70A009CCD14 /* CanvasRenderingContext2D.swift */,
@@ -127,6 +138,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8D46482626976E8300549A74 /* Macros.m in Sources */,
 				F4FF95D7245B92E800C19C63 /* PyTorchCore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -12,6 +12,7 @@ import {
   Image as RNImage,
   ImageResolvedAssetSource,
   NativeModules,
+  Platform,
 } from 'react-native';
 import type { ImageData } from './CanvasView';
 import type {NativeJSRef} from './NativeJSRef';
@@ -168,8 +169,13 @@ export const ImageUtil = {
    */
   async fromBundle(imagePath: ImageRequireSource): Promise<Image> {
     const source = getImageAssetSource(imagePath);
-    const ref: NativeJSRef = await ImageModule.fromBundle(source.uri);
-    return wrapRef(ref);
+    if(Platform.OS === 'ios') {
+      const ref: NativeJSRef = await ImageModule.fromBundle(source)
+      return wrapRef(ref)
+    } else {
+      const ref: NativeJSRef = await ImageModule.fromBundle(source.uri);
+      return wrapRef(ref);
+    }
   },
 
   /**

@@ -21,25 +21,31 @@ class DrawingCanvasView: UIView {
     var sublayers = [CALayer]()
     var scale: CGFloat?
     var needsDraw: Bool = false
+    var shapeLayers = [CAShapeLayer] ()
+    var drawingLayer = CATransformLayer()
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
         self.scale = UIScreen.main.scale
+        drawingLayer.bounds = layer.bounds
         ref = JSContext.wrapObject(object: self).getJSRef()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
         self.scale = UIScreen.main.scale
+        drawingLayer.bounds = layer.bounds
         ref = JSContext.wrapObject(object: self).getJSRef()
     }
 
     override func draw(_ layer: CALayer, in ctx: CGContext) {
         for sublayer in sublayers {
-            layer.addSublayer(sublayer)
+            drawingLayer.addSublayer(sublayer)
         }
         sublayers.removeAll()
-        if #available(iOS 11.0, *) {
+        layer.sublayers?.removeAll()
+        self.layer.addSublayer(drawingLayer)
+        if #available(iOS 11.0, *), ((self.layer.sublayers?.count ?? 0) > 100) {
             flattenLayer()
         }
         needsDraw = false
@@ -86,6 +92,7 @@ class DrawingCanvasView: UIView {
         newLayer.setStyle(state: currentState)
         newLayer.lineWidth = 0
         newLayer.path = p
+        newLayer.transform = currentState.transform
         sublayers.append(newLayer)
     }
 
@@ -107,9 +114,11 @@ class DrawingCanvasView: UIView {
     }
 
     func clear() {
+        drawingLayer.sublayers?.removeAll()
         DispatchQueue.main.async {
-            self.layer.sublayers = nil
+            self.layer.sublayers?.removeAll()
         }
+        sublayers.removeAll()
     }
 
     func clearRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) { // doesn't work yet
@@ -120,39 +129,76 @@ class DrawingCanvasView: UIView {
     }
 
     func stroke() {
-        let newLayer = CAShapeLayer()
-        newLayer.setStyle(state: currentState)
-        newLayer.fillColor = UIColor.clear.cgColor
-        newLayer.path = path
-        newLayer.frame = newLayer.contentsRect
+        if !path.isEmpty {
+            onTransformationChange()
+        }
+        let newLayer = CATransformLayer()
+        newLayer.isDoubleSided = true
+        var newShapeLayers = [CAShapeLayer]()
+        for sublayer in shapeLayers {
+            sublayer.setStyle(state: currentState)
+            sublayer.fillColor = UIColor.clear.cgColor
+            sublayer.frame = sublayer.contentsRect
+            newLayer.addSublayer(sublayer)
+            newShapeLayers.append(copyShapeLayer(layer: sublayer))
+        }
+        shapeLayers.removeAll()
+        shapeLayers = newShapeLayers
         sublayers.append(newLayer)
-        path = CGMutablePath()
     }
 
     func fill() {
-        let newLayer = CAShapeLayer()
-        newLayer.setStyle(state: currentState)
-        newLayer.lineWidth = 0
-        newLayer.path = path
-        newLayer.frame = newLayer.contentsRect
+        if !path.isEmpty {
+            onTransformationChange()
+        }
+        let newLayer = CATransformLayer()
+        newLayer.isDoubleSided = true
+        var newShapeLayers = [CAShapeLayer] ()
+        for sublayer in shapeLayers {
+            sublayer.setStyle(state: currentState)
+            sublayer.lineWidth = 0
+            sublayer.frame = sublayer.contentsRect
+            newLayer.addSublayer(sublayer)
+            newShapeLayers.append(copyShapeLayer(layer: sublayer))
+        }
+        shapeLayers.removeAll()
+        shapeLayers = newShapeLayers
         sublayers.append(newLayer)
-        path = CGMutablePath()
+    }
+
+    func copyShapeLayer(layer: CAShapeLayer) -> CAShapeLayer {
+        let newLayer = CAShapeLayer()
+        newLayer.transform = layer.transform
+        newLayer.path = layer.path
+        return newLayer
     }
 
     func scale(x: CGFloat, y: CGFloat) {
+        if !path.isEmpty {
+            onTransformationChange()
+        }
         currentState.transform = CATransform3DScale(currentState.transform, x, y, 1.0)
     }
 
     func rotate(angle: CGFloat) {
+        if !path.isEmpty {
+            onTransformationChange()
+        }
         // If the vector has zero length, the behavior is undefined: t = rotation(angle, x, y, z) * t.
         currentState.transform = CATransform3DRotate(currentState.transform, angle, 0.0, 0.0, 1.0)
     }
 
     func translate(x: CGFloat, y: CGFloat) {
+        if !path.isEmpty {
+            onTransformationChange()
+        }
         currentState.transform = CATransform3DTranslate(currentState.transform, x, y, 0.0)
     }
 
     func setTransform(a: CGFloat, b: CGFloat, c: CGFloat, d: CGFloat, e: CGFloat, f: CGFloat) {
+        if !path.isEmpty {
+            onTransformationChange()
+        }
         currentState.transform = CATransform3DMakeAffineTransform(CGAffineTransform(a: a, b: b, c: c, d: d, tx: e, ty: f))
         // Note that the Apple CGAffineTransform matrix is the transpose of the matrix used by PyTorch Live, but so is their labeling
     }
@@ -273,6 +319,7 @@ class DrawingCanvasView: UIView {
 
     func beginPath(){
         path = CGMutablePath()
+        shapeLayers = [CAShapeLayer] ()
     }
 
     func closePath(){
@@ -299,6 +346,7 @@ class DrawingCanvasView: UIView {
             newLayer.fillColor = UIColor.clear.cgColor
         }
         newLayer.path = p
+        newLayer.transform = currentState.transform
         sublayers.append(newLayer)
     }
 
@@ -344,6 +392,7 @@ class DrawingCanvasView: UIView {
     func drawImage(image: BitmapImage, dx: CGFloat, dy: CGFloat) {
         let newLayer = CALayer()
         newLayer.contents = image.getBitmap()
+        newLayer.transform = currentState.transform
         newLayer.frame = CGRect(x: dx, y: dy, width: CGFloat(image.getWidth()), height: CGFloat(image.getHeight()))
         sublayers.append(newLayer)
     }
@@ -351,12 +400,14 @@ class DrawingCanvasView: UIView {
     func drawImage(image: BitmapImage, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) {
         let newLayer = CALayer()
         newLayer.contents = image.getBitmap()
+        newLayer.transform = currentState.transform
         newLayer.frame = CGRect(x: dx, y: dy, width: dWidth, height: dHeight)
         sublayers.append(newLayer)
     }
 
     func drawImage(image: BitmapImage, sx: CGFloat, sy: CGFloat, sWidth: CGFloat, sHeight: CGFloat, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) {
         let newLayer = CALayer()
+        newLayer.transform = currentState.transform
         if let croppedImage = image.getBitmap().cropping(to: CGRect(x: sx, y: sy, width: sWidth, height: sHeight)) {
             if(dWidth != -1 && dHeight != -1) {
                 newLayer.contents = croppedImage
@@ -379,6 +430,17 @@ class DrawingCanvasView: UIView {
                 self.layer.sublayers = nil
                 self.layer.sublayers?.append(flattenedLayer)
         }
+    }
+
+    func onTransformationChange() {
+        let newLayer = CAShapeLayer()
+        newLayer.isDoubleSided = true
+        newLayer.path = path
+        newLayer.transform = currentState.transform
+        shapeLayers.append(newLayer)
+        let startPoint = path.currentPoint
+        path = CGMutablePath()
+        path.move(to: startPoint, transform: CATransform3DGetAffineTransform(currentState.transform))
     }
 
     class Stack {

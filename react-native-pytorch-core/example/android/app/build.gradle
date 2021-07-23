@@ -250,7 +250,7 @@ dependencies {
         implementation jscFlavor
     }
 
-    implementation project(':reactnativepytorchcore')
+    implementation project(':react-native-pytorch-core')
 }
 
 // Run this once to be able to run the application with BUCK

@@ -9,5 +9,5 @@ rootProject.name = 'PyTorchCoreExample'
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
 
-include ':reactnativepytorchcore'
-project(':reactnativepytorchcore').projectDir = new File(rootProject.projectDir, '../../android')
+include ':react-native-pytorch-core'
+project(':react-native-pytorch-core').projectDir = new File(rootProject.projectDir, '../../android')

@@ -10,7 +10,10 @@ package org.pytorch.rn.core.image;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.media.Image;
+import androidx.annotation.Nullable;
 import androidx.annotation.experimental.UseExperimental;
+import androidx.camera.core.ExperimentalGetImage;
 import androidx.camera.core.ImageProxy;
 
 public class ImageProxyImage extends AbstractImage {
@@ -32,6 +35,17 @@ public class ImageProxyImage extends AbstractImage {
   @Override
   public float getNaturalHeight() {
     return mImageProxy.getHeight();
+  }
+
+  @ExperimentalGetImage
+  @Override
+  public @Nullable Image getImage() {
+    return mImageProxy.getImage();
+  }
+
+  @Override
+  public int getImageRotationDegrees() {
+    return mImageProxy.getImageInfo().getRotationDegrees();
   }
 
   @Override

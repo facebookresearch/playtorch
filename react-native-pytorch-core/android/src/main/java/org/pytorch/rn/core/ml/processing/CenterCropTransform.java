@@ -22,8 +22,8 @@ class CenterCropTransform implements IImageTransform {
   }
 
   protected static CenterCropTransform parse(JSONObject jobject) throws JSONException {
-    int width = jobject.getInt("width");
-    int height = jobject.getInt("height");
+    int width = jobject.getInt(BaseIValuePacker.JSON_WIDTH);
+    int height = jobject.getInt(BaseIValuePacker.JSON_HEIGHT);
     return new CenterCropTransform(width, height);
   }
 

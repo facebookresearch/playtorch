@@ -9,6 +9,7 @@ package org.pytorch.rn.core.image;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import androidx.annotation.Nullable;
 import androidx.camera.core.ImageProxy;
 import org.pytorch.rn.core.canvas.ImageData;
 
@@ -60,6 +61,16 @@ public class Image implements IImage {
   @Override
   public Bitmap getBitmap() {
     return mImage.getBitmap();
+  }
+
+  @Override
+  public @Nullable android.media.Image getImage() {
+    return mImage.getImage();
+  }
+
+  @Override
+  public int getImageRotationDegrees() {
+    return mImage.getImageRotationDegrees();
   }
 
   @Override

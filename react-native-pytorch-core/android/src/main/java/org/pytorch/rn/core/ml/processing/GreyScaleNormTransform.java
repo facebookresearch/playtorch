@@ -70,7 +70,7 @@ public class GreyScaleNormTransform implements IImageToTensorTransform {
     return new GreyScaleNormTransform(
         Color.parseColor(jobject.getString("colorBackground")),
         Color.parseColor(jobject.getString("colorForeground")),
-        (float) jobject.getDouble("mean"),
-        (float) jobject.getDouble("std"));
+        (float) jobject.getDouble(BaseIValuePacker.JSON_MEAN),
+        (float) jobject.getDouble(BaseIValuePacker.JSON_STD));
   }
 }

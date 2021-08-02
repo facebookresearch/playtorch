@@ -22,7 +22,8 @@ class ScaleTransform implements IImageTransform {
   }
 
   public static ScaleTransform parse(JSONObject jobject) throws JSONException {
-    return new ScaleTransform(jobject.getInt("width"), jobject.getInt("height"));
+    return new ScaleTransform(
+        jobject.getInt(BaseIValuePacker.JSON_WIDTH), jobject.getInt(BaseIValuePacker.JSON_HEIGHT));
   }
 
   @Override

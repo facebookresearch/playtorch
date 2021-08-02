@@ -178,9 +178,9 @@ public class CameraView extends ConstraintLayout {
           ContextCompat.getMainExecutor(mReactContext),
           new ImageCapture.OnImageCapturedCallback() {
             @Override
-            public void onCaptureSuccess(@NonNull ImageProxy imageFrame) {
-              super.onCaptureSuccess(imageFrame);
-              IImage image = new Image(imageFrame, mReactContext.getApplicationContext());
+            public void onCaptureSuccess(@NonNull ImageProxy imageProxy) {
+              super.onCaptureSuccess(imageProxy);
+              IImage image = new Image(imageProxy, mReactContext.getApplicationContext());
               JSContext.NativeJSRef ref = JSContext.wrapObject(image);
               mReactContext
                   .getJSModule(RCTEventEmitter.class)
@@ -215,8 +215,8 @@ public class CameraView extends ConstraintLayout {
 
     imageAnalysis.setAnalyzer(
         cameraExecutor,
-        imageFrame -> {
-          IImage image = new Image(imageFrame, mReactContext.getApplicationContext());
+        imageProxy -> {
+          IImage image = new Image(imageProxy, mReactContext.getApplicationContext());
           JSContext.NativeJSRef ref = JSContext.wrapObject(image);
           mReactContext
               .getJSModule(RCTEventEmitter.class)

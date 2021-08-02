@@ -8,19 +8,26 @@
 package org.pytorch.rn.core.image;
 
 import android.graphics.Bitmap;
+import android.media.Image;
+import androidx.annotation.Nullable;
 
 public interface IImage extends AutoCloseable {
-  public float getPixelDensity();
+  float getPixelDensity();
 
-  public int getWidth();
+  int getWidth();
 
-  public int getHeight();
+  int getHeight();
 
-  public float getNaturalWidth();
+  float getNaturalWidth();
 
-  public float getNaturalHeight();
+  float getNaturalHeight();
 
-  public IImage scale(float sx, float sy);
+  IImage scale(float sx, float sy);
 
-  public Bitmap getBitmap();
+  Bitmap getBitmap();
+
+  @Nullable
+  Image getImage();
+
+  int getImageRotationDegrees();
 }

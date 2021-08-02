@@ -8,6 +8,8 @@
 package org.pytorch.rn.core.image;
 
 import android.graphics.Bitmap;
+import android.media.Image;
+import androidx.annotation.Nullable;
 
 public class BitmapImage extends AbstractImage {
 
@@ -30,6 +32,17 @@ public class BitmapImage extends AbstractImage {
   @Override
   public Bitmap getBitmap() {
     return mBitmap;
+  }
+
+  @Nullable
+  @Override
+  public Image getImage() {
+    return null;
+  }
+
+  @Override
+  public int getImageRotationDegrees() {
+    return 0;
   }
 
   @Override

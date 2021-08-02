@@ -8,6 +8,7 @@
 package org.pytorch.rn.core.ml.processing;
 
 import android.graphics.Bitmap;
+import android.media.Image;
 import com.facebook.react.bridge.JavaOnlyArray;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -17,6 +18,7 @@ import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
@@ -54,6 +56,20 @@ public class BaseIValuePacker implements IIValuePacker {
   public static final String JSON_DICT_KEY = "dict_key";
   public static final String JSON_FLOAT = "float";
   public static final String JSON_LONG = "long";
+
+  public static final String IMAGE_TRANSFORM_TYPE_TENSOR = "image_to_tensor";
+  public static final String IMAGE_TRANSFORM_TYPE_IMAGE = "image_to_image";
+
+  public static final String IMAGE_TRANSFORM_TENSOR_RGB_NORM = "rgb_norm";
+  public static final String IMAGE_TRANSFORM_TENSOR_GREYSCALE_NORM = "greyscale_norm";
+  public static final String IMAGE_TRANSFORM_IMAGE_SCALE = "scale";
+  public static final String IMAGE_TRANSFORM_IMAGE_CENTER_CROP = "center_crop";
+  public static final String IMAGE_TRANSFORM_IMAGE_CENTER_CROP_SCALE_RGB_NORM =
+      "center_crop_scale_rgb_norm";
+  public static final String JSON_WIDTH = "width";
+  public static final String JSON_HEIGHT = "height";
+  public static final String JSON_MEAN = "mean";
+  public static final String JSON_STD = "std";
 
   protected final @Nullable String mSpecSrc;
   protected final @Nullable JSONObject mSpecSrcJson;
@@ -338,37 +354,86 @@ public class BaseIValuePacker implements IIValuePacker {
     throw new IllegalArgumentException("Unknown decoder \"" + decoder + "\"");
   }
 
-  private static Tensor doImageTransforms(final JSONArray jarray, final Bitmap bitmap)
+  private static class ImageTransformObject {
+    public final String type;
+    public final String name;
+    public final JSONObject jobject;
+
+    public ImageTransformObject(String type, String name, JSONObject jobject) {
+      this.type = type;
+      this.name = name;
+      this.jobject = jobject;
+    }
+  }
+
+  private static boolean isImageTransformTensorRGBNorm(final String type, final String name) {
+    return IMAGE_TRANSFORM_TYPE_TENSOR.equals(type) && IMAGE_TRANSFORM_TENSOR_RGB_NORM.equals(name);
+  }
+
+  private static boolean isImageTransformTensorCenterCropScaleRGBNorm(
+      final String type, final String name) {
+    return IMAGE_TRANSFORM_TYPE_TENSOR.equals(type)
+        && IMAGE_TRANSFORM_IMAGE_CENTER_CROP_SCALE_RGB_NORM.equals(name);
+  }
+
+  private static boolean isImageTransformImageCenterCrop(final String type, final String name) {
+    return IMAGE_TRANSFORM_TYPE_IMAGE.equals(type)
+        && IMAGE_TRANSFORM_IMAGE_CENTER_CROP.equals(name);
+  }
+
+  private static boolean isImageTransformImageScale(final String type, final String name) {
+    return IMAGE_TRANSFORM_TYPE_IMAGE.equals(type) && IMAGE_TRANSFORM_IMAGE_SCALE.equals(name);
+  }
+
+  private static Tensor doImageTransforms(final JSONArray jarray, final IImage image)
       throws JSONException {
     final int n = jarray.length();
-    Object x = bitmap;
+
+    final ArrayList<ImageTransformObject> imageTransforms = new ArrayList<>();
     for (int i = 0; i < n; ++i) {
       final JSONObject jobject = jarray.getJSONObject(i);
-      final String type = jobject.getString(JSON_TYPE);
-      if ("image_to_image".equals(type)) {
-        final String name = jobject.getString(JSON_NAME);
+      imageTransforms.add(
+          new ImageTransformObject(
+              jobject.getString(JSON_TYPE), jobject.getString(JSON_NAME), jobject));
+    }
+
+    final Image cameraImage = image.getImage();
+    final int cameraImageRotationDegrees = image.getImageRotationDegrees();
+
+    if (cameraImage != null) {
+      final @Nullable Tensor tensor =
+          doCameraImageTransforms(imageTransforms, cameraImage, cameraImageRotationDegrees);
+      if (tensor != null) {
+        return tensor;
+      }
+    }
+
+    Object x = image.getBitmap();
+    for (int i = 0; i < n; ++i) {
+      final ImageTransformObject ito = imageTransforms.get(i);
+
+      if (IMAGE_TRANSFORM_TYPE_IMAGE.equals(ito.type)) {
         IImageTransform transform = null;
-        switch (name) {
-          case "center_crop":
-            transform = CenterCropTransform.parse(jobject);
+        switch (ito.name) {
+          case IMAGE_TRANSFORM_IMAGE_CENTER_CROP:
+            transform = CenterCropTransform.parse(ito.jobject);
             break;
-          case "scale":
-            transform = ScaleTransform.parse(jobject);
+          case IMAGE_TRANSFORM_IMAGE_SCALE:
+            transform = ScaleTransform.parse(ito.jobject);
             break;
         }
         if (transform == null) {
           throw new IllegalArgumentException("Unknown image_to_image transform");
         }
         x = transform.transform((Bitmap) x);
-      } else if ("image_to_tensor".equals(type)) {
-        final String name = jobject.getString(BaseIValuePacker.JSON_NAME);
+      } else if (IMAGE_TRANSFORM_TYPE_TENSOR.equals(ito.type)) {
         IImageToTensorTransform transform = null;
-        switch (name) {
-          case "rgb_norm":
-            transform = RgbNormTransform.parse(jobject);
+        switch (ito.name) {
+          case IMAGE_TRANSFORM_TENSOR_RGB_NORM:
+            transform = RgbNormTransform.parse(ito.jobject);
             break;
-          case "greyscale_norm":
-            transform = GreyScaleNormTransform.parse(jobject);
+          case IMAGE_TRANSFORM_TENSOR_GREYSCALE_NORM:
+            transform = GreyScaleNormTransform.parse(ito.jobject);
             break;
         }
         if (transform == null) {
@@ -380,10 +445,47 @@ public class BaseIValuePacker implements IIValuePacker {
     return (Tensor) x;
   }
 
+  private static @Nullable Tensor doCameraImageTransforms(
+      final ArrayList<ImageTransformObject> imageTransforms,
+      final Image image,
+      final int rotationDegrees)
+      throws JSONException {
+    // Supporting
+    // 1. image_to_tensor/center_crop_scale_rgb_norm
+    // 2. image_to_image/center_crop -> image_to_image/scale -> image_to_tensor/rgb_norm
+    final int size = imageTransforms.size();
+    if (size == 0) {
+      final ImageTransformObject t0 = imageTransforms.get(0);
+      if (isImageTransformTensorCenterCropScaleRGBNorm(t0.type, t0.name)) {
+        CameraImageCenterCropScaleRgbNormTransform transform =
+            CameraImageCenterCropScaleRgbNormTransform.parse(t0.jobject);
+        return transform.transform(image, rotationDegrees);
+      }
+    } else if (size == 3) {
+      final ImageTransformObject t0 = imageTransforms.get(0);
+      final ImageTransformObject t1 = imageTransforms.get(1);
+      final ImageTransformObject t2 = imageTransforms.get(2);
+
+      if (isImageTransformImageCenterCrop(t0.type, t0.name)
+          && isImageTransformImageScale(t1.type, t1.name)
+          && isImageTransformTensorRGBNorm(t2.type, t2.name)) {
+
+        CameraImageCenterCropScaleRgbNormTransform transform =
+            new CameraImageCenterCropScaleRgbNormTransform(
+                t1.jobject.getInt(JSON_WIDTH),
+                t1.jobject.getInt(JSON_HEIGHT),
+                BaseIValuePacker.readFloatArray(t2.jobject, JSON_MEAN),
+                BaseIValuePacker.readFloatArray(t2.jobject, JSON_STD));
+        return transform.transform(image, rotationDegrees);
+      }
+    }
+    return null;
+  }
+
   private static IValue packImage(final JSONObject jobject, final ReadableMap params)
       throws JSONException {
     final IImage image = JSContext.unwrapObject(params.getMap(jobject.getString(JSON_IMAGE)));
-    return IValue.from(doImageTransforms(jobject.getJSONArray(JSON_TRANSFORMS), image.getBitmap()));
+    return IValue.from(doImageTransforms(jobject.getJSONArray(JSON_TRANSFORMS), image));
   }
 
   private BertTokenizer getBertTokenizer(PackerContext packerContext)

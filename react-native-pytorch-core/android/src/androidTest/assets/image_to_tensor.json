@@ -1,0 +1,29 @@
+{
+  "pack": {
+    "type": "tensor_from_image",
+    "image": "image",
+    "transforms": [
+      {
+        "type": "image_to_tensor",
+        "name": "center_crop_scale_rgb_norm",
+        "width": "$width",
+        "height": "$height",
+        "mean": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "std": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      }
+    ]
+  },
+  "unpack": {
+    "type": "tensor",
+    "dtype": "float",
+    "key": "scores"
+  }
+}

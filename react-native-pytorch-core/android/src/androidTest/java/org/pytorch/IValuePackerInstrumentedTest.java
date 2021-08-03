@@ -299,6 +299,30 @@ public class IValuePackerInstrumentedTest {
   }
 
   @Test
+  public void testAudio() throws Exception {
+    final String spec = readAsset("speech_recognition.json");
+    final IIValuePacker packer = MobileModelModule.getPacker(spec);
+    final JavaOnlyMap params = new JavaOnlyMap();
+    final int sec = 3;
+    final short[] sdata = new short[16000 * sec];
+    TestAudioRecordImpl audioRecord = new TestAudioRecordImpl(sdata);
+    TestAudio audio = new TestAudio(audioRecord);
+    JSContext.NativeJSRef ref = JSContext.wrapObject(audio);
+    params.putMap("audio", ref.getJSRef());
+    params.putInt("sample_rate", 16000);
+
+    PackerContext packerContext = packer.newContext();
+    IValue packRes = packer.pack(params, packerContext);
+    final float[] fdata = packRes.toTensor().getDataAsFloatArray();
+
+    Assert.assertEquals(sdata.length, fdata.length);
+    for (int i = 0; i < sdata.length; ++i) {
+      Assert.assertTrue(
+          Math.abs(sdata[i] / (float) Short.MAX_VALUE - fdata[i]) < DOUBLE_EQUALS_DELTA);
+    }
+  }
+
+  @Test
   public void mnist() throws Exception {
     final String spec = readAsset("mnist.json");
     final IIValuePacker packer = MobileModelModule.getPacker(spec);

@@ -1,0 +1,13 @@
+{
+  "pack": {
+    "type": "tensor_from_audio",
+    "audio": "audio",
+    "sample_rate": 16000,
+    "duration_seconds": "$duration_seconds"
+  },
+  "unpack": {
+    "type": "tensor",
+    "dtype": "float",
+    "key": "scores"
+  }
+}

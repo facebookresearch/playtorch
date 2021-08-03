@@ -18,6 +18,7 @@ import com.facebook.react.bridge.WritableNativeArray;
 import com.facebook.react.bridge.WritableNativeMap;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -28,6 +29,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.pytorch.IValue;
 import org.pytorch.Tensor;
+import org.pytorch.rn.core.audio.IAudio;
+import org.pytorch.rn.core.audio.IAudioRecord;
 import org.pytorch.rn.core.image.IImage;
 import org.pytorch.rn.core.javascript.JSContext;
 
@@ -48,6 +51,7 @@ public class BaseIValuePacker implements IIValuePacker {
   private static final String JS_OUTPUT = "output";
   private static final String JSON_TYPE = "type";
   private static final String JSON_NAME = "name";
+  private static final String JSON_AUDIO = "audio";
   private static final String JSON_IMAGE = "image";
   private static final String JSON_TRANSFORMS = "transforms";
   private static final String JSON_DTYPE = "dtype";
@@ -112,7 +116,9 @@ public class BaseIValuePacker implements IIValuePacker {
             "tensor_from_image", (jobject, params, packerContext) -> packImage(jobject, params))
         .register(
             "tensor_from_string",
-            (jobject, params, packerContext) -> packString(jobject, packerContext));
+            (jobject, params, packerContext) -> packString(jobject, packerContext))
+        .register(
+            "tensor_from_audio", (jobject, params, packerContext) -> packAudio(jobject, params));
     // Unpack
     registry
         .register(
@@ -482,10 +488,61 @@ public class BaseIValuePacker implements IIValuePacker {
     return null;
   }
 
+  private static <T> T unwrapObject(
+      final JSONObject jobject, final ReadableMap params, final String key) throws JSONException {
+    return JSContext.unwrapObject(params.getMap(jobject.getString(key)));
+  }
+
   private static IValue packImage(final JSONObject jobject, final ReadableMap params)
       throws JSONException {
-    final IImage image = JSContext.unwrapObject(params.getMap(jobject.getString(JSON_IMAGE)));
-    return IValue.from(doImageTransforms(jobject.getJSONArray(JSON_TRANSFORMS), image));
+    final IImage image = unwrapObject(jobject, params, JSON_IMAGE);
+    return IValue.from(doImageTransforms(jobject.getJSONArray(JSON_TRANSFORMS), image.getBitmap()));
+  }
+
+  private static IValue packAudio(final JSONObject jobject, final ReadableMap params)
+      throws JSONException {
+    final IAudio audio = unwrapObject(jobject, params, JSON_AUDIO);
+    final IAudioRecord audioRecord = audio.getAudioRecord();
+    final int sampleRate = params.getInt("sample_rate");
+
+    // Guess for unknown duration of audio records
+    int durationSeconds = 10;
+    if (params.hasKey("duration_seconds")) {
+      durationSeconds = params.getInt("duration_seconds");
+    }
+    int floatBufferSize = sampleRate * durationSeconds;
+    FloatBuffer floatBuffer = Tensor.allocateFloatBuffer(floatBufferSize);
+
+    final int bufferSizeInShorts = 2048;
+    final short[] buffer = new short[bufferSizeInShorts];
+
+    int read = 0;
+    int readTotal = 0;
+    while ((read = audioRecord.read(buffer, 0, bufferSizeInShorts)) > 0) {
+      if (readTotal + read > floatBufferSize) {
+        final int newFloatBufferSize = floatBufferSize * 2;
+        final FloatBuffer newFloatBuffer = Tensor.allocateFloatBuffer(newFloatBufferSize);
+        newFloatBuffer.put(floatBuffer);
+        floatBufferSize = newFloatBufferSize;
+        floatBuffer = newFloatBuffer;
+      }
+
+      for (int i = 0; i < read; i++) {
+        floatBuffer.put(buffer[i] / (float) Short.MAX_VALUE);
+      }
+
+      readTotal += read;
+    }
+
+    if (floatBuffer.capacity() > readTotal) {
+      final FloatBuffer newFloatBuffer = Tensor.allocateFloatBuffer(readTotal);
+      for (int i = 0; i < readTotal; ++i) {
+        newFloatBuffer.put(floatBuffer.get());
+      }
+      floatBuffer = newFloatBuffer;
+    }
+
+    return IValue.from(Tensor.fromBlob(floatBuffer, new long[] {1, readTotal}));
   }
 
   private BertTokenizer getBertTokenizer(PackerContext packerContext)

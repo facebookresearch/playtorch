@@ -496,7 +496,7 @@ public class BaseIValuePacker implements IIValuePacker {
   private static IValue packImage(final JSONObject jobject, final ReadableMap params)
       throws JSONException {
     final IImage image = unwrapObject(jobject, params, JSON_IMAGE);
-    return IValue.from(doImageTransforms(jobject.getJSONArray(JSON_TRANSFORMS), image.getBitmap()));
+    return IValue.from(doImageTransforms(jobject.getJSONArray(JSON_TRANSFORMS), image));
   }
 
   private static IValue packAudio(final JSONObject jobject, final ReadableMap params)

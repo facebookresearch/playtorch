@@ -12,8 +12,6 @@ import UIKit
 class DrawingCanvasView: UIView {
 
     @objc public var onContext2D: RCTBubblingEventBlock?
-    @objc public var width: NSNumber?
-    @objc public var height: NSNumber?
     var ref: [String:String] = [:] // initialized to allow using self in init()
     var stateStack = Stack()
     var path = CGMutablePath()
@@ -27,8 +25,8 @@ class DrawingCanvasView: UIView {
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
+        self.clipsToBounds = true
         self.scale = UIScreen.main.scale
-        drawingLayer.bounds = layer.bounds
         ref = JSContext.wrapObject(object: self).getJSRef()
         deletionQueue.async {
             CATransaction.flush()
@@ -64,18 +62,6 @@ class DrawingCanvasView: UIView {
     override func didSetProps(_ changedProps: [String]!) {
         guard let unwrappedOnContext2D = onContext2D else { return }
         unwrappedOnContext2D(["ID" : ref[JSContext.ID_KEY]])
-        if let width = width as? Int, let height = height as? Int {
-            let boundsRect = CGRect(x: 0, y: 0, width: width, height: height)
-            self.bounds = boundsRect
-        } else {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            if let boundsRect = self.superview?.bounds {
-                self.bounds = boundsRect
-            } else {
-                let boundsRect = UIScreen.main.bounds
-                self.bounds = boundsRect
-            }
-        }
     }
 
     func arc(x: CGFloat, y: CGFloat, radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat, counterclockwise: Bool) {

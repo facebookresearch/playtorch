@@ -27,6 +27,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
     @objc public var onCapture: RCTDirectEventBlock?
     @objc public var onFrame: RCTDirectEventBlock?
     @objc public var hideCaptureButton: Bool = false
+    @objc public var targetResolution: NSDictionary = [ "width": 480, "height": 640]
     var captureButton: CaptureButton?
     var switchCameraButton: UIButton?
     var backCameraOn = true
@@ -58,6 +59,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
 
     override func didSetProps(_ changedProps: [String]!) {
         captureButton?.isHidden = hideCaptureButton
+        if changedProps.contains("targetResolution") { setSessionPreset() }
     }
 
     override func layoutSubviews() {
@@ -67,6 +69,24 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
         captureButton?.frame = CGRect(x: Double(width)/2.0 - captureButtonSize/2.0, y: Double(height) - captureButtonSize - captureButtonMargin, width: captureButtonSize, height: captureButtonSize)
         switchCameraButton?.frame = CGRect(x: Double(width) - switchCameraButtonMargin - switchCameraButtonSize, y: switchCameraButtonMargin, width: switchCameraButtonSize, height: switchCameraButtonSize)
         captureButton?.isHidden = hideCaptureButton
+    }
+
+    func setSessionPreset() {
+        if let captureSession = captureSession,
+           let width = (targetResolution["width"] as? NSNumber)?.intValue,
+           let height = (targetResolution["height"] as? NSNumber)?.intValue {
+            if (width <= 288 && height <= 352) {
+                captureSession.sessionPreset = .cif352x288
+            } else if (width <= 480 && height <= 640) {
+                captureSession.sessionPreset = .vga640x480
+            } else if (width <= 720 && height <= 1280) {
+                captureSession.sessionPreset = .hd1280x720
+            } else if (width <= 1080 && height <= 1920) {
+                captureSession.sessionPreset = .hd1920x1080
+            } else {
+                captureSession.sessionPreset = .hd4K3840x2160
+            }
+        }
     }
 
     func setupCaptureButton() {
@@ -161,6 +181,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
         self.setupInput()
         self.setupPreviewLayer()
         self.setupOutput()
+        self.setSessionPreset()
         self.captureSession.commitConfiguration()
         self.captureSession.startRunning()
     }

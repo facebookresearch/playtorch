@@ -31,12 +31,11 @@ export default function CanvasDrawImage() {
   const handleCapture = useCallback(
     async (image: Image) => {
       const ctx = drawingContext;
-      const scaledImage = await image.scale(0.05, 0.05);
+      const scaledImage = await image.scale(0.15, 0.15);
       if (ctx != null && image != null) {
         ctx.drawImage(scaledImage, 10, 10);
         ctx.invalidate();
       }
-      image.release();
     },
     [drawingContext],
   );
@@ -46,7 +45,8 @@ export default function CanvasDrawImage() {
       <Camera
         style={styles.camera}
         onCapture={handleCapture}
-        hideCaptureButton={true}
+        hideCaptureButton={false}
+        targetResolution={{"width": 480, "height": 640}}
       />
       <Canvas style={styles.canvas} onContext2D={handleContext2D} />
     </View>

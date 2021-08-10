@@ -352,19 +352,23 @@ class DrawingCanvasView: UIView {
 
     func drawImage(image: BitmapImage, dx: CGFloat, dy: CGFloat) {
         let frame = CGRect(x: dx, y: dy, width: CGFloat(image.getWidth()), height: CGFloat(image.getHeight()))
-        let newLayer = ImageLayerData(image: image.getBitmap(), transform: currentState.transform, frame: frame)
-        sublayers.append(newLayer)
+        if let bitmap = image.getBitmap() {
+            let newLayer = ImageLayerData(image: bitmap, transform: currentState.transform, frame: frame)
+            sublayers.append(newLayer)
+        }
     }
 
     func drawImage(image: BitmapImage, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) {
         let frame = CGRect(x: dx, y: dy, width: dWidth, height: dHeight)
-        let newLayer = ImageLayerData(image: image.getBitmap(), transform: currentState.transform, frame: frame)
-        sublayers.append(newLayer)
+        if let bitmap = image.getBitmap() {
+            let newLayer = ImageLayerData(image: bitmap, transform: currentState.transform, frame: frame)
+            sublayers.append(newLayer)
+        }
     }
 
     func drawImage(image: BitmapImage, sx: CGFloat, sy: CGFloat, sWidth: CGFloat, sHeight: CGFloat, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) {
-        var contentsImage: CGImage
-        if let croppedImage = image.getBitmap().cropping(to: CGRect(x: sx, y: sy, width: sWidth, height: sHeight)) {
+        var contentsImage: CGImage?
+        if let croppedImage = image.getBitmap()?.cropping(to: CGRect(x: sx, y: sy, width: sWidth, height: sHeight)) {
             contentsImage = croppedImage
         } else {
             contentsImage = image.getBitmap()
@@ -375,8 +379,10 @@ class DrawingCanvasView: UIView {
         } else {
             frame = CGRect(x: dx, y: dy, width: CGFloat(image.getWidth()), height: CGFloat(image.getHeight()))
         }
-        let newLayer = ImageLayerData(image: contentsImage, transform: currentState.transform, frame: frame)
-        sublayers.append(newLayer)
+        if let bitmap = contentsImage {
+            let newLayer = ImageLayerData(image: bitmap, transform: currentState.transform, frame: frame)
+            sublayers.append(newLayer)
+        }
     }
 
     func onTransformationChange() {

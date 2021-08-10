@@ -37,7 +37,6 @@ class JSContext {
         guard let id = jsRef[ID_KEY] else { throw JSContextError.invalidParam }
         refs.removeValue(forKey: id)?.release()
     }
-    //TODO(T92662670) Implement release in JSContext for iOS
 
     public static func wrapObject(object: Any) -> NativeJSRef {
         return NativeJSRef(object: object)
@@ -73,6 +72,6 @@ class JSContext {
             mId = nil
             mObject = nil
             mJSRef = nil
-        }//TODO(T92662670) Implement release in NativeJSRef for iOS
+        }
     }
 }

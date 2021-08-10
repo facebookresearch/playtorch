@@ -28,7 +28,7 @@ public class ImageModule: NSObject {
         let imageSource = CGImageSourceCreateWithURL(cfURL, nil),
         let image = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) {
             let bitmapImage = BitmapImage(image: image)
-            let ref = bitmapImage.ref
+            let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
             resolve(ref)
         } else {
             reject("Couldn't create image from URL", nil, nil) //TODO
@@ -42,7 +42,7 @@ public class ImageModule: NSObject {
                 let uiImage = Macros.toUIImage(dictionary)
                 if let cgImage = uiImage.cgImage {
                     let bitmapImage = BitmapImage(image: cgImage)
-                    let ref = bitmapImage.ref
+                    let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
                     resolve(ref)
                 }
             } else {
@@ -85,7 +85,8 @@ public class ImageModule: NSObject {
         do {
             let image = try unwrapImage(imageRef)
             let scaledImage = image.scale(sx: CGFloat(truncating: sx), sy: CGFloat(truncating: sy))
-            resolve(scaledImage.ref)
+            let ref = JSContext.wrapObject(object: scaledImage).getJSRef()
+            resolve(ref)
         } catch {
             reject("Invalid image reference in scale", nil, nil)
         }

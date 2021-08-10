@@ -7,26 +7,57 @@
  * @format
  */
 
-import React from 'react';
-import {StyleSheet, Text} from 'react-native';
-import {Camera} from 'react-native-pytorch-core';
+import React, {useCallback, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
+import {
+  Camera,
+  Canvas,
+  CanvasRenderingContext2D,
+  Image,
+} from 'react-native-pytorch-core';
 
 export default function CanvasDrawImage() {
+  const [drawingContext, setDrawingContext] = useState<
+    CanvasRenderingContext2D
+  >();
+
+  const handleContext2D = useCallback(
+    async (ctx: CanvasRenderingContext2D) => {
+      setDrawingContext(ctx);
+    },
+    [setDrawingContext],
+  );
+
+  const handleCapture = useCallback(
+    async (image: Image) => {
+      const ctx = drawingContext;
+      const scaledImage = await image.scale(0.15, 0.15);
+      if (ctx != null && image != null) {
+        ctx.drawImage(scaledImage, 10, 10);
+        ctx.invalidate();
+      }
+      image.release();
+    },
+    [drawingContext],
+  );
+
   return (
-    <>
-      <Camera style={styles.camera} />
-      <Text style={styles.baseText}> Hello </Text>
-      {/* this is to show that flex layout works! */}
-    </>
+    <View style={styles.container}>
+      <Canvas style={styles.canvas} onContext2D={handleContext2D} />
+      <Camera style={styles.camera} onCapture={handleCapture} />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  baseText: {
-    height: 100,
-    backgroundColor: 'red',
+  container: {
+    flex: 1,
+    flexDirection: "column"
   },
   camera: {
-    flex: 1,
+    flex:1
+  },
+  canvas: {
+    flex:1
   },
 });

@@ -31,7 +31,7 @@ export default function CanvasDrawImage() {
   const handleCapture = useCallback(
     async (image: Image) => {
       const ctx = drawingContext;
-      const scaledImage = await image.scale(0.15, 0.15);
+      const scaledImage = await image.scale(0.05, 0.05);
       if (ctx != null && image != null) {
         ctx.drawImage(scaledImage, 10, 10);
         ctx.invalidate();
@@ -43,21 +43,21 @@ export default function CanvasDrawImage() {
 
   return (
     <View style={styles.container}>
-      <Canvas style={styles.canvas} onContext2D={handleContext2D} />
       <Camera style={styles.camera} onCapture={handleCapture} />
+      <Canvas style={styles.canvas} onContext2D={handleContext2D} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flexDirection: 'column',
     flex: 1,
-    flexDirection: "column"
   },
   camera: {
-    flex:1
+    flex: 1,
   },
   canvas: {
-    flex:1
+    flex: 1,
   },
 });

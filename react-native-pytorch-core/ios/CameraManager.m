@@ -9,6 +9,5 @@
 #import "React/RCTViewManager.h"
 
 @interface RCT_EXTERN_REMAP_MODULE(PyTorchCoreCameraView, CameraManager, RCTViewManager)
-RCT_EXPORT_VIEW_PROPERTY(width, NSNumber)
-RCT_EXPORT_VIEW_PROPERTY(height, NSNumber)
+RCT_EXPORT_VIEW_PROPERTY(onCapture, RCTDirectEventBlock)
 @end

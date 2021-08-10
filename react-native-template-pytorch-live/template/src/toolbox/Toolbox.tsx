@@ -28,6 +28,8 @@ import Images from './canvas/Images';
 import UIStarter from './ui/UIStarter';
 import UICard from './ui/UICard';
 
+import GetData from './data/GetRequest';
+
 import ToolboxContext, {useToolboxContext} from './ToolboxContext';
 import ToolboxList from './ToolboxList';
 
@@ -120,6 +122,18 @@ const tools: ToolSection = [
         subtitle: 'Take picture processing',
         component: CameraTakePicture,
       },
+    ],
+  },
+
+  {
+    title: 'Server and Data',
+    data: [
+      {
+        icon: <Icon name="image-size-select-actual" size={32} color="white" />,
+        title: 'GET Request',
+        subtitle: 'Request and display images from a public API service',
+        component: GetData,
+      }
     ],
   },
 ];

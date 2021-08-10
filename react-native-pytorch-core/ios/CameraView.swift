@@ -14,6 +14,8 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
 
     private let captureButtonSize = 75.0
     private let captureButtonMargin = 16.0
+    private let switchCameraButtonSize = 25.0
+    private let switchCameraButtonMargin = 25.0
     private let photoOutput = AVCapturePhotoOutput()
     private var videoOutput: AVCaptureVideoDataOutput!
     private var captureSession: AVCaptureSession!
@@ -26,9 +28,12 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
     @objc public var onFrame: RCTDirectEventBlock?
     @objc public var hideCaptureButton: Bool = false
     var captureButton: CaptureButton?
+    var switchCameraButton: UIButton?
+    var backCameraOn = true
 
     public func openCamera() {
         setupCaptureButton()
+        setupSwitchCameraButton()
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
             self.setupCaptureSession()
@@ -56,6 +61,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
         let width = self.bounds.width
         cameraLayer?.frame = CGRect(x: 0, y: 0, width: width, height: height)
         captureButton?.frame = CGRect(x: Double(width)/2.0 - captureButtonSize/2.0, y: Double(height) - captureButtonSize - captureButtonMargin, width: captureButtonSize, height: captureButtonSize)
+        switchCameraButton?.frame = CGRect(x: Double(width) - switchCameraButtonMargin - switchCameraButtonSize, y: switchCameraButtonMargin, width: switchCameraButtonSize, height: switchCameraButtonSize)
     }
 
     func setupCaptureButton() {
@@ -63,6 +69,20 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
         captureButton?.addTarget(self, action: #selector(captureImage), for: .touchDown)
         if let captureButton = captureButton {
             self.addSubview(captureButton)
+        }
+    }
+
+    func setupSwitchCameraButton() {
+        if let _ = switchCameraButton?.superview {
+            switchCameraButton?.removeFromSuperview()
+        }
+        switchCameraButton = UIButton()
+        switchCameraButton?.tintColor = UIColor.white
+        switchCameraButton?.setTitle("F", for: .normal) //TODO(T96787380) replace with design asset
+        switchCameraButton?.frame = CGRect(x: Double(self.bounds.width) - switchCameraButtonMargin, y: switchCameraButtonMargin, width: switchCameraButtonSize, height: switchCameraButtonSize)
+        switchCameraButton?.addTarget(self, action: #selector(switchCameraInput), for: .touchDown)
+        if let switchCameraButton = switchCameraButton {
+            self.addSubview(switchCameraButton)
         }
     }
 
@@ -91,6 +111,17 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
             } else {
                 createErrorView(error: "Could not find back camera")
             }
+        }
+
+        if let device = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: .front) {
+            frontCamera = device
+            if let fInput = try? AVCaptureDeviceInput(device: frontCamera) {
+                frontInput = fInput
+            } else {
+                print("could not create front input")
+            }
+        } else {
+            print("no front camera")
         }
     }
 
@@ -132,6 +163,23 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
         let label = UILabel(frame: self.frame)
         label.text = error
         self.addSubview(label)
+    }
+
+    @objc func switchCameraInput() {
+        switchCameraButton?.isUserInteractionEnabled = false
+        captureSession.beginConfiguration()
+        if backCameraOn {
+            captureSession.removeInput(backInput)
+            captureSession.addInput(frontInput)
+            backCameraOn = false
+        } else {
+            captureSession.removeInput(frontInput)
+            captureSession.addInput(backInput)
+            backCameraOn = true
+        }
+        videoOutput.connection(with: AVMediaType.video)?.videoOrientation = .portrait
+        captureSession.commitConfiguration()
+        switchCameraButton?.isUserInteractionEnabled = true
     }
 
     @objc func captureImage() {

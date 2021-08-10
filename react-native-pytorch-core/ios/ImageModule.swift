@@ -31,7 +31,7 @@ public class ImageModule: NSObject {
             let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
             resolve(ref)
         } else {
-            reject("Couldn't create image from URL", nil, nil) //TODO
+            reject(RCTErrorUnspecified, "Couldn't create image from URL", nil)
         }
     }
 
@@ -46,7 +46,7 @@ public class ImageModule: NSObject {
                     resolve(ref)
                 }
             } else {
-                reject("Couldn't create image from bundle", nil, nil)
+                reject(RCTErrorUnspecified, "Couldn't create image from bundle", nil)
             }
         }
     }
@@ -88,7 +88,7 @@ public class ImageModule: NSObject {
             let ref = JSContext.wrapObject(object: scaledImage).getJSRef()
             resolve(ref)
         } catch {
-            reject("Invalid image reference in scale", nil, nil)
+            reject(RCTErrorUnspecified, "Invalid image reference in scale: \(error)", error)
         }
     }
 
@@ -100,7 +100,7 @@ public class ImageModule: NSObject {
             }
             resolve(nil)
         } catch {
-            reject("Invalid image reference in release", nil, nil)
+            reject(RCTErrorUnspecified, "Invalid image reference in release: \(error)", error)
         }
     }
 }

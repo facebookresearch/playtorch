@@ -56,16 +56,22 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
         }
     }
 
+    override func didSetProps(_ changedProps: [String]!) {
+        captureButton?.isHidden = hideCaptureButton
+    }
+
     override func layoutSubviews() {
         let height = self.bounds.height
         let width = self.bounds.width
         cameraLayer?.frame = CGRect(x: 0, y: 0, width: width, height: height)
         captureButton?.frame = CGRect(x: Double(width)/2.0 - captureButtonSize/2.0, y: Double(height) - captureButtonSize - captureButtonMargin, width: captureButtonSize, height: captureButtonSize)
         switchCameraButton?.frame = CGRect(x: Double(width) - switchCameraButtonMargin - switchCameraButtonSize, y: switchCameraButtonMargin, width: switchCameraButtonSize, height: switchCameraButtonSize)
+        captureButton?.isHidden = hideCaptureButton
     }
 
     func setupCaptureButton() {
         captureButton = CaptureButton(frame: CGRect(x: Double(self.bounds.width)/2.0 - captureButtonSize/2.0, y: Double(self.bounds.height) - captureButtonSize - captureButtonMargin, width: captureButtonSize, height: captureButtonSize))
+        captureButton?.isHidden = hideCaptureButton
         captureButton?.addTarget(self, action: #selector(captureImage), for: .touchDown)
         if let captureButton = captureButton {
             self.addSubview(captureButton)

@@ -43,7 +43,11 @@ export default function CanvasDrawImage() {
 
   return (
     <View style={styles.container}>
-      <Camera style={styles.camera} onCapture={handleCapture} />
+      <Camera
+        style={styles.camera}
+        onCapture={handleCapture}
+        hideCaptureButton={true}
+      />
       <Canvas style={styles.canvas} onContext2D={handleContext2D} />
     </View>
   );

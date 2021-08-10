@@ -28,7 +28,8 @@ import Images from './canvas/Images';
 import UIStarter from './ui/UIStarter';
 import UICard from './ui/UICard';
 
-import GetData from './data/GetRequest';
+import GetRequest from './data/GetRequest';
+import PostRequest from './data/PostRequest';
 
 import ToolboxContext, {useToolboxContext} from './ToolboxContext';
 import ToolboxList from './ToolboxList';
@@ -132,7 +133,13 @@ const tools: ToolSection = [
         icon: <Icon name="image-size-select-actual" size={32} color="white" />,
         title: 'GET Request',
         subtitle: 'Request and display images from a public API service',
-        component: GetData,
+        component: GetRequest,
+      },
+      {
+        icon: <Icon name="image-size-select-actual" size={32} color="white" />,
+        title: 'POST Request',
+        subtitle: 'Send a POST request to server and receive a mock response',
+        component: PostRequest,
       }
     ],
   },

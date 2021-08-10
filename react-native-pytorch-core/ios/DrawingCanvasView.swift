@@ -11,6 +11,13 @@ import UIKit
 @objc(DrawingCanvasView)
 class DrawingCanvasView: UIView {
 
+    enum CanvasError: Error {
+        case InvalidLineJoinValue
+        case InvalidLineCapValue
+        case InvalidFontFamily
+        case UnableToCreateBitmap
+    }
+
     @objc public var onContext2D: RCTBubblingEventBlock?
     var ref: [String:String] = [:] // initialized to allow using self in init()
     var stateStack = Stack()
@@ -195,7 +202,7 @@ class DrawingCanvasView: UIView {
         currentState.lineWidth = lineWidth
     }
 
-    func setLineCap(lineCap: String) {
+    func setLineCap(lineCap: String) throws {
         switch lineCap {
         case "butt":
             currentState.lineCap = CAShapeLayerLineCap.butt
@@ -204,11 +211,11 @@ class DrawingCanvasView: UIView {
         case "square":
             currentState.lineCap = CAShapeLayerLineCap.square
         default:
-            print("Invalid value, could not set line cap")
+            throw CanvasError.InvalidLineCapValue
         }
     }
 
-    func setLineJoin(lineJoin: String) {
+    func setLineJoin(lineJoin: String) throws {
         switch lineJoin {
         case "miter":
             currentState.lineJoin = CAShapeLayerLineJoin.miter
@@ -217,7 +224,7 @@ class DrawingCanvasView: UIView {
         case "bevel":
             currentState.lineJoin = CAShapeLayerLineJoin.bevel
         default:
-            print("Invalid value, could not set line join")
+            throw CanvasError.InvalidLineJoinValue
         }
     }
 
@@ -225,8 +232,7 @@ class DrawingCanvasView: UIView {
         currentState.miterLimit = miterLimit
     }
 
-    @available(iOS 13.0, *)
-    func setFont(font: NSDictionary) {
+    func setFont(font: NSDictionary) throws {
         if let fr = currentState.fontRepresentation, fr.isEqual(font) {
             return
         } else {
@@ -246,8 +252,7 @@ class DrawingCanvasView: UIView {
             case "monospace":
                 fontName = "Menlo-"
             default:
-                fontName = "Helvetica-"
-                print("Invalid font family... using default of sans-serif")
+                throw CanvasError.InvalidFontFamily
             }
         }
 
@@ -350,23 +355,27 @@ class DrawingCanvasView: UIView {
         sublayers.append(newLayer)
     }
 
-    func drawImage(image: BitmapImage, dx: CGFloat, dy: CGFloat) {
+    func drawImage(image: BitmapImage, dx: CGFloat, dy: CGFloat) throws {
         let frame = CGRect(x: dx, y: dy, width: CGFloat(image.getWidth()), height: CGFloat(image.getHeight()))
         if let bitmap = image.getBitmap() {
             let newLayer = ImageLayerData(image: bitmap, transform: currentState.transform, frame: frame)
             sublayers.append(newLayer)
+        } else {
+            throw CanvasError.UnableToCreateBitmap
         }
     }
 
-    func drawImage(image: BitmapImage, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) {
+    func drawImage(image: BitmapImage, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) throws {
         let frame = CGRect(x: dx, y: dy, width: dWidth, height: dHeight)
         if let bitmap = image.getBitmap() {
             let newLayer = ImageLayerData(image: bitmap, transform: currentState.transform, frame: frame)
             sublayers.append(newLayer)
+        } else {
+            throw CanvasError.UnableToCreateBitmap
         }
     }
 
-    func drawImage(image: BitmapImage, sx: CGFloat, sy: CGFloat, sWidth: CGFloat, sHeight: CGFloat, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) {
+    func drawImage(image: BitmapImage, sx: CGFloat, sy: CGFloat, sWidth: CGFloat, sHeight: CGFloat, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) throws {
         var contentsImage: CGImage?
         if let croppedImage = image.getBitmap()?.cropping(to: CGRect(x: sx, y: sy, width: sWidth, height: sHeight)) {
             contentsImage = croppedImage
@@ -382,6 +391,8 @@ class DrawingCanvasView: UIView {
         if let bitmap = contentsImage {
             let newLayer = ImageLayerData(image: bitmap, transform: currentState.transform, frame: frame)
             sublayers.append(newLayer)
+        } else {
+            throw CanvasError.UnableToCreateBitmap
         }
     }
 

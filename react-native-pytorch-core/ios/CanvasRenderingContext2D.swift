@@ -16,101 +16,101 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func fillRect(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber) {
+    func fillRect(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.fillRect(x: CGFloat(truncating: x), y: CGFloat(truncating: y), width: CGFloat(truncating: width), height: CGFloat(truncating: height))
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform fillRect")
+            reject(RCTErrorUnspecified, "Could not perform fillRect: \(error)", error)
         }
     }
 
     @objc
-    func strokeRect(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber) {
+    func strokeRect(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.strokeRect(x: CGFloat(truncating: x), y: CGFloat(truncating: y), width: CGFloat(truncating: width), height: CGFloat(truncating: height))
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform strokeRect")
+            reject(RCTErrorUnspecified, "Could not perform strokeRect: \(error)", error)
         }
     }
 
     @objc
-    func rect(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber) {
+    func rect(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.rect(x: CGFloat(truncating: x), y: CGFloat(truncating: y), width: CGFloat(truncating: width), height: CGFloat(truncating: height))
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform strokeRect")
+            reject(RCTErrorUnspecified, "Could not perform rect: \(error)", error)
         }
     }
 
     @objc
-    func arc(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, radius: NSNumber, startAngle: NSNumber, endAngle: NSNumber, counterclockwise: Bool) {
+    func arc(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, radius: NSNumber, startAngle: NSNumber, endAngle: NSNumber, counterclockwise: Bool, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.arc(x: CGFloat(truncating: x), y: CGFloat(truncating: y), radius: CGFloat(truncating: radius), startAngle: CGFloat(truncating: startAngle), endAngle: CGFloat(truncating: endAngle), counterclockwise: counterclockwise)
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform arc")
+            reject(RCTErrorUnspecified, "Could not perform arc: \(error)", error)
         }
     }
 
     @objc
-    func clearRect(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber) {
+    func clearRect(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.clearRect(x: CGFloat(truncating: x), y: CGFloat(truncating: y), width: CGFloat(truncating: width), height: CGFloat(truncating: height))
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform clearRect")
+            reject(RCTErrorUnspecified, "Could not perform clearRect: \(error)", error)
         }
     }
 
     @objc
-    func clear(_ canvasRef: NSDictionary) {
+    func clear(_ canvasRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.clear()
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform clear")
+            reject(RCTErrorUnspecified, "Could not perform clear: \(error)", error)
         }
     }
 
     @objc
-    func invalidate(_ canvasRef: NSDictionary){
+    func invalidate(_ canvasRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock){
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.invalidate()
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform invalidate")
+            reject(RCTErrorUnspecified, "Could not perform invalidate: \(error)", error)
         }
     }
 
     @objc
-    func stroke(_ canvasRef: NSDictionary){
+    func stroke(_ canvasRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock){
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.stroke()
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform stroke")
+            reject(RCTErrorUnspecified, "Could not perform stroke: \(error)", error)
         }
     }
 
     @objc
-    func fill(_ canvasRef: NSDictionary){
+    func fill(_ canvasRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock){
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.fill()
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform fill")
+            reject(RCTErrorUnspecified, "Could not perform fill: \(error)", error)
         }
     }
 
@@ -130,18 +130,18 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func scale(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber) {
+    func scale(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.scale(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform scale")
+            reject(RCTErrorUnspecified, "Could not perform scale: \(error)", error)
         }
     }
 
     @objc
-    func rotate(_ canvasRef: NSDictionary, angle: NSNumber, x: NSNumber, y: NSNumber) {
+    func rotate(_ canvasRef: NSDictionary, angle: NSNumber, x: NSNumber, y: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             if(Int(truncating: x) >= 0 && Int(truncating: y) >= 0){
@@ -151,254 +151,249 @@ class CanvasRenderingContext2D: NSObject {
             if(Int(truncating: x) >= 0 && Int(truncating: y) >= 0){
                 canvasView.translate(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
             }
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform rotate")
+            reject(RCTErrorUnspecified, "Could not perform rotate: \(error)", error)
         }
     }
 
     @objc
-    func translate(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber) {
+    func translate(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.translate(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform translate")
+            reject(RCTErrorUnspecified, "Could not perform translate: \(error)", error)
         }
     }
 
     @objc
-    func setTransform(_ canvasRef: NSDictionary, a: NSNumber, b: NSNumber, c: NSNumber, d: NSNumber, e: NSNumber, f: NSNumber) {
+    func setTransform(_ canvasRef: NSDictionary, a: NSNumber, b: NSNumber, c: NSNumber, d: NSNumber, e: NSNumber, f: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.setTransform(a: CGFloat(truncating: a), b: CGFloat(truncating: b), c: CGFloat(truncating: c), d: CGFloat(truncating: d), e: CGFloat(truncating: e), f: CGFloat(truncating: f))
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform setTransform")
+            reject(RCTErrorUnspecified, "Could not perform setTransform: \(error)", error)
         }
     }
 
     @objc
-    func save(_ canvasRef: NSDictionary) {
+    func save(_ canvasRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.save()
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform save")
+            reject(RCTErrorUnspecified, "Could not perform save: \(error)", error)
         }
     }
 
     @objc
-    func restore(_ canvasRef: NSDictionary) {
+    func restore(_ canvasRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.restore()
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform save")
+            reject(RCTErrorUnspecified, "Could not perform restore: \(error)", error)
         }
     }
 
     @objc
-    func setFillStyle(_ canvasRef: NSDictionary, color: CGColor) {
+    func setFillStyle(_ canvasRef: NSDictionary, color: CGColor, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.setFillStyle(color: color)
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform setFillStyle")
+            reject(RCTErrorUnspecified, "Could not perform setFillStyle: \(error)", error)
         }
     }
 
     @objc
-    func setStrokeStyle(_ canvasRef: NSDictionary, color: CGColor) {
+    func setStrokeStyle(_ canvasRef: NSDictionary, color: CGColor, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.setStrokeStyle(color: color)
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform setStrokeStyle")
+            reject(RCTErrorUnspecified, "Could not perform setStrokeStyle: \(error)", error)
         }
     }
 
     @objc
-    func setLineWidth(_ canvasRef: NSDictionary, lineWidth: NSNumber) {
+    func setLineWidth(_ canvasRef: NSDictionary, lineWidth: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.setLineWidth(lineWidth: CGFloat(truncating: lineWidth))
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform setLineWidth")
+            reject(RCTErrorUnspecified, "Could not perform setLineWidth: \(error)", error)
         }
     }
 
     @objc
-    func setLineCap(_ canvasRef: NSDictionary, lineCap: NSString) {
+    func setLineCap(_ canvasRef: NSDictionary, lineCap: NSString, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.setLineCap(lineCap: lineCap as String)
+            try canvasView.setLineCap(lineCap: lineCap as String)
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform setLineCap")
+            reject(RCTErrorUnspecified, "Could not perform setLineCap: \(error)", error)
         }
     }
 
     @objc
-    func setLineJoin(_ canvasRef: NSDictionary, lineJoin: NSString) {
+    func setLineJoin(_ canvasRef: NSDictionary, lineJoin: NSString, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.setLineJoin(lineJoin: lineJoin as String)
+            try canvasView.setLineJoin(lineJoin: lineJoin as String)
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform setLineJoin")
+            reject(RCTErrorUnspecified, "Could not perform setLineJoin: \(error)", error)
         }
     }
 
     @objc
-    func setMiterLimit(_ canvasRef: NSDictionary, miterLimit: NSNumber) {
+    func setMiterLimit(_ canvasRef: NSDictionary, miterLimit: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.setMiterLimit(miterLimit: CGFloat(truncating: miterLimit))
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform setMiterLimit")
+            reject(RCTErrorUnspecified, "Could not perform setMiterLimit: \(error)", error)
         }
     }
 
     @objc
-    func setFont(_ canvasRef: NSDictionary, font: NSDictionary) {
+    func setFont(_ canvasRef: NSDictionary, font: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            if #available(iOS 13.0, *) {
-                canvasView.setFont(font: font)
-            } else {
-                //TODO(T92857704) Eventually forward Error to React Native using promises
-                print("iOS 13 is unavailable, cannot perform setFont")
-            }
+            try canvasView.setFont(font: font)
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform setFont")
+            reject(RCTErrorUnspecified, "Could not perform setFont: \(error)", error)
         }
     }
 
     @objc
-    func beginPath(_ canvasRef: NSDictionary) {
+    func beginPath(_ canvasRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.beginPath()
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform beginPath")
+            reject(RCTErrorUnspecified, "Could not perform beginPath: \(error)", error)
         }
     }
 
     @objc
-    func closePath(_ canvasRef: NSDictionary) {
+    func closePath(_ canvasRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.closePath()
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform closePath")
+            reject(RCTErrorUnspecified, "Could not perform closePath: \(error)", error)
         }
     }
 
     @objc
-    func lineTo(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber) {
+    func lineTo(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             let point = CGPoint(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
             canvasView.lineTo(point: point)
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform lineTo")
+            reject(RCTErrorUnspecified, "Could not perform lineTo: \(error)", error)
         }
     }
 
     @objc
-    func moveTo(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber) {
+    func moveTo(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             let point = CGPoint(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
             canvasView.moveTo(point: point)
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform moveTo")
+            reject(RCTErrorUnspecified, "Could not perform moveTo: \(error)", error)
         }
     }
 
     @objc
-    func drawCircle(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, radius: NSNumber) {
+    func drawCircle(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, radius: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.drawCircle(x: CGFloat(truncating: x), y: CGFloat(truncating: y), radius: CGFloat(truncating: radius))
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform drawCircle")
+            reject(RCTErrorUnspecified, "Could not perform drawCircle: \(error)", error)
         }
     }
 
     @objc
-    func fillCircle(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, radius: NSNumber) {
+    func fillCircle(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, radius: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.drawCircle(x: CGFloat(truncating: x), y: CGFloat(truncating: y), radius: CGFloat(truncating: radius), fill: true)
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform fillCircle")
+            reject(RCTErrorUnspecified, "Could not perform fillCircle: \(error)", error)
         }
     }
 
     @objc
-    func fillText(_ canvasRef: NSDictionary, text: NSString, x: NSNumber, y: NSNumber) {
+    func fillText(_ canvasRef: NSDictionary, text: NSString, x: NSNumber, y: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.fillText(text: text as String, x: CGFloat(truncating: x), y: CGFloat(truncating: y))
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform fillText")
+            reject(RCTErrorUnspecified, "Could not perform fillText: \(error)", error)
         }
     }
 
     @objc
-    func strokeText(_ canvasRef: NSDictionary, text: NSString, x: NSNumber, y: NSNumber) {
+    func strokeText(_ canvasRef: NSDictionary, text: NSString, x: NSNumber, y: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.fillText(text: text as String, x: CGFloat(truncating: x), y: CGFloat(truncating: y), fill: false)
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform strokeText")
+            reject(RCTErrorUnspecified, "Could not perform strokeText: \(error)", error)
         }
     }
 
     @objc
-    func setTextAlign(_ canvasRef: NSDictionary, textAlign: NSString) {
+    func setTextAlign(_ canvasRef: NSDictionary, textAlign: NSString, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             canvasView.setTextAlign(textAlign: textAlign as String)
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform setTextAlign")
+            reject(RCTErrorUnspecified, "Could not perform setTextAlign: \(error)", error)
         }
     }
 
     @objc
-    func drawImage(_ canvasRef: NSDictionary, image: NSDictionary, sx: NSNumber, sy: NSNumber, sWidth: NSNumber, sHeight: NSNumber, dx: NSNumber, dy: NSNumber, dWidth: NSNumber, dHeight: NSNumber) {
+    func drawImage(_ canvasRef: NSDictionary, image: NSDictionary, sx: NSNumber, sy: NSNumber, sWidth: NSNumber, sHeight: NSNumber, dx: NSNumber, dy: NSNumber, dWidth: NSNumber, dHeight: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
             let image = try unwrapImage(image)
             if (dWidth == -1 && sWidth == -1) {
-                canvasView.drawImage(image: image, dx: CGFloat(truncating: sx), dy: CGFloat(truncating: sy))
+                try canvasView.drawImage(image: image, dx: CGFloat(truncating: sx), dy: CGFloat(truncating: sy))
             } else if (dx == -1) {
-                canvasView.drawImage(image: image, dx: CGFloat(truncating: sx), dy: CGFloat(truncating: sy), dWidth: CGFloat(truncating: sWidth), dHeight: CGFloat(truncating: sHeight))
+                try canvasView.drawImage(image: image, dx: CGFloat(truncating: sx), dy: CGFloat(truncating: sy), dWidth: CGFloat(truncating: sWidth), dHeight: CGFloat(truncating: sHeight))
             } else {
-                canvasView.drawImage(image: image, sx: CGFloat(truncating: sx), sy: CGFloat(truncating: sy), sWidth: CGFloat(truncating: sWidth), sHeight: CGFloat(truncating: sHeight), dx: CGFloat(truncating: dx), dy: CGFloat(truncating: dy), dWidth: CGFloat(truncating: dWidth), dHeight: CGFloat(truncating: dHeight))
+                try canvasView.drawImage(image: image, sx: CGFloat(truncating: sx), sy: CGFloat(truncating: sy), sWidth: CGFloat(truncating: sWidth), sHeight: CGFloat(truncating: sHeight), dx: CGFloat(truncating: dx), dy: CGFloat(truncating: dy), dWidth: CGFloat(truncating: dWidth), dHeight: CGFloat(truncating: dHeight))
             }
+            resolve(nil)
         } catch {
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-            print("Could not perform drawImage")
+            reject(RCTErrorUnspecified, "Could not perform drawImage: \(error)", error)
         }
     }
 }

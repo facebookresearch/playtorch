@@ -64,7 +64,7 @@ public class BitmapImage {
     }
 
     func scale(sx: CGFloat, sy: CGFloat) -> BitmapImage? {
-        if let bitmap = self.getBitmap() {
+        if let bitmap = self.getBitmap()?.copy() {
             let scaledImage = BitmapImage(image: bitmap)
             scaledImage.width = sx * self.width
             scaledImage.height = sy * self.height

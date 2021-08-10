@@ -10,4 +10,6 @@
 
 @interface RCT_EXTERN_REMAP_MODULE(PyTorchCoreCameraView, CameraManager, RCTViewManager)
 RCT_EXPORT_VIEW_PROPERTY(onCapture, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(onFrame, RCTDirectEventBlock)
+RCT_EXPORT_VIEW_PROPERTY(hideCaptureButton, BOOL)
 @end

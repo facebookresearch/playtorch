@@ -78,7 +78,7 @@ export interface CameraProps extends ViewProps {
    *
    * @param image An [[Image]] reference.
    */
-  onFrame?(image: Image): void;
+  onFrame? (image: Image): void;
 }
 
 const PyTorchCoreCameraView = requireNativeComponent<CameraProps>(
@@ -124,6 +124,7 @@ export function Camera({
   targetResolution,
   ...otherProps
 }: CameraProps) {
+
   const handleFrame = useCallback(
     (event: any) => {
       const { nativeEvent } = event;
@@ -151,7 +152,7 @@ export function Camera({
       {...otherProps}
       hideCaptureButton={hideCaptureButton}
       onCapture={handleCapture}
-      onFrame={handleFrame}
+      onFrame={onFrame != null ? handleFrame : undefined}
       targetResolution={targetResolution}
     />
   );

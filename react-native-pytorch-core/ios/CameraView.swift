@@ -10,11 +10,12 @@ import AVFoundation
 import UIKit
 
 @objc(CameraView)
-class CameraView: UIView, AVCapturePhotoCaptureDelegate {
+class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
 
     private let captureButtonSize = 75.0
     private let captureButtonMargin = 16.0
     private let photoOutput = AVCapturePhotoOutput()
+    private var videoOutput: AVCaptureVideoDataOutput!
     private var captureSession: AVCaptureSession!
     private var cameraLayer: AVCaptureVideoPreviewLayer!
     private var backCamera: AVCaptureDevice!
@@ -22,6 +23,8 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate {
     private var frontCamera: AVCaptureDevice!
     private var frontInput: AVCaptureInput!
     @objc public var onCapture: RCTDirectEventBlock?
+    @objc public var onFrame: RCTDirectEventBlock?
+    @objc public var hideCaptureButton: Bool = false
     var captureButton: CaptureButton?
 
     public func openCamera() {
@@ -92,6 +95,13 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate {
     }
 
     func setupOutput() {
+        videoOutput = AVCaptureVideoDataOutput()
+        let videoQueue = DispatchQueue(label: "videoQueue", qos: .userInteractive)
+        videoOutput.setSampleBufferDelegate(self, queue: videoQueue)
+        if captureSession.canAddOutput(videoOutput) {
+            captureSession.addOutput(videoOutput)
+        }
+        videoOutput.connection(with: AVMediaType.video)?.videoOrientation = .portrait
         if captureSession.canAddOutput(photoOutput) {
             captureSession.addOutput(photoOutput)
         }
@@ -166,5 +176,18 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate {
         } else {
             print("Error making image")
         }
+    }
+
+    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        guard let onFrame = onFrame else { return }
+        guard let cvBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
+            print("Could not get sample buffer")
+            return
+            //TODO(T92857704) Eventually forward Error to React Native using promises
+        }
+        let ciImage = CIImage(cvImageBuffer: cvBuffer)
+        let bitmapImage = BitmapImage(image: ciImage)
+        let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
+        onFrame(ref)
     }
 }

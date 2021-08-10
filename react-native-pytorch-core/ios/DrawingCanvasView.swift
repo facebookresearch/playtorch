@@ -16,47 +16,24 @@ class DrawingCanvasView: UIView {
     var stateStack = Stack()
     var path = CGMutablePath()
     var currentState = CanvasState()
-    var sublayers = [CALayer]()
-    var scale: CGFloat?
-    var needsDraw: Bool = false
-    var shapeLayers = [CAShapeLayer] ()
-    var drawingLayer = CATransformLayer()
-    let deletionQueue = DispatchQueue(label: "deletionQueue", qos: .userInitiated, attributes: .concurrent)
+    var sublayers = [LayerData]()
+    let scaleText = UIScreen.main.scale
+    var shapeLayers = [ShapeLayerData] ()
+    var clearOnDraw: Bool = false
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
         self.clipsToBounds = true
-        self.scale = UIScreen.main.scale
         ref = JSContext.wrapObject(object: self).getJSRef()
-        deletionQueue.async {
-            CATransaction.flush()
-        }
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        self.scale = UIScreen.main.scale
-        drawingLayer.bounds = layer.bounds
         ref = JSContext.wrapObject(object: self).getJSRef()
-        deletionQueue.async {
-            CATransaction.flush()
-        }
     }
 
-    override func draw(_ layer: CALayer, in ctx: CGContext) {
-        for sublayer in sublayers {
-            drawingLayer.addSublayer(sublayer)
-        }
-        sublayers.removeAll()
-        layer.sublayers?.removeAll()
-        self.layer.addSublayer(drawingLayer)
-        if #available(iOS 11.0, *), ((self.layer.sublayers?.count ?? 0) > 100) {
-            flattenLayer()
-        }
-        needsDraw = false
-        deletionQueue.async {
-            CATransaction.flush()
-        }
+    override class var layerClass : AnyClass {
+       return CATransformLayer.self
     }
 
     override func didSetProps(_ changedProps: [String]!) {
@@ -72,30 +49,20 @@ class DrawingCanvasView: UIView {
         let rect = CGRect(x: x, y: y, width: width, height: height)
         let p = CGMutablePath()
         p.addRect(rect)
-        let newLayer = CAShapeLayer()
-        newLayer.setStyle(state: currentState)
-        newLayer.fillColor = UIColor.clear.cgColor
-        newLayer.path = p
-        newLayer.transform = currentState.transform
+        var state = CanvasState(state: currentState)
+        state.fillStyle = UIColor.clear.cgColor
+        let newLayer = ShapeLayerData(path: path, state: state)
         sublayers.append(newLayer)
-        deletionQueue.async {
-            CATransaction.flush()
-        }
     }
 
     func fillRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
         let rect = CGRect(x: x, y: y, width: width, height: height)
         let p = CGMutablePath()
         p.addRect(rect)
-        let newLayer = CAShapeLayer()
-        newLayer.setStyle(state: currentState)
-        newLayer.lineWidth = 0
-        newLayer.path = p
-        newLayer.transform = currentState.transform
+        var state = CanvasState(state: currentState)
+        state.lineWidth = 0
+        let newLayer = ShapeLayerData(path: p, state: state)
         sublayers.append(newLayer)
-        deletionQueue.async {
-            CATransaction.flush()
-        }
     }
 
     func rect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
@@ -105,31 +72,43 @@ class DrawingCanvasView: UIView {
     }
 
     func invalidate() {
-        // The invalidate has been called previously and the canvas hasn't redrawn yet -- no need to call needs display again.
-        if (needsDraw) {
-            return
-        }
-        needsDraw = true
-        DispatchQueue.main.async {
-            self.layer.setNeedsDisplay()
-            self.deletionQueue.async {
-                CATransaction.flush()
+        RunLoop.main.perform {
+            if self.clearOnDraw {
+                self.layer.sublayers?.removeAll()
+                self.clearOnDraw = false
+            }
+            for layerData in self.sublayers {
+                switch layerData.type{
+                case .ShapeLayer:
+                    let data = layerData as! ShapeLayerData
+                    let newLayer = CAShapeLayer()
+                    newLayer.setStyle(state: data.state)
+                    newLayer.transform = data.state.transform
+                    newLayer.path = data.path
+                    self.layer.addSublayer(newLayer)
+                case .TextLayer:
+                    let data = layerData as! TextLayerData
+                    let newLayer = CATextLayer()
+                    newLayer.transform = data.transform
+                    newLayer.frame = data.frame
+                    newLayer.string = data.text
+                    newLayer.contentsScale = self.scaleText
+                    self.layer.addSublayer(newLayer)
+                case .ImageLayer:
+                    let data = layerData as! ImageLayerData
+                    let newLayer = CALayer()
+                    newLayer.transform = data.transform
+                    newLayer.contents = data.image
+                    newLayer.frame = data.frame
+                    self.layer.addSublayer(newLayer)
+                }
             }
         }
     }
 
     func clear() {
-        drawingLayer.sublayers?.removeAll()
-        DispatchQueue.main.async {
-            self.layer.sublayers?.removeAll()
-            self.deletionQueue.async {
-                CATransaction.flush()
-            }
-        }
         sublayers.removeAll()
-        deletionQueue.async {
-            CATransaction.flush()
-        }
+        clearOnDraw = true
     }
 
     func clearRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) { // doesn't work yet
@@ -143,24 +122,11 @@ class DrawingCanvasView: UIView {
         if !path.isEmpty {
             onTransformationChange()
         }
-        let newLayer = CATransformLayer()
-        newLayer.isDoubleSided = true
-        var newShapeLayers = [CAShapeLayer]()
-        for sublayer in shapeLayers {
-            sublayer.setStyle(state: currentState)
-            sublayer.fillColor = UIColor.clear.cgColor
-            sublayer.frame = sublayer.contentsRect
-            newLayer.addSublayer(sublayer)
-            newShapeLayers.append(copyShapeLayer(layer: sublayer))
-            deletionQueue.async {
-                CATransaction.flush()
-            }
-        }
-        shapeLayers.removeAll()
-        shapeLayers = newShapeLayers
-        sublayers.append(newLayer)
-        deletionQueue.async {
-            CATransaction.flush()
+        var state = CanvasState(state: currentState)
+        state.fillStyle = UIColor.clear.cgColor
+        for sld in shapeLayers {
+            let newLayer  = ShapeLayerData(path: sld.path, state: state)
+            sublayers.append(newLayer)
         }
     }
 
@@ -168,35 +134,12 @@ class DrawingCanvasView: UIView {
         if !path.isEmpty {
             onTransformationChange()
         }
-        let newLayer = CATransformLayer()
-        newLayer.isDoubleSided = true
-        var newShapeLayers = [CAShapeLayer] ()
-        for sublayer in shapeLayers {
-            sublayer.setStyle(state: currentState)
-            sublayer.lineWidth = 0
-            sublayer.frame = sublayer.contentsRect
-            newLayer.addSublayer(sublayer)
-            newShapeLayers.append(copyShapeLayer(layer: sublayer))
-            deletionQueue.async {
-                CATransaction.flush()
-            }
+        var state = CanvasState(state: currentState)
+        state.lineWidth = 0
+        for sld in shapeLayers {
+            let newLayer = ShapeLayerData(path: sld.path, state: state)
+            sublayers.append(newLayer)
         }
-        shapeLayers.removeAll()
-        shapeLayers = newShapeLayers
-        sublayers.append(newLayer)
-        deletionQueue.async {
-            CATransaction.flush()
-        }
-    }
-
-    func copyShapeLayer(layer: CAShapeLayer) -> CAShapeLayer {
-        let newLayer = CAShapeLayer()
-        newLayer.transform = layer.transform
-        newLayer.path = layer.path
-        deletionQueue.async {
-            CATransaction.flush()
-        }
-        return newLayer
     }
 
     func scale(x: CGFloat, y: CGFloat) {
@@ -284,6 +227,12 @@ class DrawingCanvasView: UIView {
 
     @available(iOS 13.0, *)
     func setFont(font: NSDictionary) {
+        if let fr = currentState.fontRepresentation, fr.isEqual(font) {
+            return
+        } else {
+            currentState.fontRepresentation = font
+        }
+
         var fontName = ""
         var serif = false
 
@@ -345,7 +294,7 @@ class DrawingCanvasView: UIView {
 
     func beginPath(){
         path = CGMutablePath()
-        shapeLayers = [CAShapeLayer] ()
+        shapeLayers.removeAll()
     }
 
     func closePath(){
@@ -364,19 +313,14 @@ class DrawingCanvasView: UIView {
         let rect = CGRect(x: x-radius, y: y-radius, width: 2*radius, height: 2*radius)
         let p = CGMutablePath()
         p.addEllipse(in: rect)
-        let newLayer = CAShapeLayer()
-        newLayer.setStyle(state: currentState)
+        var state = CanvasState(state: currentState)
         if fill {
-            newLayer.lineWidth = 0
+            state.lineWidth = 0
         } else {
-            newLayer.fillColor = UIColor.clear.cgColor
+            state.fillStyle = UIColor.clear.cgColor
         }
-        newLayer.path = p
-        newLayer.transform = currentState.transform
+        let newLayer = ShapeLayerData(path: p, state: state)
         sublayers.append(newLayer)
-        deletionQueue.async {
-            CATransaction.flush()
-        }
     }
 
     func fillText(text: String, x: CGFloat, y: CGFloat, fill: Bool = true) {
@@ -388,11 +332,7 @@ class DrawingCanvasView: UIView {
             attrs[ NSAttributedString.Key.strokeColor ] = currentState.strokeStyle
             attrs[ NSAttributedString.Key.strokeWidth ] = currentState.lineWidth
         }
-
         let attrString = NSAttributedString(string: text, attributes: attrs)
-        let newLayer = CATextLayer()
-        newLayer.string = attrString
-        newLayer.transform = currentState.transform
         let textWidth = attrString.size().width + currentState.lineWidth
         let textHeight = attrString.size().height
         var offsetX = CGFloat(0) //default value for textAlign left (so not needed in switch case)
@@ -405,86 +345,46 @@ class DrawingCanvasView: UIView {
         default:
             offsetX = 0 //this is a duplicate of what is already stored in offsetX, but switch case must be exhaustive and each case must have at least one executable statement?
         }
-        newLayer.frame = CGRect(x: x + offsetX, y: y + offsetY, width: textWidth, height: textHeight)
-        if let scale = scale {
-            DispatchQueue.main.sync {
-                newLayer.contentsScale = scale
-            }
-        } else {
-            DispatchQueue.main.sync {
-                newLayer.contentsScale = UIScreen.main.scale
-            }
-        }
+        let frame = CGRect(x: x + offsetX, y: y + offsetY, width: textWidth, height: textHeight)
+        let newLayer = TextLayerData(text: attrString, transform: currentState.transform, frame: frame)
         sublayers.append(newLayer)
-        deletionQueue.async {
-            CATransaction.flush()
-        }
     }
 
     func drawImage(image: BitmapImage, dx: CGFloat, dy: CGFloat) {
-        let newLayer = CALayer()
-        newLayer.contents = image.getBitmap()
-        newLayer.transform = currentState.transform
-        newLayer.frame = CGRect(x: dx, y: dy, width: CGFloat(image.getWidth()), height: CGFloat(image.getHeight()))
+        let frame = CGRect(x: dx, y: dy, width: CGFloat(image.getWidth()), height: CGFloat(image.getHeight()))
+        let newLayer = ImageLayerData(image: image.getBitmap(), transform: currentState.transform, frame: frame)
         sublayers.append(newLayer)
-        deletionQueue.async {
-            CATransaction.flush()
-        }
     }
 
     func drawImage(image: BitmapImage, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) {
-        let newLayer = CALayer()
-        newLayer.contents = image.getBitmap()
-        newLayer.transform = currentState.transform
-        newLayer.frame = CGRect(x: dx, y: dy, width: dWidth, height: dHeight)
+        let frame = CGRect(x: dx, y: dy, width: dWidth, height: dHeight)
+        let newLayer = ImageLayerData(image: image.getBitmap(), transform: currentState.transform, frame: frame)
         sublayers.append(newLayer)
-        deletionQueue.async {
-            CATransaction.flush()
-        }
     }
 
     func drawImage(image: BitmapImage, sx: CGFloat, sy: CGFloat, sWidth: CGFloat, sHeight: CGFloat, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) {
-        let newLayer = CALayer()
-        newLayer.transform = currentState.transform
+        var contentsImage: CGImage
         if let croppedImage = image.getBitmap().cropping(to: CGRect(x: sx, y: sy, width: sWidth, height: sHeight)) {
-            if(dWidth != -1 && dHeight != -1) {
-                newLayer.contents = croppedImage
-                newLayer.frame = CGRect(x: dx, y: dy, width: dWidth, height: dHeight)
-            } else {
-                newLayer.contents = image.getBitmap()
-                newLayer.frame = CGRect(x: dx, y: dy, width: CGFloat(image.getWidth()), height: CGFloat(image.getHeight()))
-            }
+            contentsImage = croppedImage
+        } else {
+            contentsImage = image.getBitmap()
         }
+        var frame: CGRect
+        if(dWidth != -1 && dHeight != -1) {
+            frame = CGRect(x: dx, y: dy, width: dWidth, height: dHeight)
+        } else {
+            frame = CGRect(x: dx, y: dy, width: CGFloat(image.getWidth()), height: CGFloat(image.getHeight()))
+        }
+        let newLayer = ImageLayerData(image: contentsImage, transform: currentState.transform, frame: frame)
         sublayers.append(newLayer)
-        deletionQueue.async {
-            CATransaction.flush()
-        }
-    }
-
-    @available(iOS 11.0, *)
-    func flattenLayer() {
-        //see https://medium.com/@almalehdev/high-performance-drawing-on-ios-part-2-2cb2bc957f6
-        let currentLayer = self.layer.presentation()
-        if let flattenedLayer = try? NSKeyedUnarchiver.unarchiveTopLevelObjectWithData(
-            NSKeyedArchiver.archivedData(withRootObject: currentLayer, requiringSecureCoding: false))
-            as? CAShapeLayer {
-                self.layer.sublayers = nil
-                self.layer.sublayers?.append(flattenedLayer)
-        }
     }
 
     func onTransformationChange() {
-        let newLayer = CAShapeLayer()
-        newLayer.isDoubleSided = true
-        newLayer.path = path
-        newLayer.transform = currentState.transform
+        let newLayer = ShapeLayerData(path: path, state: currentState)
         shapeLayers.append(newLayer)
         let startPoint = path.currentPoint
         path = CGMutablePath()
         path.move(to: startPoint, transform: CATransform3DGetAffineTransform(currentState.transform))
-        deletionQueue.async {
-            CATransaction.flush()
-        }
     }
 
     class Stack {
@@ -515,6 +415,7 @@ struct CanvasState {
     public var miterLimit: CGFloat
     public var font: UIFont
     public var textAlign: NSTextAlignment
+    public var fontRepresentation: NSDictionary?
 
     init(transform: CATransform3D = CATransform3DIdentity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1, lineCap: CAShapeLayerLineCap = .butt, lineJoin: CAShapeLayerLineJoin = .miter, miterLimit: CGFloat = 10, font: UIFont = .systemFont(ofSize: 10), textAlign: NSTextAlignment = NSTextAlignment.left) {
         self.transform = transform
@@ -538,5 +439,6 @@ struct CanvasState {
         self.miterLimit = CGFloat(state.miterLimit)
         self.font = state.font.copy() as! UIFont
         self.textAlign = state.textAlign
+        self.fontRepresentation = state.fontRepresentation
     }
 }

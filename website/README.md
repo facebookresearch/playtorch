@@ -10,6 +10,12 @@ yarn install
 
 ## Local Development
 
+```
+yarn install:pytorch-core-deps
+```
+
+This command will install dependencies for the `react-native-pytorch-core` package, which are necessary for the typedoc plugin to generate the React Native PyTorch Core package API.
+
 ```console
 yarn start
 ```

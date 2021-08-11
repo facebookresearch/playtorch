@@ -144,7 +144,7 @@ module.exports = {
           '../react-native-pytorch-core/**/__tests__',
           '../react-native-pytorch-core/**/example',
         ],
-        tsconfig: '../react-native-pytorch-core/tsconfig.json',
+        tsconfig: '../react-native-pytorch-core/tsconfig.build.json',
         excludePrivate: true,
         excludeProtected: true,
         excludeExternals: true,

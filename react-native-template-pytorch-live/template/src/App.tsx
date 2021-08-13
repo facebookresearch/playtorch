@@ -40,14 +40,11 @@ type ModelPreloaderWrapperProps = {
  * platform.
  */
 function ModelPreloaderWrapper({children}: ModelPreloaderWrapperProps) {
-  if (Platform.OS === 'android') {
     return (
       <ModelPreloader modelInfos={ImageClassificationModels} loadAsync={true}>
         {children}
       </ModelPreloader>
     );
-  }
-  return <>{children}</>;
 }
 
 function AppWithNavigation() {

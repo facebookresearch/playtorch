@@ -10,3 +10,4 @@
 #import <React/RCTEventEmitter.h>
 #import <React/RCTConvert.h>
 #import "Macros.h"
+#import "TorchModule.h"

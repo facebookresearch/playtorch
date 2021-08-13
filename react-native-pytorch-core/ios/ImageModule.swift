@@ -51,9 +51,15 @@ public class ImageModule: NSObject {
         }
     }
 
-    func unwrapImage(_ imageRef: NSDictionary) throws -> BitmapImage {
+    public static func unwrapImage(_ imageRef: NSDictionary) throws -> BitmapImage {
         guard let ref = imageRef["ID"] as? String else { throw ImageModuleError.castingDict }
         let castedImage = try JSContext.unwrapObject(jsRef: ["ID": ref]) as? BitmapImage
+        guard let image = castedImage else { throw ImageModuleError.castingObject }
+        return image
+    }
+
+    public static func unwrapImage(_ imageRef: String) throws -> BitmapImage {
+        let castedImage = try JSContext.unwrapObject(jsRef: ["ID": imageRef]) as? BitmapImage
         guard let image = castedImage else { throw ImageModuleError.castingObject }
         return image
     }
@@ -61,7 +67,7 @@ public class ImageModule: NSObject {
     @objc
     public func getWidth(_ imageRef: NSDictionary) -> Any {
         do {
-            let image = try unwrapImage(imageRef)
+            let image = try ImageModule.unwrapImage(imageRef)
             return NSNumber(value: Float(image.getWidth()));
         } catch {
             print("Invalid image reference in getWidth")
@@ -72,7 +78,7 @@ public class ImageModule: NSObject {
     @objc
     public func getHeight(_ imageRef: NSDictionary) -> Any {
         do {
-            let image = try unwrapImage(imageRef)
+            let image = try ImageModule.unwrapImage(imageRef)
             return NSNumber(value: Float(image.getHeight()));
         } catch {
             print("Invalid image reference in getHeight")
@@ -83,7 +89,7 @@ public class ImageModule: NSObject {
     @objc(scale:sx:sy:resolver:rejecter:)
     public func scale(_ imageRef: NSDictionary, sx: NSNumber, sy: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
-            let image = try unwrapImage(imageRef)
+            let image = try ImageModule.unwrapImage(imageRef)
             let scaledImage = image.scale(sx: CGFloat(truncating: sx), sy: CGFloat(truncating: sy))
             let ref = JSContext.wrapObject(object: scaledImage).getJSRef()
             resolve(ref)

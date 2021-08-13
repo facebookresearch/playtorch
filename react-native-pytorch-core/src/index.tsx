@@ -8,6 +8,7 @@
  */
 
 export {Image, ImageUtil} from './ImageModule';
-export {MobileModel} from './MobileModelModule';
+export {MobileModel, ModelResultMetrics, ModelResult} from './MobileModelModule';
+export {ModelInfo} from "./Models"
 export {Camera} from './CameraView';
 export {Canvas, CanvasRenderingContext2D} from './CanvasView';

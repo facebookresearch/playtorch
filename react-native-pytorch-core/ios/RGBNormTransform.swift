@@ -30,7 +30,7 @@ class RGBNormTransform: IImageToTensorTransform {
         }
     }
 
-    func transform(bitmap: CGImage) -> [Float32] {
+    func transform(bitmap: CGImage) -> TensorWrapper {
         let w = bitmap.width
         let h = bitmap.height
         let bytesPerPixel = 4
@@ -57,6 +57,6 @@ class RGBNormTransform: IImageToTensorTransform {
             normalizedBuffer[w * h + i] = (Float32(rawBytes[i * 4 + 1]) / 255.0 - mean[1]) / std[1] // G
             normalizedBuffer[w * h * 2 + i] = (Float32(rawBytes[i * 4 + 2]) / 255.0 - mean[2]) / std[2]// B
         }
-        return normalizedBuffer
+        return TensorWrapper(fromBlob: &normalizedBuffer, shape: [1, 3, NSNumber(value: Int32(w)), NSNumber(value: Int32(h))], dtype: "float")
     }
 }

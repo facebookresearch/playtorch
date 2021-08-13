@@ -35,12 +35,16 @@ class BaseIValuePacker {
         }
     }
 
-    func unpack(outputs: [NSNumber], modelSpec: ModelSpecification) throws -> Any? {
-        switch modelSpec.unpack.type {
-        case "argmax":
-            return [modelSpec.unpack.key : argmax(array: outputs)]
-        default:
-            throw BaseIValuePackerError.InvalidUnpackType
+    func unpack(outputs: TensorWrapper, modelSpec: ModelSpecification) throws -> Any? {
+        do {
+            switch modelSpec.unpack.type {
+            case "argmax":
+                return try [modelSpec.unpack.key : argmax(tensorWrapper: outputs)]
+            default:
+                throw BaseIValuePackerError.InvalidUnpackType
+            }
+        } catch {
+            throw error
         }
     }
 
@@ -122,16 +126,8 @@ class BaseIValuePacker {
         }
     }
 
-    private func argmax(array: [NSNumber]) -> Int {
-        var max = array[0]
-        var maxIdx = 0
-        for i in 0 ..< array.count {
-            if(array[i].floatValue > max.floatValue) {
-                max = array[i]
-                maxIdx = i
-            }
-        }
-        return maxIdx
+    private func argmax(tensorWrapper: TensorWrapper) throws -> Int {
+        return Int(tensorWrapper.argmax());
     }
 
 }

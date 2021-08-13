@@ -9,45 +9,61 @@
 #import <LibTorch/LibTorch.h>
 
 @implementation TorchModule {
- @protected
-  torch::jit::script::Module _impl;
+    @protected
+    torch::jit::script::Module _impl;
 }
 
 - (nullable instancetype)initWithFileAtPath:(NSString*)filePath {
-  self = [super init];
-  if (self) {
-    try {
-      _impl = torch::jit::load(filePath.UTF8String);
-      _impl.eval();
-    } catch (const std::exception& exception) {
-      NSLog(@"%s", exception.what());
-      return nil;
+    self = [super init];
+    if (self) {
+        try {
+            _impl = torch::jit::load(filePath.UTF8String);
+            _impl.eval();
+        } catch (const std::exception& exception) {
+          NSLog(@"%s", exception.what());
+          return nil;
+        }
     }
-  }
-  return self;
+    return self;
 }
 
 
 
-- (NSArray<NSNumber*>*)predictImage:(void*)imageBuffer width:(int)width height:(int)height{
-  try {
-    at::Tensor tensor = torch::from_blob(imageBuffer, {1, 3, width, height}, at::kFloat);
-    torch::autograd::AutoGradMode guard(false);
-    at::AutoNonVariableTypeMode non_var_type_mode(true);
-    auto outputTensor = _impl.forward({tensor}).toTensor();
-    float* floatBuffer = outputTensor.data_ptr<float>();
-    if (!floatBuffer) {
-      return nil;
+- (TensorWrapper *)predictImage:(TensorWrapper *)tensorWrapper outputType:(NSString *)outputType {
+    try {
+        std::vector<int64_t> shape = {};
+        for (NSNumber * n in [tensorWrapper shape]) {
+          int64_t num = n.intValue;
+          shape.push_back(num);
+        }
+        at::Tensor tensor;
+        if([[tensorWrapper getDtype] isEqualToString:@"float"]) { //eventually add other cases that do the same thing, but with a different third parameter
+            tensor = torch::from_blob([tensorWrapper buffer], shape, at::kFloat);
+        } else {
+            NSException* exception = [NSException exceptionWithName:@"InvalidDtype" reason:@"The provided dtype is not a recognized data type" userInfo:nil];
+            throw exception;
+        }
+        torch::autograd::AutoGradMode guard(false);
+        at::AutoNonVariableTypeMode non_var_type_mode(true);
+        auto outputTensor = _impl.forward({tensor}).toTensor();
+        NSMutableArray * shapeArray = [NSMutableArray new];
+        std::vector<int64_t> shapeVector = outputTensor.sizes().vec();
+        for (int i = 0; i < shapeVector.size(); i++) {
+          NSNumber * n = @(shapeVector[i]);
+          [shapeArray addObject:(n)];
+        }
+        TensorWrapper* outputTensorWrapper;
+        if([outputType isEqualToString:@"float"]) { //eventually add other cases that do the same thing, but with a different type for the data pointer
+            outputTensorWrapper = [[TensorWrapper new] initFromBlob:outputTensor.data_ptr<float>() shape: shapeArray dtype:@"float"];
+        } else {
+            NSException* exception = [NSException exceptionWithName:@"InvalidDtype" reason:@"The provided dtype is not a recognized data type" userInfo:nil];
+            throw exception;
+        }
+        return outputTensorWrapper;
+    } catch (const std::exception& exception) {
+        NSLog(@"%s", exception.what());
     }
-    NSMutableArray* results = [[NSMutableArray alloc] init];
-      for (int i = 0; i < outputTensor.numel(); i++) {
-      [results addObject:@(floatBuffer[i])];
-    }
-    return [results copy];
-  } catch (const std::exception& exception) {
-    NSLog(@"%s", exception.what());
-  }
-  return nil;
+    return nil;
 }
 
 @end

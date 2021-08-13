@@ -26,10 +26,10 @@ public class MobileModelModule: NSObject {
             guard let modelSpec = moduleHolder.modelSpec else { return }
             let startPack = CFAbsoluteTimeGetCurrent()
             do {
-                if var pixelBuffer =  try packer.pack(params: params, modelSpec: modelSpec) as? [Float32] {
+                if var tensorWrapper =  try packer.pack(params: params, modelSpec: modelSpec) as? TensorWrapper {
                     let packTime = (CFAbsoluteTimeGetCurrent() - startPack) * 1000
                     let startInference = CFAbsoluteTimeGetCurrent()
-                    if let outputs = moduleHolder.module?.predictImage(UnsafeMutablePointer(&pixelBuffer), width: 224, height: 224) {
+                    if let outputs = moduleHolder.module?.predictImage(tensorWrapper, outputType: modelSpec.unpack.dtype) {
                         let inferenceTime = (CFAbsoluteTimeGetCurrent() - startInference) * 1000
                         let startUnpack = CFAbsoluteTimeGetCurrent()
                         let result = try packer.unpack(outputs: outputs, modelSpec: modelSpec)

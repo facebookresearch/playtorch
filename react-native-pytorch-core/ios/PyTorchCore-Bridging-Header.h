@@ -11,3 +11,4 @@
 #import <React/RCTConvert.h>
 #import "Macros.h"
 #import "TorchModule.h"
+#import "TensorWrapper.h"

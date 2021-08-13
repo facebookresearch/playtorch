@@ -3,53 +3,33 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
- *
- * @format
  */
 
-import React, {useCallback, useState} from 'react';
-import {StyleSheet, View} from 'react-native';
-import {
-  Camera,
-  Canvas,
-  CanvasRenderingContext2D,
-  Image,
-} from 'react-native-pytorch-core';
+import * as React from 'react';
+import { Text } from 'react-native'
+import type { ModelInfo } from 'react-native-pytorch-core'
+import useImageModelInference from '../useImageModelInference'
+import {Camera, Image} from 'react-native-pytorch-core'
+import { StyleSheet } from 'react-native';
 
-export default function CanvasDrawImage() {
-  const [drawingContext, setDrawingContext] = useState<
-    CanvasRenderingContext2D
-  >();
+const modelInfo: ModelInfo = {
+    name: 'MobileNet V3 Small',
+    model: require('../../models/mobilenet_v3_small.pt')
+}
 
-  const handleContext2D = useCallback(
-    async (ctx: CanvasRenderingContext2D) => {
-      setDrawingContext(ctx);
-    },
-    [setDrawingContext],
-  );
+export default function Playground() {
+    const {processImage, imageClass} = useImageModelInference(modelInfo);
 
-  const handleCapture = useCallback(
-    async (image: Image) => {
-      const ctx = drawingContext;
-      const scaledImage = await image.scale(0.15, 0.15);
-      if (ctx != null && image != null) {
-        ctx.drawImage(scaledImage, 10, 10);
-        ctx.invalidate();
-      }
-    },
-    [drawingContext],
-  );
+    async function handleImage(image: Image) {
+        await processImage(image);
+        image.release();
+    }
 
   return (
-    <View style={styles.container}>
-      <Camera
-        style={styles.camera}
-        onCapture={handleCapture}
-        hideCaptureButton={false}
-        targetResolution={{"width": 480, "height": 640}}
-      />
-      <Canvas style={styles.canvas} onContext2D={handleContext2D} />
-    </View>
+    <>
+    <Text style={styles.text}>{imageClass}</Text>
+    <Camera onCapture={handleImage} hideCaptureButton={false} style={styles.camera}/>
+    </>
   );
 }
 
@@ -59,9 +39,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   camera: {
-    flex: 1,
+    flex: 10,
   },
-  canvas: {
+  text: {
     flex: 1,
   },
 });

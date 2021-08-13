@@ -22,6 +22,27 @@ public class MobileModelModule: NSObject {
     public func execute(_ modelPath: NSString, params: NSDictionary, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
         let modelKey = getKey(path: modelPath as String)
         if let moduleHolder = mModulesAndSpecs[modelKey] {
+            let packer = BaseIValuePacker()
+            guard let modelSpec = moduleHolder.modelSpec else { return }
+            let startPack = CFAbsoluteTimeGetCurrent()
+            do {
+                if var pixelBuffer =  try packer.pack(params: params, modelSpec: modelSpec) as? [Float32] {
+                    let packTime = (CFAbsoluteTimeGetCurrent() - startPack) * 1000
+                    let startInference = CFAbsoluteTimeGetCurrent()
+                    if let outputs = moduleHolder.module?.predictImage(UnsafeMutablePointer(&pixelBuffer), width: 224, height: 224) {
+                        let inferenceTime = (CFAbsoluteTimeGetCurrent() - startInference) * 1000
+                        let startUnpack = CFAbsoluteTimeGetCurrent()
+                        let result = try packer.unpack(outputs: outputs, modelSpec: modelSpec)
+                        let unpackTime = (CFAbsoluteTimeGetCurrent() - startUnpack) * 1000
+                        let metrics = ["totalTime": packTime + inferenceTime + unpackTime, "packTime": packTime, "inferenceTime": inferenceTime, "unpackTime": unpackTime]
+                        resolve(["result": result, "metrics": metrics])
+                    }
+                } else {
+                    reject(RCTErrorUnspecified, "Could not run inference on packed inputs", nil)
+                }
+            } catch {
+                reject(RCTErrorUnspecified, "\(error)", error)
+            }
         } else {
             let completionHandler: (String?) -> Void  = { error in
                 if let error = error {

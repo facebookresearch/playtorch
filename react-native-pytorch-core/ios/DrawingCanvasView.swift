@@ -58,7 +58,7 @@ class DrawingCanvasView: UIView {
         p.addRect(rect)
         var state = CanvasState(state: currentState)
         state.fillStyle = UIColor.clear.cgColor
-        let newLayer = ShapeLayerData(path: path, state: state)
+        let newLayer = ShapeLayerData(path: p, state: state)
         sublayers.append(newLayer)
     }
 

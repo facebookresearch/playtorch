@@ -24,6 +24,7 @@ module.exports = {
     'tutorials/image-classification',
     'tutorials/question-answering',
     'tutorials/prepare-custom-model',
+    'tutorials/server-model',
   ],
   api: [
     {

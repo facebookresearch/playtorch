@@ -21,7 +21,7 @@ const FeatureList = [
       </>
     ),
     description: 'Get started',
-    to: '/docs/tutorials/install-cli',
+    to: '/docs/tutorials/get-started',
   },
   {
     title: (

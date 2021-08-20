@@ -29,7 +29,7 @@
 </p>
 
 <h3 align="center">
-  <a href="http://facebookexperimental.github.io/pytorch-live/docs/tutorials/install-cli">Getting Started</a>
+  <a href="http://facebookexperimental.github.io/pytorch-live/docs/tutorials/get-started">Get Started</a>
   <span> · </span>
   <a href="http://facebookexperimental.github.io/pytorch-live/docs/tutorials/image-classification">Tutorials</a>
   <span> · </span>
@@ -53,7 +53,7 @@ This monorepo includes the PyTorch Live command line interface (i.e., `torchlive
 PyTorch Live apps may target Android 10.0 (API 29) or newer. You may use Windows, macOS, or Linux as your development operating system, though building and running the PyTorch Live CLI is limited to macOS.
 
 ## 🎉 Building your first PyTorch Live app
-Follow the [Getting Started guide](http://facebookexperimental.github.io/pytorch-live/docs/tutorials/install-cli). PyTorch Live offers a CLI with convenient commands to install development dependencies and initialize new projects. We also have a few tutorials for you to keep going after getting started:
+Follow the [Getting Started guide](http://facebookexperimental.github.io/pytorch-live/docs/tutorials/get-started). PyTorch Live offers a CLI with convenient commands to install development dependencies and initialize new projects. We also have a few tutorials for you to keep going after getting started:
 
 * [Image Classification](http://facebookexperimental.github.io/pytorch-live/docs/tutorials/image-classification)
 * [Question Answering](http://facebookexperimental.github.io/pytorch-live/docs/tutorials/question-answering)

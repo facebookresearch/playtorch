@@ -23,7 +23,7 @@ module.exports = {
   projectName: 'pytorch-live',
   themeConfig: {
     prism: {
-      theme: require('prism-react-renderer/themes/github'),
+      theme: require('prism-react-renderer/themes/dracula'),
       darkTheme: require('prism-react-renderer/themes/dracula'),
     },
     navbar: {
@@ -35,9 +35,9 @@ module.exports = {
       items: [
         {
           type: 'doc',
-          docId: 'tutorials/install-cli',
+          docId: 'tutorials/get-started',
           position: 'left',
-          label: 'Tutorial',
+          label: 'Tutorials',
         },
         {
           type: 'doc',

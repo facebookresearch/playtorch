@@ -20,11 +20,12 @@
 
 module.exports = {
   docs: [
-    'tutorials/install-cli',
+    'tutorials/get-started',
     'tutorials/image-classification',
     'tutorials/question-answering',
     'tutorials/prepare-custom-model',
     'tutorials/server-model',
+    'tutorials/faq',
   ],
   api: [
     {

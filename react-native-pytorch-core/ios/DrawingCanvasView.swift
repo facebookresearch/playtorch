@@ -85,30 +85,31 @@ class DrawingCanvasView: UIView {
                 self.clearOnDraw = false
             }
             for layerData in self.sublayers {
+                let baseLayer = CALayer()
+                baseLayer.transform = layerData.transform
                 switch layerData.type{
                 case .ShapeLayer:
                     let data = layerData as! ShapeLayerData
                     let newLayer = CAShapeLayer()
                     newLayer.setStyle(state: data.state)
-                    newLayer.transform = data.state.transform
+                    baseLayer.transform = data.state.transform
                     newLayer.path = data.path
-                    self.layer.addSublayer(newLayer)
+                    baseLayer.addSublayer(newLayer)
                 case .TextLayer:
                     let data = layerData as! TextLayerData
                     let newLayer = CATextLayer()
-                    newLayer.transform = data.transform
                     newLayer.frame = data.frame
                     newLayer.string = data.text
                     newLayer.contentsScale = self.scaleText
-                    self.layer.addSublayer(newLayer)
+                    baseLayer.addSublayer(newLayer)
                 case .ImageLayer:
                     let data = layerData as! ImageLayerData
                     let newLayer = CALayer()
-                    newLayer.transform = data.transform
                     newLayer.contents = data.image
                     newLayer.frame = data.frame
-                    self.layer.addSublayer(newLayer)
+                    baseLayer.addSublayer(newLayer)
                 }
+                self.layer.addSublayer(baseLayer)
             }
         }
     }

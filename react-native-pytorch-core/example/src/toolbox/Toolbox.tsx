@@ -40,6 +40,7 @@ import ToolboxContext, {useToolboxContext} from './ToolboxContext';
 import ToolboxList from './ToolboxList';
 import CanvasGetImageData from './apiTest/CanvasGetImageData';
 import Playground from './Playground';
+import CanvasImageSprite from './apiTest/CanvasImageSprite';
 
 export type Tool = {
   icon?: React.ReactNode;
@@ -216,6 +217,13 @@ const tools: ToolSection = [
         subtitle: 'Drawing aligned text on canvas',
         apiTest: true,
         component: CanvasTextAlign,
+      },
+      {
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
+        title: 'Canvas Image Sprite',
+        subtitle: 'Draw and transform images from an image sprite',
+        apiTest: true,
+        component: CanvasImageSprite,
       },
     ],
   },

@@ -231,7 +231,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
                 bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
         else {
             print("Could not create context to rotate image, resolving with unrotated image");
-            let bitmapImage = BitmapImage(image: image)
+            let bitmapImage = Image(image: image)
             let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
             if let onCapture = onCapture {
                 onCapture(ref)
@@ -243,7 +243,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
         context.translateBy(x: CGFloat(image.height)/(-2) - (CGFloat(image.width - image.height)), y: CGFloat(image.width)/(-2))
         context.draw(image, in: CGRect(origin: .zero, size: CGSize(width: image.width, height: image.height)))
         if let rotatedImage = context.makeImage() {
-            let bitmapImage = BitmapImage(image: rotatedImage)
+            let bitmapImage = Image(image: rotatedImage)
             let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
             if let onCapture = onCapture {
                 onCapture(ref)
@@ -261,7 +261,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
             //TODO(T92857704) Eventually forward Error to React Native using promises
         }
         let ciImage = CIImage(cvImageBuffer: cvBuffer)
-        let bitmapImage = BitmapImage(image: ciImage)
+        let bitmapImage = Image(image: ciImage)
         let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
         onFrame(ref)
     }

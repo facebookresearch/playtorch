@@ -39,7 +39,7 @@ class DrawingCanvasView: UIView {
     }
 
     override class var layerClass : AnyClass {
-       return CATransformLayer.self
+        return CATransformLayer.self
     }
 
     override func didSetProps(_ changedProps: [String]!) {
@@ -360,7 +360,7 @@ class DrawingCanvasView: UIView {
         sublayers.append(newLayer)
     }
 
-    func drawImage(image: BitmapImage, dx: CGFloat, dy: CGFloat) throws {
+    func drawImage(image: IImage, dx: CGFloat, dy: CGFloat) throws {
         let frame = CGRect(x: dx, y: dy, width: CGFloat(image.getWidth()), height: CGFloat(image.getHeight()))
         if let bitmap = image.getBitmap() {
             let newLayer = ImageLayerData(image: bitmap, transform: currentState.transform, frame: frame)
@@ -370,7 +370,7 @@ class DrawingCanvasView: UIView {
         }
     }
 
-    func drawImage(image: BitmapImage, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) throws {
+    func drawImage(image: IImage, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) throws {
         let frame = CGRect(x: dx, y: dy, width: dWidth, height: dHeight)
         if let bitmap = image.getBitmap() {
             let newLayer = ImageLayerData(image: bitmap, transform: currentState.transform, frame: frame)
@@ -380,7 +380,7 @@ class DrawingCanvasView: UIView {
         }
     }
 
-    func drawImage(image: BitmapImage, sx: CGFloat, sy: CGFloat, sWidth: CGFloat, sHeight: CGFloat, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) throws {
+    func drawImage(image: IImage, sx: CGFloat, sy: CGFloat, sWidth: CGFloat, sHeight: CGFloat, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) throws {
         var contentsImage: CGImage?
         if let croppedImage = image.getBitmap()?.cropping(to: CGRect(x: sx, y: sy, width: sWidth, height: sHeight)) {
             contentsImage = croppedImage

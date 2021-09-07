@@ -7,11 +7,11 @@
 
 import Foundation
 
-public class BitmapImage {
+public class BitmapImage: IImage {
     private var mBitmap: CGImage?
     private var ciImage: CIImage?
-    private var width: CGFloat;
-    private var height: CGFloat;
+    public var width: CGFloat;
+    public var height: CGFloat;
 
     init(image: CGImage) {
         self.mBitmap = image
@@ -25,27 +25,31 @@ public class BitmapImage {
         self.height = image.extent.height
     }
 
-    func getNaturalWidth() -> Int {
-        //Note: on Android, returns the width in device pixels so that it can be properly redrawn back to the canvas
-        //Since iOS always uses points (density independent), this will return the same as getWidth so that it can be properly redrawn back to the canvas
-        return Int(width)
+    public func getPixelDensity() -> CGFloat {
+        return 1.0
     }
 
-    func getNaturalHeight() -> Int {
-        //Note: on Android, returns the height in device pixels so that it can be properly redrawn back to the canvas
-        //Since iOS always uses points (density independent), this will return the same as getHeight so that it can be properly redrawn back to the canvas
-        return Int(height)
-    }
-
-    func getWidth() -> CGFloat {
+    public func getWidth() -> CGFloat {
         return self.width
     }
 
-    func getHeight() -> CGFloat {
+    public func getHeight() -> CGFloat {
         return self.height
     }
 
-    func getBitmap() -> CGImage? {
+    public func getNaturalWidth() -> Int {
+        return Int(self.width)
+    }
+
+    public func getNaturalHeight() -> Int {
+        return Int(self.height)
+    }
+
+    public func scale(sx: CGFloat, sy: CGFloat) throws -> IImage {
+        return try ImageUtils.scale(image: self, sx: sx, sy: sy)
+    }
+
+    public func getBitmap() -> CGImage? {
         if let bitmap = mBitmap {
             return bitmap
         } else {
@@ -59,19 +63,7 @@ public class BitmapImage {
         }
     }
 
-    func close() throws {
+    public func close() throws -> Void {
         // TODO(T94684939)
-    }
-
-    func scale(sx: CGFloat, sy: CGFloat) -> BitmapImage? {
-        if let bitmap = self.getBitmap()?.copy() {
-            let scaledImage = BitmapImage(image: bitmap)
-            scaledImage.width = sx * self.width
-            scaledImage.height = sy * self.height
-            return scaledImage
-        } else {
-            return nil
-            //TODO(T92857704) Eventually forward Error to React Native using promises
-        }
     }
 }

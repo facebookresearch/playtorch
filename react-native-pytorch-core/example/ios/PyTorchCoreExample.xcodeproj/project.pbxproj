@@ -13,7 +13,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		381721E4266F2E4F00DBB29A /* DummySwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381721E3266F2E4F00DBB29A /* DummySwift.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		B7307E978501A502CA024FE3 /* libPods-PyTorchCoreExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5D90C9E969E9E05D2D2290BD /* libPods-PyTorchCoreExample.a */; };
+		C18A9AB3782563F3BB06FDC1 /* libPods-PyTorchCoreExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5B27D2280AAE7BEA380D097 /* libPods-PyTorchCoreExample.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,12 +37,12 @@
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = PyTorchCoreExample/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = PyTorchCoreExample/main.m; sourceTree = "<group>"; };
 		381721E3266F2E4F00DBB29A /* DummySwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummySwift.swift; sourceTree = "<group>"; };
-		5D90C9E969E9E05D2D2290BD /* libPods-PyTorchCoreExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PyTorchCoreExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
-		6F855924982F627A9B9A7569 /* Pods-PyTorchCoreExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PyTorchCoreExample.release.xcconfig"; path = "Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample.release.xcconfig"; sourceTree = "<group>"; };
+		387003A726E4A18300CF2BDB /* PyTorchCoreExample-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PyTorchCoreExample-Bridging-Header.h"; sourceTree = "<group>"; };
+		75ACA95208C815B7E8090268 /* Pods-PyTorchCoreExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PyTorchCoreExample.release.xcconfig"; path = "Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PyTorchCoreExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		8DF4B164266A5C48009CCD14 /* PyTorchCoreExample-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PyTorchCoreExample-Bridging-Header.h"; sourceTree = "<group>"; };
+		B45861040773D80865054E7E /* Pods-PyTorchCoreExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PyTorchCoreExample.debug.xcconfig"; path = "Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample.debug.xcconfig"; sourceTree = "<group>"; };
+		E5B27D2280AAE7BEA380D097 /* libPods-PyTorchCoreExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PyTorchCoreExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
-		F3841F9F52CD7F717CF1CC8B /* Pods-PyTorchCoreExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PyTorchCoreExample.debug.xcconfig"; path = "Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,7 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B7307E978501A502CA024FE3 /* libPods-PyTorchCoreExample.a in Frameworks */,
+				C18A9AB3782563F3BB06FDC1 /* libPods-PyTorchCoreExample.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +84,7 @@
 		13B07FAE1A68108700A75B9A /* PyTorchCoreExample */ = {
 			isa = PBXGroup;
 			children = (
+				387003A726E4A18300CF2BDB /* PyTorchCoreExample-Bridging-Header.h */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
 				13B07FB51A68108700A75B9A /* Images.xcassets */,
@@ -91,7 +92,6 @@
 				81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */,
 				13B07FB71A68108700A75B9A /* main.m */,
 				381721E3266F2E4F00DBB29A /* DummySwift.swift */,
-				8DF4B164266A5C48009CCD14 /* PyTorchCoreExample-Bridging-Header.h */,
 			);
 			name = PyTorchCoreExample;
 			sourceTree = "<group>";
@@ -100,7 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				5D90C9E969E9E05D2D2290BD /* libPods-PyTorchCoreExample.a */,
+				E5B27D2280AAE7BEA380D097 /* libPods-PyTorchCoreExample.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -139,8 +139,8 @@
 		EE888F89A3FE6E75D4332052 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				F3841F9F52CD7F717CF1CC8B /* Pods-PyTorchCoreExample.debug.xcconfig */,
-				6F855924982F627A9B9A7569 /* Pods-PyTorchCoreExample.release.xcconfig */,
+				B45861040773D80865054E7E /* Pods-PyTorchCoreExample.debug.xcconfig */,
+				75ACA95208C815B7E8090268 /* Pods-PyTorchCoreExample.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -170,14 +170,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "PyTorchCoreExample" */;
 			buildPhases = (
-				3E2577CA73086C40BD53EAB1 /* [CP] Check Pods Manifest.lock */,
+				5F7AF2B1381D67D143C072CE /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				27892D52F93743D22839311E /* [CP] Embed Pods Frameworks */,
-				FEF7B8A2A3211E7DDD9D186F /* [CP] Copy Pods Resources */,
+				3FACAB2B8B42BA87009A08F0 /* [CP] Embed Pods Frameworks */,
+				284EC4405A430C23C023E894 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -258,7 +258,24 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport ENTRY_FILE=index.tsx\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		27892D52F93743D22839311E /* [CP] Embed Pods Frameworks */ = {
+		284EC4405A430C23C023E894 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		3FACAB2B8B42BA87009A08F0 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -275,7 +292,7 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
-		3E2577CA73086C40BD53EAB1 /* [CP] Check Pods Manifest.lock */ = {
+		5F7AF2B1381D67D143C072CE /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -314,23 +331,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "export RCT_METRO_PORT=\"${RCT_METRO_PORT:=8081}\"\necho \"export RCT_METRO_PORT=${RCT_METRO_PORT}\" > \"${SRCROOT}/../node_modules/react-native/scripts/.packager.env\"\nif [ -z \"${RCT_NO_LAUNCH_PACKAGER+xxx}\" ] ; then\n  if nc -w 5 -z localhost ${RCT_METRO_PORT} ; then\n    if ! curl -s \"http://localhost:${RCT_METRO_PORT}/status\" | grep -q \"packager-status:running\" ; then\n      echo \"Port ${RCT_METRO_PORT} already in use, packager is either not running or not running correctly\"\n      exit 2\n    fi\n  else\n    open \"$SRCROOT/../node_modules/react-native/scripts/launchPackager.command\" || echo \"Can't start packager automatically\"\n  fi\nfi\n";
-			showEnvVarsInLog = 0;
-		};
-		FEF7B8A2A3211E7DDD9D186F /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -418,9 +418,10 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F3841F9F52CD7F717CF1CC8B /* Pods-PyTorchCoreExample.debug.xcconfig */;
+			baseConfigurationReference = B45861040773D80865054E7E /* Pods-PyTorchCoreExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
@@ -440,7 +441,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.pytorch.rn.core.example.PyTorchCoreExample;
 				PRODUCT_NAME = PyTorchCoreExample;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
-				SWIFT_OBJC_BRIDGING_HEADER = "PyTorchCoreExample-Bridging-Header.h";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -449,9 +449,10 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6F855924982F627A9B9A7569 /* Pods-PyTorchCoreExample.release.xcconfig */;
+			baseConfigurationReference = 75ACA95208C815B7E8090268 /* Pods-PyTorchCoreExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
@@ -470,7 +471,6 @@
 				PRODUCT_BUNDLE_IDENTIFIER = org.pytorch.rn.core.example.PyTorchCoreExample;
 				PRODUCT_NAME = PyTorchCoreExample;
 				PROVISIONING_PROFILE_SPECIFIER = "Facebook Generic";
-				SWIFT_OBJC_BRIDGING_HEADER = "PyTorchCoreExample-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};

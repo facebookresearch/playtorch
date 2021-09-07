@@ -27,7 +27,7 @@ public class ImageModule: NSObject {
         if let cfURL = CFURLCreateWithString(nil, urlString, nil),
         let imageSource = CGImageSourceCreateWithURL(cfURL, nil),
         let image = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) {
-            let bitmapImage = BitmapImage(image: image)
+            let bitmapImage = Image(image: image)
             let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
             resolve(ref)
         } else {
@@ -41,7 +41,7 @@ public class ImageModule: NSObject {
             if let dictionary = assetImage as? [AnyHashable: Any] {
                 let uiImage = Macros.toUIImage(dictionary)
                 if let cgImage = uiImage.cgImage {
-                    let bitmapImage = BitmapImage(image: cgImage)
+                    let bitmapImage = Image(image: cgImage)
                     let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
                     resolve(ref)
                 }
@@ -51,15 +51,15 @@ public class ImageModule: NSObject {
         }
     }
 
-    public static func unwrapImage(_ imageRef: NSDictionary) throws -> BitmapImage {
+    public static func unwrapImage(_ imageRef: NSDictionary) throws -> IImage {
         guard let ref = imageRef["ID"] as? String else { throw ImageModuleError.castingDict }
-        let castedImage = try JSContext.unwrapObject(jsRef: ["ID": ref]) as? BitmapImage
+        let castedImage = try JSContext.unwrapObject(jsRef: ["ID": ref]) as? IImage
         guard let image = castedImage else { throw ImageModuleError.castingObject }
         return image
     }
 
-    public static func unwrapImage(_ imageRef: String) throws -> BitmapImage {
-        let castedImage = try JSContext.unwrapObject(jsRef: ["ID": imageRef]) as? BitmapImage
+    public static func unwrapImage(_ imageRef: String) throws -> IImage {
+        let castedImage = try JSContext.unwrapObject(jsRef: ["ID": imageRef]) as? IImage
         guard let image = castedImage else { throw ImageModuleError.castingObject }
         return image
     }
@@ -90,7 +90,7 @@ public class ImageModule: NSObject {
     public func scale(_ imageRef: NSDictionary, sx: NSNumber, sy: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let image = try ImageModule.unwrapImage(imageRef)
-            let scaledImage = image.scale(sx: CGFloat(truncating: sx), sy: CGFloat(truncating: sy))
+            let scaledImage = try image.scale(sx: CGFloat(truncating: sx), sy: CGFloat(truncating: sy))
             let ref = JSContext.wrapObject(object: scaledImage).getJSRef()
             resolve(ref)
         } catch {

@@ -24,7 +24,7 @@ class ScaleTransform: IImageTransform {
 
     public static func parse(transform: ModelSpecification.Transform) throws -> ScaleTransform {
         if let widthString = transform.width, let heightString = transform.height,
-           let width = Int(widthString), let height = Int(heightString) {
+           let width = Int( widthString), let height = Int(heightString) {
             return ScaleTransform(width: width, height: height)
         } else {
             throw ScaleTranformError.NoDimensProvided

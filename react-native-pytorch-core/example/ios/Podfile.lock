@@ -259,6 +259,8 @@ PODS:
   - React-jsinspector (0.64.2)
   - react-native-pytorch-core (0.1.0):
     - LibTorch (~> 1.9.0)
+    - React
+    - React-callinvoker
     - React-Core
   - react-native-safe-area-context (3.2.0):
     - React-Core
@@ -505,7 +507,7 @@ SPEC CHECKSUMS:
   React-jsi: 67747b9722f6dab2ffe15b011bcf6b3f2c3f1427
   React-jsiexecutor: 80c46bd381fd06e418e0d4f53672dc1d1945c4c3
   React-jsinspector: cc614ec18a9ca96fd275100c16d74d62ee11f0ae
-  react-native-pytorch-core: 6d8bfb983b5b6336c27b64930a21c874dd89c860
+  react-native-pytorch-core: b24ed1e8fbeab2ed852f8f8033318fe36a25e84c
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737
   React-RCTActionSheet: af7796ba49ffe4ca92e7277a5d992d37203f7da5

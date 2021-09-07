@@ -20,7 +20,18 @@ Pod::Spec.new do |s|
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
 
+  s.swift_version = "5.0"
+
+  s.requires_arc = true
+
+  s.pod_target_xcconfig = {
+    "DEFINES_MODULE" => "YES",
+    "USE_HEADERMAP" => "YES",
+    "HEADER_SEARCH_PATHS" => '$(inherited) "$(PODS_TARGET_SRCROOT)/ReactCommon" "$(PODS_TARGET_SRCROOT)" "$(PODS_ROOT)/Headers/Private/React-Core" "$(PODS_ROOT)/Headers/Public/React-hermes" "$(PODS_ROOT)/Headers/Public/hermes-engine" "${PODS_ROOT}/LibTorch/install/include"'
+  }
+
+  s.dependency "React-callinvoker"
+  s.dependency "React"
   s.dependency "React-Core"
   s.dependency "LibTorch", "~> 1.9.0"
-  s.pod_target_xcconfig = { 'HEADER_SEARCH_PATHS' => '$(inherited) "${PODS_ROOT}/LibTorch/install/include"' }
 end

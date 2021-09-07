@@ -122,13 +122,12 @@ class CanvasRenderingContext2D: NSObject {
         return canvasView
     }
 
-    func unwrapImage(_ imageRef: NSDictionary) throws -> BitmapImage {
+    func unwrapImage(_ imageRef: NSDictionary) throws -> IImage {
         guard let ref = imageRef["ID"] as? String else { throw CanvasRenderingContext2DError.castingDict }
-        let castedImage = try JSContext.unwrapObject(jsRef: ["ID": ref]) as? BitmapImage
+        let castedImage = try JSContext.unwrapObject(jsRef: ["ID": ref]) as? IImage
         guard let image = castedImage else { throw CanvasRenderingContext2DError.castingObject }
         return image
     }
-
     @objc
     func scale(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {

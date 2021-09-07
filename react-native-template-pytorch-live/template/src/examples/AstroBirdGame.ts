@@ -7,7 +7,7 @@
  * @format
  */
 
-import {
+ import {
   CanvasRenderingContext2D,
   Image,
   ImageUtil,
@@ -133,7 +133,6 @@ export default class AstroBirdGame extends GameLoop {
   drawInstructions(ctx: CanvasRenderingContext2D): void {
     this.drawBackground(ctx);
     this.drawLand(ctx);
-    this.drawBird(ctx, 0);
     if (this.instructionsImage != null) {
       const width = this.instructionsImage.getWidth();
       const height = this.instructionsImage.getHeight();
@@ -195,25 +194,28 @@ export default class AstroBirdGame extends GameLoop {
 
       const index = Math.round(totalTime / this.birdFlapInterval) % 4;
       ctx.save();
-      const angle = Math.min(
-        Math.max((this.birdVelocity + 0.75) * -100, -20),
-        90,
-      );
+      let radians = 0;
       if (this.birdVelocity != null && totalTime > 0) {
-        ctx.rotate(
-          (angle * Math.PI) / 180,
-          x + (32 * this.birdImageScale) / 2,
-          y + (24 * this.birdImageScale) / 2,
+        const angle = Math.min(
+          Math.max((this.birdVelocity + 0.75) * -100, -20),
+          90,
         );
+        radians = (angle * Math.PI) / 180;
+        ctx.translate(34 / 2, 24 / 2);
+        ctx.rotate((angle * Math.PI) / 180);
+        ctx.translate(-34 / 2, -24 / 2);
       }
+      ctx.rotate(-radians);
+      ctx.translate(x, y);
+      ctx.rotate(radians);
       ctx.drawImage(
         this.birdImage,
         0,
         24 * index,
         32,
         24,
-        x,
-        y,
+        0,
+        0,
         32 * this.birdImageScale,
         24 * this.birdImageScale,
       );

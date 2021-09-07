@@ -9,7 +9,7 @@
 #import <LibTorch/LibTorch.h>
 
 @implementation TorchModule {
-    @protected
+@protected
     torch::jit::script::Module _impl;
 }
 
@@ -20,21 +20,55 @@
             _impl = torch::jit::load(filePath.UTF8String);
             _impl.eval();
         } catch (const std::exception& exception) {
-          NSLog(@"%s", exception.what());
-          return nil;
+            NSLog(@"%s", exception.what());
+            return nil;
         }
     }
     return self;
 }
 
+- (nullable instancetype)initWithFileAtPath:(NSString*)filePath extraFiles:(NSMutableDictionary<NSString *, NSString *>*)extraFiles {
+    self = [super init];
+    if (self) {
+        try {
+            std::unordered_map<std::string, std::string> extra_files;
+
+            for (NSString* key in extraFiles) {
+                NSString* value = [extraFiles objectForKey: key];
+                std::string _key = std::string([key UTF8String]);
+                std::string _value = std::string([value UTF8String]);
+                extra_files[_key] = _value;
+            }
+
+            _impl = torch::jit::load(filePath.UTF8String, torch::kCPU, extra_files);
+            _impl.eval();
+
+            for (std::pair<std::string, std::string> element : extra_files) {
+                std::string _key = element.first;
+                std::string _value = element.second;
+                NSString *key = [NSString stringWithCString:_key.c_str() encoding:[NSString defaultCStringEncoding]];
+                NSString *value = [NSString stringWithCString:_value.c_str() encoding:[NSString defaultCStringEncoding]];
+                [extraFiles setValue: value forKey:key];
+            }
+        } catch (const std::exception& exception) {
+            NSLog(@"%s", exception.what());
+            return nil;
+        }
+    }
+    return self;
+}
+
++ (nullable instancetype)load:(NSString *)filePath extraFiles:(NSMutableDictionary<NSString *, NSString *> *)extraFiles {
+    return [[TorchModule alloc] initWithFileAtPath:filePath extraFiles: extraFiles];
+}
 
 
 - (TensorWrapper *)predictImage:(TensorWrapper *)tensorWrapper outputType:(NSString *)outputType {
     try {
         std::vector<int64_t> shape = {};
         for (NSNumber * n in [tensorWrapper shape]) {
-          int64_t num = n.intValue;
-          shape.push_back(num);
+            int64_t num = n.intValue;
+            shape.push_back(num);
         }
         at::Tensor tensor;
         if([[tensorWrapper getDtype] isEqualToString:@"float"]) { //eventually add other cases that do the same thing, but with a different third parameter
@@ -49,8 +83,8 @@
         NSMutableArray * shapeArray = [NSMutableArray new];
         std::vector<int64_t> shapeVector = outputTensor.sizes().vec();
         for (int i = 0; i < shapeVector.size(); i++) {
-          NSNumber * n = @(shapeVector[i]);
-          [shapeArray addObject:(n)];
+            NSNumber * n = @(shapeVector[i]);
+            [shapeArray addObject:(n)];
         }
         TensorWrapper* outputTensorWrapper;
         if([outputType isEqualToString:@"float"]) { //eventually add other cases that do the same thing, but with a different type for the data pointer
@@ -67,4 +101,3 @@
 }
 
 @end
-

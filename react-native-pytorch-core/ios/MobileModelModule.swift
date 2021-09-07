@@ -75,9 +75,32 @@ public class MobileModelModule: NSObject {
         if let modelUrl = URL(string: modelUri) {
             let modelTask = URLSession.shared.downloadTask(with: modelUrl) { urlOrNil, responseOrNil, errorOrNil in
                 guard let tempURL = urlOrNil else { completionHandler("Error downloading file"); return }
-                if let module = TorchModule(fileAtPath: tempURL.path) {
+
+                // Try to fetch live.spec.json from model file
+                let extraFiles = NSMutableDictionary()
+                extraFiles.setValue("", forKey: "model/live.spec.json")
+
+                // Note: regardless what initial value is set for the key "model/live.spec.json", the
+                // TorchModule.load method will set an empty string if the model file is not bundled inside the
+                // model file.
+                if let module = TorchModule.load(tempURL.path, extraFiles: extraFiles) {
                     self.mModulesAndSpecs[modelKey]?.setModule(module: module)
-                    self.fetchModelSpec(modelUri: modelUri, completionHandler: completionHandler)
+
+                    let modelSpec = extraFiles["model/live.spec.json"] as? String ?? ""
+                    if (!modelSpec.isEmpty) {
+                        do {
+                            let data = Data(modelSpec.utf8)
+                            let jsonDecoder = JSONDecoder()
+                            let decodedModelSpec = try jsonDecoder.decode(ModelSpecification.self, from: data)
+                            self.mModulesAndSpecs[modelKey]?.setSpec(modelSpec: decodedModelSpec)
+                            completionHandler(nil)
+                        }
+                        catch {
+                            completionHandler("could not fetch json file: \(error)")
+                        }
+                    } else {
+                        self.fetchModelSpec(modelUri: modelUri, completionHandler: completionHandler)
+                    }
                 } else {
                     completionHandler("Could not convert downloaded file into Torch Module")
                 }

@@ -41,6 +41,7 @@ import ToolboxList from './ToolboxList';
 import CanvasGetImageData from './apiTest/CanvasGetImageData';
 import Playground from './Playground';
 import CanvasImageSprite from './apiTest/CanvasImageSprite';
+import AstroBirdExample from './apiTest/AstroBirdExample';
 
 export type Tool = {
   icon?: React.ReactNode;
@@ -65,6 +66,13 @@ const tools: ToolSection = [
         subtitle: 'A playground to experiment with the PyTorch Core API',
         apiTest: false,
         component: Playground,
+      },
+      {
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
+        title: 'Astro Bird',
+        subtitle: 'A little game to test performance',
+        apiTest: false,
+        component: AstroBirdExample,
       },
     ],
   },

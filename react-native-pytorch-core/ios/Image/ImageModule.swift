@@ -51,6 +51,23 @@ public class ImageModule: NSObject {
         }
     }
 
+    @objc(fromImageData:resolver:rejecter:)
+    public func fromImageData(_ imageDataRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+        DispatchQueue.main.sync {
+            let pixelDensity = UIScreen.main.scale
+
+            do {
+                let imageData = try CanvasRenderingContext2D.unwrapImageData(imageDataRef)
+                let image = Image(imageData: imageData, pixelDensity: pixelDensity)
+                let ref = JSContext.wrapObject(object: image).getJSRef()
+                resolve(ref)
+            }
+            catch {
+                reject(RCTErrorUnspecified, "Could't create image from image data: \(error)", error)
+            }
+        }
+    }
+
     public static func unwrapImage(_ imageRef: NSDictionary) throws -> IImage {
         guard let ref = imageRef["ID"] as? String else { throw ImageModuleError.castingDict }
         let castedImage = try JSContext.unwrapObject(jsRef: ["ID": ref]) as? IImage

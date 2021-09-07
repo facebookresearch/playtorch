@@ -23,6 +23,10 @@ public class Image: IImage {
         self.image = BitmapImage(image: image)
     }
 
+    init(imageData: ImageData, pixelDensity: CGFloat) {
+        self.image = ImageDataImage(imageData: imageData, pixelDensity: pixelDensity)
+    }
+
     public func getPixelDensity() -> CGFloat {
         return self.image.getPixelDensity()
     }

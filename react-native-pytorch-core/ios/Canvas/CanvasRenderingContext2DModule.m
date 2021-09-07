@@ -44,5 +44,7 @@ RCT_EXTERN_METHOD(fillText:(nonnull NSDictionary)canvasRef text:(nonnull NSStrin
 RCT_EXTERN_METHOD(strokeText:(nonnull NSDictionary)canvasRef text:(nonnull NSString)text x:(nonnull NSNumber)x y:(nonnull NSNumber)y resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setTextAlign:(nonnull NSDictionary)canvasRef textAlign:(nonnull NSString)textAlign resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(drawImage:(nonnull NSDictionary)canvasRef image:(nonnull NSDictionary)image sx:(nonnull NSNumber)sx sy:(nonnull NSNumber)sy sWidth:(nonnull NSNumber)sWidth sHeight:(nonnull NSNumber)sHeight dx:(nonnull NSNumber)dx dy:(nonnull NSNumber)dy dWidth:(nonnull NSNumber)dWidth dHeight:(nonnull NSNumber)dHeight resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(getImageData:(nonnull NSDictionary)canvasRef sx:(nonnull NSNumber)sx sy:(nonnull NSNumber)sy sw:(nonnull NSNumber)sw sh:(nonnull NSNumber)sh resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(putImageData:(nonnull NSDictionary)canvasRef imageDataRef:(nonnull NSDictionary)imageDataRef sx:(nonnull NSNumber)sx sy:(nonnull NSNumber)sy resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 
 @end

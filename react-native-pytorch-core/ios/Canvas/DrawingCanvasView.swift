@@ -77,6 +77,36 @@ class DrawingCanvasView: UIView {
         path.addRect(rect)
     }
 
+    private func renderLayers(allLayerData: [LayerData], layer: CALayer) -> Void {
+        for layerData in allLayerData {
+            let baseLayer = CALayer()
+            baseLayer.transform = layerData.transform
+            switch layerData.type {
+            case .ShapeLayer:
+                let data = layerData as! ShapeLayerData
+                let newLayer = CAShapeLayer()
+                newLayer.setStyle(state: data.state)
+                baseLayer.transform = data.state.transform
+                newLayer.path = data.path
+                baseLayer.addSublayer(newLayer)
+            case .TextLayer:
+                let data = layerData as! TextLayerData
+                let newLayer = CATextLayer()
+                newLayer.frame = data.frame
+                newLayer.string = data.text
+                newLayer.contentsScale = self.scaleText
+                baseLayer.addSublayer(newLayer)
+            case .ImageLayer:
+                let data = layerData as! ImageLayerData
+                let newLayer = CALayer()
+                newLayer.contents = data.image
+                newLayer.frame = data.frame
+                baseLayer.addSublayer(newLayer)
+            }
+            layer.addSublayer(baseLayer)
+        }
+    }
+
     func invalidate() {
         // Swift has value semantics, which means the following will create a new array
         // for the sublayers that can be used in the main loop even though the original
@@ -87,34 +117,7 @@ class DrawingCanvasView: UIView {
 
         RunLoop.main.perform {
             self.layer.sublayers?.removeAll()
-            for layerData in sublayers {
-                let baseLayer = CALayer()
-                baseLayer.transform = layerData.transform
-                switch layerData.type {
-                case .ShapeLayer:
-                    let data = layerData as! ShapeLayerData
-                    let newLayer = CAShapeLayer()
-                    newLayer.setStyle(state: data.state)
-                    baseLayer.transform = data.state.transform
-                    newLayer.path = data.path
-                    baseLayer.addSublayer(newLayer)
-                case .TextLayer:
-                    let data = layerData as! TextLayerData
-                    let newLayer = CATextLayer()
-                    newLayer.frame = data.frame
-                    newLayer.string = data.text
-                    newLayer.contentsScale = self.scaleText
-                    baseLayer.addSublayer(newLayer)
-                case .ImageLayer:
-                    let data = layerData as! ImageLayerData
-                    let newLayer = CALayer()
-                    newLayer.contents = data.image
-                    newLayer.frame = data.frame
-                    baseLayer.addSublayer(newLayer)
-                }
-                self.layer.addSublayer(baseLayer)
-            }
-
+            self.renderLayers(allLayerData: sublayers, layer: self.layer)
             self.layer.needsDisplay()
         }
     }
@@ -397,6 +400,40 @@ class DrawingCanvasView: UIView {
             let newLayer = ImageLayerData(image: bitmap, transform: currentState.transform, frame: frame)
             sublayers.append(newLayer)
         } else {
+            throw CanvasError.UnableToCreateBitmap
+        }
+    }
+
+    func getImageData(sx: CGFloat, sy: CGFloat, sw: CGFloat, sh: CGFloat) throws -> ImageData {
+        let renderer = UIGraphicsImageRenderer(bounds: CGRect(x: sx, y: sy, width: sw, height: sh))
+        var data: Data = Data()
+        let sublayers = self.sublayers
+        DispatchQueue.main.sync {
+            data = renderer.pngData { rendererContext in
+                // The sublayers will be empty when the canvas invalidate is called. In that
+                // case, we want the image data come from the view layer.
+                if sublayers.isEmpty {
+                    self.layer.render(in: rendererContext.cgContext)
+                }
+                else {
+                    let rootLayer = CALayer()
+                    self.renderLayers(allLayerData: sublayers, layer: rootLayer)
+                    rootLayer.render(in: rendererContext.cgContext)
+                }
+            }
+        }
+        return ImageData(width: sw, height: sh, data: [UInt8](data))
+    }
+
+    func putImageData(imageData: ImageData, sx: CGFloat, sy: CGFloat) throws -> Void {
+        let data = Data(imageData.data)
+        let frame = CGRect(x: sx, y: sy, width: imageData.width, height: imageData.height)
+        let uiImage = UIImage(data: data)
+        if let cgImage = uiImage?.cgImage {
+            let newLayer = ImageLayerData(image: cgImage, transform: currentState.transform, frame: frame)
+            sublayers.append(newLayer)
+        }
+        else {
             throw CanvasError.UnableToCreateBitmap
         }
     }

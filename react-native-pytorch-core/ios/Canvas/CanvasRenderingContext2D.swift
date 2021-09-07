@@ -128,6 +128,14 @@ class CanvasRenderingContext2D: NSObject {
         guard let image = castedImage else { throw CanvasRenderingContext2DError.castingObject }
         return image
     }
+
+    public static func unwrapImageData(_ imageDataRef: NSDictionary) throws -> ImageData {
+        guard let ref = imageDataRef["ID"] as? String else { throw CanvasRenderingContext2DError.castingDict }
+        let castedImageData = try JSContext.unwrapObject(jsRef: ["ID": ref]) as? ImageData
+        guard let imageData = castedImageData else { throw CanvasRenderingContext2DError.castingObject }
+        return imageData
+    }
+
     @objc
     func scale(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
@@ -387,6 +395,32 @@ class CanvasRenderingContext2D: NSObject {
             resolve(nil)
         } catch {
             reject(RCTErrorUnspecified, "Could not perform drawImage: \(error)", error)
+        }
+    }
+
+    @objc
+    func getImageData(_ canvasRef: NSDictionary, sx: NSNumber, sy: NSNumber, sw: NSNumber, sh: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            let imageData = try canvasView.getImageData(sx: CGFloat(truncating: sx), sy: CGFloat(truncating: sy), sw: CGFloat(truncating: sw), sh: CGFloat(truncating: sh))
+            let ref = JSContext.wrapObject(object: imageData).getJSRef()
+            resolve(ref)
+        }
+        catch {
+            reject(RCTErrorUnspecified, "Could not perform getImageData: \(error)", error)
+        }
+    }
+
+    @objc
+    func putImageData(_ canvasRef: NSDictionary, imageDataRef: NSDictionary, sx: NSNumber, sy: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+        do {
+            let canvasView = try unwrapCanvas(canvasRef)
+            let imageData = try CanvasRenderingContext2D.unwrapImageData(imageDataRef)
+            try canvasView.putImageData(imageData: imageData, sx: CGFloat(truncating: sx), sy: CGFloat(truncating: sy))
+            resolve(nil)
+        }
+        catch {
+            reject(RCTErrorUnspecified, "Could not perform putImageData: \(error)", error)
         }
     }
 }

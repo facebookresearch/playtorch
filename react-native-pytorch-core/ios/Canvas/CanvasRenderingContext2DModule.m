@@ -22,7 +22,7 @@ RCT_EXTERN_METHOD(invalidate:(nonnull NSDictionary)canvasRef resolver:(RCTPromis
 RCT_EXTERN_METHOD(stroke:(nonnull NSDictionary)canvasRef resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(fill:(nonnull NSDictionary)canvasRef resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(scale:(nonnull NSDictionary)canvasRef x:(nonnull NSNumber)x y:(nonnull NSNumber)y resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
-RCT_EXTERN_METHOD(rotate:(nonnull NSDictionary)canvasRef angle:(nonnull NSNumber)angle x:(nonnull NSNumber)x y:(nonnull NSNumber)y resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
+RCT_EXTERN_METHOD(rotate:(nonnull NSDictionary)canvasRef angle:(nonnull NSNumber)angle resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject)
 RCT_EXTERN_METHOD(translate:(nonnull NSDictionary)canvasRef x:(nonnull NSNumber)x y:(nonnull NSNumber)y resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setTransform:(nonnull NSDictionary)canvasRef a:(nonnull NSNumber)a b:(nonnull NSNumber)b c:(nonnull NSNumber)c d:(nonnull NSNumber)d e:(nonnull NSNumber)e f:(nonnull NSNumber)f resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(setFillStyle:(nonnull NSDictionary)canvasRef color:(nonnull CGColor)color resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
@@ -46,4 +46,3 @@ RCT_EXTERN_METHOD(setTextAlign:(nonnull NSDictionary)canvasRef textAlign:(nonnul
 RCT_EXTERN_METHOD(drawImage:(nonnull NSDictionary)canvasRef image:(nonnull NSDictionary)image sx:(nonnull NSNumber)sx sy:(nonnull NSNumber)sy sWidth:(nonnull NSNumber)sWidth sHeight:(nonnull NSNumber)sHeight dx:(nonnull NSNumber)dx dy:(nonnull NSNumber)dy dWidth:(nonnull NSNumber)dWidth dHeight:(nonnull NSNumber)dHeight resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 
 @end
-

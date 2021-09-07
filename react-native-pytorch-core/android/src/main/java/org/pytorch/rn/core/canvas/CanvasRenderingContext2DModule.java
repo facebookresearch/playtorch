@@ -413,15 +413,11 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void rotate(ReadableMap canvasRef, double angle, double x, double y) {
+  public void rotate(ReadableMap canvasRef, double angle) {
     mMainHandler.post(
         () -> {
           CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
-          if (x < 0 || y < 0) {
-            ctx.rotate((float) angle);
-          } else {
-            ctx.rotate((float) angle, (float) x, (float) y);
-          }
+          ctx.rotate((float) angle);
         });
   }
 

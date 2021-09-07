@@ -141,16 +141,10 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func rotate(_ canvasRef: NSDictionary, angle: NSNumber, x: NSNumber, y: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+    func rotate(_ canvasRef: NSDictionary, angle: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         do {
             let canvasView = try unwrapCanvas(canvasRef)
-            if(Int(truncating: x) >= 0 && Int(truncating: y) >= 0){
-                canvasView.translate(x: -1 * CGFloat(truncating: x), y: -1 * CGFloat(truncating: y))
-            }
             canvasView.rotate(angle: CGFloat(truncating: angle))
-            if(Int(truncating: x) >= 0 && Int(truncating: y) >= 0){
-                canvasView.translate(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
-            }
             resolve(nil)
         } catch {
             reject(RCTErrorUnspecified, "Could not perform rotate: \(error)", error)

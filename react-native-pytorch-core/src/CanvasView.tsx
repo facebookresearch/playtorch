@@ -531,19 +531,6 @@ export interface CanvasRenderingContext2D {
   restore(): void;
 
   /**
-   * The rotate angle,x,y API is not supported by the web canvas and we will
-   * eventually depracate this API. It is, however, needed for Flappy Bird
-   * until the whole web canvas api is implemented.
-   *
-   * @param angle The rotation angle, clockwise in radians. You can use _`degree`_` * Math.PI / 180` to calculate a radian from a degree.
-   * @param x The x-axis pivot point which rotates the canvas around the pivot point.
-   * @param y The y-axis pivot point which rotates the canvas around the pivot point.
-   *
-   * @deprecated Will be deprecated eventually.
-   */
-  rotate(angle: number, x: number, y: number): void;
-
-  /**
    * The `rotate()` function of the Canvas 2D API adds a rotation to the
    * transformation matrix.
    *
@@ -919,12 +906,8 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
       textAlign = null;
       await CanvasRenderingContext2DModule.restore(ref);
     },
-    rotate(
-      angle: number,
-      x: number = INVALID_VALUE_NULLABLE,
-      y: number = INVALID_VALUE_NULLABLE,
-    ): void {
-      CanvasRenderingContext2DModule.rotate(ref, angle, x, y);
+    rotate(angle: number): void {
+      CanvasRenderingContext2DModule.rotate(ref, angle);
     },
     async save(): Promise<void> {
       await CanvasRenderingContext2DModule.save(ref);

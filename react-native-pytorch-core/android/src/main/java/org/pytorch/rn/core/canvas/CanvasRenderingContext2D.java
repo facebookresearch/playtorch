@@ -455,11 +455,6 @@ public class CanvasRenderingContext2D {
     mCanvas.rotate(radiansToDegrees(angle));
   }
 
-  protected void rotate(float angle, float x, float y) {
-    mCanvas.rotate(
-        radiansToDegrees(angle), PixelUtil.toPixelFromDIP(x), PixelUtil.toPixelFromDIP(y));
-  }
-
   protected void translate(float x, float y) {
     mCanvas.translate(PixelUtil.toPixelFromDIP(x), PixelUtil.toPixelFromDIP(y));
   }

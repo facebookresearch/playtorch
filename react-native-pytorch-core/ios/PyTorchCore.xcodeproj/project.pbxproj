@@ -7,7 +7,34 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		8D46482626976E8300549A74 /* Macros.m in Sources */ = {isa = PBXBuildFile; fileRef = 8D46482526976E8300549A74 /* Macros.m */; };
+		387E703C26E16F43003BB6F5 /* CanvasManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E701826E16F43003BB6F5 /* CanvasManager.swift */; };
+		387E703D26E16F43003BB6F5 /* DrawingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E701926E16F43003BB6F5 /* DrawingCanvasView.swift */; };
+		387E703E26E16F43003BB6F5 /* CanvasRenderingContext2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E701A26E16F43003BB6F5 /* CanvasRenderingContext2D.swift */; };
+		387E703F26E16F43003BB6F5 /* CanvasManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 387E701B26E16F43003BB6F5 /* CanvasManager.m */; };
+		387E704026E16F43003BB6F5 /* LayerData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E701C26E16F43003BB6F5 /* LayerData.swift */; };
+		387E704126E16F43003BB6F5 /* CanvasRenderingContext2DModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 387E701D26E16F43003BB6F5 /* CanvasRenderingContext2DModule.m */; };
+		387E704226E16F43003BB6F5 /* ShapeLayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E701E26E16F43003BB6F5 /* ShapeLayer.swift */; };
+		387E704326E16F43003BB6F5 /* CGContextExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E701F26E16F43003BB6F5 /* CGContextExtension.swift */; };
+		387E704426E16F43003BB6F5 /* CaptureButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702126E16F43003BB6F5 /* CaptureButton.swift */; };
+		387E704526E16F43003BB6F5 /* CameraManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 387E702226E16F43003BB6F5 /* CameraManager.m */; };
+		387E704626E16F43003BB6F5 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702326E16F43003BB6F5 /* CameraView.swift */; };
+		387E704726E16F43003BB6F5 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702426E16F43003BB6F5 /* CameraManager.swift */; };
+		387E704826E16F43003BB6F5 /* JSContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702626E16F43003BB6F5 /* JSContext.swift */; };
+		387E704926E16F43003BB6F5 /* ModelSpecification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702826E16F43003BB6F5 /* ModelSpecification.swift */; };
+		387E704A26E16F43003BB6F5 /* ScaleTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702A26E16F43003BB6F5 /* ScaleTransform.swift */; };
+		387E704B26E16F43003BB6F5 /* RGBNormTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702B26E16F43003BB6F5 /* RGBNormTransform.swift */; };
+		387E704C26E16F43003BB6F5 /* BaseIValuePacker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702C26E16F43003BB6F5 /* BaseIValuePacker.swift */; };
+		387E704D26E16F43003BB6F5 /* IImageTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702D26E16F43003BB6F5 /* IImageTransform.swift */; };
+		387E704E26E16F43003BB6F5 /* CenterCropTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702E26E16F43003BB6F5 /* CenterCropTransform.swift */; };
+		387E704F26E16F43003BB6F5 /* IImageToTensorTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702F26E16F43003BB6F5 /* IImageToTensorTransform.swift */; };
+		387E705026E16F43003BB6F5 /* TorchModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 387E703026E16F43003BB6F5 /* TorchModule.mm */; };
+		387E705126E16F43003BB6F5 /* TensorWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 387E703326E16F43003BB6F5 /* TensorWrapper.mm */; };
+		387E705226E16F43003BB6F5 /* MobileModelModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 387E703426E16F43003BB6F5 /* MobileModelModule.m */; };
+		387E705326E16F43003BB6F5 /* MobileModelModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E703526E16F43003BB6F5 /* MobileModelModule.swift */; };
+		387E705426E16F43003BB6F5 /* BitmapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E703726E16F43003BB6F5 /* BitmapImage.swift */; };
+		387E705526E16F43003BB6F5 /* Macros.m in Sources */ = {isa = PBXBuildFile; fileRef = 387E703826E16F43003BB6F5 /* Macros.m */; };
+		387E705626E16F43003BB6F5 /* ImageModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 387E703926E16F43003BB6F5 /* ImageModule.m */; };
+		387E705726E16F43003BB6F5 /* ImageModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E703B26E16F43003BB6F5 /* ImageModule.swift */; };
 		F4FF95D7245B92E800C19C63 /* PyTorchCore.swift in Sources */ = {isa = PBXBuildFile; fileRef = F4FF95D6245B92E800C19C63 /* PyTorchCore.swift */; };
 /* End PBXBuildFile section */
 
@@ -25,17 +52,37 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libPyTorchCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPyTorchCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
-		8D46481A268E4D8800549A74 /* ImageModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageModule.swift; sourceTree = "<group>"; };
-		8D46481B268E4E1900549A74 /* ImageModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageModule.m; sourceTree = "<group>"; };
-		8D46481C268E4EB800549A74 /* BitmapImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitmapImage.swift; sourceTree = "<group>"; };
-		8D46482426976E8300549A74 /* Macros.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
-		8D46482526976E8300549A74 /* Macros.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Macros.m; sourceTree = "<group>"; };
-		8DF4B1602669754F009CCD14 /* DrawingCanvasView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DrawingCanvasView.swift; sourceTree = "<group>"; };
-		8DF4B161266975B3009CCD14 /* CanvasManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CanvasManager.m; sourceTree = "<group>"; };
-		8DF4B162266979F5009CCD14 /* CanvasManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasManager.swift; sourceTree = "<group>"; };
-		8DF4B167266AA70A009CCD14 /* CanvasRenderingContext2D.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CanvasRenderingContext2D.swift; sourceTree = "<group>"; };
-		8DF4B168266AA771009CCD14 /* CanvasRenderingContext2DModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CanvasRenderingContext2DModule.m; sourceTree = "<group>"; };
-		8DF4B16A266FCE5A009CCD14 /* JSContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSContext.swift; sourceTree = "<group>"; };
+		387E701826E16F43003BB6F5 /* CanvasManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasManager.swift; sourceTree = "<group>"; };
+		387E701926E16F43003BB6F5 /* DrawingCanvasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingCanvasView.swift; sourceTree = "<group>"; };
+		387E701A26E16F43003BB6F5 /* CanvasRenderingContext2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasRenderingContext2D.swift; sourceTree = "<group>"; };
+		387E701B26E16F43003BB6F5 /* CanvasManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CanvasManager.m; sourceTree = "<group>"; };
+		387E701C26E16F43003BB6F5 /* LayerData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LayerData.swift; sourceTree = "<group>"; };
+		387E701D26E16F43003BB6F5 /* CanvasRenderingContext2DModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CanvasRenderingContext2DModule.m; sourceTree = "<group>"; };
+		387E701E26E16F43003BB6F5 /* ShapeLayer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShapeLayer.swift; sourceTree = "<group>"; };
+		387E701F26E16F43003BB6F5 /* CGContextExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CGContextExtension.swift; sourceTree = "<group>"; };
+		387E702126E16F43003BB6F5 /* CaptureButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CaptureButton.swift; sourceTree = "<group>"; };
+		387E702226E16F43003BB6F5 /* CameraManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CameraManager.m; sourceTree = "<group>"; };
+		387E702326E16F43003BB6F5 /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
+		387E702426E16F43003BB6F5 /* CameraManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
+		387E702626E16F43003BB6F5 /* JSContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSContext.swift; sourceTree = "<group>"; };
+		387E702826E16F43003BB6F5 /* ModelSpecification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelSpecification.swift; sourceTree = "<group>"; };
+		387E702A26E16F43003BB6F5 /* ScaleTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScaleTransform.swift; sourceTree = "<group>"; };
+		387E702B26E16F43003BB6F5 /* RGBNormTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RGBNormTransform.swift; sourceTree = "<group>"; };
+		387E702C26E16F43003BB6F5 /* BaseIValuePacker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseIValuePacker.swift; sourceTree = "<group>"; };
+		387E702D26E16F43003BB6F5 /* IImageTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IImageTransform.swift; sourceTree = "<group>"; };
+		387E702E26E16F43003BB6F5 /* CenterCropTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CenterCropTransform.swift; sourceTree = "<group>"; };
+		387E702F26E16F43003BB6F5 /* IImageToTensorTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IImageToTensorTransform.swift; sourceTree = "<group>"; };
+		387E703026E16F43003BB6F5 /* TorchModule.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TorchModule.mm; sourceTree = "<group>"; };
+		387E703126E16F43003BB6F5 /* TorchModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TorchModule.h; sourceTree = "<group>"; };
+		387E703226E16F43003BB6F5 /* TensorWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TensorWrapper.h; sourceTree = "<group>"; };
+		387E703326E16F43003BB6F5 /* TensorWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TensorWrapper.mm; sourceTree = "<group>"; };
+		387E703426E16F43003BB6F5 /* MobileModelModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobileModelModule.m; sourceTree = "<group>"; };
+		387E703526E16F43003BB6F5 /* MobileModelModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobileModelModule.swift; sourceTree = "<group>"; };
+		387E703726E16F43003BB6F5 /* BitmapImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitmapImage.swift; sourceTree = "<group>"; };
+		387E703826E16F43003BB6F5 /* Macros.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Macros.m; sourceTree = "<group>"; };
+		387E703926E16F43003BB6F5 /* ImageModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageModule.m; sourceTree = "<group>"; };
+		387E703A26E16F43003BB6F5 /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
+		387E703B26E16F43003BB6F5 /* ImageModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageModule.swift; sourceTree = "<group>"; };
 		B3E7B5891CC2AC0600A0062D /* PyTorchCore.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PyTorchCore.m; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* PyTorchCore-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PyTorchCore-Bridging-Header.h"; sourceTree = "<group>"; };
 		F4FF95D6245B92E800C19C63 /* PyTorchCore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PyTorchCore.swift; sourceTree = "<group>"; };
@@ -60,20 +107,88 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		387E701726E16F43003BB6F5 /* Canvas */ = {
+			isa = PBXGroup;
+			children = (
+				387E701826E16F43003BB6F5 /* CanvasManager.swift */,
+				387E701926E16F43003BB6F5 /* DrawingCanvasView.swift */,
+				387E701A26E16F43003BB6F5 /* CanvasRenderingContext2D.swift */,
+				387E701B26E16F43003BB6F5 /* CanvasManager.m */,
+				387E701C26E16F43003BB6F5 /* LayerData.swift */,
+				387E701D26E16F43003BB6F5 /* CanvasRenderingContext2DModule.m */,
+				387E701E26E16F43003BB6F5 /* ShapeLayer.swift */,
+				387E701F26E16F43003BB6F5 /* CGContextExtension.swift */,
+			);
+			path = Canvas;
+			sourceTree = "<group>";
+		};
+		387E702026E16F43003BB6F5 /* Camera */ = {
+			isa = PBXGroup;
+			children = (
+				387E702126E16F43003BB6F5 /* CaptureButton.swift */,
+				387E702226E16F43003BB6F5 /* CameraManager.m */,
+				387E702326E16F43003BB6F5 /* CameraView.swift */,
+				387E702426E16F43003BB6F5 /* CameraManager.swift */,
+			);
+			path = Camera;
+			sourceTree = "<group>";
+		};
+		387E702526E16F43003BB6F5 /* JavaScript */ = {
+			isa = PBXGroup;
+			children = (
+				387E702626E16F43003BB6F5 /* JSContext.swift */,
+			);
+			path = JavaScript;
+			sourceTree = "<group>";
+		};
+		387E702726E16F43003BB6F5 /* ML */ = {
+			isa = PBXGroup;
+			children = (
+				387E702826E16F43003BB6F5 /* ModelSpecification.swift */,
+				387E702926E16F43003BB6F5 /* Processing */,
+				387E703026E16F43003BB6F5 /* TorchModule.mm */,
+				387E703126E16F43003BB6F5 /* TorchModule.h */,
+				387E703226E16F43003BB6F5 /* TensorWrapper.h */,
+				387E703326E16F43003BB6F5 /* TensorWrapper.mm */,
+				387E703426E16F43003BB6F5 /* MobileModelModule.m */,
+				387E703526E16F43003BB6F5 /* MobileModelModule.swift */,
+			);
+			path = ML;
+			sourceTree = "<group>";
+		};
+		387E702926E16F43003BB6F5 /* Processing */ = {
+			isa = PBXGroup;
+			children = (
+				387E702A26E16F43003BB6F5 /* ScaleTransform.swift */,
+				387E702B26E16F43003BB6F5 /* RGBNormTransform.swift */,
+				387E702C26E16F43003BB6F5 /* BaseIValuePacker.swift */,
+				387E702D26E16F43003BB6F5 /* IImageTransform.swift */,
+				387E702E26E16F43003BB6F5 /* CenterCropTransform.swift */,
+				387E702F26E16F43003BB6F5 /* IImageToTensorTransform.swift */,
+			);
+			path = Processing;
+			sourceTree = "<group>";
+		};
+		387E703626E16F43003BB6F5 /* Image */ = {
+			isa = PBXGroup;
+			children = (
+				387E703726E16F43003BB6F5 /* BitmapImage.swift */,
+				387E703826E16F43003BB6F5 /* Macros.m */,
+				387E703926E16F43003BB6F5 /* ImageModule.m */,
+				387E703A26E16F43003BB6F5 /* Macros.h */,
+				387E703B26E16F43003BB6F5 /* ImageModule.swift */,
+			);
+			path = Image;
+			sourceTree = "<group>";
+		};
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				8D46482426976E8300549A74 /* Macros.h */,
-				8D46482526976E8300549A74 /* Macros.m */,
-				8D46481C268E4EB800549A74 /* BitmapImage.swift */,
-				8D46481B268E4E1900549A74 /* ImageModule.m */,
-				8D46481A268E4D8800549A74 /* ImageModule.swift */,
-				8DF4B16A266FCE5A009CCD14 /* JSContext.swift */,
-				8DF4B168266AA771009CCD14 /* CanvasRenderingContext2DModule.m */,
-				8DF4B167266AA70A009CCD14 /* CanvasRenderingContext2D.swift */,
-				8DF4B162266979F5009CCD14 /* CanvasManager.swift */,
-				8DF4B161266975B3009CCD14 /* CanvasManager.m */,
-				8DF4B1602669754F009CCD14 /* DrawingCanvasView.swift */,
+				387E702026E16F43003BB6F5 /* Camera */,
+				387E703626E16F43003BB6F5 /* Image */,
+				387E701726E16F43003BB6F5 /* Canvas */,
+				387E702526E16F43003BB6F5 /* JavaScript */,
+				387E702726E16F43003BB6F5 /* ML */,
 				F4FF95D6245B92E800C19C63 /* PyTorchCore.swift */,
 				B3E7B5891CC2AC0600A0062D /* PyTorchCore.m */,
 				F4FF95D5245B92E700C19C63 /* PyTorchCore-Bridging-Header.h */,
@@ -138,8 +253,35 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8D46482626976E8300549A74 /* Macros.m in Sources */,
+				387E704526E16F43003BB6F5 /* CameraManager.m in Sources */,
+				387E704726E16F43003BB6F5 /* CameraManager.swift in Sources */,
+				387E705026E16F43003BB6F5 /* TorchModule.mm in Sources */,
 				F4FF95D7245B92E800C19C63 /* PyTorchCore.swift in Sources */,
+				387E704F26E16F43003BB6F5 /* IImageToTensorTransform.swift in Sources */,
+				387E705226E16F43003BB6F5 /* MobileModelModule.m in Sources */,
+				387E704B26E16F43003BB6F5 /* RGBNormTransform.swift in Sources */,
+				387E704A26E16F43003BB6F5 /* ScaleTransform.swift in Sources */,
+				387E704226E16F43003BB6F5 /* ShapeLayer.swift in Sources */,
+				387E705626E16F43003BB6F5 /* ImageModule.m in Sources */,
+				387E704826E16F43003BB6F5 /* JSContext.swift in Sources */,
+				387E705526E16F43003BB6F5 /* Macros.m in Sources */,
+				387E704626E16F43003BB6F5 /* CameraView.swift in Sources */,
+				387E704026E16F43003BB6F5 /* LayerData.swift in Sources */,
+				387E703C26E16F43003BB6F5 /* CanvasManager.swift in Sources */,
+				387E703F26E16F43003BB6F5 /* CanvasManager.m in Sources */,
+				387E703E26E16F43003BB6F5 /* CanvasRenderingContext2D.swift in Sources */,
+				387E705326E16F43003BB6F5 /* MobileModelModule.swift in Sources */,
+				387E704C26E16F43003BB6F5 /* BaseIValuePacker.swift in Sources */,
+				387E704926E16F43003BB6F5 /* ModelSpecification.swift in Sources */,
+				387E704426E16F43003BB6F5 /* CaptureButton.swift in Sources */,
+				387E704D26E16F43003BB6F5 /* IImageTransform.swift in Sources */,
+				387E704126E16F43003BB6F5 /* CanvasRenderingContext2DModule.m in Sources */,
+				387E704E26E16F43003BB6F5 /* CenterCropTransform.swift in Sources */,
+				387E703D26E16F43003BB6F5 /* DrawingCanvasView.swift in Sources */,
+				387E704326E16F43003BB6F5 /* CGContextExtension.swift in Sources */,
+				387E705726E16F43003BB6F5 /* ImageModule.swift in Sources */,
+				387E705426E16F43003BB6F5 /* BitmapImage.swift in Sources */,
+				387E705126E16F43003BB6F5 /* TensorWrapper.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

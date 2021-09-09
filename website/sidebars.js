@@ -25,6 +25,7 @@ module.exports = {
     'tutorials/question-answering',
     'tutorials/prepare-custom-model',
     'tutorials/server-model',
+    'tutorials/connecting-to-a-server',
     'tutorials/faq',
   ],
   api: [

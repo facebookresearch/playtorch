@@ -169,7 +169,7 @@ CORS(app)
 def hello_world():
     return "<p>Hello, World!</p>"
 
-app.run()
+app.run(host="0.0.0.0")
 ```
 
 Let's walk through what this code does:
@@ -178,7 +178,7 @@ Let's walk through what this code does:
 - We use the `CORS` function on our `app` to allow any device to access our server.
 - We create a function called `hello_world` that simply returns html that says "Hello, World!".
 - We tell the `app` to run our `hello_world` function when it gets a request to the _index_ endpoint `"/"`.
-- We start our server by calling `app.run()`.
+- We start our server by calling `app.run(host="0.0.0.0")` and use `host="0.0.0.0" to make it accessible by external devices.
 
 Let's run it and see what it does! Run the following command in your terminal:
 
@@ -229,7 +229,7 @@ def echo():
     response = jsonify({"echo": user_said})
     return response
 
-app.run()
+app.run(host="0.0.0.0")
 ```
 
 Now that we have an endpoint ready to accept our input, let's run our server and test it out with the form below. Whatever you put in the **value** box should come back from the server.
@@ -269,7 +269,7 @@ def gpt():
     response = jsonify({"generated_text": generated_text})
     return response
 
-app.run()
+app.run(host="0.0.0.0")
 ```
 
 Once you add the new `gpt` function and make it accessible at the `/gpt` endpoint, your server should reload itself and you should see our print statements from earlier in your server logs.
@@ -284,6 +284,7 @@ Now let's test our text generation model with the form below. This time you shou
 
 <HttpTester defaultEndpoint="http://127.0.0.1:5000/gpt" defaultKey="prompt" />
 
+You can find the [completed versions of the source code](https://github.com/facebookexperimental/pytorch-live/tree/main/examples/gpt3-server-tutorials/ptl-server) we've written in this tutorial in the `examples` folder Pytorch Live GitHub repo.
 
 ## Next steps
 

@@ -8,6 +8,7 @@
 package org.pytorch.rn.core.ml.processing;
 
 import android.graphics.Bitmap;
+import android.graphics.ImageFormat;
 import android.media.Image;
 import com.facebook.react.bridge.JavaOnlyArray;
 import com.facebook.react.bridge.ReadableArray;
@@ -406,7 +407,7 @@ public class BaseIValuePacker implements IIValuePacker {
     final Image cameraImage = image.getImage();
     final int cameraImageRotationDegrees = image.getImageRotationDegrees();
 
-    if (cameraImage != null) {
+    if (cameraImage != null && cameraImage.getFormat() == ImageFormat.YUV_420_888) {
       final @Nullable Tensor tensor =
           doCameraImageTransforms(imageTransforms, cameraImage, cameraImageRotationDegrees);
       if (tensor != null) {

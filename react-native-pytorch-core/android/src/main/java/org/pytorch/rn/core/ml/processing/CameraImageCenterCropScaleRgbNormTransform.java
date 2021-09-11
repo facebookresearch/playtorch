@@ -7,6 +7,7 @@
 
 package org.pytorch.rn.core.ml.processing;
 
+import android.graphics.ImageFormat;
 import android.media.Image;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,6 +40,9 @@ public class CameraImageCenterCropScaleRgbNormTransform {
   }
 
   public Tensor transform(Image image, int rotationDegrees) {
+    if (image.getFormat() != ImageFormat.YUV_420_888) {
+      throw new UnsupportedOperationException("image format YUV_420_888 required");
+    }
     return TensorImageUtils.imageYUV420CenterCropToFloat32Tensor(
         image, rotationDegrees, mWidth, mHeight, mMean, mStd, MemoryFormat.CHANNELS_LAST);
   }

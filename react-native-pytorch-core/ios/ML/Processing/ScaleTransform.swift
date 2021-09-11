@@ -37,6 +37,9 @@ class ScaleTransform: IImageTransform {
         format.scale = 1
         let renderer = UIGraphicsImageRenderer(size: newSize, format: format)
         let image = renderer.image { ctx in
+            var transform = CGAffineTransform(scaleX: 1, y: -1)
+            transform = transform.translatedBy(x: 0, y: -newSize.height)
+            ctx.cgContext.concatenate(transform)
             ctx.cgContext.draw(bitmap, in: CGRect(origin: .zero, size: newSize))
         }
         if let cgImage = image.cgImage {

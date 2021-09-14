@@ -19,11 +19,19 @@ public abstract class AbstractImage implements IImage {
 
   @Override
   public int getWidth() {
+    int rotation = getImageRotationDegrees();
+    if (rotation == 90 || rotation == 270) {
+      return Math.round(getNaturalHeight() / getPixelDensity());
+    }
     return Math.round(getNaturalWidth() / getPixelDensity());
   }
 
   @Override
   public int getHeight() {
+    int rotation = getImageRotationDegrees();
+    if (rotation == 90 || rotation == 270) {
+      return Math.round(getNaturalWidth() / getPixelDensity());
+    }
     return Math.round(getNaturalHeight() / getPixelDensity());
   }
 

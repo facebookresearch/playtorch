@@ -105,7 +105,8 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
             final long inferenceTime = SystemClock.elapsedRealtime() - inferenceStartTime;
 
             final long unpackStartTime = SystemClock.elapsedRealtime();
-            final ReadableMap result = moduleHolder.packer.unpack(forwardResult, packerContext);
+            final ReadableMap result =
+                moduleHolder.packer.unpack(forwardResult, params, packerContext);
             final long unpackTime = SystemClock.elapsedRealtime() - unpackStartTime;
 
             WritableMap inferenceResult = Arguments.createMap();

@@ -10,6 +10,7 @@ package org.pytorch.rn.core.ml.processing;
 import android.graphics.Bitmap;
 import android.graphics.ImageFormat;
 import android.media.Image;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.JavaOnlyArray;
 import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
@@ -25,6 +26,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import javax.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -165,7 +167,12 @@ public class BaseIValuePacker implements IIValuePacker {
             "bert_decode_qa_answer",
             (ivalue, jobject, map, packerContext) ->
                 map.putString(
-                    jobject.getString(JSON_KEY), decodeBertQAAnswer(ivalue, packerContext)));
+                    jobject.getString(JSON_KEY), decodeBertQAAnswer(ivalue, packerContext)))
+        .register(
+            "bounding_boxes",
+            (ivalue, jobject, map, packerContext) ->
+                map.putArray(
+                    jobject.getString("key"), decodeObjects(ivalue, jobject, packerContext)));
   }
 
   private String applyParams(final String specSrc, final ReadableMap params) {
@@ -193,7 +200,8 @@ public class BaseIValuePacker implements IIValuePacker {
   }
 
   @Override
-  public ReadableMap unpack(final IValue output, final PackerContext packerContext)
+  public ReadableMap unpack(
+      final IValue output, final ReadableMap params, final PackerContext packerContext)
       throws Exception {
     WritableMap map = new WritableNativeMap();
     if (mSpecSrcJson == null) {
@@ -201,7 +209,11 @@ public class BaseIValuePacker implements IIValuePacker {
       return map;
     }
 
-    registry.unpack(output, mSpecSrcJson.getJSONObject(JSON_UNPACK), map, packerContext);
+    registry.unpack(
+        output,
+        new JSONObject(applyParams(mSpecSrc, params)).getJSONObject(JSON_UNPACK),
+        map,
+        packerContext);
     return map;
   }
 
@@ -237,6 +249,85 @@ public class BaseIValuePacker implements IIValuePacker {
 
     return getBertTokenizer(packerContext)
         .decode(Arrays.copyOfRange(tokenIds, startIdx, endIdx + 1));
+  }
+
+  private WritableArray decodeObjects(
+      final IValue ivalue, final JSONObject jobject, final PackerContext packerContext)
+      throws JSONException {
+    final Map<String, IValue> map = ivalue.toDictStringKey();
+    IValue predLogits = map.get("pred_logits");
+    IValue predBoxes = map.get("pred_boxes");
+
+    final String PROBABILITY_THRESHOLD_KEY = "probabilityThreshold";
+    if (!jobject.has(PROBABILITY_THRESHOLD_KEY)) {
+      throw new IllegalStateException(
+          "model param value for " + PROBABILITY_THRESHOLD_KEY + " is missing [0, 1]");
+    }
+    double probabilityThreshold = jobject.getDouble(PROBABILITY_THRESHOLD_KEY);
+
+    final String CLASSES_KEY = "classes";
+    String[] classes;
+    if (packerContext.get(CLASSES_KEY) != null) {
+      classes = (String[]) packerContext.get(CLASSES_KEY);
+    } else {
+      if (!jobject.has(CLASSES_KEY)) {
+        throw new IllegalStateException(
+            CLASSES_KEY
+                + "classes property is missing in the unpack definition for bounding_boxes unpack type");
+      }
+      try {
+        JSONArray classesArray = jobject.getJSONArray(CLASSES_KEY);
+        classes = toStringArray(classesArray);
+        packerContext.store(CLASSES_KEY, classes);
+      } catch (JSONException e) {
+        throw new IllegalStateException(
+            CLASSES_KEY
+                + "classes property in the unpack definition for bounding_boxes needs to be an array of strings");
+      }
+    }
+
+    final Tensor predLogitsTensor = predLogits.toTensor();
+    final float[] confidencesTensor = predLogitsTensor.getDataAsFloatArray();
+    final long[] confidencesShape = predLogitsTensor.shape();
+    final int numClasses = (int) predLogitsTensor.shape()[2];
+
+    final Tensor predBoxesTensor = predBoxes.toTensor();
+    final float[] locationsTensor = predBoxesTensor.getDataAsFloatArray();
+    final long[] locationsShape = predBoxesTensor.shape();
+
+    WritableArray result = Arguments.createArray();
+
+    for (int i = 0; i < confidencesShape[1]; i++) {
+      float[] scores = softmax(confidencesTensor, i * numClasses, (i + 1) * numClasses);
+
+      float maxProb = scores[0];
+      int maxIndex = -1;
+      for (int j = 0; j < scores.length; j++) {
+        if (scores[j] > maxProb) {
+          maxProb = scores[j];
+          maxIndex = j;
+        }
+      }
+
+      if (maxProb <= probabilityThreshold || maxIndex >= classes.length) {
+        continue;
+      }
+
+      WritableMap match = Arguments.createMap();
+      match.putString("objectClass", classes[maxIndex]);
+
+      int locationsFrom = (int) (i * locationsShape[2]);
+      WritableArray bounds = Arguments.createArray();
+      bounds.pushDouble(locationsTensor[locationsFrom]);
+      bounds.pushDouble(locationsTensor[locationsFrom + 1]);
+      bounds.pushDouble(locationsTensor[locationsFrom + 2]);
+      bounds.pushDouble(locationsTensor[locationsFrom + 3]);
+      match.putArray("bounds", bounds);
+
+      result.pushMap(match);
+    }
+
+    return result;
   }
 
   private void unpackDictStringKey(
@@ -313,6 +404,26 @@ public class BaseIValuePacker implements IIValuePacker {
       }
     }
     return maxIdx;
+  }
+
+  private static float[] softmax(float[] confidences, int from, int to) {
+    float[] softmax = new float[to - from];
+    float expSum = 0;
+
+    for (int i = from; i < to; i++) {
+      softmax[i - from] = (float) Math.exp(confidences[i]);
+      expSum += softmax[i - from];
+    }
+
+    for (int i = 0; i < softmax.length; i++) {
+      softmax[i] /= expSum;
+    }
+    return softmax;
+  }
+
+  private double softmax(double input, double[] neuronValues) {
+    double total = Arrays.stream(neuronValues).map(Math::exp).sum();
+    return Math.exp(input) / total;
   }
 
   private static void unpackArgmax(
@@ -642,5 +753,13 @@ public class BaseIValuePacker implements IIValuePacker {
 
   private static String toJsonString(Object o) {
     return o.toString();
+  }
+
+  private static String[] toStringArray(@NotNull JSONArray array) throws JSONException {
+    String[] arr = new String[array.length()];
+    for (int i = 0; i < arr.length; i++) {
+      arr[i] = array.getString(i);
+    }
+    return arr;
   }
 }

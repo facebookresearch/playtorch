@@ -13,7 +13,8 @@ import org.pytorch.IValue;
 public interface IIValuePacker {
   IValue pack(final ReadableMap params, PackerContext packerContext) throws Exception;
 
-  ReadableMap unpack(final IValue output, PackerContext packerContext) throws Exception;
+  ReadableMap unpack(final IValue output, final ReadableMap params, PackerContext packerContext)
+      throws Exception;
 
   PackerContext newContext();
 

@@ -3,90 +3,111 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @format
  */
 
 import * as React from 'react';
-import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
-import {StyleSheet} from 'react-native';
-import useImageFromBundle from '../utils/useImageFromBundle';
+import type {CanvasRenderingContext2D} from 'react-native-pytorch-core';
+import {Canvas, ModelInfo} from 'react-native-pytorch-core';
+import {Camera, Image} from 'react-native-pytorch-core';
+import {LayoutRectangle, StyleSheet, View} from 'react-native';
+import useObjectDetection from '../useObjectDetection';
+
+const modelInfo: ModelInfo = {
+  name: 'MobileNet V3 Small',
+  model: require('../../models/detr_resnet50.pt'),
+};
 
 export default function Playground() {
-  const [drawingContext, setDrawingContext] = React.useState<
-    CanvasRenderingContext2D
-  >();
-  const birdImage = useImageFromBundle(
-    require('../../assets/astrobird/bird.png'),
-  );
+  const contextRef = React.useRef<CanvasRenderingContext2D | null>();
+  const [layout, setLayout] = React.useState<LayoutRectangle>();
+  const {processImage} = useObjectDetection(modelInfo);
 
-  const handleContext2D = React.useCallback(
-    async (ctx: CanvasRenderingContext2D) => {
-      setDrawingContext(ctx);
-    },
-    [setDrawingContext],
-  );
+  const handleImage = React.useCallback(
+    async function handleImage(image: Image) {
+      const ctx = contextRef.current;
+      if (ctx != null && layout != null) {
+        ctx.clearRect(0, 0, layout.width, layout.height);
+        ctx.font = '20px sans-serif';
+        ctx.fillText('Processing...', 20, 40);
+        ctx.invalidate();
+      }
 
-  React.useEffect(() => {
-    const ctx = drawingContext;
-    const img = birdImage;
+      const {boundingBoxes} = await processImage(image);
 
-    function drawAstroBird(
-      index: number,
-      x: number,
-      y: number,
-      degAngle: number,
-    ): void {
-      if (ctx != null && img != null) {
-        const angle = (degAngle * Math.PI) / 180;
+      if (ctx != null && layout != null) {
+        ctx.clearRect(0, 0, layout.width, layout.height);
+        const imageWidth = image.getWidth();
+        const imageHeight = image.getHeight();
+        const scale = Math.min(
+          layout.width / imageWidth,
+          layout.height / imageHeight,
+        );
+        ctx.drawImage(image, 0, 0, imageWidth * scale, imageHeight * scale);
 
-        const sprite = [34, 96];
-        const w = sprite[0];
-        const h = sprite[1] / 4;
-        const dw = w;
-        const dh = h;
-
-        ctx.strokeStyle = 'lime';
+        ctx.strokeStyle = 'red';
         ctx.lineWidth = 2;
-        ctx.strokeRect(x, y, w, h);
+        ctx.fillStyle = 'white';
+        ctx.font = '12px sans-serif';
+        boundingBoxes.forEach(boundingBox => {
+          ctx.beginPath();
+          const {objectClass, bounds} = boundingBox;
+          ctx.fillText(objectClass, bounds[0] * scale, bounds[1] * scale - 5);
+          ctx.rect(
+            bounds[0] * scale,
+            bounds[1] * scale,
+            bounds[2] * scale,
+            bounds[3] * scale,
+          );
+          ctx.stroke();
+        });
 
-        const tx = w / 2;
-        const ty = h / 2;
-        ctx.save();
-        ctx.translate(tx, ty);
-        ctx.rotate(angle);
-        ctx.translate(-tx, -ty);
-        ctx.rotate(-angle);
-        ctx.translate(x, y);
-        ctx.rotate(angle);
-        ctx.drawImage(img, 0, h * index, w, h, 0, 0, dw, dh);
-        ctx.restore();
-      }
-    }
-
-    if (ctx != null && img != null) {
-      const step = 30;
-      for (let j = 0; j <= 360 / step; j++) {
-        const angle = j * step;
-        for (let i = 0; i < 4; i++) {
-          drawAstroBird(i, i * 50 + 10, j * 40 + 10, angle);
-        }
+        ctx.invalidate();
       }
 
-      ctx.invalidate();
-    }
+      image.release();
+    },
+    [layout, processImage],
+  );
 
-    return function() {
-      drawingContext?.clear();
-      drawingContext?.invalidate();
-    };
-  }, [birdImage, drawingContext]);
+  function handleContext2D(ctx: CanvasRenderingContext2D) {
+    contextRef.current = ctx;
+  }
 
-  return <Canvas style={styles.canvas} onContext2D={handleContext2D} />;
+  return (
+    <View style={styles.container}>
+      <Canvas
+        style={styles.canvas}
+        onLayout={event => {
+          setLayout(event.nativeEvent.layout);
+        }}
+        onContext2D={handleContext2D}
+      />
+      <Camera
+        style={styles.camera}
+        onCapture={handleImage}
+        hideCaptureButton={false}
+      />
+    </View>
+  );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'column',
+    flex: 1,
+    backgroundColor: 'black',
+    alignContent: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  camera: {
+    width: '50%',
+    height: '50%',
+  },
   canvas: {
-    backgroundColor: 'orange',
-    width: '100%',
-    height: '100%',
+    width: '50%',
+    height: '50%',
   },
 });

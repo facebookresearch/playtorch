@@ -16,6 +16,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (NSArray<NSNumber*>*) shape;
 - (int64_t) numel;
 - (int) argmax;
+- (NSArray *) toFloatArray;
 - (NSString *) getDtype;
 
 @end

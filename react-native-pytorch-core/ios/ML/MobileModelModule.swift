@@ -6,6 +6,7 @@
  */
 
 import Foundation
+import SwiftyJSON
 
 @objc(MobileModelModule)
 public class MobileModelModule: NSObject {
@@ -29,7 +30,8 @@ public class MobileModelModule: NSObject {
                 if var tensorWrapper =  try packer.pack(params: params, modelSpec: modelSpec) as? TensorWrapper {
                     let packTime = (CFAbsoluteTimeGetCurrent() - startPack) * 1000
                     let startInference = CFAbsoluteTimeGetCurrent()
-                    if let outputs = moduleHolder.module?.predictImage(tensorWrapper, outputType: modelSpec.unpack.dtype) {
+                    let outputType = modelSpec["unpack"]["dtype"].string
+                    if let outputs = moduleHolder.module?.predictImage(tensorWrapper, outputType: outputType!) {
                         let inferenceTime = (CFAbsoluteTimeGetCurrent() - startInference) * 1000
                         let startUnpack = CFAbsoluteTimeGetCurrent()
                         let result = try packer.unpack(outputs: outputs, modelSpec: modelSpec)
@@ -90,9 +92,8 @@ public class MobileModelModule: NSObject {
                     if (!modelSpec.isEmpty) {
                         do {
                             let data = Data(modelSpec.utf8)
-                            let jsonDecoder = JSONDecoder()
-                            let decodedModelSpec = try jsonDecoder.decode(ModelSpecification.self, from: data)
-                            self.mModulesAndSpecs[modelKey]?.setSpec(modelSpec: decodedModelSpec)
+                            let modelSpec = try JSON(data: data)
+                            self.mModulesAndSpecs[modelKey]?.setSpec(modelSpec: modelSpec)
                             completionHandler(nil)
                         }
                         catch {
@@ -122,8 +123,7 @@ public class MobileModelModule: NSObject {
             do {
                 let jsonString = try String(contentsOfFile: tempURL.path)
                 let data = Data(jsonString.utf8)
-                let jsonDecoder = JSONDecoder()
-                let decodedModelSpec = try jsonDecoder.decode(ModelSpecification.self, from: data)
+                let decodedModelSpec = try JSON(data: data)
                 self.mModulesAndSpecs[modelKey]?.setSpec(modelSpec: decodedModelSpec)
                 completionHandler(nil) //argument represents error, completionHandler(nil) represents success and will resolve promise
             } catch {
@@ -135,13 +135,13 @@ public class MobileModelModule: NSObject {
 
     public class ModuleHolder {
         var module: TorchModule?
-        var modelSpec: ModelSpecification?
+        var modelSpec: JSON?
 
         func setModule(module: TorchModule) {
             self.module = module
         }
 
-        func setSpec(modelSpec: ModelSpecification) {
+        func setSpec(modelSpec: JSON) {
             self.modelSpec = modelSpec
         }
     }

@@ -6,6 +6,7 @@
  */
 
 import Foundation
+import SwiftyJSON
 
 class CenterCropTransform: IImageTransform {
 
@@ -23,13 +24,12 @@ class CenterCropTransform: IImageTransform {
         self.outHeight = outHeight
     }
 
-    static func parse(transform: ModelSpecification.Transform) throws -> CenterCropTransform {
-        if let widthString = transform.width, let heightString = transform.height,
-           let width = Float(widthString), let height = Float(heightString){
-            return CenterCropTransform(outWidth: width, outHeight: height)
-        } else {
-            throw CenterCropTransformError.NoDimensProvided
-        }
+    static func parse(transform: JSON) throws -> CenterCropTransform {
+        let widthString = transform["width"].string!
+        let heightString = transform["height"].string!
+        let width = Float(widthString)!
+        let height = Float(heightString)!
+        return CenterCropTransform(outWidth: width, outHeight: height)
     }
 
     func transform(bitmap: CGImage) throws -> CGImage {

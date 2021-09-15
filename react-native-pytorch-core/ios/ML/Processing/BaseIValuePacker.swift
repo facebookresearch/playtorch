@@ -6,6 +6,7 @@
  */
 
 import Foundation
+import SwiftyJSON
 
 class BaseIValuePacker {
 
@@ -20,14 +21,15 @@ class BaseIValuePacker {
         case StringToJSONError
     }
 
-    func pack(params: NSDictionary, modelSpec: ModelSpecification) throws -> Any? {
-        var modelSpecification: ModelSpecification
+    func pack(params: NSDictionary, modelSpec: JSON) throws -> Any? {
+        let modelSpecification: JSON
         do {
             modelSpecification = try applyParams(modelSpec: modelSpec, params: params)
         } catch {
             throw error
         }
-        switch modelSpec.pack.type {
+
+        switch modelSpec["pack"]["type"].string {
         case "tensor_from_image":
             return try packImage(modelSpec: modelSpecification, params: params)
         default:
@@ -35,11 +37,15 @@ class BaseIValuePacker {
         }
     }
 
-    func unpack(outputs: TensorWrapper, modelSpec: ModelSpecification) throws -> Any? {
+    func unpack(outputs: TensorWrapper, modelSpec: JSON) throws -> Any? {
         do {
-            switch modelSpec.unpack.type {
+            let unpack = modelSpec["unpack"]
+            let type = unpack["type"].string
+            switch type {
+            case "tensor":
+                return [(unpack["key"].string) : outputs.toFloatArray()]
             case "argmax":
-                return try [modelSpec.unpack.key : argmax(tensorWrapper: outputs)]
+                return try [(unpack["key"].string) : argmax(tensorWrapper: outputs)]
             default:
                 throw BaseIValuePackerError.InvalidUnpackType
             }
@@ -48,14 +54,11 @@ class BaseIValuePacker {
         }
     }
 
-    func packImage(modelSpec: ModelSpecification, params: NSDictionary) throws -> Any? {
+    func packImage(modelSpec: JSON, params: NSDictionary) throws -> Any? {
         do {
             if let imageId = (params["image"] as? NSDictionary)?["ID"] as? String, let image = try ImageModule.unwrapImage(imageId).getBitmap() {
-                if let transforms = modelSpec.pack.transforms {
-                    return try doImageTransforms(transforms: transforms, image: image)
-                } else {
-                    return image
-                }
+                let transforms: JSON = modelSpec["pack"]["transforms"]
+                return try doImageTransforms(transforms: transforms.arrayValue, image: image)
             } else {
                 throw BaseIValuePackerError.ImageUnwrapError
             }
@@ -64,14 +67,17 @@ class BaseIValuePacker {
         }
     }
 
-    func doImageTransforms(transforms: [ModelSpecification.Transform], image: CGImage) throws -> Any? {
+    func doImageTransforms(transforms: Array<JSON>, image: CGImage) throws -> Any? {
         var newImage = image
         var iValue: Any? = nil
         for transform in transforms {
-            switch transform.type {
+            let type = transform["type"].string
+            let name = transform["name"].string
+
+            switch type {
             case "image_to_image":
                 var transformer: IImageTransform
-                switch transform.name {
+                switch name {
                 case "center_crop":
                     transformer = try CenterCropTransform.parse(transform: transform)
                 case "scale":
@@ -83,7 +89,7 @@ class BaseIValuePacker {
                 iValue = newImage
             case "image_to_tensor":
                 var transformer: IImageToTensorTransform
-                switch transform.name{
+                switch name{
                 case "rgb_norm":
                     transformer = try RGBNormTransform.parse(transform: transform)
                 default:
@@ -97,14 +103,11 @@ class BaseIValuePacker {
         return iValue
     }
 
-    func applyParams(modelSpec: ModelSpecification, params: NSDictionary) throws -> ModelSpecification {
-        var specSrc: String
-        let jsonEncoder = JSONEncoder()
-        do {
-            specSrc = try String(decoding: jsonEncoder.encode(modelSpec), as: UTF8.self)
-        } catch {
+    func applyParams(modelSpec: JSON, params: NSDictionary) throws -> JSON {
+        guard var specSrc = modelSpec.rawString() else {
             throw BaseIValuePackerError.JSONToStringError
         }
+
         for (key, value) in params {
             if let key = key as? String, let value = value as? String ?? (value as? NSNumber)?.stringValue {
                 specSrc = specSrc.replacingOccurrences(of: "$\(key)", with: value)
@@ -118,16 +121,17 @@ class BaseIValuePacker {
                 }
             }
         }
-        let jsonDecoder = JSONDecoder()
+
         do {
-            return try jsonDecoder.decode(ModelSpecification.self, from: Data(specSrc.utf8))
+            let spec = try JSON(data: Data(specSrc.utf8))
+            return spec
         } catch {
             throw BaseIValuePackerError.StringToJSONError
         }
+        throw BaseIValuePackerError.StringToJSONError
     }
 
     private func argmax(tensorWrapper: TensorWrapper) throws -> Int {
         return Int(tensorWrapper.argmax());
     }
-
 }

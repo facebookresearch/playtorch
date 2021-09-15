@@ -262,6 +262,7 @@ PODS:
     - React
     - React-callinvoker
     - React-Core
+    - SwiftyJSON (~> 5.0)
   - react-native-safe-area-context (3.2.0):
     - React-Core
   - React-perflogger (0.64.2)
@@ -335,6 +336,7 @@ PODS:
     - React-RCTImage
   - RNVectorIcons (8.1.0):
     - React-Core
+  - SwiftyJSON (5.0.1)
   - Yoga (1.14.0)
   - YogaKit (1.18.1):
     - Yoga (~> 1.14)
@@ -409,6 +411,7 @@ SPEC REPOS:
     - libevent
     - LibTorch
     - OpenSSL-Universal
+    - SwiftyJSON
     - YogaKit
 
 EXTERNAL SOURCES:
@@ -507,7 +510,7 @@ SPEC CHECKSUMS:
   React-jsi: 67747b9722f6dab2ffe15b011bcf6b3f2c3f1427
   React-jsiexecutor: 80c46bd381fd06e418e0d4f53672dc1d1945c4c3
   React-jsinspector: cc614ec18a9ca96fd275100c16d74d62ee11f0ae
-  react-native-pytorch-core: b24ed1e8fbeab2ed852f8f8033318fe36a25e84c
+  react-native-pytorch-core: 82cdf65a9429b4d3188eac9ccc08802834f5ef84
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737
   React-RCTActionSheet: af7796ba49ffe4ca92e7277a5d992d37203f7da5
@@ -524,6 +527,7 @@ SPEC CHECKSUMS:
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
   RNScreens: 21b73c94c9117e1110a79ee0ee80c93ccefed8ce
   RNVectorIcons: 31cebfcf94e8cf8686eb5303ae0357da64d7a5a4
+  SwiftyJSON: 2f33a42c6fbc52764d96f13368585094bfd8aa5e
   Yoga: 575c581c63e0d35c9a83f4b46d01d63abc1100ac
   YogaKit: f782866e155069a2cca2517aafea43200b01fd5a
 

@@ -6,6 +6,7 @@
  */
 
 import Foundation
+import SwiftyJSON
 
 class RGBNormTransform: IImageToTensorTransform {
 
@@ -22,12 +23,10 @@ class RGBNormTransform: IImageToTensorTransform {
         self.std = std
     }
 
-    static func parse(transform: ModelSpecification.Transform) throws -> RGBNormTransform {
-        if let mean = transform.mean, let std = transform.std {
-            return RGBNormTransform(mean: mean, std: std)
-        } else {
-            throw RGBNormTransformError.NoMeanOrStd
-        }
+    static func parse(transform: JSON) throws -> RGBNormTransform {
+        let mean = transform["mean"].arrayValue.map {$0.float ?? 0}
+        let std = transform["std"].arrayValue.map {$0.float ?? 0}
+        return RGBNormTransform(mean: mean, std: std)
     }
 
     func transform(bitmap: CGImage) -> TensorWrapper {

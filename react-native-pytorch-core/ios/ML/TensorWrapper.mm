@@ -82,6 +82,19 @@
     return maxIdx;
 }
 
+- (NSArray *) toFloatArray {
+    if ([_dtype isEqualToString:@"float"]){ //eventually add other cases with different types for buffer and maxVal
+        NSMutableArray *values = [[NSMutableArray alloc] initWithCapacity: 0];
+        float* buffer = _tensor.data_ptr<float>();
+        for(int i = 0; i < _tensor.numel(); i++) {
+            [values addObject: [NSNumber numberWithFloat: buffer[i]]];
+        }
+        return values;
+    } else {
+        NSException* exception = [NSException exceptionWithName:@"InvalidDtype" reason:@"The provided dtype is not a recognized data type" userInfo:nil];
+        throw exception;
+    }
+}
 
 - (NSString *) getDtype {
     return _dtype;

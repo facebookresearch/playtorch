@@ -7,107 +7,49 @@
  * @format
  */
 
+import {useIsFocused} from '@react-navigation/native';
 import * as React from 'react';
-import type {CanvasRenderingContext2D} from 'react-native-pytorch-core';
-import {Canvas, ModelInfo} from 'react-native-pytorch-core';
+import {useCallback} from 'react';
 import {Camera, Image} from 'react-native-pytorch-core';
-import {LayoutRectangle, StyleSheet, View} from 'react-native';
-import useObjectDetection from '../useObjectDetection';
+import useImageModelInference from '../useImageModelInference';
+import {StyleSheet, Text} from 'react-native';
 
-const modelInfo: ModelInfo = {
-  name: 'MobileNet V3 Small',
-  model: require('../../models/detr_resnet50.pt'),
-};
+export default function CameraTakePicture() {
+  const isFocused = useIsFocused();
+  const {imageClass, processImage} = useImageModelInference({
+    model: require('../../models/mobilenet_v3_small.pt'),
+    name: 'MobileNet V3',
+  });
 
-export default function Playground() {
-  const contextRef = React.useRef<CanvasRenderingContext2D | null>();
-  const [layout, setLayout] = React.useState<LayoutRectangle>();
-  const {processImage} = useObjectDetection(modelInfo);
-
-  const handleImage = React.useCallback(
-    async function handleImage(image: Image) {
-      const ctx = contextRef.current;
-      if (ctx != null && layout != null) {
-        ctx.clearRect(0, 0, layout.width, layout.height);
-        ctx.font = '20px sans-serif';
-        ctx.fillText('Processing...', 20, 40);
-        ctx.invalidate();
-      }
-
-      const {boundingBoxes} = await processImage(image);
-
-      if (ctx != null && layout != null) {
-        ctx.clearRect(0, 0, layout.width, layout.height);
-        const imageWidth = image.getWidth();
-        const imageHeight = image.getHeight();
-        const scale = Math.min(
-          layout.width / imageWidth,
-          layout.height / imageHeight,
-        );
-        ctx.drawImage(image, 0, 0, imageWidth * scale, imageHeight * scale);
-
-        ctx.strokeStyle = 'red';
-        ctx.lineWidth = 2;
-        ctx.fillStyle = 'white';
-        ctx.font = '12px sans-serif';
-        boundingBoxes.forEach(boundingBox => {
-          ctx.beginPath();
-          const {objectClass, bounds} = boundingBox;
-          ctx.fillText(objectClass, bounds[0] * scale, bounds[1] * scale - 5);
-          ctx.rect(
-            bounds[0] * scale,
-            bounds[1] * scale,
-            bounds[2] * scale,
-            bounds[3] * scale,
-          );
-          ctx.stroke();
-        });
-
-        ctx.invalidate();
-      }
-
+  const handleCapture = useCallback(
+    async (image: Image) => {
+      await processImage(image);
       image.release();
     },
-    [layout, processImage],
+    [processImage],
   );
 
-  function handleContext2D(ctx: CanvasRenderingContext2D) {
-    contextRef.current = ctx;
-  }
-
   return (
-    <View style={styles.container}>
-      <Canvas
-        style={styles.canvas}
-        onLayout={event => {
-          setLayout(event.nativeEvent.layout);
-        }}
-        onContext2D={handleContext2D}
-      />
-      <Camera
-        style={styles.camera}
-        onCapture={handleImage}
-        hideCaptureButton={false}
-      />
-    </View>
+    <>
+      <Text>{imageClass}</Text>
+      {isFocused && (
+        <Camera
+          onCapture={handleCapture}
+          style={styles.camera}
+          targetResolution={{width: 480, height: 640}}
+        />
+      )}
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    flex: 1,
-    backgroundColor: 'black',
-    alignContent: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   camera: {
-    width: '50%',
-    height: '50%',
+    flex: 1,
   },
-  canvas: {
-    width: '50%',
-    height: '50%',
+  actions: {
+    position: 'absolute',
+    top: 20,
+    left: 20,
   },
 });

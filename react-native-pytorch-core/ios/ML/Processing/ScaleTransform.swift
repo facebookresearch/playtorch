@@ -6,33 +6,33 @@
  */
 
 import Foundation
+import SwiftyJSON
 
 class ScaleTransform: IImageTransform {
 
-    private let width: Int
-    private let height: Int
+    private let width: Float
+    private let height: Float
 
     enum ScaleTranformError: Error {
         case NoDimensProvided
         case ErrorScalingImage
     }
 
-    init(width: Int, height: Int) {
+    init(width: Float, height: Float) {
         self.width = width
         self.height = height
     }
 
-    public static func parse(transform: ModelSpecification.Transform) throws -> ScaleTransform {
-        if let widthString = transform.width, let heightString = transform.height,
-           let width = Int( widthString), let height = Int(heightString) {
-            return ScaleTransform(width: width, height: height)
-        } else {
-            throw ScaleTranformError.NoDimensProvided
-        }
+    public static func parse(transform: JSON) throws -> ScaleTransform {
+        let widthString = transform["width"].string!
+        let heightString = transform["height"].string!
+        let width = Float(widthString)!
+        let height = Float(heightString)!
+        return ScaleTransform(width: width, height: height)
     }
 
     func transform(bitmap: CGImage) throws -> CGImage {
-        let newSize = CGSize(width: width, height: height)
+        let newSize = CGSize(width: Int(width), height: Int(height))
         let format = UIGraphicsImageRendererFormat.default()
         format.scale = 1
         let renderer = UIGraphicsImageRenderer(size: newSize, format: format)

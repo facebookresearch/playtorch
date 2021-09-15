@@ -33,5 +33,6 @@ Pod::Spec.new do |s|
   s.dependency "React-callinvoker"
   s.dependency "React"
   s.dependency "React-Core"
+  s.dependency "SwiftyJSON", '~> 5.0'
   s.dependency "LibTorch", "~> 1.9.0"
 end

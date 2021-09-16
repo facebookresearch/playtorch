@@ -92,6 +92,8 @@ class BaseIValuePacker {
                 switch name{
                 case "rgb_norm":
                     transformer = try RGBNormTransform.parse(transform: transform)
+                case "greyscale_norm":
+                    transformer = try GreyScaleNormTransform.parse(transform: transform)
                 default:
                     throw BaseIValuePackerError.InvalidImageToTensorName
                 }

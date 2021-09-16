@@ -21,7 +21,6 @@
 		387E704626E16F43003BB6F5 /* CameraView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702326E16F43003BB6F5 /* CameraView.swift */; };
 		387E704726E16F43003BB6F5 /* CameraManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702426E16F43003BB6F5 /* CameraManager.swift */; };
 		387E704826E16F43003BB6F5 /* JSContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702626E16F43003BB6F5 /* JSContext.swift */; };
-		387E704926E16F43003BB6F5 /* ModelSpecification.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702826E16F43003BB6F5 /* ModelSpecification.swift */; };
 		387E704A26E16F43003BB6F5 /* ScaleTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702A26E16F43003BB6F5 /* ScaleTransform.swift */; };
 		387E704B26E16F43003BB6F5 /* RGBNormTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702B26E16F43003BB6F5 /* RGBNormTransform.swift */; };
 		387E704C26E16F43003BB6F5 /* BaseIValuePacker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702C26E16F43003BB6F5 /* BaseIValuePacker.swift */; };
@@ -36,6 +35,7 @@
 		387E705526E16F43003BB6F5 /* Macros.m in Sources */ = {isa = PBXBuildFile; fileRef = 387E703826E16F43003BB6F5 /* Macros.m */; };
 		387E705626E16F43003BB6F5 /* ImageModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 387E703926E16F43003BB6F5 /* ImageModule.m */; };
 		387E705726E16F43003BB6F5 /* ImageModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E703B26E16F43003BB6F5 /* ImageModule.swift */; };
+		3881238726E3F8F60042E773 /* GreyScaleNormTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3881238626E3F8F60042E773 /* GreyScaleNormTransform.swift */; };
 		3896F5B126E17F2700A03229 /* ImageDataModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3896F5B026E17F2700A03229 /* ImageDataModule.swift */; };
 		3896F5B326E17F7900A03229 /* ImageDataModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 3896F5B226E17F7900A03229 /* ImageDataModule.m */; };
 		38C0DDB026E59E40003007B6 /* IImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C0DDAF26E59E40003007B6 /* IImage.swift */; };
@@ -72,7 +72,6 @@
 		387E702326E16F43003BB6F5 /* CameraView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraView.swift; sourceTree = "<group>"; };
 		387E702426E16F43003BB6F5 /* CameraManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraManager.swift; sourceTree = "<group>"; };
 		387E702626E16F43003BB6F5 /* JSContext.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSContext.swift; sourceTree = "<group>"; };
-		387E702826E16F43003BB6F5 /* ModelSpecification.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModelSpecification.swift; sourceTree = "<group>"; };
 		387E702A26E16F43003BB6F5 /* ScaleTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScaleTransform.swift; sourceTree = "<group>"; };
 		387E702B26E16F43003BB6F5 /* RGBNormTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RGBNormTransform.swift; sourceTree = "<group>"; };
 		387E702C26E16F43003BB6F5 /* BaseIValuePacker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BaseIValuePacker.swift; sourceTree = "<group>"; };
@@ -90,6 +89,7 @@
 		387E703926E16F43003BB6F5 /* ImageModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageModule.m; sourceTree = "<group>"; };
 		387E703A26E16F43003BB6F5 /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
 		387E703B26E16F43003BB6F5 /* ImageModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageModule.swift; sourceTree = "<group>"; };
+		3881238626E3F8F60042E773 /* GreyScaleNormTransform.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GreyScaleNormTransform.swift; sourceTree = "<group>"; };
 		3896F5B026E17F2700A03229 /* ImageDataModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDataModule.swift; sourceTree = "<group>"; };
 		3896F5B226E17F7900A03229 /* ImageDataModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ImageDataModule.m; sourceTree = "<group>"; };
 		38C0DDAF26E59E40003007B6 /* IImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IImage.swift; sourceTree = "<group>"; };
@@ -160,7 +160,6 @@
 			children = (
 				387E703426E16F43003BB6F5 /* MobileModelModule.m */,
 				387E703526E16F43003BB6F5 /* MobileModelModule.swift */,
-				387E702826E16F43003BB6F5 /* ModelSpecification.swift */,
 				387E702926E16F43003BB6F5 /* Processing */,
 				387E703226E16F43003BB6F5 /* TensorWrapper.h */,
 				387E703326E16F43003BB6F5 /* TensorWrapper.mm */,
@@ -179,6 +178,7 @@
 				387E702D26E16F43003BB6F5 /* IImageTransform.swift */,
 				387E702B26E16F43003BB6F5 /* RGBNormTransform.swift */,
 				387E702A26E16F43003BB6F5 /* ScaleTransform.swift */,
+				3881238626E3F8F60042E773 /* GreyScaleNormTransform.swift */,
 			);
 			path = Processing;
 			sourceTree = "<group>";
@@ -286,13 +286,13 @@
 				38C1F3CC26E5A2B9004BD31B /* ImageDataImage.swift in Sources */,
 				38C0DDB026E59E40003007B6 /* IImage.swift in Sources */,
 				387E703C26E16F43003BB6F5 /* CanvasManager.swift in Sources */,
+				3881238726E3F8F60042E773 /* GreyScaleNormTransform.swift in Sources */,
 				3896F5B326E17F7900A03229 /* ImageDataModule.m in Sources */,
 				387E703F26E16F43003BB6F5 /* CanvasManager.m in Sources */,
 				387E703E26E16F43003BB6F5 /* CanvasRenderingContext2D.swift in Sources */,
 				387E705326E16F43003BB6F5 /* MobileModelModule.swift in Sources */,
 				387E704C26E16F43003BB6F5 /* BaseIValuePacker.swift in Sources */,
 				38C0DDB226E59E88003007B6 /* Image.swift in Sources */,
-				387E704926E16F43003BB6F5 /* ModelSpecification.swift in Sources */,
 				387E704426E16F43003BB6F5 /* CaptureButton.swift in Sources */,
 				387E704D26E16F43003BB6F5 /* IImageTransform.swift in Sources */,
 				387E704126E16F43003BB6F5 /* CanvasRenderingContext2DModule.m in Sources */,

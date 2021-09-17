@@ -13,7 +13,7 @@ const npm2yarn = require('@docusaurus/remark-plugin-npm2yarn');
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: 'Making AI easier to use, for everyone.',
+  title: 'Share, discover and use machine learning models. Unlock the vast potential of AI innovations.',
   url: 'https://facebookexperimental.github.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',

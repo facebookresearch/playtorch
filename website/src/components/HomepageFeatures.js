@@ -11,6 +11,7 @@ import React from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
 import styles from './HomepageFeatures.module.css';
+import DocVideo from '../components/DocVideo';
 
 const FeatureList = [
   {
@@ -20,35 +21,41 @@ const FeatureList = [
         minutes.
       </>
     ),
-    description: 'Get started',
+    description: 'Get started now',
     to: '/docs/tutorials/get-started',
+    video: 'demo_mnist'
   },
   {
     title: (
       <>Use React Native templates to quickly build visual, interactive UI.</>
     ),
-    description: 'Tutorials',
+    description: 'View our tutorials',
     to: '/docs/tutorials/image-classification',
+    video: 'demo_ui'
   },
   {
     title: (
       <>Easily integrate open source, mobile ML models into your projects.</>
     ),
-    description: 'API',
+    description: 'Check out our API',
     to: '/docs/api/core',
+    video: 'demo_model'
   },
 ];
 
-function Feature({title, description, to}) {
+function Feature({title, description, video, to}) {
   return (
     <div className={clsx('col col--4')}>
-      <div className="text--center padding-horiz--md">
-        <p className="p__value_props">{title}</p>
-        <div className={styles.button}>
-          <Link className="button button--outline button--lg" to={to}>
-            {description}
-          </Link>
+      <div className={styles.feature}>
+        <p className={styles.featureText}>{title}</p>
+
+        <div className={styles.featureVideo}>
+          <DocVideo asset={video} style={{margin: 0}} autoPlay={true} loop={true} controls={false} />
         </div>
+
+        <Link className={styles.featureButton} to={to}>
+          {description}
+        </Link>
       </div>
     </div>
   );
@@ -63,7 +70,7 @@ export default function HomepageFeatures() {
             <Feature key={idx} {...props} />
           ))}
         </div>
-        <HomepageVisual />
+
       </div>
     </section>
   );

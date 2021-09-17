@@ -10,8 +10,11 @@ import clsx from 'clsx';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import {FbInternalOnly} from 'internaldocs-fb-helpers';
 import styles from './index.module.css';
 import HomepageFeatures from '../components/HomepageFeatures';
+import DocVideo from '../components/DocVideo';
+import {InternalCTAButton} from '../fb/FBInternalComponents';
 
 function HomepageHeader() {
   const {siteConfig} = useDocusaurusContext();
@@ -19,6 +22,15 @@ function HomepageHeader() {
     <header className={clsx('hero--primary', styles.heroBanner)}>
       <div className="container">
         <h1 className="hero__title">{siteConfig.title}</h1>
+        <div>
+          <Link className="hero__cta" to="/docs/tutorials/get-started">Try our latest build</Link>
+          <FbInternalOnly>
+            <InternalCTAButton cls="hero__cta" />
+          </FbInternalOnly>
+        </div>
+      </div>
+      <div className="hero__video">
+        <DocVideo asset="demo_catdog" style={{margin: 0}} autoPlay={true} loop={true} controls={false} />
       </div>
     </header>
   );
@@ -34,6 +46,7 @@ export default function Home() {
       <main>
         <HomepageFeatures />
       </main>
+
     </Layout>
   );
 }

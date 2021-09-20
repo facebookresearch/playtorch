@@ -5,8 +5,14 @@ sidebar_position: 1
 
 import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
 import DocVideo from '@site/src/components/DocVideo';
+import BrewIssues from '@site/docs/tutorials/fb/_brew-issues.mdx';
+import WhereToRun from '@site/docs/tutorials/fb/_where-to-run.mdx';
+import ChangedNPMRegistry from '@site/docs/tutorials/fb/_changed-npm-registry.mdx';
+import {FbInternalOnly} from 'internaldocs-fb-helpers';
+
 
 # Get Started
+
 In this tutorial, we will install the tools, set up the build environment, create your first PyTorch Live project and see it running in an emulator or your phone.
 
 PyTorch Live's command line tool `torchlive-cli` will automate most of the setup process. Here's a sneak peek of what the process looks like:
@@ -15,6 +21,11 @@ PyTorch Live's command line tool `torchlive-cli` will automate most of the setup
 
 Let's get started!
 
+<FbInternalOnly>
+
+<WhereToRun />
+
+</FbInternalOnly>
 
 ## Prerequisites
 
@@ -40,6 +51,12 @@ Now let's run this **setup-dev** command and get the build environment ready for
 ```shell
 ❯ npx torchlive-cli setup-dev
 ```
+
+<FbInternalOnly>
+
+<ChangedNPMRegistry />
+
+</FbInternalOnly>
 
 :::note
 
@@ -108,6 +125,11 @@ For PyTorch Live beta, we provide a bootstrap React Native app, packed with AI d
 ```shell
 npx torchlive-cli init MyFirstProject
 ```
+<FbInternalOnly>
+
+<BrewIssues />
+
+</FbInternalOnly>
 
 Behind the scene, the tool created a new React Native project and configured the build tools for mobile development. It also added a couple on-device AI models as well as examples to run them.
 

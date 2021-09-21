@@ -2297,6 +2297,11 @@ babel-plugin-polyfill-regenerator@^0.2.0:
   dependencies:
     "@babel/helper-define-polyfill-provider" "^0.2.2"
 
+babel-plugin-transform-remove-imports@^1.7.0:
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-transform-remove-imports/-/babel-plugin-transform-remove-imports-1.7.0.tgz#3fdfeec58592078544547155b1bffc4a4a0fcfa8"
+  integrity sha512-gprmWf6ry5qrnxMyiDaxZpXzZJP6R9FRA+p0AImLIWRmSEGtlKcFprHKeGMZYkII9rJR6Q1hYou+n1fk6rWf2g==
+
 bail@^1.0.0:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/bail/-/bail-1.0.5.tgz#b6fa133404a392cbc1f8c4bf63f5953351e7a776"

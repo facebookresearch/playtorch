@@ -3,6 +3,8 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @format
  */
 
 import React from 'react';
@@ -23,14 +25,24 @@ function HomepageHeader() {
       <div className="container">
         <h1 className="hero__title">{siteConfig.title}</h1>
         <div>
-          <Link className="hero__cta" to="/docs/tutorials/get-started">Try our latest build</Link>
+          <Link className="hero__cta" to="/docs/tutorials/get-started">
+            Try our latest build
+          </Link>
           <FbInternalOnly>
-            <InternalCTAButton cls="hero__cta" />
+            {typeof InternalCTAButton !== 'undefined' && (
+              <InternalCTAButton cls="hero__cta" />
+            )}
           </FbInternalOnly>
         </div>
       </div>
       <div className="hero__video">
-        <DocVideo asset="demo_catdog" style={{margin: 0}} autoPlay={true} loop={true} controls={false} />
+        <DocVideo
+          asset="demo_catdog"
+          style={{margin: 0}}
+          autoPlay={true}
+          loop={true}
+          controls={false}
+        />
       </div>
     </header>
   );
@@ -39,14 +51,11 @@ function HomepageHeader() {
 export default function Home() {
   const {siteConfig} = useDocusaurusContext();
   return (
-    <Layout
-      title={`PyTorch Live`}
-      description={`${siteConfig.title}`}>
+    <Layout title={`PyTorch Live`} description={`${siteConfig.title}`}>
       <HomepageHeader />
       <main>
         <HomepageFeatures />
       </main>
-
     </Layout>
   );
 }

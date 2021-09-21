@@ -27,7 +27,7 @@ public class MobileModelModule: NSObject {
             guard let modelSpec = moduleHolder.modelSpec else { return }
             let startPack = CFAbsoluteTimeGetCurrent()
             do {
-                if var tensorWrapper =  try packer.pack(params: params, modelSpec: modelSpec) as? TensorWrapper {
+                if let tensorWrapper =  try packer.pack(params: params, modelSpec: modelSpec) as? TensorWrapper {
                     let packTime = (CFAbsoluteTimeGetCurrent() - startPack) * 1000
                     let startInference = CFAbsoluteTimeGetCurrent()
                     let outputType = modelSpec["unpack"]["dtype"].string

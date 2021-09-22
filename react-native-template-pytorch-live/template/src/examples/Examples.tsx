@@ -25,6 +25,7 @@ import CameraExample from './CameraExample';
 import CanvasExample from './CanvasExample';
 import NLPExample from './NLPQAExample';
 import PhotosExample from './PhotosExample';
+import DETRExample from './DETRExample';
 import MNISTExample from './MNISTExample';
 
 const contents = [
@@ -42,6 +43,12 @@ const contents = [
         info: 'Identify objects in the camera',
         component: 'CameraExample',
         img: require('../../assets/images/flamingo.jpg'),
+      },
+      {
+        name: 'DE⫶TR example',
+        info: 'End-to-End Object Detection with Transformers',
+        component: 'DETRExample',
+        img: require('../../assets/images/mnist.jpg'),
       },
       {
         name: 'MNIST example',
@@ -156,6 +163,7 @@ export default function Examples() {
         component={ExampleScreen}
       />
       <Stack.Screen name="MNISTExample" component={MNISTExample} />
+      <Stack.Screen name="DETRExample" component={DETRExample} />
       <Stack.Screen name="PhotosExample" component={PhotosExample} />
       <Stack.Screen name="CameraExample" component={CameraExample} />
       <Stack.Screen name="NLPExample" component={NLPExample} />

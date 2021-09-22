@@ -41,6 +41,22 @@ def export_image_classification_models():
         bundle_live_spec_and_export_model(name, script_model)
 
 
+def export_image_segmentation_models():
+    print("Exporting image segmentation models")
+
+    name = "detr_resnet50"
+
+    model = torch.hub.load("facebookresearch/detr", name, pretrained=True)
+    model.eval()
+
+    example = torch.rand(1, 3, 800, 1066)
+    traced_script_module = torch.jit.trace(model, example, strict=False)
+    spec = Path(f"{name}.pt.live.spec.json").read_text()
+    extra_files = {"model/live.spec.json": spec}
+    optimized_model = optimize_for_mobile(traced_script_module)
+    optimized_model._save_for_lite_interpreter(f"{name}.pt", _extra_files=extra_files)
+
+
 def export_mnist_model():
     print("Exporting MNIST model")
 
@@ -87,6 +103,7 @@ def export_nlp_models():
 
 def main():
     export_image_classification_models()
+    export_image_segmentation_models()
     export_mnist_model()
     export_nlp_models()
 

@@ -14,6 +14,7 @@ import {
 import * as React from 'react';
 import {
   Image,
+  ImageSourcePropType,
   SectionList,
   StyleSheet,
   Text,
@@ -28,33 +29,50 @@ import PhotosExample from './PhotosExample';
 import DETRExample from './DETRExample';
 import MNISTExample from './MNISTExample';
 
-const contents = [
+type Example = {
+  name: string;
+  info: string;
+  key: string;
+  component: () => JSX.Element | null;
+  img: ImageSourcePropType;
+};
+
+type ExampleSection = {
+  title: string;
+  data: Example[];
+};
+
+const EXAMPLE_SECTIONS: ExampleSection[] = [
   {
     title: 'VISION',
     data: [
       {
         name: 'Photo example',
         info: 'Identify the contents in a photo',
-        component: 'PhotosExample',
+        key: 'PhotosExample',
+        component: PhotosExample,
         img: require('../../assets/images/plane.jpg'),
       },
       {
         name: 'Camera example',
         info: 'Identify objects in the camera',
-        component: 'CameraExample',
+        key: 'CameraExample',
+        component: CameraExample,
         img: require('../../assets/images/flamingo.jpg'),
       },
       {
         name: 'DE⫶TR example',
         info: 'End-to-End Object Detection with Transformers',
-        component: 'DETRExample',
+        key: 'DETRExample',
+        component: DETRExample,
         img: require('../../assets/images/mnist.jpg'),
       },
       {
         name: 'MNIST example',
         info:
           'An end-to-end example of implementing a custom model in a fun demo',
-        component: 'MNISTExample',
+        key: 'MNISTExample',
+        component: MNISTExample,
         img: require('../../assets/images/mnist.jpg'),
       },
     ],
@@ -65,7 +83,8 @@ const contents = [
       {
         name: 'QA example',
         info: 'Question answering using Bert',
-        component: 'NLPExample',
+        key: 'NLPExample',
+        component: NLPExample,
         img: require('../../assets/images/nlp_screenshot.jpg'),
       },
     ],
@@ -76,7 +95,8 @@ const contents = [
       {
         name: 'Canvas example',
         info: 'An interactive composition that demonstrates canvas features',
-        component: 'CanvasExample',
+        key: 'CanvasExample',
+        component: CanvasExample,
         img: require('../../assets/images/canvas_example.jpg'),
       },
     ],
@@ -87,7 +107,8 @@ const contents = [
       {
         name: 'Astro Bird',
         info: 'A little game to test performance',
-        component: 'AstroBirdExample',
+        key: 'AstroBirdExample',
+        component: AstroBirdExample,
         img: require('../../assets/images/astro_bird.jpg'),
       },
     ],
@@ -95,29 +116,29 @@ const contents = [
 ];
 
 type ExampleProp = {
-  item: {name: string; info: string; component: string; img: any};
+  example: Example;
   onSelect: (name: string) => {};
 };
 
-const ExampleCard = ({item, onSelect}: ExampleProp) => {
+const ExampleCard = ({example, onSelect}: ExampleProp) => {
   return (
     <View style={styles.card}>
       <TouchableOpacity
         activeOpacity={0.7}
-        onPress={() => onSelect(item.component)}>
+        onPress={() => onSelect(example.key)}>
         <View style={styles.label}>
-          <Text style={styles.titleText}>{item.name}</Text>
-          <Text style={styles.infoText}>{item.info}</Text>
+          <Text style={styles.titleText}>{example.name}</Text>
+          <Text style={styles.infoText}>{example.info}</Text>
         </View>
         <View style={styles.thumbnail}>
-          <Image source={item.img} style={styles.thumb_image} />
+          <Image source={example.img} style={styles.thumb_image} />
         </View>
       </TouchableOpacity>
     </View>
   );
 };
 
-const ExampleSection = ({title}: {title: string}) => {
+const ExampleSection = ({title}: Pick<ExampleSection, 'title'>) => {
   return (
     <View style={styles.category}>
       <Text style={styles.categoryLabel}>{title}</Text>
@@ -135,10 +156,10 @@ function ExampleScreen({navigation}: any) {
       </View>
       <SectionList
         style={styles.container}
-        sections={contents}
+        sections={EXAMPLE_SECTIONS}
         keyExtractor={(item, index) => item.name + index}
         renderItem={({item}) => (
-          <ExampleCard item={item} onSelect={navigation.navigate} />
+          <ExampleCard example={item} onSelect={navigation.navigate} />
         )}
         renderSectionHeader={({section: {title}}) => (
           <ExampleSection title={title} />
@@ -151,6 +172,12 @@ function ExampleScreen({navigation}: any) {
 const Stack = createStackNavigator();
 
 export default function Examples() {
+  const examples = React.useMemo(() => {
+    return EXAMPLE_SECTIONS.map(section => {
+      return section.data;
+    }).reduce((prev, curr) => [...prev, ...curr]);
+  }, [EXAMPLE_SECTIONS]);
+
   return (
     <Stack.Navigator
       initialRouteName="Examples"
@@ -162,13 +189,15 @@ export default function Examples() {
         options={{headerShown: false}}
         component={ExampleScreen}
       />
-      <Stack.Screen name="MNISTExample" component={MNISTExample} />
-      <Stack.Screen name="DETRExample" component={DETRExample} />
-      <Stack.Screen name="PhotosExample" component={PhotosExample} />
-      <Stack.Screen name="CameraExample" component={CameraExample} />
-      <Stack.Screen name="NLPExample" component={NLPExample} />
-      <Stack.Screen name="CanvasExample" component={CanvasExample} />
-      <Stack.Screen name="AstroBirdExample" component={AstroBirdExample} />
+      {examples.map(example => {
+        return (
+          <Stack.Screen
+            key={example.key}
+            name={example.key}
+            component={example.component}
+          />
+        );
+      })}
     </Stack.Navigator>
   );
 }

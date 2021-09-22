@@ -74,7 +74,7 @@ function useMNISTCanvasInference(layout: LayoutRectangle | null) {
       // already in-flight. Ignore in-flight inference if `forceRun` is set to
       // true.
       if (layout === null || (isRunningInferenceRef.current && !forceRun)) {
-        return null;
+        return;
       }
 
       // Set inference running if not force run
@@ -161,7 +161,7 @@ export default function MNISTExample() {
         trail.push(position);
       }
     },
-    [trailRef, classify, ctx],
+    [trailRef],
   );
 
   const handleStart = useCallback(() => {
@@ -179,7 +179,7 @@ export default function MNISTExample() {
         showingRef.current = true;
       }, 100);
     }
-  }, [drawingRef, classify]);
+  }, [ctx, classify]);
 
   // Instantiate an Animator. `useMemo` is used for React optimization.
   const animator = useMemo(() => new Animator(), []);

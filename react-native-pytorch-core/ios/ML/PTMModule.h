@@ -6,17 +6,19 @@
  */
 
 #import <Foundation/Foundation.h>
-#import "TensorWrapper.h"
+
+@class PTMIValue;
 
 NS_ASSUME_NONNULL_BEGIN
 
-@interface TorchModule : NSObject
+NS_SWIFT_NAME(Module)
+@interface PTMModule : NSObject
 
-+ (nullable instancetype)load:(NSString *)filePath extraFiles:(NSMutableDictionary<NSString *, NSString *> *)extraFiles;
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)init NS_UNAVAILABLE;
-- (TensorWrapper *)predictImage:(TensorWrapper *)tensorWrapper outputType:(NSString *)outputType;
 
++ (nullable instancetype)load:(NSString *)filePath extraFiles:(NSMutableDictionary<NSString *, NSString *> *)extraFiles;
+- (nullable PTMIValue *)forward:(NSArray<PTMIValue *> *)ivalues;
 @end
 
 NS_ASSUME_NONNULL_END

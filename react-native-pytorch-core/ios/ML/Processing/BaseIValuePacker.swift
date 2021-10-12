@@ -15,13 +15,15 @@ class BaseIValuePacker {
         case InvalidImageToImageName
         case InvalidImageToTensorName
         case InvalidTransformType
+        case InvalidPackType
         case InvalidUnpackType
         case InvalidParam
+        case InvalidDType
         case JSONToStringError
         case StringToJSONError
     }
 
-    func pack(params: NSDictionary, modelSpec: JSON) throws -> Any? {
+    func pack(params: NSDictionary, modelSpec: JSON) throws -> IValue? {
         let modelSpecification: JSON
         do {
             modelSpecification = try applyParams(modelSpec: modelSpec, params: params)
@@ -29,7 +31,10 @@ class BaseIValuePacker {
             throw error
         }
 
-        switch modelSpec["pack"]["type"].string {
+        guard let type = modelSpec["pack"]["type"].string else {
+            throw BaseIValuePackerError.InvalidPackType
+        }
+        switch type {
         case "tensor_from_image":
             return try packImage(modelSpec: modelSpecification, params: params)
         default:
@@ -37,28 +42,33 @@ class BaseIValuePacker {
         }
     }
 
-    func unpack(outputs: TensorWrapper, modelSpec: JSON) throws -> Any? {
-        do {
-            let unpack = modelSpec["unpack"]
-            let type = unpack["type"].string
-            switch type {
-            case "tensor":
-                return [(unpack["key"].string) : outputs.toFloatArray()]
-            case "argmax":
-                return try [(unpack["key"].string) : argmax(tensorWrapper: outputs)]
-            default:
-                throw BaseIValuePackerError.InvalidUnpackType
-            }
-        } catch {
-            throw error
+    func unpack(ivalue: IValue, modelSpec: JSON) throws -> Any? {
+        let unpack = modelSpec["unpack"]
+
+        guard let type = unpack["type"].string,
+              let key = unpack["key"].string else {
+            throw BaseIValuePackerError.InvalidUnpackType
         }
+        var value : Any? = nil
+        switch type {
+        case "tensor":
+            value = try unpackTensor(ivalue: ivalue, unpack: unpack)
+        case "argmax":
+            value = try unpackArgmax(ivalue: ivalue, unpack: unpack)
+        default:
+            throw BaseIValuePackerError.InvalidUnpackType
+        }
+        return [key: value]
     }
 
-    func packImage(modelSpec: JSON, params: NSDictionary) throws -> Any? {
+    private func packImage(modelSpec: JSON, params: NSDictionary) throws -> IValue? {
         do {
             if let imageId = (params["image"] as? NSDictionary)?["ID"] as? String, let image = try ImageModule.unwrapImage(imageId).getBitmap() {
                 let transforms: JSON = modelSpec["pack"]["transforms"]
-                return try doImageTransforms(transforms: transforms.arrayValue, image: image)
+                guard let tensor = try doImageTransforms(transforms: transforms.arrayValue, image: image) else {
+                  throw BaseIValuePackerError.ImageUnwrapError
+                }
+                return IValue.fromTensor(tensor)
             } else {
                 throw BaseIValuePackerError.ImageUnwrapError
             }
@@ -67,9 +77,9 @@ class BaseIValuePacker {
         }
     }
 
-    func doImageTransforms(transforms: Array<JSON>, image: CGImage) throws -> Any? {
+    private func doImageTransforms(transforms: Array<JSON>, image: CGImage) throws -> Tensor? {
         var newImage = image
-        var iValue: Any? = nil
+        var tensor: Tensor? = nil
         for transform in transforms {
             let type = transform["type"].string
             let name = transform["name"].string
@@ -86,7 +96,6 @@ class BaseIValuePacker {
                     throw BaseIValuePackerError.InvalidImageToImageName
                 }
                 newImage = try transformer.transform(bitmap: newImage)
-                iValue = newImage
             case "image_to_tensor":
                 var transformer: IImageToTensorTransform
                 switch name{
@@ -97,15 +106,15 @@ class BaseIValuePacker {
                 default:
                     throw BaseIValuePackerError.InvalidImageToTensorName
                 }
-                iValue = transformer.transform(bitmap: newImage)
+                tensor = transformer.transform(bitmap: newImage)
             default:
                 throw BaseIValuePackerError.InvalidTransformType
             }
         }
-        return iValue
+        return tensor
     }
 
-    func applyParams(modelSpec: JSON, params: NSDictionary) throws -> JSON {
+    private func applyParams(modelSpec: JSON, params: NSDictionary) throws -> JSON {
         guard var specSrc = modelSpec.rawString() else {
             throw BaseIValuePackerError.JSONToStringError
         }
@@ -130,10 +139,49 @@ class BaseIValuePacker {
         } catch {
             throw BaseIValuePackerError.StringToJSONError
         }
-        throw BaseIValuePackerError.StringToJSONError
     }
 
-    private func argmax(tensorWrapper: TensorWrapper) throws -> Int {
-        return Int(tensorWrapper.argmax());
+    private func unpackTensor(ivalue: IValue, unpack: JSON) throws -> [Any] {
+        let dtype = unpack["dtype"].string
+        switch dtype {
+        case "float":
+            return ivalue.toTensor()?.getDataAsArray() ?? []
+        default:
+            throw BaseIValuePackerError.InvalidDType
+        }
+    }
+
+    private func argmax(array: [Any]?, dtype: PTMTensorType?) -> Int {
+        guard let array = array, let dtype = dtype else {
+            return 0
+        }
+
+        switch dtype {
+        case .float:
+            var max = -MAXFLOAT;
+            var ret = -1;
+            for (i, item) in array.enumerated() {
+                let num = item as! Float32
+                if (num > max) {
+                  ret = i;
+                  max = num;
+                }
+            }
+            return ret;
+        default:
+            return 0
+        }
+    }
+
+    private func unpackArgmax(ivalue: IValue, unpack: JSON) throws -> Int {
+        let dtype = unpack["dtype"].string
+        switch dtype {
+        case "float":
+            let tensor = ivalue.toTensor()
+            let array = tensor?.getDataAsArray()
+            return argmax(array: array, dtype: tensor?.dtype)
+        default:
+            throw BaseIValuePackerError.InvalidDType
+        }
     }
 }

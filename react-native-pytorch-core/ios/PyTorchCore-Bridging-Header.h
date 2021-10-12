@@ -10,8 +10,9 @@
 #import <React/RCTEventEmitter.h>
 #import <React/RCTConvert.h>
 #import "Macros.h"
-#import "TorchModule.h"
-#import "TensorWrapper.h"
+#import "PTMModule.h"
+#import "PTMTensor.h"
+#import "PTMIValue.h"
 
 @interface PyTorchCoreBridge: RCTViewManager
 

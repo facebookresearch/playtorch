@@ -100,6 +100,6 @@ class GreyScaleNormTransform: IImageToTensorTransform  {
             let norm = (value - self.mean) / self.std
             normalizedBuffer[i] = norm
         }
-        return TensorWrapper(fromBlob: &normalizedBuffer, shape: [1, 1, NSNumber(value: Int32(w)), NSNumber(value: Int32(h))], dtype: "float")
+        return Tensor.fromBlob(data: &normalizedBuffer, shape: [1, 1, NSNumber(value: Int32(w)), NSNumber(value: Int32(h))], dtype: .float)
     }
 }

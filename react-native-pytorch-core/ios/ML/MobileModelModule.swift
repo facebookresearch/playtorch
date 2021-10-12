@@ -24,17 +24,19 @@ public class MobileModelModule: NSObject {
         let modelKey = getKey(path: modelPath as String)
         if let moduleHolder = mModulesAndSpecs[modelKey] {
             let packer = BaseIValuePacker()
-            guard let modelSpec = moduleHolder.modelSpec else { return }
+            guard let modelSpec = moduleHolder.modelSpec else {
+                reject(RCTErrorUnspecified, "Could not find model spec", nil)
+                return
+            }
             let startPack = CFAbsoluteTimeGetCurrent()
             do {
-                if let tensorWrapper =  try packer.pack(params: params, modelSpec: modelSpec) as? TensorWrapper {
+                if let ivalue =  try packer.pack(params: params, modelSpec: modelSpec) {
                     let packTime = (CFAbsoluteTimeGetCurrent() - startPack) * 1000
                     let startInference = CFAbsoluteTimeGetCurrent()
-                    let outputType = modelSpec["unpack"]["dtype"].string
-                    if let outputs = moduleHolder.module?.predictImage(tensorWrapper, outputType: outputType!) {
+                    if let ivalue = moduleHolder.module?.forward([ivalue]) {
                         let inferenceTime = (CFAbsoluteTimeGetCurrent() - startInference) * 1000
                         let startUnpack = CFAbsoluteTimeGetCurrent()
-                        let result = try packer.unpack(outputs: outputs, modelSpec: modelSpec)
+                        let result = try packer.unpack(ivalue: ivalue, modelSpec: modelSpec)
                         let unpackTime = (CFAbsoluteTimeGetCurrent() - startUnpack) * 1000
                         let metrics = ["totalTime": packTime + inferenceTime + unpackTime, "packTime": packTime, "inferenceTime": inferenceTime, "unpackTime": unpackTime]
                         resolve(["result": result, "metrics": metrics])
@@ -85,7 +87,7 @@ public class MobileModelModule: NSObject {
                 // Note: regardless what initial value is set for the key "model/live.spec.json", the
                 // TorchModule.load method will set an empty string if the model file is not bundled inside the
                 // model file.
-                if let module = TorchModule.load(tempURL.path, extraFiles: extraFiles) {
+                if let module = Module.load(tempURL.path, extraFiles: extraFiles) {
                     self.mModulesAndSpecs[modelKey]?.setModule(module: module)
 
                     let modelSpec = extraFiles["model/live.spec.json"] as? String ?? ""
@@ -97,7 +99,7 @@ public class MobileModelModule: NSObject {
                             completionHandler(nil)
                         }
                         catch {
-                            completionHandler("could not fetch json file: \(error)")
+                            completionHandler("Could not fetch json file: \(error)")
                         }
                     } else {
                         self.fetchModelSpec(modelUri: modelUri, completionHandler: completionHandler)
@@ -134,10 +136,10 @@ public class MobileModelModule: NSObject {
     }
 
     public class ModuleHolder {
-        var module: TorchModule?
+        var module: Module?
         var modelSpec: JSON?
 
-        func setModule(module: TorchModule) {
+        func setModule(module: Module) {
             self.module = module
         }
 

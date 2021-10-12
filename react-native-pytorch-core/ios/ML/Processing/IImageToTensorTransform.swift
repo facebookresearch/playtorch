@@ -8,5 +8,5 @@
 import Foundation
 
 protocol IImageToTensorTransform {
-    func transform(bitmap: CGImage) -> TensorWrapper
+    func transform(bitmap: CGImage) -> Tensor?
 }

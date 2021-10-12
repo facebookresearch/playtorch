@@ -29,7 +29,7 @@ class RGBNormTransform: IImageToTensorTransform {
         return RGBNormTransform(mean: mean, std: std)
     }
 
-    func transform(bitmap: CGImage) -> TensorWrapper {
+    func transform(bitmap: CGImage) -> Tensor? {
         let w = bitmap.width
         let h = bitmap.height
         let bytesPerPixel = 4

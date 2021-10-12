@@ -68,7 +68,8 @@ class GreyScaleNormTransform: IImageToTensorTransform  {
         let c = b0 - b1
         return sqrtf(Float(a*a + b*b + c*c))
     }
-    func transform(bitmap: CGImage) -> TensorWrapper {
+
+    func transform(bitmap: CGImage) -> Tensor? {
         let w = bitmap.width
         let h = bitmap.height
         let bytesPerPixel = 4

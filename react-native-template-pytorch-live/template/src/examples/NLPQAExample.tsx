@@ -63,7 +63,7 @@ export default function NLPExample() {
             <TouchableOpacity
               disabled={isProcessing}
               onPress={() => processQA(text, question)}>
-              <View style={styles.askButton}>
+              <View style={isProcessing ? styles.askButtonDisabled : styles.askButton}>
                 <Text style={styles.askButtonText}>Ask</Text>
               </View>
             </TouchableOpacity>
@@ -145,6 +145,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#ff4c2c',
+  },
+  askButtonDisabled: {
+    width: 60,
+    height: 40,
+    borderRadius: 25,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#eeeeee',
   },
   askButtonText: {
     color: '#ffffff',

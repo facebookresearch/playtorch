@@ -10,4 +10,5 @@
 @interface RCT_EXTERN_REMAP_MODULE(PyTorchCoreMobileModelModule, MobileModelModule, NSObject)
 RCT_EXTERN_METHOD(execute:(nonnull NSString)modelPath params:(nonnull NSDictionary)params resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(preload:(nonnull NSString)modelPath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(unload:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 @end

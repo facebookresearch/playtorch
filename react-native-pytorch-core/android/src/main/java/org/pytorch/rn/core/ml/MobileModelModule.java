@@ -85,6 +85,15 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void unload(Promise promise) {
+    executorService.execute(
+        () -> {
+          mModulesAndSpecs.clear();
+          promise.resolve(null);
+        });
+  }
+
+  @ReactMethod
   @UseExperimental(markerClass = androidx.camera.core.ExperimentalGetImage.class)
   public void execute(final String modelUri, final ReadableMap params, final Promise promise) {
     executorService.execute(

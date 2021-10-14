@@ -95,6 +95,13 @@ export interface MobileModel {
    * @param modelPath The model path (i.e., a `require`).
    */
   preload(modelPath: ImageRequireSource): Promise<void>;
+  
+  /**
+   * Unload all model. If any model were loaded previously, they will be discarded.
+   * This function allows to load a new version of a model without restarting the 
+   * app.
+   */
+  unload(): Promise<void>;
 
   /**
    * Run inference on a model.
@@ -132,6 +139,9 @@ export const MobileModel: MobileModel = {
   async preload(modelPath: ImageRequireSource): Promise<void> {
     const source = getModelAssetSource(modelPath);
     return await MobileModelModule.preload(source.uri);
+  },
+  async unload(): Promise<void> {
+    return await MobileModelModule.unload();
   },
   async execute<T>(
     modelPath: ImageRequireSource,

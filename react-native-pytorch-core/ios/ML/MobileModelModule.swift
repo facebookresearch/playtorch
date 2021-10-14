@@ -74,6 +74,12 @@ public class MobileModelModule: NSObject {
         fetchCacheAndLoadModel(modelUri: modelUri as String, completionHandler: completionHandler)
     }
 
+    @objc(unload:rejecter:)
+    public func unload(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+        mModulesAndSpecs.removeAll()
+        resolve(nil)
+    }
+
     func fetchCacheAndLoadModel(modelUri: String, completionHandler: @escaping (String?) -> Void) {
         let modelKey = getKey(path: modelUri)
         if let modelUrl = URL(string: modelUri) {

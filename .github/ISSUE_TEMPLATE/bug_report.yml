@@ -1,0 +1,46 @@
+name: Bug Report
+description: File a bug report
+title: ""
+labels: ["Needs: Triage :mag:"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please provide all the information requested.
+  - type: input
+    id: version
+    attributes:
+      label: Version
+      description: What version of PyTorch Live?
+      placeholder: ex) 0.0.2-alpha.11
+    validations:
+      required: false
+  - type: dropdown
+    id: area
+    attributes:
+      label: Problem Area
+      description: What part of the PyTorch Live codebase are you reporitng a bug for?
+      options:
+        - react-native-pytorch-core (core package)
+        - CLI
+        - Website/Documentation
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Steps to Reproduce
+      description: Please provide a detailed list of steps that reproduce the issue.
+      placeholder: |
+        1.
+        2.
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Results
+      description: Please describe what you expected to happen.
+  - type: textarea
+    id: example
+    attributes:
+      label: Code example, screenshot, or link to repository
+      description: Please provide a link to a repository on GitHub or a minimal code example that reproduces the problem. You may provide a screenshot of the application if you think it is relevant to your bug report.

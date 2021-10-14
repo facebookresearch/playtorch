@@ -8,6 +8,7 @@
 import Foundation
 import AVFoundation
 import UIKit
+import VideoToolbox
 
 @objc(CameraView)
 class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutputSampleBufferDelegate {
@@ -219,7 +220,10 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
             print("Error capturing photo: \(error)")
             return
         }
-        guard let image = photo.cgImageRepresentation()?.takeUnretainedValue() else { print("Could not get imageData"); return }
+        guard let buffer = photo.pixelBuffer else { print("Could not get pixelBuffer"); return };
+        var cgImage: CGImage?
+        VTCreateCGImageFromCVPixelBuffer(buffer, options: nil, imageOut: &cgImage);
+        guard let image: CGImage = cgImage else { print("Could not get imageData"); return };
         let colorSpace: CGColorSpace = image.colorSpace ?? CGColorSpace(name: CGColorSpace.sRGB)!
         guard let context = CGContext(
                 data: nil,

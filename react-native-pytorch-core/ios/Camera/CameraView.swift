@@ -211,7 +211,8 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
     }
 
     @objc func captureImage() {
-        self.photoOutput.capturePhoto(with: AVCapturePhotoSettings(), delegate: self)
+        let photoSettings = AVCapturePhotoSettings(format: [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)])
+        self.photoOutput.capturePhoto(with: photoSettings, delegate: self)
     }
 
     @available(iOS 11.0, *)

@@ -14,7 +14,7 @@
 
 + (instancetype)fromTensor:(const at::Tensor&)tensor {
     PTMTensor *ptmTensor = [PTMTensor new];
-    ptmTensor->_tensor = tensor;
+    ptmTensor->_tensor = tensor.clone();
     return ptmTensor;
 }
 

@@ -21,7 +21,11 @@ class BaseIValuePacker {
         case InvalidDType
         case JSONToStringError
         case StringToJSONError
+        case PackStringError
+        case DecodeBertError
     }
+
+    var packerContext = [String: Any]()
 
     func pack(params: NSDictionary, modelSpec: JSON) throws -> IValue? {
         let modelSpecification: JSON
@@ -37,6 +41,8 @@ class BaseIValuePacker {
         switch type {
         case "tensor_from_image":
             return try packImage(modelSpec: modelSpecification, params: params)
+        case "tensor_from_string":
+            return try packString(modelSpec: modelSpecification, params: params)
         default:
             throw BaseIValuePackerError.InvalidTransformType
         }
@@ -55,6 +61,8 @@ class BaseIValuePacker {
             value = try unpackTensor(ivalue: ivalue, unpack: unpack)
         case "argmax":
             value = try unpackArgmax(ivalue: ivalue, unpack: unpack)
+        case "bert_decode_qa_answer":
+            value = try decodeBertQAAnswer(ivalue: ivalue, unpack: unpack)
         default:
             throw BaseIValuePackerError.InvalidUnpackType
         }
@@ -184,4 +192,54 @@ class BaseIValuePacker {
             throw BaseIValuePackerError.InvalidDType
         }
     }
+
+    private func packString(modelSpec: JSON, params: NSDictionary) throws -> IValue? {
+        let pack = modelSpec["pack"]
+        let tokenizer = pack["tokenizer"].string
+        switch tokenizer {
+        case "bert":
+            guard let vocabulary = modelSpec["vocabulary_bert"].string else {
+                throw BaseIValuePackerError.PackStringError
+            }
+            let bertTokenizer = try BertTokenizer(vocabulary: vocabulary)
+            var tokenIds = try bertTokenizer.tokenize(content: pack["string"].stringValue, modelInputLength: pack["model_input_length"].intValue)
+            packerContext["bert_tokenizer"] = bertTokenizer
+            packerContext["token_ids"] = tokenIds
+            guard let tensor = Tensor.fromBlob(data: &tokenIds, shape: [1, NSNumber(value: tokenIds.count)], dtype: .long) else {
+                throw BaseIValuePackerError.PackStringError
+            }
+            return IValue.fromTensor(tensor)
+        default:
+            throw BaseIValuePackerError.PackStringError
+        }
+    }
+
+    private func decodeBertQAAnswer(ivalue: IValue, unpack: JSON) throws -> String {
+        guard let bertTokenizer = packerContext["bert_tokenizer"] as? BertTokenizer,
+              let tokenIds = packerContext["token_ids"] as? [Int] else {
+            throw BaseIValuePackerError.DecodeBertError
+        }
+
+        guard let  map = ivalue.toDictStringKey() as [String: IValue]? else {
+            throw BaseIValuePackerError.DecodeBertError
+        }
+
+        guard let startLogitTensor = map["start_logits"]?.toTensor(),
+              let endLogitTensor = map["end_logits"]?.toTensor() else {
+            throw BaseIValuePackerError.DecodeBertError
+        }
+
+        let startLogits = startLogitTensor.getDataAsArrayBert()
+        let endLogits = endLogitTensor.getDataAsArrayBert()
+        let startIdx = argmax(array: startLogits, dtype: startLogitTensor.dtype)
+        let endIdx = argmax(array: endLogits, dtype: endLogitTensor.dtype)
+
+        if startIdx > endIdx {
+            throw BaseIValuePackerError.DecodeBertError
+        }
+
+        let tokenIdRange = Array(tokenIds[startIdx...endIdx])
+        return try bertTokenizer.decode(tokenIds: tokenIdRange)
+    }
+
 }

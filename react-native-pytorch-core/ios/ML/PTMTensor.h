@@ -30,6 +30,7 @@ NS_SWIFT_NAME(Tensor)
 + (nullable instancetype)fromBlob:(void *)data shape:(NSArray<NSNumber*>*)shape dtype:(PTMTensorType)dtype NS_SWIFT_NAME(fromBlob(data:shape:dtype:));
 
 - (nullable NSArray<NSNumber *> *)getDataAsArray;
+- (nullable NSArray<NSNumber *> *)getDataAsArrayBert;
 
 @end
 

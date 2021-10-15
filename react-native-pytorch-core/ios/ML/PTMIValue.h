@@ -23,6 +23,8 @@ NS_SWIFT_NAME(IValue)
 
 - (nullable PTMTensor*)toTensor;
 
+- (nullable NSDictionary<NSString*, PTMIValue*>*)toDictStringKey;
+
 @end
 
 NS_ASSUME_NONNULL_END

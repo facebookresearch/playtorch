@@ -39,4 +39,28 @@
     return [PTMTensor fromTensor:tensor];
 }
 
+- (nullable NSDictionary<NSString*, PTMIValue*>*)toDictStringKey {
+    if (_ivalue.isGenericDict() == NO) {
+        return nil;
+    }
+    
+    auto dict = _ivalue.toGenericDict();
+    auto keyType = dict.keyType();
+    auto keyTypeKind = keyType->kind();
+
+    if (keyTypeKind != c10::TypeKind::StringType) {
+        return nil;
+    }
+
+    NSMutableDictionary<NSString*, PTMIValue*> *result = [NSMutableDictionary dictionary];
+    for (auto const& pair : dict) {
+        auto key = pair.key().toString()->string().c_str();
+        auto value = pair.value();
+        PTMIValue *valueIValue = [PTMIValue fromIValue:value];
+        NSString *keyString = [NSString stringWithUTF8String:key];
+        result[keyString] = valueIValue;
+    }
+    return [result copy];
+}
+
 @end

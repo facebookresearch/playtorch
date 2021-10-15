@@ -98,4 +98,17 @@
     return [values copy];
 }
 
+- (nullable NSArray<NSNumber *> *)getDataAsArrayBert {
+    if (_tensor.dtype() != at::kFloat) {
+        return nil;
+    }
+    
+    NSMutableArray *values = [NSMutableArray array];
+    float* buffer = _tensor.data_ptr<float>();
+    for (int i = 0; i < _tensor.numel(); i++) {
+        [values addObject: [NSNumber numberWithFloat:buffer[i*2]]];
+    }
+    return [values copy];
+}
+
 @end

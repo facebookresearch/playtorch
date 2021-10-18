@@ -3,6 +3,8 @@ id: image-classification
 sidebar_position: 2
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
 
 # Image Classification
@@ -214,9 +216,9 @@ Click on camera capture button and check logged output in terminal.
 
 ### Run model inference
 
-Fantastic! Now use the `useImageModelInference` hook to run inference on a captured image. The hook provides a `processImage` function and an `imageClass`. Replace the `console.log` with the `processImage` function and pass in the image object. When the inference finishes, the component re-renders with the top class as label.
+Fantastic! Now use the `useImageModelInference` hook to run inference on a captured image. The hook provides a `processImage` function and an `imageClass`.
 
-It will use the `mobilenet_v3_small.pt` model that is already prepared for PyTorch Live. You can follow the [Prepare Custom Model](prepare-custom-model) tutorial to prepare your own classification model and use this model instead for image classification.
+Replace the `console.log` with the `processImage` function and pass in the image object. When the inference finishes, the component re-renders with the top class as label.
 
 ```tsx {4-5,7-10,14,17,24} title="./src/demos/ImageClassificationDemo.tsx"
 import * as React from 'react';
@@ -266,6 +268,52 @@ const styles = StyleSheet.create({
 ```
 
 ![](/img/tutorial/image_classification_tutorial6.png)
+
+:::note
+PyTorch Live comes with 3 image classification models that are ready to use. In the example code provided in this tutorial, we use `mobilenet_v3_small.pt` for inference, but feel free to try out the others by replacing the `modelInfo` with code from the tabbed viewer below.
+:::
+
+<Tabs
+  defaultValue="mobilenet-v3-small"
+  values={[
+    {label: 'MobileNet v3 Small', value: 'mobilenet-v3-small'},
+    {label: 'MobileNet v3 Large', value: 'mobilenet-v3-large'},
+    {label: 'ResNet-18', value: 'resnet18'},
+  ]}
+>
+  <TabItem value="mobilenet-v3-small">
+
+  ```tsx
+  const modelInfo: ModelInfo = {
+    name: 'MobileNet V3 Small',
+    model: require('../../models/mobilenet_v3_small.pt'),
+  }
+  ```
+
+  </TabItem>
+  <TabItem value="mobilenet-v3-large">
+
+  ```tsx
+  const modelInfo: ModelInfo = {
+    name: 'MobileNet V3 Small',
+    model: require('../../models/mobilenet_v3_large.pt'),
+  }
+  ```
+
+  </TabItem>
+  <TabItem value="resnet18">
+
+  ```tsx
+  const modelInfo: ModelInfo = {
+    name: 'ResNet-18',
+    model: require('../../models/resnet18.pt'),
+  }
+  ```
+
+  </TabItem>
+</Tabs>
+
+You can follow the [Prepare Custom Model](prepare-custom-model) tutorial to prepare your own classification model that you can plug into the demo code provided here.
 
 ### Use Frame-by-Frame Images
 

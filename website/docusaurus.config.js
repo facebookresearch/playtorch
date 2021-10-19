@@ -13,7 +13,8 @@ const npm2yarn = require('@docusaurus/remark-plugin-npm2yarn');
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title: 'Share, discover and use machine learning models. Unlock the vast potential of AI innovations.',
+  title:
+    'Share, discover and use machine learning models. Unlock the vast potential of AI innovations.',
   url: 'https://facebookexperimental.github.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',
@@ -113,6 +114,10 @@ module.exports = {
       },
       // Please do not remove the credits, help to publicize Docusaurus :)
       copyright: `Copyright © ${new Date().getFullYear()} Facebook, Inc. Built with Docusaurus.`,
+    },
+    googleAnalytics: {
+      trackingID: 'UA-117752657-2',
+      anonymizeIP: true,
     },
   },
   presets: [

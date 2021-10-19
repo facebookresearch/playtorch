@@ -1,0 +1,82 @@
+name: Build iOS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-ios.yml'
+      - 'react-native-pytorch-core/*.podspec'
+      - 'react-native-pytorch-core/ios/**'
+      - 'react-native-pytorch-core/example/ios/**'
+      - 'react-native-template-pytorch-live/template/ios/**'
+      - 'react-native-pytorch-core/example/ios/**'
+      - 'react-native-pytorch-core/yarn.lock'
+      - 'react-native-template-pytorch-live/template/yarn.lock'
+
+  pull_request:
+    paths:
+      - '.github/workflows/build-ios.yml'
+      - 'react-native-pytorch-core/*.podspec'
+      - 'react-native-pytorch-core/ios/**'
+      - 'react-native-pytorch-core/example/ios/**'
+      - 'react-native-template-pytorch-live/template/ios/**'
+      - 'react-native-pytorch-core/example/ios/**'
+      - 'react-native-pytorch-core/yarn.lock'
+      - 'react-native-template-pytorch-live/template/yarn.lock'
+
+jobs:
+  build:
+    name: Build iOS Template App
+    runs-on: macOS-latest
+    defaults:
+      run:
+        working-directory: ./react-native-template-pytorch-live/template/ios
+    steps:
+      - uses: actions/checkout@v2
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+      - name: Restore node_modules from cache
+        uses: actions/cache@v2
+        id: yarn-cache
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+      - name: Install node_modules for react-native-pytorch-core
+        run: yarn install --frozen-lockfile
+        working-directory: ./react-native-pytorch-core
+      - name: Install node_modules for template
+        run: yarn install --frozen-lockfile
+      - name: Setup Ruby (bundle)
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 2.6
+          bundler-cache: true
+          working-directory: ./react-native-template-pytorch-live/template/ios
+      - name: Restore Pods cache
+        uses: actions/cache@v2
+        with:
+          path: |
+            example/ios/Pods
+            ~/Library/Caches/CocoaPods
+            ~/.cocoapods
+          key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pods-
+      - name: Install Pods
+        run: pod check || pod install
+      - name: Install xcpretty
+        run: gem install xcpretty
+      - name: Build App
+        run: "set -o pipefail && xcodebuild \
+          CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
+          -derivedDataPath build -UseModernBuildSystem=YES \
+          -workspace PyTorchLiveExample.xcworkspace \
+          -scheme PyTorchLiveExample \
+          -sdk iphonesimulator \
+          -configuration Debug \
+          -destination 'platform=iOS Simulator,name=iPhone 11 Pro' \
+          build \
+          CODE_SIGNING_ALLOWED=NO | xcpretty"

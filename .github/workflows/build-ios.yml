@@ -1,4 +1,4 @@
-name: Build iOS
+name: Build iOS Template App
 
 on:
   push:

@@ -14,7 +14,7 @@
 
 + (instancetype)fromTensor:(const at::Tensor&)tensor {
     PTMTensor *ptmTensor = [PTMTensor new];
-    ptmTensor->_tensor = tensor.clone();
+    ptmTensor->_tensor = tensor;
     return ptmTensor;
 }
 
@@ -35,7 +35,7 @@
       case PTMTensorTypeUndefined:
         return nil;
     }
-    return [PTMTensor fromTensor:tensor];
+    return [PTMTensor fromTensor:tensor.clone()];
 }
 
 - (void *)buffer {

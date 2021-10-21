@@ -18,6 +18,8 @@ import {execCommand, isLinux, isMacOS, platform} from '../../utils/SystemUtils';
 import {IInstallerTask} from '../IInstaller';
 
 export default class AndroidSDKInstaller implements IInstallerTask {
+  _sdkManagerFilepath = 'cmdline-tools/bin/sdkmanager';
+
   isValid(): boolean {
     return isMacOS();
   }
@@ -29,7 +31,7 @@ export default class AndroidSDKInstaller implements IInstallerTask {
   isInstalled(): boolean {
     const sdkPath = getSDKPath();
     if (sdkPath !== null) {
-      return fs.existsSync(path.join(sdkPath, 'tools/bin/sdkmanager'));
+      return fs.existsSync(path.join(sdkPath, this._sdkManagerFilepath));
     }
     return false;
   }
@@ -42,7 +44,7 @@ export default class AndroidSDKInstaller implements IInstallerTask {
   async run(context: TaskContext): Promise<void> {
     context.update('Installing cmdline-tools');
     const cltPath = await this.downloadCommandLineTools();
-    const sdkManager = path.join(cltPath, 'cmdline-tools/bin/sdkmanager');
+    const sdkManager = path.join(cltPath, this._sdkManagerFilepath);
 
     const sdkRoot = getDefaultSDKPath();
     const basicsCmd = `yes | ${sdkManager} --sdk_root=${sdkRoot} "tools"`;
@@ -77,11 +79,22 @@ export default class AndroidSDKInstaller implements IInstallerTask {
           const zip = new Zip(filePath);
           zip.extractAllTo(dirPath, true);
 
-          // If we don't need the file anymore we could manually call the cleanupCallback
-          // But that is not necessary if we didn't pass the keep option because the library
-          // will clean after itself.
-          cleanupCallback();
-          resolve(dirPath);
+          fs.chmod(
+            path.join(dirPath, this._sdkManagerFilepath),
+            0o755,
+            err => {
+              if (err) {
+                reject(err);
+                return;
+              }
+
+              // If we don't need the file anymore we could manually call the cleanupCallback
+              // But that is not necessary if we didn't pass the keep option because the library
+              // will clean after itself.
+              cleanupCallback();
+              resolve(dirPath);
+            },
+          );
         });
       });
     });

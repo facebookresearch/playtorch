@@ -8,24 +8,26 @@
  * @format
  */
 
-import { program } from 'commander';
-import { makeCleanCommand } from './cli-commands/Clean';
-import { makeDoctorCommand } from './cli-commands/Doctor';
-import { makeEmulatorCommand } from './cli-commands/Emulator';
-import { makeInitCommand } from './cli-commands/Init';
-import { makePrintLogCommand } from './cli-commands/Log';
-import { makeRunAndroidCommand } from './cli-commands/RunAndroid';
-import { makeSetUpDevCommand } from './cli-commands/SetUpDev';
+import {program} from 'commander';
+import {makeCleanCommand} from './cli-commands/Clean';
+import {makeDoctorCommand} from './cli-commands/Doctor';
+import {makeEmulatorCommand} from './cli-commands/Emulator';
+import {makeInitCommand} from './cli-commands/Init';
+import {makePrintLogCommand} from './cli-commands/Log';
+import {makeRunAndroidCommand} from './cli-commands/RunAndroid';
+import {makeRunIOSCommand} from './cli-commands/RunIOS';
+import {makeSetUpDevCommand} from './cli-commands/SetUpDev';
 
 const packageJSON = require('../package.json');
 
 program
-    .version(packageJSON.version, '-v, --version', 'output the version number')
-    .addCommand(makeSetUpDevCommand())
-    .addCommand(makeInitCommand())
-    .addCommand(makeCleanCommand())
-    .addCommand(makeRunAndroidCommand())
-    .addCommand(makeEmulatorCommand())
-    .addCommand(makeDoctorCommand())
-    .addCommand(makePrintLogCommand())
-    .parse(process.argv);
+  .version(packageJSON.version, '-v, --version', 'output the version number')
+  .addCommand(makeSetUpDevCommand())
+  .addCommand(makeInitCommand())
+  .addCommand(makeCleanCommand())
+  .addCommand(makeRunAndroidCommand())
+  .addCommand(makeRunIOSCommand())
+  .addCommand(makeEmulatorCommand())
+  .addCommand(makeDoctorCommand())
+  .addCommand(makePrintLogCommand())
+  .parse(process.argv);

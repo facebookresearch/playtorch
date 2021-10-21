@@ -1,5 +1,5 @@
 <h1 align="center">
-  <a href="http://facebookexperimental.github.io/pytorch-live/">
+  <a href="https://pytorch.org/live/">
     PyTorch Live
   </a>
 </h1>
@@ -29,11 +29,11 @@
 </p>
 
 <h3 align="center">
-  <a href="http://facebookexperimental.github.io/pytorch-live/docs/tutorials/get-started">Get Started</a>
+  <a href="https://pytorch.org/live/docs/tutorials/get-started">Get Started</a>
   <span> · </span>
-  <a href="http://facebookexperimental.github.io/pytorch-live/docs/tutorials/image-classification">Tutorials</a>
+  <a href="https://pytorch.org/live/docs/tutorials/image-classification">Tutorials</a>
   <span> · </span>
-  <a href="http://facebookexperimental.github.io/pytorch-live/docs/api/cli">API</a>
+  <a href="https://pytorch.org/live/docs/api/cli">API</a>
 </h3>
 
 ----------------------
@@ -53,15 +53,15 @@ This monorepo includes the PyTorch Live command line interface (i.e., `torchlive
 PyTorch Live apps may target Android 10.0 (API 29) and iOS 12.0 or newer. You may use Windows, macOS, or Linux as your development operating system, though building and running the PyTorch Live CLI is limited to macOS.
 
 ## 🎉 Building your first PyTorch Live app
-Follow the [Getting Started guide](http://facebookexperimental.github.io/pytorch-live/docs/tutorials/get-started). PyTorch Live offers a CLI with convenient commands to install development dependencies and initialize new projects. We also have a few tutorials for you to keep going after getting started:
+Follow the [Getting Started guide](https://pytorch.org/live/docs/tutorials/get-started). PyTorch Live offers a CLI with convenient commands to install development dependencies and initialize new projects. We also have a few tutorials for you to keep going after getting started:
 
-* [Image Classification](http://facebookexperimental.github.io/pytorch-live/docs/tutorials/image-classification)
-* [Question Answering](http://facebookexperimental.github.io/pytorch-live/docs/tutorials/question-answering)
-* [Prepare Custom Model](http://facebookexperimental.github.io/pytorch-live/docs/tutorials/prepare-custom-model)
+* [Image Classification](https://pytorch.org/live/docs/tutorials/image-classification)
+* [Question Answering](https://pytorch.org/live/docs/tutorials/question-answering)
+* [Prepare Custom Model](https://pytorch.org/live/docs/tutorials/prepare-custom-model)
 
 ## 📖 Documentation
 
-The full documentation for React Native can be found on our [website](http://facebookexperimental.github.io/pytorch-live/).
+The full documentation for React Native can be found on our [website](https://pytorch.org/live/).
 
 ## 👏 How to Contribute
 The main purpose of this repository is to continue evolving PyTorch Live. We want to make contributing to this project as easy and transparent as possible, and we are grateful to the community for contributing bug fixes and improvements. Read below to learn how you can take part in improving PyTorch Live.

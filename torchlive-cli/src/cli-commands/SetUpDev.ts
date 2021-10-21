@@ -7,7 +7,6 @@
  * @format
  */
 
-import {execSync} from 'child_process';
 import {Command} from 'commander';
 import AndroidEmulatorDeviceInstaller from '../installers/android/AndroidEmulatorDeviceInstaller';
 import AndroidEmulatorSkinsInstaller from '../installers/android/AndroidEmulatorSkinInstaller';
@@ -16,6 +15,7 @@ import AndroidSDKManagerInstaller from '../installers/android/AndroidSDKManagerI
 import OpenJDKInstaller from '../installers/android/OpenJDKInstaller';
 import HomebrewInstaller from '../installers/HomebrewInstaller';
 import {IInstallerTask} from '../installers/IInstaller';
+import CocoaPodsInstaller from '../installers/ios/CocoaPodsInstaller';
 import NodeInstaller from '../installers/NodeInstaller';
 import WatchmanInstaller from '../installers/WatchmanInstaller';
 import YarnInstaller from '../installers/YarnInstaller';
@@ -35,6 +35,7 @@ const setUpDev = async (): Promise<void> => {
     new AndroidSDKManagerInstaller(),
     new AndroidEmulatorDeviceInstaller(),
     new AndroidEmulatorSkinsInstaller(),
+    new CocoaPodsInstaller(),
   ];
 
   await runTasks(tasks);

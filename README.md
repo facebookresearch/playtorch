@@ -8,7 +8,7 @@
   <strong>Making AI easier to use, for everyone.</strong>
 </p>
 
-[![Deploy Website](https://github.com/facebookexperimental/pytorch-live/actions/workflows/deploy-website.yml/badge.svg)](https://github.com/facebookexperimental/pytorch-live/actions/workflows/deploy-website.yml) [![Torchlive CLI](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-cli.yml/badge.svg)](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-cli.yml) [![Build Android Template App](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-android.yml/badge.svg)](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-android.yml)
+[![Deploy Website](https://github.com/facebookexperimental/pytorch-live/actions/workflows/deploy-website.yml/badge.svg)](https://github.com/facebookexperimental/pytorch-live/actions/workflows/deploy-website.yml) [![Torchlive CLI](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-cli.yml/badge.svg)](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-cli.yml) [![Build Android Template App](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-template-android.yml/badge.svg)](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-template-android.yml) [![Build iOS Template App](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-template-ios.yml/badge.svg)](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-template-ios.yml)
 
 <p>
   <a href="https://www.npmjs.org/package/react-native-pytorch-core">
@@ -38,9 +38,9 @@
 
 ----------------------
 
-PyTorch Live is an open source playground for everyone to discover, build, test and share on-device AI demos built on PyTorch.
+PyTorch Live is a set of tools to build AI-powered experiences for mobile.
 
-This monorepo includes the PyTorch Live command line interface (i.e., `torchlive`), a React Native package to interface with PyTorch Mobile, and a React Native template with examples ready to be deployed on mobile devices.
+This monorepo includes the PyTorch Live command line interface (i.e., `torchlive-cli`), a React Native package to run on-device inference with PyTorch Mobile, and a React Native template with examples ready to be deployed on mobile devices.
 
 ## Contents
 - [Requirements](#-requirements)
@@ -50,7 +50,7 @@ This monorepo includes the PyTorch Live command line interface (i.e., `torchlive
 - [License](#-license)
 
 ## 📋 Requirements
-PyTorch Live apps may target Android 10.0 (API 29) or newer. You may use Windows, macOS, or Linux as your development operating system, though building and running the PyTorch Live CLI is limited to macOS.
+PyTorch Live apps may target Android 10.0 (API 29) and iOS 12.0 or newer. You may use Windows, macOS, or Linux as your development operating system, though building and running the PyTorch Live CLI is limited to macOS.
 
 ## 🎉 Building your first PyTorch Live app
 Follow the [Getting Started guide](http://facebookexperimental.github.io/pytorch-live/docs/tutorials/get-started). PyTorch Live offers a CLI with convenient commands to install development dependencies and initialize new projects. We also have a few tutorials for you to keep going after getting started:

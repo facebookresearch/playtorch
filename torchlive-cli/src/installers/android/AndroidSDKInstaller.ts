@@ -75,7 +75,7 @@ export default class AndroidSDKInstaller implements IInstallerTask {
           }
           await downloadFile(url, filePath);
           const zip = new Zip(filePath);
-          zip.extractAllTo(dirPath);
+          zip.extractAllTo(dirPath, true);
 
           // If we don't need the file anymore we could manually call the cleanupCallback
           // But that is not necessary if we didn't pass the keep option because the library

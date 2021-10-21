@@ -11,6 +11,7 @@ import {exec} from 'child_process';
 import {Command} from 'commander';
 import {ITask, TaskContext} from '../task/Task';
 import {print as printHeader} from '../utils/header';
+import {getEnv} from '../utils/SystemUtils';
 import {executeCommandForTask, runTasks} from '../utils/TaskUtils';
 import {isCommandInstalled} from '../utils/ToolingUtils';
 
@@ -29,7 +30,7 @@ class InitTask implements ITask {
   }
 
   isValid(): boolean {
-    return isCommandInstalled('yarn') && isCommandInstalled('npx');
+    return isCommandInstalled('yarn', getEnv()) && isCommandInstalled('npx');
   }
 
   getDescription(): string {

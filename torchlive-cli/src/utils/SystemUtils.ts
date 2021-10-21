@@ -8,12 +8,13 @@
  */
 
 import {exec, execSync, spawn} from 'child_process';
+import {getJDKPath} from '../android/JDK';
+import {getSDKPath} from '../android/AndroidSDK';
+import {TaskContext} from '../task/Task';
 import execa from 'execa';
+import fs from 'fs';
 import os from 'os';
 import path from 'path';
-import {getSDKPath} from '../android/AndroidSDK';
-import {getJDKPath} from '../android/JDK';
-import {TaskContext} from '../task/Task';
 
 export const platform: string = os.platform();
 
@@ -29,11 +30,30 @@ export function isWindows(): boolean {
   return os.platform() === 'win32';
 }
 
+function addToEnvPath(
+  env: NodeJS.ProcessEnv,
+  paths: string[],
+  path: string,
+): void {
+  if (fs.existsSync(path)) {
+    if (!env.PATH.includes(path)) {
+      paths.push(path);
+    }
+  }
+}
+
 export function getEnv(): NodeJS.ProcessEnv {
   const env: NodeJS.ProcessEnv = {
     ...process.env,
   };
   const paths = [];
+
+  addToEnvPath(env, paths, `${os.homedir()}/.yarn/bin`);
+  addToEnvPath(
+    env,
+    paths,
+    `${os.homedir()}/.config/yarn/global/node_modules/.bin`,
+  );
 
   const jdkPath = getJDKPath();
   if (jdkPath !== null) {

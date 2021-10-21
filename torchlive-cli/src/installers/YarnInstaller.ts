@@ -7,13 +7,13 @@
  * @format
  */
 
+import {exec} from 'child_process';
 import {ICommand} from '../commands/ICommand';
-import yarn from '../commands/Yarn';
-import {TaskContext} from '../task/Task';
-import {isMacOS} from '../utils/SystemUtils';
-import {executeCommandForTask} from '../utils/TaskUtils';
-import {isCommandInstalled} from '../utils/ToolingUtils';
 import {ICommandInstallerTask} from './IInstaller';
+import {isCommandInstalled} from '../utils/ToolingUtils';
+import {isMacOS} from '../utils/SystemUtils';
+import {TaskContext} from '../task/Task';
+import yarn from '../commands/Yarn';
 
 export default class YarnInstaller implements ICommandInstallerTask {
   isValid(): boolean {
@@ -38,6 +38,24 @@ export default class YarnInstaller implements ICommandInstallerTask {
   }
 
   async run(context: TaskContext): Promise<void> {
-    await executeCommandForTask(context, 'brew', ['install', 'yarn']);
+    return new Promise(async (resolve, reject) => {
+      context.update(`Installing ${this.getDescription()}`);
+
+      const bash = exec(
+        '/bin/bash -c "$(curl -o- -L https://yarnpkg.com/install.sh)"',
+        async error => {
+          if (error != null) {
+            reject(error);
+            return;
+          }
+
+          context.update(`Installed ${this.getDescription()}`);
+          resolve();
+        },
+      );
+      bash.stdout?.on('data', data => {
+        context.update(String(data).trim());
+      });
+    });
   }
 }

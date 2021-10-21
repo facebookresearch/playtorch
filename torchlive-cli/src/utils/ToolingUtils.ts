@@ -11,9 +11,15 @@ import {execSync} from 'child_process';
 
 export const AndroidVirtualDeviceName = 'pytorch_live';
 
-export function isCommandInstalled(cmd: string): boolean {
+export function isCommandInstalled(
+  cmd: string,
+  env?: NodeJS.ProcessEnv,
+): boolean {
   try {
-    execSync(`command -v ${cmd}`, {encoding: 'utf-8'});
+    execSync(`command -v ${cmd}`, {
+      env,
+      encoding: 'utf-8',
+    });
     return true;
   } catch (err) {
     return false;

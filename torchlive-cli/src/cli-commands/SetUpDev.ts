@@ -25,10 +25,6 @@ import {runTasks} from '../utils/TaskUtils';
 const setUpDev = async (): Promise<void> => {
   printHeader();
 
-  // Run 'sudo -v' to pre-emptively ask for sudo password in case any of the
-  // following installers need sudo priviliges.
-  execSync('sudo -v', {stdio: 'inherit'});
-
   const tasks: Array<IInstallerTask> = [
     new HomebrewInstaller(),
     new OpenJDKInstaller(),

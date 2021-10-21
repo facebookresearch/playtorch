@@ -16,15 +16,16 @@ import {isCommandInstalled} from '../utils/ToolingUtils';
 
 type InitOptions = {
   template: string;
+  skipInstall: boolean;
 };
 
 class InitTask implements ITask {
   private name: string;
-  private template: string;
+  private options: InitOptions;
 
-  constructor(name: string, template: string) {
+  constructor(name: string, options: InitOptions) {
     this.name = name;
-    this.template = template;
+    this.options = options;
   }
 
   isValid(): boolean {
@@ -47,15 +48,21 @@ class InitTask implements ITask {
   }
 
   async initProject(context: TaskContext): Promise<void> {
-    context.update(`Init template ${this.template}`);
-    await executeCommandForTask(context, 'npx', [
+    context.update(`Init template ${this.options.template}`);
+
+    const args = [
       'react-native',
       'init',
       this.name,
-      '--skip-install',
       '--template',
-      this.template,
-    ]);
+      this.options.template,
+    ];
+
+    if (this.options.skipInstall) {
+      args.push('--skip-install');
+    }
+
+    await executeCommandForTask(context, 'npx', args);
   }
 
   installProjectDependencies(context: TaskContext): Promise<void> {
@@ -79,7 +86,7 @@ class InitTask implements ITask {
 
 const init = async (name: string, options: InitOptions): Promise<void> => {
   printHeader();
-  const tasks: ITask[] = [new InitTask(name, options.template)];
+  const tasks: ITask[] = [new InitTask(name, options)];
   await runTasks(tasks);
 };
 
@@ -92,5 +99,6 @@ export function makeInitCommand() {
       'React Native template',
       'react-native-template-pytorch-live',
     )
+    .option('--skip-install', 'Skips dependencies installation step')
     .action(init);
 }

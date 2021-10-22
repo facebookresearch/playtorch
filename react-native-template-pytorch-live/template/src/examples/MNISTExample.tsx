@@ -24,6 +24,10 @@ import {
   MobileModel,
 } from 'react-native-pytorch-core';
 import {Animator} from '../utils/Animator';
+import {
+  PTLColors as colors,
+  PTLFontSizes as fontsizes,
+} from '../components/UISettings';
 
 // This is the custom model you have trained. See the tutorial for more on preparing a PyTorch model for mobile.
 const mnistModel = require('../../models/mnist.pt');
@@ -42,8 +46,8 @@ function useMNISTModel() {
       crop_height: 1,
       scale_width: 28,
       scale_height: 28,
-      colorBackground: '#4f25c6',
-      colorForeground: '#ffffff',
+      colorBackground: colors.light,
+      colorForeground: colors.dark,
     });
 
     // Get the score of each number (index), and sort the array by the most likely first.
@@ -134,6 +138,8 @@ export default function MNISTExample() {
   // `ctx` is drawing context to draw shapes
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
 
+  const [drawing, setDrawing] = useState<number[][]>([]);
+
   const {classify, result} = useMNISTCanvasInference(layout);
 
   // useRef is the React way of storing mutable variable
@@ -201,7 +207,7 @@ export default function MNISTExample() {
     return labels[index][choice];
   };
 
-  const theme = '#180b3b';
+  const theme = colors.accent2;
 
   useLayoutEffect(() => {
     if (ctx != null) {
@@ -215,37 +221,11 @@ export default function MNISTExample() {
           // fill background by drawing a rect
           ctx.fillStyle = theme;
           ctx.fillRect(0, 0, size[0], size[1]);
-          ctx.fillStyle = '#4F25C6';
+          ctx.fillStyle = colors.light;
           ctx.fillRect(0, size[1] / 2 - size[0] / 2, size[0], size[0]);
 
           // Draw text when there's no drawing
           if (result && trail.length === 0) {
-            const prediction = result[0][1];
-            const fontSize = Math.floor(size[0] * 0.85);
-            ctx.fillStyle = '#fff';
-
-            ctx.font = `bold ${fontSize}px sans-serif`;
-            ctx.textAlign = 'center';
-            ctx.fillText(
-              `${prediction}`,
-              size[0] / 2,
-              size[1] / 2 + fontSize * 0.35,
-            );
-
-            ctx.font = '40px sans-serif';
-            ctx.fillStyle = theme;
-            ctx.fillText(
-              numToLabel(prediction, 1),
-              35,
-              size[1] / 2 - size[1] / 4 + 15,
-            );
-
-            ctx.textAlign = 'right';
-            ctx.fillText(
-              numToLabel(prediction, 3),
-              size[0] - 20,
-              size[1] / 2 + size[1] / 4 + 15,
-            );
           }
 
           // Draw border
@@ -259,14 +239,23 @@ export default function MNISTExample() {
             size[0],
           );
 
-          // Draw the trail
-          ctx.strokeStyle = '#fff';
-          ctx.lineWidth = 25;
+          // Draw the trails
+          ctx.lineWidth = 32;
           ctx.lineJoin = 'round';
           ctx.lineCap = 'round';
           ctx.miterLimit = 1;
 
+          if (drawing.length > 0) {
+            ctx.strokeStyle = colors.accent2;
+            ctx.beginPath();
+            ctx.moveTo(drawing[0][0], drawing[0][1]);
+            for (let i = 1; i < drawing.length; i++) {
+              ctx.lineTo(drawing[i][0], drawing[i][1]);
+            }
+          }
+
           if (trail.length > 0) {
+            ctx.strokeStyle = colors.dark;
             ctx.beginPath();
             ctx.moveTo(trail[0][0], trail[0][1]);
             for (let i = 1; i < trail.length; i++) {
@@ -300,6 +289,8 @@ export default function MNISTExample() {
                 }
               }
 
+              setDrawing(trail.slice());
+
               // After classifying, remove the trail with a little animation
             } else {
               // Shrink trail in a logarithmic size each animation frame
@@ -315,7 +306,16 @@ export default function MNISTExample() {
 
     // Stop animator when exiting (unmount)
     return () => animator.stop();
-  }, [animator, ctx, drawingRef, showingRef, layout, trailRef, result]); // update only when layout or context changes
+  }, [
+    animator,
+    ctx,
+    drawingRef,
+    showingRef,
+    layout,
+    trailRef,
+    result,
+    drawing,
+  ]); // update only when layout or context changes
 
   if (!isFocused) {
     return null;
@@ -335,13 +335,10 @@ export default function MNISTExample() {
         onTouchEnd={handleEnd}
       />
       <View style={styles.instruction}>
-        <Text style={styles.label}>Write a number</Text>
-        <Text style={styles.label}>
-          Let's see if the AI model will get it right
-        </Text>
+        <Text style={styles.title}>Write a number</Text>
       </View>
       <View style={[styles.resultView]} pointerEvents="none">
-        <Text style={[styles.label, styles.secondary]}>
+        <Text style={[styles.label]}>
           {result
             ? `${numToLabel(result[0][1], 2)} it looks like ${numToLabel(
                 result[0][1],
@@ -381,9 +378,14 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     padding: 15,
   },
+  title: {
+    fontSize: fontsizes.h1,
+    fontWeight: 'bold',
+    color: colors.dark,
+  },
   label: {
-    fontSize: 16,
-    color: '#ffffff',
+    fontSize: fontsizes.h3,
+    color: colors.white,
   },
   secondary: {
     color: '#ffffff99',

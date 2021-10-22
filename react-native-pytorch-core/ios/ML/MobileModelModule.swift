@@ -36,7 +36,7 @@ public class MobileModelModule: NSObject {
                     if let ivalue = moduleHolder.module?.forward([ivalue]) {
                         let inferenceTime = (CFAbsoluteTimeGetCurrent() - startInference) * 1000
                         let startUnpack = CFAbsoluteTimeGetCurrent()
-                        let result = try packer.unpack(ivalue: ivalue, modelSpec: modelSpec)
+                        let result = try packer.unpack(ivalue: ivalue, params: params, modelSpec: modelSpec)
                         let unpackTime = (CFAbsoluteTimeGetCurrent() - startUnpack) * 1000
                         let metrics = ["totalTime": packTime + inferenceTime + unpackTime, "packTime": packTime, "inferenceTime": inferenceTime, "unpackTime": unpackTime]
                         resolve(["result": result, "metrics": metrics])

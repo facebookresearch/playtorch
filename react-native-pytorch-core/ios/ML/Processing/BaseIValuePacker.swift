@@ -23,6 +23,7 @@ class BaseIValuePacker {
         case StringToJSONError
         case PackStringError
         case DecodeBertError
+        case DecodeObjectsError
     }
 
     var packerContext = [String: Any]()
@@ -48,7 +49,7 @@ class BaseIValuePacker {
         }
     }
 
-    func unpack(ivalue: IValue, modelSpec: JSON) throws -> Any? {
+    func unpack(ivalue: IValue, params: NSDictionary, modelSpec: JSON) throws -> Any? {
         let unpack = modelSpec["unpack"]
 
         guard let type = unpack["type"].string,
@@ -63,6 +64,8 @@ class BaseIValuePacker {
             value = try unpackArgmax(ivalue: ivalue, unpack: unpack)
         case "bert_decode_qa_answer":
             value = try decodeBertQAAnswer(ivalue: ivalue, unpack: unpack)
+        case "bounding_boxes":
+            value = try decodeObjects(ivalue: ivalue, unpack: unpack, params: params)
         default:
             throw BaseIValuePackerError.InvalidUnpackType
         }
@@ -220,7 +223,7 @@ class BaseIValuePacker {
             throw BaseIValuePackerError.DecodeBertError
         }
 
-        guard let  map = ivalue.toDictStringKey() as [String: IValue]? else {
+        guard let map = ivalue.toDictStringKey() as [String: IValue]? else {
             throw BaseIValuePackerError.DecodeBertError
         }
 
@@ -240,6 +243,79 @@ class BaseIValuePacker {
 
         let tokenIdRange = Array(tokenIds[startIdx...endIdx])
         return try bertTokenizer.decode(tokenIds: tokenIdRange)
+    }
+
+    private func decodeObjects(ivalue: IValue, unpack: JSON, params: NSDictionary) throws -> [Any] {
+        guard let map = ivalue.toDictStringKey() as [String: IValue]? else {
+            throw BaseIValuePackerError.DecodeObjectsError
+        }
+
+        guard let predLogitsTensor = map["pred_logits"]?.toTensor(),
+              let predBoxesTensor = map["pred_boxes"]?.toTensor(),
+              let probabilityThreshold = params["probabilityThreshold"] as? Double,
+              let classes = unpack["classes"].array else {
+            throw BaseIValuePackerError.DecodeObjectsError
+        }
+
+        guard let confidencesTensor = predLogitsTensor.getDataAsArray(),
+              let locationsTensor = predBoxesTensor.getDataAsArray() else {
+            throw BaseIValuePackerError.DecodeObjectsError
+        }
+
+        let confidencesShape = predLogitsTensor.shape
+        let numClasses = confidencesShape[2].intValue
+        let locationsShape = predBoxesTensor.shape
+
+        var result = [Any]()
+
+        for i in 0..<confidencesShape[1].intValue {
+            let scores = softmax(confidences: confidencesTensor, from: i * numClasses, to: (i + 1) * numClasses)
+
+            var maxProb = scores[0]
+            var maxIndex = -1
+            for j in 0..<scores.count {
+                if scores[j] > maxProb {
+                    maxProb = scores[j]
+                    maxIndex = j
+                }
+            }
+
+            if maxProb <= probabilityThreshold || maxIndex >= classes.count {
+                continue
+            }
+
+            var match = [String : Any]()
+            match["objectClass"] = classes[maxIndex].stringValue
+
+            let locationsFrom = i * locationsShape[2].intValue
+            var bounds = [Double]()
+            bounds.append(locationsTensor[locationsFrom].doubleValue)
+            bounds.append(locationsTensor[locationsFrom + 1].doubleValue)
+            bounds.append(locationsTensor[locationsFrom + 2].doubleValue)
+            bounds.append(locationsTensor[locationsFrom + 3].doubleValue)
+            match["bounds"] = bounds
+
+            result.append(match)
+        }
+
+        return result
+    }
+
+    func softmax(confidences: [NSNumber], from: Int, to: Int) -> [Double] {
+        var softmax = [Double](repeating: 0.0, count: (to - from))
+        var expSum = 0.0
+
+        for i in from..<to {
+            let expValue = exp(confidences[i].doubleValue)
+            softmax[i - from] = expValue
+            expSum += expValue
+        }
+
+        for i in 0..<softmax.count {
+            softmax[i] /= expSum
+        }
+
+        return softmax
     }
 
 }

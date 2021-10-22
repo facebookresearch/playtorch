@@ -25,6 +25,8 @@ public class ImageProxyImage extends AbstractImage {
   public ImageProxyImage(ImageProxy imageProxy, Context context) {
     mImageProxy = imageProxy;
     mContext = context;
+    // Eager bitmap conversion
+    mBitmap = getBitmap();
   }
 
   @Override

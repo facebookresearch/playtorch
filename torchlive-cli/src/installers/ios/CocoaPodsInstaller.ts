@@ -9,7 +9,7 @@
 
 import {exec} from 'child_process';
 import {ICommand} from '../../commands/ICommand';
-import {ICommandInstallerTask} from './../IInstaller';
+import {ICommandInstallerTask, getInstallerErrorMitigationMessage}from './../IInstaller';
 import {isCommandInstalled} from '../../utils/ToolingUtils';
 import {isMacOS} from '../../utils/SystemUtils';
 import {TaskContext} from '../../task/Task';
@@ -34,8 +34,10 @@ export default class CocoaPodsInstaller implements ICommandInstallerTask {
   }
 
   mitigateOnError(): string {
-    // TODO(T90094183) Add mitigation message
-    return '';
+    return getInstallerErrorMitigationMessage(
+      this,
+      'https://guides.cocoapods.org/using/getting-started.html',
+    );
   }
 
   async run(context: TaskContext): Promise<void> {

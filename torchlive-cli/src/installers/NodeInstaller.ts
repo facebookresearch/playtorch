@@ -13,7 +13,7 @@ import {TaskContext} from '../task/Task';
 import {isMacOS} from '../utils/SystemUtils';
 import {executeCommandForTask} from '../utils/TaskUtils';
 import {isCommandInstalled} from '../utils/ToolingUtils';
-import {ICommandInstallerTask} from './IInstaller';
+import {ICommandInstallerTask, getInstallerErrorMitigationMessage} from './IInstaller';
 
 export default class NodeInstaller implements ICommandInstallerTask {
   isValid(): boolean {
@@ -33,8 +33,10 @@ export default class NodeInstaller implements ICommandInstallerTask {
   }
 
   mitigateOnError(): string {
-    // TODO(T90094183) Add mitigation message
-    return '';
+    return getInstallerErrorMitigationMessage(
+      this,
+      'https://nodejs.org/',
+    );;
   }
 
   async run(context: TaskContext): Promise<void> {

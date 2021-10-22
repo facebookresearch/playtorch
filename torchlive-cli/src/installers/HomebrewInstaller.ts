@@ -14,7 +14,7 @@ import {TaskContext} from '../task/Task';
 import {sudo} from '../utils/SudoUtils';
 import {isMacOS} from '../utils/SystemUtils';
 import {isCommandInstalled} from '../utils/ToolingUtils';
-import {ICommandInstallerTask} from './IInstaller';
+import {ICommandInstallerTask, getInstallerErrorMitigationMessage} from './IInstaller';
 
 export default class HomebrewInstaller implements ICommandInstallerTask {
   isValid(): boolean {
@@ -34,8 +34,10 @@ export default class HomebrewInstaller implements ICommandInstallerTask {
   }
 
   mitigateOnError(): string {
-    // TODO(T90094183) Add mitigation message
-    return '';
+    return getInstallerErrorMitigationMessage(
+      this,
+      'https://brew.sh/',
+    );
   }
 
   async run(context: TaskContext): Promise<void> {

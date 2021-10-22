@@ -11,7 +11,7 @@ import {execSync} from 'child_process';
 import {TaskContext} from '../../task/Task';
 import {isMacOS} from '../../utils/SystemUtils';
 import {executeCommandForTask} from '../../utils/TaskUtils';
-import {IInstallerTask} from '../IInstaller';
+import {IInstallerTask, getInstallerErrorMitigationMessage} from '../IInstaller';
 
 export default class IntelHAXMInstaller implements IInstallerTask {
   getDescription(): string {
@@ -34,8 +34,10 @@ export default class IntelHAXMInstaller implements IInstallerTask {
   }
 
   mitigateOnError(): string {
-    // TODO(T90094183) Add mitigation message
-    return '';
+    return getInstallerErrorMitigationMessage(
+      this,
+      'https://github.com/intel/haxm',
+    );
   }
 
   async run(context: TaskContext): Promise<void> {

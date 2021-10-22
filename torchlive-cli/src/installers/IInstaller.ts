@@ -31,3 +31,20 @@ export function isCommandInstallerTask(
 ): task is ICommandInstallerTask {
   return (task as ICommandInstallerTask).getCommand !== undefined;
 }
+
+export function getInstallerErrorMitigationMessage(
+  task: ITask,
+  externalLink: string,
+): string {
+  const msg =
+    `💥 Installation of ${task.getDescription()} failed.
+
+Please go to ${externalLink} and manually install the package.
+
+Once you complete the installation, \
+you can run the 'npx torchlive-cli setup-dev' again to continue the setup.
+
+If you still run into issue, \
+please refer to https://github.com/pytorch/live/issues for more info.`;
+  return msg;
+}

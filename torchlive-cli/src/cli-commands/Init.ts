@@ -45,7 +45,7 @@ class InitTask implements ITask {
   async run(context: TaskContext): Promise<void> {
     await this.initProject(context);
     await this.installProjectDependencies(context);
-    context.update(`Initialized ${this.getDescription()}}`);
+    context.update(`Initialized ${this.getDescription()}`);
   }
 
   async initProject(context: TaskContext): Promise<void> {

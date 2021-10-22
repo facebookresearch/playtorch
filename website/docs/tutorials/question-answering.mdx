@@ -107,8 +107,8 @@ import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
 export default function QuestionAnsweringDemo() {
   return (
     <View style={styles.container}>
-      <TextInput style={[styles.item, styles.input]} multiline={true} placeholder="Text" />
-      <TextInput style={[styles.item, styles.input]} placeholder="Question" />
+      <TextInput style={[styles.item, styles.input]} multiline={true} placeholder="Text" placeholderTextColor="#CCC" />
+      <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" />
       <Button title="Ask" onPress={() => {}} />
       <Text style={styles.item}>Question Answering</Text>
     </View>
@@ -124,6 +124,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
+    color: '#000',
   }
 });
 ```
@@ -154,8 +155,8 @@ export default function QuestionAnsweringDemo() {
 
   return (
     <View style={styles.container}>
-      <TextInput style={[styles.item, styles.input]} placeholder="Text" multiline={true} value={text} onChangeText={setText} />
-      <TextInput style={[styles.item, styles.input]} placeholder="Question" value={question} onChangeText={setQuestion} />
+      <TextInput style={[styles.item, styles.input]} placeholder="Text" placeholderTextColor="#CCC" multiline={true} value={text} onChangeText={setText} />
+      <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" value={question} onChangeText={setQuestion} />
       <Button title="Ask" onPress={handleAsk} />
       <Text style={styles.item}>Question Answering</Text>
     </View>
@@ -171,6 +172,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
+    color: '#000',
   }
 });
 ```
@@ -211,8 +213,8 @@ export default function QuestionAnsweringDemo() {
 
   return (
     <View style={styles.container}>
-      <TextInput style={[styles.item, styles.input]} placeholder="Text" multiline={true} value={text} onChangeText={setText} />
-      <TextInput style={[styles.item, styles.input]} placeholder="Question" value={question} onChangeText={setQuestion} />
+      <TextInput style={[styles.item, styles.input]} placeholder="Text" placeholderTextColor="#CCC" multiline={true} value={text} onChangeText={setText} />
+      <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" value={question} onChangeText={setQuestion} />
       <Button title="Ask" onPress={handleAsk} />
       <Text style={styles.item}>{answer}</Text>
     </View>
@@ -228,6 +230,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
+    color: '#000',
   }
 });
 ```
@@ -265,8 +268,8 @@ export default function QuestionAnsweringDemo() {
 
   return (
     <View style={styles.container}>
-      <TextInput style={[styles.item, styles.input]} placeholder="Text" multiline={true} value={text} onChangeText={setText} />
-      <TextInput style={[styles.item, styles.input]} placeholder="Question" value={question} onChangeText={setQuestion} />
+      <TextInput style={[styles.item, styles.input]} placeholder="Text" placeholderTextColor="#CCC" multiline={true} value={text} onChangeText={setText} />
+      <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" value={question} onChangeText={setQuestion} />
       <Button title="Ask" onPress={handleAsk} />
       <Text style={styles.item}>{isProcessing ? "Looking for the answer" : answer}</Text>
     </View>
@@ -282,6 +285,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
+    color: '#000',
   }
 });
 ```

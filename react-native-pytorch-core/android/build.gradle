@@ -75,8 +75,8 @@ repositories {
 
 def kotlin_version = safeExtGet('PyTorchCore_kotlinVersion', '1.3.50')
 dependencies {
-  implementation "org.pytorch:pytorch_android_lite:1.9.0"
-  implementation "org.pytorch:pytorch_android_torchvision:1.9.0"
+  implementation 'org.pytorch:pytorch_android_lite:1.10.0'
+  implementation 'org.pytorch:pytorch_android_torchvision_lite:1.10.0'
 
   //noinspection GradleDynamicVersion
   api "com.facebook.react:react-native:+"  // From node_modules

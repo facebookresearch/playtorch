@@ -60,4 +60,5 @@ android/keystores/debug.keystore
 lib/
 
 # PyTorch mobile models
+example/models/*.ptl
 example/models/*.pt

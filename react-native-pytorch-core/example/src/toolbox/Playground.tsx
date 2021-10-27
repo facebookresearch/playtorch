@@ -18,7 +18,7 @@ import ImageClass from '../components/ImageClass';
 export default function CameraTakePicture() {
   const isFocused = useIsFocused();
   const {imageClass, metrics, processImage} = useImageModelInference({
-    model: require('../../models/mobilenet_v3_small.pt'),
+    model: require('../../models/mobilenet_v3_small.ptl'),
     name: 'MobileNet V3',
   });
 

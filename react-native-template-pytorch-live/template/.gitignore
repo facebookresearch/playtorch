@@ -63,4 +63,5 @@ buck-out/
 yalc.lock
 
 # PyTorch mobile models
+models/*.ptl
 models/*.pt

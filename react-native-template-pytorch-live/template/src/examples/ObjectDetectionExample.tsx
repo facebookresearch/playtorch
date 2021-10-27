@@ -27,7 +27,7 @@ import { color } from 'react-native-reanimated';
 
  const modelInfo: ModelInfo = {
    name: 'DETR',
-   model: require('../../models/detr_resnet50.pt'),
+   model: require('../../models/detr_resnet50.ptl'),
  };
 
  const objectColors = [

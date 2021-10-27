@@ -121,10 +121,10 @@ script_model_opt = optimize_for_mobile(script_model)
 spec = Path("live.spec.json").read_text()
 extra_files = {}
 extra_files["model/live.spec.json"] = spec
-script_model_opt._save_for_lite_interpreter("mobilenet_v3_small.pt", _extra_files=extra_files)
+script_model_opt._save_for_lite_interpreter("mobilenet_v3_small.ptl", _extra_files=extra_files)
 ```
 
-Run Python script to create `mobilenet_v3_small.pt`.
+Run Python script to create `mobilenet_v3_small.ptl`.
 
 <Tabs
   defaultValue="venv"
@@ -148,7 +148,7 @@ Run Python script to create `mobilenet_v3_small.pt`.
   </TabItem>
 </Tabs>
 
-If you haven't run the commands in the `<PYTORCH_LIVE_PROJECT>/models` directory, copy the `mobilenet_v3_small.pt` file to the `<PYTORCH_LIVE_PROJECT>/models` directory.
+If you haven't run the commands in the `<PYTORCH_LIVE_PROJECT>/models` directory, copy the `mobilenet_v3_small.ptl` file to the `<PYTORCH_LIVE_PROJECT>/models` directory.
 
 
 ## Give us feedback

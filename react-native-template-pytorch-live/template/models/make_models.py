@@ -15,13 +15,17 @@ from transformers import DistilBertTokenizer, DistilBertForQuestionAnswering
 
 print(f"torch version {torch.__version__}")
 
+MODEL_EXTENSION = "ptl"
+
 
 def bundle_live_spec_and_export_model(name: str, model):
     optimized_model = optimize_for_mobile(model)
-    spec = Path(f"{name}.pt.live.spec.json").read_text()
+    spec = Path(f"{name}.{MODEL_EXTENSION}.live.spec.json").read_text()
     extra_files = {}
     extra_files["model/live.spec.json"] = spec
-    optimized_model._save_for_lite_interpreter(f"{name}.pt", _extra_files=extra_files)
+    optimized_model._save_for_lite_interpreter(
+        f"{name}.{MODEL_EXTENSION}", _extra_files=extra_files
+    )
     print(f"Model {name} successfully exported")
 
 
@@ -51,10 +55,12 @@ def export_image_segmentation_models():
 
     example = torch.rand(1, 3, 800, 1066)
     traced_script_module = torch.jit.trace(model, example, strict=False)
-    spec = Path(f"{name}.pt.live.spec.json").read_text()
+    spec = Path(f"{name}.{MODEL_EXTENSION}.live.spec.json").read_text()
     extra_files = {"model/live.spec.json": spec}
     optimized_model = optimize_for_mobile(traced_script_module)
-    optimized_model._save_for_lite_interpreter(f"{name}.pt", _extra_files=extra_files)
+    optimized_model._save_for_lite_interpreter(
+        f"{name}.{MODEL_EXTENSION}", _extra_files=extra_files
+    )
 
 
 def export_mnist_model():

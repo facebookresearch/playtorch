@@ -229,7 +229,7 @@ import useImageModelInference from '../useImageModelInference';
 
 const modelInfo: ModelInfo = {
   name: 'MobileNet V3 Small',
-  model: require('../../models/mobilenet_v3_small.pt'),
+  model: require('../../models/mobilenet_v3_small.ptl'),
 }
 
 export default function ImageClassificationDemo() {
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
 ![](/img/tutorial/image_classification_tutorial6.png)
 
 :::note
-PyTorch Live comes with 3 image classification models that are ready to use. In the example code provided in this tutorial, we use `mobilenet_v3_small.pt` for inference, but feel free to try out the others by replacing the `modelInfo` with code from the tabbed viewer below.
+PyTorch Live comes with 3 image classification models that are ready to use. In the example code provided in this tutorial, we use `mobilenet_v3_small.ptl` for inference, but feel free to try out the others by replacing the `modelInfo` with code from the tabbed viewer below.
 :::
 
 <Tabs
@@ -286,7 +286,7 @@ PyTorch Live comes with 3 image classification models that are ready to use. In 
   ```tsx
   const modelInfo: ModelInfo = {
     name: 'MobileNet V3 Small',
-    model: require('../../models/mobilenet_v3_small.pt'),
+    model: require('../../models/mobilenet_v3_small.ptl'),
   }
   ```
 
@@ -296,7 +296,7 @@ PyTorch Live comes with 3 image classification models that are ready to use. In 
   ```tsx
   const modelInfo: ModelInfo = {
     name: 'MobileNet V3 Small',
-    model: require('../../models/mobilenet_v3_large.pt'),
+    model: require('../../models/mobilenet_v3_large.ptl'),
   }
   ```
 
@@ -306,7 +306,7 @@ PyTorch Live comes with 3 image classification models that are ready to use. In 
   ```tsx
   const modelInfo: ModelInfo = {
     name: 'ResNet-18',
-    model: require('../../models/resnet18.pt'),
+    model: require('../../models/resnet18.ptl'),
   }
   ```
 
@@ -328,7 +328,7 @@ import useImageModelInference from '../useImageModelInference';
 
 const modelInfo: ModelInfo = {
   name: 'MobileNet V3 Small',
-  model: require('../../models/mobilenet_v3_small.pt'),
+  model: require('../../models/mobilenet_v3_small.ptl'),
 }
 
 export default function ImageClassificationDemo() {

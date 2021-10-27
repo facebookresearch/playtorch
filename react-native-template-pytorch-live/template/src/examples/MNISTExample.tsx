@@ -30,7 +30,7 @@ import {
 } from '../components/UISettings';
 
 // This is the custom model you have trained. See the tutorial for more on preparing a PyTorch model for mobile.
-const mnistModel = require('../../models/mnist.pt');
+const mnistModel = require('../../models/mnist.ptl');
 
 /**
  * The React hook provides MNIST model inference on an input image.

@@ -185,7 +185,7 @@ Type into both text inputs, click the `Ask` button, and check logged output in t
 
 Fantastic! Now use the `useNLPQAModelInference` hook to run inference on the `text` and `question`. The hook provides a `processQA` function and an `answer`. Replace the `console.log` with the `processQA` function and pass in the `text` and `question`. When the inference finishes, the component re-renders with the answer set as content of the `Text` component.
 
-It will use the `bert_qa.pt` model that is already prepared for PyTorch Live. You can follow the [Prepare Custom Model](prepare-custom-model) tutorial to prepare your own NLP model and use this model instead for question answering.
+It will use the `bert_qa.ptl` model that is already prepared for PyTorch Live. You can follow the [Prepare Custom Model](prepare-custom-model) tutorial to prepare your own NLP model and use this model instead for question answering.
 
 ```tsx {2,4-5,7-10,15-18,21,29} title="./src/demos/QuestionAnsweringDemo.tsx"
 import * as React from 'react';
@@ -196,7 +196,7 @@ import useNLPQAModelInference from '../useNLPQAModelInference';
 
 const modelInfo: ModelInfo = {
   name: 'Bert Q&A',
-  model: require('../../models/bert_qa.pt'),
+  model: require('../../models/bert_qa.ptl'),
 }
 
 export default function QuestionAnsweringDemo() {
@@ -250,7 +250,7 @@ import useNLPQAModelInference from '../useNLPQAModelInference';
 
 const modelInfo: ModelInfo = {
   name: 'Bert Q&A',
-  model: require('../../models/bert_qa.pt'),
+  model: require('../../models/bert_qa.ptl'),
 }
 
 export default function QuestionAnsweringDemo() {

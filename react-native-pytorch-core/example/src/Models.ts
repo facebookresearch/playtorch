@@ -14,35 +14,35 @@ import type {ModelInfo} from 'react-native-pytorch-core'
 export const ImageClassificationModels: ModelInfo[] = [
   {
     name: 'ResNet 18',
-    model: require('../models/resnet18.pt'),
+    model: require('../models/resnet18.ptl'),
   },
   {
     name: 'MobileNet V3 Small',
-    model: require('../models/mobilenet_v3_small.pt'),
+    model: require('../models/mobilenet_v3_small.ptl'),
   },
   {
     name: 'MobileNet V3 Large',
-    model: require('../models/mobilenet_v3_large.pt'),
+    model: require('../models/mobilenet_v3_large.ptl'),
   },
 ];
 
 export const MultiClassClassificationModels: ModelInfo[] = [
   {
     name: 'MNIST',
-    model: require('../models/mnist.pt'),
+    model: require('../models/mnist.ptl'),
   },
 ];
 
 export const ObjectDetectionModels: ModelInfo[] = [
   {
     name: 'DETR',
-    model: require('../models/detr_resnet50.pt'),
+    model: require('../models/detr_resnet50.ptl'),
   },
 ];
 
 export const NLPModels: ModelInfo[] = [
   {
     name: 'DistilBertQA',
-    model: require('../models/bert_qa.pt'),
+    model: require('../models/bert_qa.ptl'),
   },
 ];

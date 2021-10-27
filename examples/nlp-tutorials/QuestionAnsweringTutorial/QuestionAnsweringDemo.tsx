@@ -15,7 +15,7 @@ import useNLPQAModelInference from '../useNLPQAModelInference';
 
 const modelInfo: ModelInfo = {
   name: 'Bert Q&A',
-  model: require('../../models/bert_qa.pt'),
+  model: require('../../models/bert_qa.ptl'),
 }
 
 export default function QuestionAnsweringDemo() {

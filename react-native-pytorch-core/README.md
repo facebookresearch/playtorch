@@ -13,9 +13,13 @@ npm install react-native-pytorch-core
 ```js
 import { MobileModel, Image } from "react-native-pytorch-core";
 
+const model = require('./models/resnet18_model.ptl');
+
 // ...
 const image = Image.from('https://pytorch.org/example.jpg');
-const result = await MobileModel.run('resnet18_model.pt', image);
+const result = await MobileModel.run(model, {
+    image,
+});
 ```
 
 ## Contributing

@@ -91,7 +91,7 @@ const PyTorchCoreCameraView = requireNativeComponent<CameraProps>(
  * ```typescript
  * export default function App() {
  *   const {imageClass, processImage} = useImageClassification(
- *     require('./resnet18.pt'),
+ *     require('./resnet18.ptl'),
  *   );
  *
  *   const handleFrame = useCallback(

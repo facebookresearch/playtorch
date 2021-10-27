@@ -95,10 +95,10 @@ export interface MobileModel {
    * @param modelPath The model path (i.e., a `require`).
    */
   preload(modelPath: ImageRequireSource): Promise<void>;
-  
+
   /**
    * Unload all model. If any model were loaded previously, they will be discarded.
-   * This function allows to load a new version of a model without restarting the 
+   * This function allows to load a new version of a model without restarting the
    * app.
    */
   unload(): Promise<void>;
@@ -107,7 +107,7 @@ export interface MobileModel {
    * Run inference on a model.
    *
    * ```typescript
-   * const classificationModel = require('../models/mobilenet_v3_small.pt');
+   * const classificationModel = require('../models/mobilenet_v3_small.ptl');
    *
    * const image: Image = await ImageUtils.fromURL('https://image.url');
    *

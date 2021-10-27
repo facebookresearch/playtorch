@@ -16,19 +16,19 @@ import {
   ModelInfo,
 } from 'react-native-pytorch-core';
 
-type BoundingBox = {
+export type BoundingBox = {
   objectClass: string;
   bounds: [number, number, number, number];
 };
 
-type ObjectDetectionResult = {
+export type ObjectDetectionResult = {
   boundingBoxes: BoundingBox[];
 };
 
 export default function useObjectDetection(modelInfo: ModelInfo) {
   const [metrics, setMetrics] = useState<ModelResultMetrics>();
 
-  const processImage = useCallback(
+  const detectObjects = useCallback(
     async (image: Image) => {
       const imageWidth = image.getWidth();
       const imageHeight = image.getHeight();
@@ -78,6 +78,6 @@ export default function useObjectDetection(modelInfo: ModelInfo) {
 
   return {
     metrics,
-    processImage,
+    detectObjects,
   };
 }

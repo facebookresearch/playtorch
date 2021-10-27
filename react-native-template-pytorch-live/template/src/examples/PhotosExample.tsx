@@ -16,6 +16,7 @@ import {ModelInfo, ImageClassificationModels} from '../Models';
 import ModelSelector from '../components/ModelSelector';
 import PredefinedImageList from '../components/PredefinedImageList';
 import useImageModelInference from '../useImageModelInference';
+import {HintText} from '../components/UIComponents';
 
 export default function PhotosExample() {
   const [activeModelInfo, setActiveModelInfo] = useState<ModelInfo>(
@@ -50,11 +51,7 @@ export default function PhotosExample() {
         />
         <ImageClass imageClass={imageClass} metrics={metrics} />
       </View>
-      <View style={[styles.hint, {opacity: hint ? 1 : 0}]}>
-        <Text style={styles.hintText}>
-          Click an image to test the current model
-        </Text>
-      </View>
+      {hint && <HintText text="Click an image to test the current model" />}
     </>
   );
 }
@@ -68,19 +65,5 @@ const styles = StyleSheet.create({
   },
   actions: {
     flexDirection: 'row',
-  },
-  hint: {
-    position: 'absolute',
-    top: 20,
-    height: 50,
-    paddingHorizontal: 25,
-    borderRadius: 25,
-    backgroundColor: '#000',
-    justifyContent: 'center',
-    alignSelf: 'center',
-  },
-  hintText: {
-    color: '#fff',
-    fontSize: 14,
   },
 });

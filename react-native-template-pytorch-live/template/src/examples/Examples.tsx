@@ -26,7 +26,7 @@ import CameraExample from './CameraExample';
 import CanvasExample from './CanvasExample';
 import NLPExample from './NLPQAExample';
 import PhotosExample from './PhotosExample';
-import DETRExample from './DETRExample';
+import ObjectDetectionExample from './ObjectDetectionExample';
 import MNISTExample from './MNISTExample';
 
 type Example = {
@@ -61,11 +61,11 @@ const EXAMPLE_SECTIONS: ExampleSection[] = [
         img: require('../../assets/images/thumbnail_Camera.jpg'),
       },
       {
-        name: 'DE⫶TR example',
-        info: 'End-to-End Object Detection with Transformers',
-        key: 'DETRExample',
-        component: DETRExample,
-        img: require('../../assets/images/thumbnail_FPO.jpg'),
+        name: 'Object detection example',
+        info: 'Identify objects with the camera',
+        key: 'ObjectDetectionExample',
+        component: ObjectDetectionExample,
+        img: require('../../assets/images/thumbnail_ObjectDetection.jpg'),
       },
       {
         name: 'MNIST example',

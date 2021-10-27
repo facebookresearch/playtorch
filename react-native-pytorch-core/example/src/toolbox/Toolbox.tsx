@@ -43,6 +43,7 @@ import Playground from './Playground';
 import CanvasImageSprite from './apiTest/CanvasImageSprite';
 import AstroBirdExample from './apiTest/AstroBirdExample';
 import MNIST from './models/MNIST';
+import Distilbert from './models/Distilbert';
 
 export type Tool = {
   icon?: React.ReactNode;
@@ -86,6 +87,13 @@ const tools: ToolSection = [
         subtitle: 'Handwritten digit classifier',
         apiTest: false,
         component: MNIST,
+      },
+      {
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
+        title: 'Distilbert',
+        subtitle: 'A playground to experiment with the PyTorch Core API',
+        apiTest: false,
+        component: Distilbert,
       },
     ],
   },

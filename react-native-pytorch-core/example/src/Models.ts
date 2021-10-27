@@ -33,6 +33,13 @@ export const MultiClassClassificationModels: ModelInfo[] = [
   },
 ];
 
+export const ObjectDetectionModels: ModelInfo[] = [
+  {
+    name: 'DETR',
+    model: require('../models/detr_resnet50.pt'),
+  },
+];
+
 export const NLPModels: ModelInfo[] = [
   {
     name: 'DistilBertQA',

@@ -44,6 +44,7 @@ import CanvasImageSprite from './apiTest/CanvasImageSprite';
 import AstroBirdExample from './apiTest/AstroBirdExample';
 import MNIST from './models/MNIST';
 import Distilbert from './models/Distilbert';
+import DETR from './models/DETR';
 
 export type Tool = {
   icon?: React.ReactNode;
@@ -87,6 +88,13 @@ const tools: ToolSection = [
         subtitle: 'Handwritten digit classifier',
         apiTest: false,
         component: MNIST,
+      },
+      {
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
+        title: 'DETR',
+        subtitle: 'Example to test the DETR model',
+        apiTest: false,
+        component: DETR,
       },
       {
         icon: <Icon name="clipboard-text" size={32} color="white" />,

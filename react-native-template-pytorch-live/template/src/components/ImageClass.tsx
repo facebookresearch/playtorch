@@ -50,6 +50,6 @@ const styles = StyleSheet.create({
   small: {
     fontSize: 11,
     color: '#678',
-    //fontFamily: 'monospace',
+    fontFamily: 'Courier New',
   },
 });

@@ -167,6 +167,6 @@ const styles = StyleSheet.create({
   smallLabel: {
     fontSize: 12,
     color: '#667788',
-    fontFamily: 'monospace',
+    fontFamily: 'Courier New',
   },
 });

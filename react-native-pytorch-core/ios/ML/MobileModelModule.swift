@@ -28,16 +28,16 @@ public class MobileModelModule: NSObject {
                 reject(RCTErrorUnspecified, "Could not find model spec", nil)
                 return
             }
-            let startPack = CFAbsoluteTimeGetCurrent()
+            let startPack = clock()
             do {
                 if let ivalue =  try packer.pack(params: params, modelSpec: modelSpec) {
-                    let packTime = (CFAbsoluteTimeGetCurrent() - startPack) * 1000
-                    let startInference = CFAbsoluteTimeGetCurrent()
+                    let packTime = (Double(clock() - startPack) / 1000).rounded()
+                    let startInference = clock()
                     if let ivalue = moduleHolder.module?.forward([ivalue]) {
-                        let inferenceTime = (CFAbsoluteTimeGetCurrent() - startInference) * 1000
-                        let startUnpack = CFAbsoluteTimeGetCurrent()
+                        let inferenceTime = (Double(clock() - startInference) / 1000).rounded()
+                        let startUnpack = clock()
                         let result = try packer.unpack(ivalue: ivalue, params: params, modelSpec: modelSpec)
-                        let unpackTime = (CFAbsoluteTimeGetCurrent() - startUnpack) * 1000
+                        let unpackTime = (Double(clock() - startUnpack) / 1000).rounded()
                         let metrics = ["totalTime": packTime + inferenceTime + unpackTime, "packTime": packTime, "inferenceTime": inferenceTime, "unpackTime": unpackTime]
                         resolve(["result": result, "metrics": metrics])
                     }

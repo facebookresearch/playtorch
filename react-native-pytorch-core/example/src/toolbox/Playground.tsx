@@ -12,11 +12,12 @@ import * as React from 'react';
 import {useCallback} from 'react';
 import {Camera, Image} from 'react-native-pytorch-core';
 import useImageModelInference from '../useImageModelInference';
-import {StyleSheet, Text} from 'react-native';
+import {StyleSheet} from 'react-native';
+import ImageClass from '../components/ImageClass';
 
 export default function CameraTakePicture() {
   const isFocused = useIsFocused();
-  const {imageClass, processImage} = useImageModelInference({
+  const {imageClass, metrics, processImage} = useImageModelInference({
     model: require('../../models/mobilenet_v3_small.pt'),
     name: 'MobileNet V3',
   });
@@ -29,16 +30,18 @@ export default function CameraTakePicture() {
     [processImage],
   );
 
+  if (!isFocused) {
+    return null;
+  }
+
   return (
     <>
-      <Text>{imageClass}</Text>
-      {isFocused && (
-        <Camera
-          onCapture={handleCapture}
-          style={styles.camera}
-          targetResolution={{width: 480, height: 640}}
-        />
-      )}
+      <Camera
+        onFrame={handleCapture}
+        style={styles.camera}
+        targetResolution={{width: 480, height: 640}}
+      />
+      <ImageClass imageClass={imageClass} metrics={metrics} />
     </>
   );
 }

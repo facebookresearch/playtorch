@@ -42,6 +42,7 @@ import CanvasGetImageData from './apiTest/CanvasGetImageData';
 import Playground from './Playground';
 import CanvasImageSprite from './apiTest/CanvasImageSprite';
 import AstroBirdExample from './apiTest/AstroBirdExample';
+import MNIST from './models/MNIST';
 
 export type Tool = {
   icon?: React.ReactNode;
@@ -73,6 +74,18 @@ const tools: ToolSection = [
         subtitle: 'A little game to test performance',
         apiTest: false,
         component: AstroBirdExample,
+      },
+    ],
+  },
+  {
+    title: 'Models',
+    data: [
+      {
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
+        title: 'MNIST',
+        subtitle: 'Handwritten digit classifier',
+        apiTest: false,
+        component: MNIST,
       },
     ],
   },
@@ -250,7 +263,7 @@ function ToolView() {
   const {activeTool} = useToolboxContext();
   const Component = activeTool?.component;
   return (
-    <ScrollView contentContainerStyle={styles.container}>
+    <ScrollView contentContainerStyle={styles.container} bounces={false}>
       {Component && <Component />}
     </ScrollView>
   );

@@ -62,3 +62,4 @@ lib/
 # PyTorch mobile models
 example/models/*.ptl
 example/models/*.pt
+example/models/venv

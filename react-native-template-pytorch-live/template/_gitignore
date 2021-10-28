@@ -64,3 +64,4 @@ yalc.lock
 
 # PyTorch mobile models
 models/*.pt
+models/venv

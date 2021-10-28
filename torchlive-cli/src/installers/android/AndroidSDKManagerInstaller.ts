@@ -13,7 +13,7 @@ import path from 'path';
 import {getSDKPath, isPackageInstalled} from '../../android/AndroidSDK';
 import {TaskContext} from '../../task/Task';
 import {execCommand, isMacOS, spawnCommand} from '../../utils/SystemUtils';
-import {IInstallerTask} from '../IInstaller';
+import {IInstallerTask, getInstallerErrorMitigationMessage} from '../IInstaller';
 import AbstractAndroidCommandLineTools from './AbstractAndroidCommandLineTools';
 
 export default class AndroidSDKManagerInstaller
@@ -46,8 +46,10 @@ export default class AndroidSDKManagerInstaller
   }
 
   mitigateOnError(): string {
-    // TODO(T90094183) Add mitigation message
-    return '';
+    return getInstallerErrorMitigationMessage(
+      this,
+      'https://developer.android.com/studio',
+    );
   }
 
   async run(context: TaskContext): Promise<void> {

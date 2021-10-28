@@ -15,7 +15,7 @@ import {getDefaultSDKPath, getSDKPath} from '../../android/AndroidSDK';
 import {TaskContext} from '../../task/Task';
 import {downloadFile} from '../../utils/FileUtils';
 import {execCommand, isLinux, isMacOS, platform} from '../../utils/SystemUtils';
-import {IInstallerTask, getInstallerErrorMitigationMessage} from '../IInstaller';
+import {IInstallerTask, getInstallerErrorMitigationMessage, getUserConsentOnInstallerOrQuit} from '../IInstaller';
 
 export default class AndroidSDKInstaller implements IInstallerTask {
   _sdkManagerFilepath = 'cmdline-tools/bin/sdkmanager';
@@ -49,6 +49,9 @@ export default class AndroidSDKInstaller implements IInstallerTask {
     const sdkManager = path.join(cltPath, this._sdkManagerFilepath);
 
     const sdkRoot = getDefaultSDKPath();
+
+    await getUserConsentOnInstallerOrQuit(this, context, 'https://developer.android.com/studio/terms');
+
     const basicsCmd = `yes | ${sdkManager} --sdk_root=${sdkRoot} "tools"`;
     await execCommand(context, basicsCmd);
     context.update(`Installed ${this.getDescription()}`);

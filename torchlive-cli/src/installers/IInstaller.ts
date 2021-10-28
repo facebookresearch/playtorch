@@ -8,7 +8,7 @@
  */
 
 import {ICommand} from '../commands/ICommand';
-import {ITask} from '../task/Task';
+import {ITask, TaskContext} from '../task/Task';
 
 export interface IInstallerTask extends ITask {
   isInstalled(): boolean;
@@ -47,4 +47,21 @@ you can run the 'npx torchlive-cli setup-dev' again to continue the setup.
 If you still run into issue, \
 please refer to https://github.com/pytorch/live/issues for more info.`;
   return msg;
+}
+
+export async function getUserConsentOnInstallerOrQuit(task: IInstallerTask, context: TaskContext, licenseLink: string): Promise<void> {
+  const userConsent = await context.task.prompt<boolean>({
+    type: 'confirm',
+    name: 'userConsent',
+    message: `You must accept the following license agreement to continue installing ${task.getDescription()}.
+
+${licenseLink}.
+
+Do you accept the license?`,
+  });
+
+  if (!userConsent) {
+    throw new Error(`Stopping installation of ${task.getDescription()}, it is required to accept Android Software Development Kit License Agreement.`);
+  }
+  context.update('Accepted licenses agreement');
 }

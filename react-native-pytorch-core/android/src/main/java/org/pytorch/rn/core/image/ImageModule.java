@@ -22,9 +22,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.nio.file.StandardCopyOption;
 import org.pytorch.rn.core.canvas.ImageData;
 import org.pytorch.rn.core.javascript.JSContext;
+import org.pytorch.rn.core.utils.FileUtils;
 
 public class ImageModule extends ReactContextBaseJavaModule {
 
@@ -108,23 +108,7 @@ public class ImageModule extends ReactContextBaseJavaModule {
     // Get file path to cache image or load image model from cache if loading from Uri fails
     File targetFile = new File(getReactApplicationContext().getCacheDir(), uri.getPath());
 
-    // Always try to load image from uri to make sure it's always the latest version. Only if
-    // fetching the model from the uri fails, it will load the cached version (if exists).
-    try {
-      InputStream inputStream = new URL(uriString).openStream();
-
-      // Create directory for model if they don't exist
-      targetFile.mkdirs();
-
-      // Save content from stream to cache file
-      java.nio.file.Files.copy(
-          inputStream, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-      // Close stream properly
-      inputStream.close();
-    } catch (IOException e) {
-      // ignore, load image from cache instead
-    }
+    FileUtils.downloadUriToFile(uriString, targetFile);
 
     InputStream inputStream;
     try {

@@ -30,11 +30,11 @@ def safeExtGet(prop, fallback) {
 }
 
 android {
-  compileSdkVersion safeExtGet('PyTorchCore_compileSdkVersion', 29)
-  buildToolsVersion safeExtGet('PyTorchCore_buildToolsVersion', '29.0.2')
+  compileSdkVersion safeExtGet('PyTorchCore_compileSdkVersion', 30)
+  buildToolsVersion safeExtGet('PyTorchCore_buildToolsVersion', '30.0.2')
   defaultConfig {
-    minSdkVersion safeExtGet('PyTorchCore_minSdkVersion', 28)
-    targetSdkVersion safeExtGet('PyTorchCore_targetSdkVersion', 29)
+    minSdkVersion safeExtGet('PyTorchCore_minSdkVersion', 21)
+    targetSdkVersion safeExtGet('PyTorchCore_targetSdkVersion', 30)
     versionCode 1
     versionName "1.0"
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

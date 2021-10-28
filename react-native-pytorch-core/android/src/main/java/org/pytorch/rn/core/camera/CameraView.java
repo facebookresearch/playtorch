@@ -258,7 +258,8 @@ public class CameraView extends ConstraintLayout {
             mImageCapture);
     mCaptureButton.setVisibility(View.VISIBLE);
 
-    preview.setSurfaceProvider(mReactContext.getMainExecutor(), mPreviewView.getSurfaceProvider());
+    preview.setSurfaceProvider(
+        ContextCompat.getMainExecutor(mReactContext), mPreviewView.getSurfaceProvider());
   }
 
   private boolean allPermissionsGranted() {

@@ -20,21 +20,14 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.net.URL;
-import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.stream.Collectors;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.pytorch.Device;
@@ -44,6 +37,7 @@ import org.pytorch.Module;
 import org.pytorch.rn.core.ml.processing.BaseIValuePacker;
 import org.pytorch.rn.core.ml.processing.IIValuePacker;
 import org.pytorch.rn.core.ml.processing.PackerContext;
+import org.pytorch.rn.core.utils.FileUtils;
 
 public class MobileModelModule extends ReactContextBaseJavaModule {
 
@@ -148,11 +142,7 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
 
     // Always try to load model from uri to make sure it's always the latest version. Only if
     // fetching the model from the uri fails, it will load the cached version (if exists).
-    try {
-      downloadFile(uri, targetFile);
-    } catch (IOException e) {
-      // ignore, load model from cache instead
-    }
+    FileUtils.downloadUriToFile(modelUri, targetFile);
 
     Log.d(REACT_MODULE, "Absolute local model path: " + targetFile.getAbsolutePath());
 
@@ -179,35 +169,13 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
 
       // Get file path to cache model or load model from cache if loading from Uri fails
       File specFile = new File(mReactContext.getCacheDir(), specUri.getPath());
-      try {
-        downloadFile(specUri, specFile);
-        InputStream inputStream = new FileInputStream(specFile);
-        spec =
-            new BufferedReader(new InputStreamReader(inputStream))
-                .lines()
-                .collect(Collectors.joining("\n"));
-
-      } catch (IOException e2) {
-        // ignore
-      }
+      FileUtils.downloadUriToFile(specUri.getPath(), specFile);
+      spec = FileUtils.readFileToString(specFile);
     }
 
     ModuleHolder moduleHolder = new ModuleHolder(module, spec);
     mModulesAndSpecs.put(modelUri, moduleHolder);
     return moduleHolder;
-  }
-
-  private void downloadFile(Uri uri, File targetFile) throws IOException {
-    InputStream inputStream = new URL(uri.toString()).openStream();
-
-    // Create directory for model if they don't exist
-    targetFile.mkdirs();
-
-    // Save content from stream to cache file
-    java.nio.file.Files.copy(inputStream, targetFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-    // Close stream properly
-    inputStream.close();
   }
 
   static IIValuePacker newPacker(final String customPackerClass, final String spec)

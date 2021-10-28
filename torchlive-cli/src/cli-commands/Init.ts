@@ -38,8 +38,12 @@ class InitTask implements ITask {
   }
 
   mitigateOnError(): string {
-    // TODO(T90094183) Add mitigation message
-    return '';
+    return `💥 Failed to initialize ${this.name} project. \
+Please run 'react-native init <project-name> --template react-native-template-pytorch-live'
+for more debug info.
+
+If you still run into issue, \
+please refer to https://github.com/pytorch/live/issues for more info.`;
   }
 
   async run(context: TaskContext): Promise<void> {

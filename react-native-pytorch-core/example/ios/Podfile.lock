@@ -58,11 +58,11 @@ PODS:
     - FlipperKit/FlipperKitNetworkPlugin
   - glog (0.3.5)
   - libevent (2.1.12)
-  - LibTorch (1.9.0):
-    - LibTorch/Core (= 1.9.0)
-  - LibTorch/Core (1.9.0):
-    - LibTorch/Torch
-  - LibTorch/Torch (1.9.0)
+  - LibTorch-Lite (1.10.0):
+    - LibTorch-Lite/Core (= 1.10.0)
+  - LibTorch-Lite/Core (1.10.0):
+    - LibTorch-Lite/Torch
+  - LibTorch-Lite/Torch (1.10.0)
   - OpenSSL-Universal (1.1.180)
   - RCT-Folly (2020.01.13.00):
     - boost-for-react-native
@@ -258,7 +258,7 @@ PODS:
     - React-perflogger (= 0.64.2)
   - React-jsinspector (0.64.2)
   - react-native-pytorch-core (0.1.0):
-    - LibTorch (~> 1.9.0)
+    - LibTorch-Lite (~> 1.10.0)
     - React
     - React-callinvoker
     - React-Core
@@ -409,7 +409,7 @@ SPEC REPOS:
     - Flipper-RSocket
     - FlipperKit
     - libevent
-    - LibTorch
+    - LibTorch-Lite
     - OpenSSL-Universal
     - SwiftyJSON
     - YogaKit
@@ -487,7 +487,7 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: e686045572151edef46010a6f819ade377dfeb4b
-  FBReactNativeSpec: a8cce52896aa661eb84a4cd486ea12c86ef8fe2d
+  FBReactNativeSpec: e6addf266f08bc9ba4bd2fb89ccf64d7f486996b
   Flipper: ed161911b24ac3f237ed57febeed5d71d432d9bf
   Flipper-DoubleConversion: 38631e41ef4f9b12861c67d17cb5518d06badc41
   Flipper-Folly: 755929a4f851b2fb2c347d533a23f191b008554c
@@ -497,7 +497,7 @@ SPEC CHECKSUMS:
   FlipperKit: 57764956d2f0f972c1af5075a9c8f05ca5b12349
   glog: 73c2498ac6884b13ede40eda8228cb1eee9d9d62
   libevent: 4049cae6c81cdb3654a443be001fb9bdceff7913
-  LibTorch: d89f452b8b932002bd98884b3921850a95c35e14
+  LibTorch-Lite: 1e06028172ee5aecc12a01da6e6f3fe0bc3541c6
   OpenSSL-Universal: 1aa4f6a6ee7256b83db99ec1ccdaa80d10f9af9b
   RCT-Folly: ec7a233ccc97cc556cf7237f0db1ff65b986f27c
   RCTRequired: 6d3e854f0e7260a648badd0d44fc364bc9da9728
@@ -510,7 +510,7 @@ SPEC CHECKSUMS:
   React-jsi: 67747b9722f6dab2ffe15b011bcf6b3f2c3f1427
   React-jsiexecutor: 80c46bd381fd06e418e0d4f53672dc1d1945c4c3
   React-jsinspector: cc614ec18a9ca96fd275100c16d74d62ee11f0ae
-  react-native-pytorch-core: f49e918b2e0a7ee136a7953bfc2a0572fe606c65
+  react-native-pytorch-core: 012a83a49d2f5b6dd195143eed300abaccb18f5f
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   React-perflogger: 25373e382fed75ce768a443822f07098a15ab737
   React-RCTActionSheet: af7796ba49ffe4ca92e7277a5d992d37203f7da5
@@ -533,4 +533,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: 0f229e682fc15f9a783a3c06a0c1e8fbdab367bf
 
-COCOAPODS: 1.11.2
+COCOAPODS: 1.10.2

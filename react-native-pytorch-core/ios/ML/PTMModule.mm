@@ -9,10 +9,10 @@
 #import "PTMTensor.h"
 #import "PTMIValue.h"
 #import "PTMIValue+Internal.h"
-#import <LibTorch/LibTorch.h>
+#import <LibTorch-Lite/LibTorch-Lite.h>
 
 @implementation PTMModule {
-    torch::jit::script::Module _module;
+    torch::jit::mobile::Module _module;
 }
 
 + (nullable instancetype)load:(NSString *)filePath extraFiles:(NSMutableDictionary<NSString *, NSString *> *)extraFiles {
@@ -30,8 +30,7 @@
         }
 
         PTMModule *module = [PTMModule new];
-        module->_module = torch::jit::load(filePath.UTF8String, torch::kCPU, extra_files);
-        module->_module.eval();
+        module->_module = torch::jit::_load_for_mobile(filePath.UTF8String, torch::kCPU, extra_files);
 
         for (std::pair<std::string, std::string> element : extra_files) {
             std::string _key = element.first;

@@ -5,7 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import <LibTorch/LibTorch.h>
+#import <LibTorch-Lite/LibTorch-Lite.h>
 
 NS_ASSUME_NONNULL_BEGIN
 

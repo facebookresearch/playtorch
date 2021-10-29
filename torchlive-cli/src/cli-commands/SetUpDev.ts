@@ -9,7 +9,6 @@
 
 import {Command} from 'commander';
 import AndroidEmulatorDeviceInstaller from '../installers/android/AndroidEmulatorDeviceInstaller';
-import AndroidEmulatorSkinsInstaller from '../installers/android/AndroidEmulatorSkinInstaller';
 import AndroidSDKInstaller from '../installers/android/AndroidSDKInstaller';
 import AndroidSDKManagerInstaller from '../installers/android/AndroidSDKManagerInstaller';
 import OpenJDKInstaller from '../installers/android/OpenJDKInstaller';
@@ -34,7 +33,6 @@ const setUpDev = async (): Promise<void> => {
     new AndroidSDKInstaller(),
     new AndroidSDKManagerInstaller(),
     new AndroidEmulatorDeviceInstaller(),
-    new AndroidEmulatorSkinsInstaller(),
     new CocoaPodsInstaller(),
   ];
 

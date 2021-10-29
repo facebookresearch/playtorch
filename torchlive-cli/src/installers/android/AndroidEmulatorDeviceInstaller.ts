@@ -16,7 +16,7 @@ import * as ini from 'ini';
 import {getSDKPath} from '../../android/AndroidSDK';
 import {AndroidVirtualDeviceName} from '../../utils/ToolingUtils';
 import {TaskContext} from '../../task/Task';
-import {IInstallerTask} from '../IInstaller';
+import {IInstallerTask, getInstallerErrorMitigationMessage} from '../IInstaller';
 
 export default class AndroidEmulatorDeviceInstaller
   extends AbstractAndroidCommandLineTools
@@ -42,8 +42,10 @@ export default class AndroidEmulatorDeviceInstaller
   }
 
   mitigateOnError(): string {
-    // TODO(T90094183) Add mitigation message
-    return '';
+    return getInstallerErrorMitigationMessage(
+      this,
+      'https://developer.android.com/studio/run/managing-avds',
+    );
   }
 
   async run(context: TaskContext): Promise<void> {

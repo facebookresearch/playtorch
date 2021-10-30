@@ -25,4 +25,14 @@
     app:layout_constraintEnd_toEndOf="parent"
     app:layout_constraintStart_toStartOf="parent" />
 
+  <Button
+    android:id="@+id/flip_button"
+    android:layout_width="49dp"
+    android:layout_height="49dp"
+    android:layout_marginBottom="28dp"
+    android:layout_marginRight="28dp"
+    android:background="@drawable/ic_baseline_flip_camera_ios_24"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

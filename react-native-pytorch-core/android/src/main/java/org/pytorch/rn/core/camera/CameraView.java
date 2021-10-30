@@ -23,6 +23,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.camera.core.Camera;
+import androidx.camera.core.CameraInfoUnavailableException;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
@@ -55,10 +56,12 @@ public class CameraView extends ConstraintLayout {
   private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
   private PreviewView mPreviewView;
   private Button mCaptureButton;
+  private Button mFlipButton;
   private ImageCapture mImageCapture;
   private ValueAnimator pressAnimation, releaseAnimation;
   private LayerDrawable mCaptureButtonLayerDrawable;
   private GradientDrawable mCaptureButtonInnerCircle;
+  private CameraSelector mPreferredCameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
   private final int DURATION = 100;
   private final float SCALE_BUTTON_BY = 1.15f;
 
@@ -86,6 +89,7 @@ public class CameraView extends ConstraintLayout {
 
     mPreviewView = mLayout.findViewById(R.id.preview_view);
     mCaptureButton = mLayout.findViewById(R.id.capture_button);
+    mFlipButton = mLayout.findViewById(R.id.flip_button);
 
     // Initialize drawables to change (inner circle stroke)
     mCaptureButtonLayerDrawable =
@@ -138,6 +142,14 @@ public class CameraView extends ConstraintLayout {
               releaseAnimation.start();
               mCaptureButton.animate().scaleX(1f).setDuration(DURATION);
               mCaptureButton.animate().scaleY(1f).setDuration(DURATION);
+          }
+          return false;
+        });
+
+    mFlipButton.setOnTouchListener(
+        (v, e) -> {
+          if (e.getAction() == MotionEvent.ACTION_DOWN) {
+            flipCamera();
           }
           return false;
         });
@@ -196,6 +208,15 @@ public class CameraView extends ConstraintLayout {
     }
   }
 
+  private void flipCamera() {
+    if (mPreferredCameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
+      mPreferredCameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA;
+    } else {
+      mPreferredCameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
+    }
+    startCamera();
+  }
+
   void bindPreview(@NonNull ProcessCameraProvider cameraProvider) {
 
     // Unbind previous use cases. Without this, on unmounting and mounting CameraView again, the
@@ -204,8 +225,14 @@ public class CameraView extends ConstraintLayout {
 
     Preview preview = new Preview.Builder().build();
 
-    CameraSelector cameraSelector =
-        new CameraSelector.Builder().requireLensFacing(CameraSelector.LENS_FACING_BACK).build();
+    // Some devices do not have front and back camera, like the emulator on a laptop.
+    CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
+    try {
+      if (cameraProvider.hasCamera(mPreferredCameraSelector)) {
+        cameraSelector = mPreferredCameraSelector;
+      }
+    } catch (CameraInfoUnavailableException e) {
+    }
 
     ImageAnalysis imageAnalysis =
         new ImageAnalysis.Builder()

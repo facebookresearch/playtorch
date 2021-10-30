@@ -10,7 +10,7 @@
 import {useIsFocused} from '@react-navigation/native';
 import * as React from 'react';
 import {useCallback} from 'react';
-import {Camera, Image} from 'react-native-pytorch-core';
+import {Camera, CameraFacing, Image} from 'react-native-pytorch-core';
 import useImageModelInference from '../useImageModelInference';
 import {StyleSheet} from 'react-native';
 import ImageClass from '../components/ImageClass';
@@ -40,6 +40,7 @@ export default function CameraTakePicture() {
         onFrame={handleCapture}
         style={styles.camera}
         targetResolution={{width: 480, height: 640}}
+        facing={CameraFacing.BACK}
       />
       <ImageClass imageClass={imageClass} metrics={metrics} />
     </>

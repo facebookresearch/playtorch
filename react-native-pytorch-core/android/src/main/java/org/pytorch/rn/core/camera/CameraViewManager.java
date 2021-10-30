@@ -10,6 +10,7 @@ package org.pytorch.rn.core.camera;
 import android.util.Size;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.camera.core.CameraSelector;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.common.MapBuilder;
@@ -65,6 +66,15 @@ public class CameraViewManager extends SimpleViewManager<CameraView> {
       int width = targetResolution.getInt("width");
       int height = targetResolution.getInt("height");
       view.setTargetResolution(new Size(width, height));
+    }
+  }
+
+  @ReactProp(name = "facing")
+  public void setFacing(CameraView view, String facing) {
+    if (facing.equals("back")) {
+      view.setCameraSelector(CameraSelector.DEFAULT_BACK_CAMERA);
+    } else if (facing.equals("front")) {
+      view.setCameraSelector(CameraSelector.DEFAULT_FRONT_CAMERA);
     }
   }
 }

@@ -306,6 +306,11 @@ public class CameraView extends ConstraintLayout {
         });
   }
 
+  public void setCameraSelector(CameraSelector cameraSelector) {
+    mPreferredCameraSelector = cameraSelector;
+    startCamera();
+  }
+
   public void setTargetResolution(Size size) {
     mTargetResolution = size;
     startCamera();

@@ -32,6 +32,21 @@ interface TargetResolution {
 }
 
 /**
+ * Direction the camera faces relative to the device's screen.
+ */
+export enum CameraFacing {
+  /**
+   * Camera facing the opposite direction as the device's screen.
+   */
+  BACK = "back",
+
+  /**
+   * Camera facing the same direction as the device's screen.
+   */
+  FRONT = "front",
+}
+
+/**
  * Properties for the camera.
  *
  * ```typescript
@@ -57,6 +72,11 @@ export interface CameraProps extends ViewProps {
    * {@see https://developer.android.com/reference/androidx/camera/core/ImageAnalysis.Builder#setTargetResolution(android.util.Size)}
    */
   targetResolution?: TargetResolution;
+
+  /**
+   * Direction the camera faces relative to the device's screen.
+   */
+  facing?: CameraFacing,
 
   /**
    * Callback with an [[Image]] after capture button was pressed.
@@ -122,6 +142,7 @@ export function Camera({
   onCapture,
   hideCaptureButton,
   targetResolution,
+  facing,
   ...otherProps
 }: CameraProps) {
 
@@ -154,6 +175,7 @@ export function Camera({
       onCapture={handleCapture}
       onFrame={onFrame != null ? handleFrame : undefined}
       targetResolution={targetResolution}
+      facing={facing}
     />
   );
 }

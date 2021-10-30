@@ -10,5 +10,5 @@
 export {Image, ImageUtil} from './ImageModule';
 export {MobileModel, ModelResultMetrics, ModelResult} from './MobileModelModule';
 export {ModelInfo} from "./Models"
-export {Camera} from './CameraView';
+export {Camera, CameraFacing} from './CameraView';
 export {Canvas, CanvasRenderingContext2D} from './CanvasView';

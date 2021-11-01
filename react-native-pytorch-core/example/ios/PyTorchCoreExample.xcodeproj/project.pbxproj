@@ -13,7 +13,7 @@
 		13B07FC11A68108700A75B9A /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 13B07FB71A68108700A75B9A /* main.m */; };
 		381721E4266F2E4F00DBB29A /* DummySwift.swift in Sources */ = {isa = PBXBuildFile; fileRef = 381721E3266F2E4F00DBB29A /* DummySwift.swift */; };
 		81AB9BB82411601600AC10FF /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */; };
-		C18A9AB3782563F3BB06FDC1 /* libPods-PyTorchCoreExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = E5B27D2280AAE7BEA380D097 /* libPods-PyTorchCoreExample.a */; };
+		C28880B58CFFB4FB01E8D89A /* libPods-PyTorchCoreExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 10466E711966FEF02B41751B /* libPods-PyTorchCoreExample.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -30,6 +30,7 @@
 		00E356EE1AD99517003FC87E /* PyTorchCoreExampleTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = PyTorchCoreExampleTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* PyTorchCoreExampleTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PyTorchCoreExampleTests.m; sourceTree = "<group>"; };
+		10466E711966FEF02B41751B /* libPods-PyTorchCoreExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PyTorchCoreExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07F961A680F5B00A75B9A /* PyTorchCoreExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PyTorchCoreExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = PyTorchCoreExample/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = PyTorchCoreExample/AppDelegate.m; sourceTree = "<group>"; };
@@ -38,10 +39,9 @@
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = PyTorchCoreExample/main.m; sourceTree = "<group>"; };
 		381721E3266F2E4F00DBB29A /* DummySwift.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DummySwift.swift; sourceTree = "<group>"; };
 		387003A726E4A18300CF2BDB /* PyTorchCoreExample-Bridging-Header.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "PyTorchCoreExample-Bridging-Header.h"; sourceTree = "<group>"; };
-		75ACA95208C815B7E8090268 /* Pods-PyTorchCoreExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PyTorchCoreExample.release.xcconfig"; path = "Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample.release.xcconfig"; sourceTree = "<group>"; };
 		81AB9BB72411601600AC10FF /* LaunchScreen.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = LaunchScreen.storyboard; path = PyTorchCoreExample/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		B45861040773D80865054E7E /* Pods-PyTorchCoreExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PyTorchCoreExample.debug.xcconfig"; path = "Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample.debug.xcconfig"; sourceTree = "<group>"; };
-		E5B27D2280AAE7BEA380D097 /* libPods-PyTorchCoreExample.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-PyTorchCoreExample.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		C903E3BAD2657D810045F2F8 /* Pods-PyTorchCoreExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PyTorchCoreExample.debug.xcconfig"; path = "Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample.debug.xcconfig"; sourceTree = "<group>"; };
+		DE7E2312B49F3A37CEDD00FB /* Pods-PyTorchCoreExample.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-PyTorchCoreExample.release.xcconfig"; path = "Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample.release.xcconfig"; sourceTree = "<group>"; };
 		ED297162215061F000B7C4FE /* JavaScriptCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = JavaScriptCore.framework; path = System/Library/Frameworks/JavaScriptCore.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
@@ -57,7 +57,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				C18A9AB3782563F3BB06FDC1 /* libPods-PyTorchCoreExample.a in Frameworks */,
+				C28880B58CFFB4FB01E8D89A /* libPods-PyTorchCoreExample.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,7 +100,7 @@
 			isa = PBXGroup;
 			children = (
 				ED297162215061F000B7C4FE /* JavaScriptCore.framework */,
-				E5B27D2280AAE7BEA380D097 /* libPods-PyTorchCoreExample.a */,
+				10466E711966FEF02B41751B /* libPods-PyTorchCoreExample.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -139,8 +139,8 @@
 		EE888F89A3FE6E75D4332052 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				B45861040773D80865054E7E /* Pods-PyTorchCoreExample.debug.xcconfig */,
-				75ACA95208C815B7E8090268 /* Pods-PyTorchCoreExample.release.xcconfig */,
+				C903E3BAD2657D810045F2F8 /* Pods-PyTorchCoreExample.debug.xcconfig */,
+				DE7E2312B49F3A37CEDD00FB /* Pods-PyTorchCoreExample.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -170,14 +170,14 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "PyTorchCoreExample" */;
 			buildPhases = (
-				5F7AF2B1381D67D143C072CE /* [CP] Check Pods Manifest.lock */,
+				129F2A5500BD2B0702CF88EB /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
 				13B07F871A680F5B00A75B9A /* Sources */,
 				13B07F8C1A680F5B00A75B9A /* Frameworks */,
 				13B07F8E1A680F5B00A75B9A /* Resources */,
 				00DD1BFF1BD5951E006B06BC /* Bundle React Native code and images */,
-				3FACAB2B8B42BA87009A08F0 /* [CP] Embed Pods Frameworks */,
-				284EC4405A430C23C023E894 /* [CP] Copy Pods Resources */,
+				2D5730DF050EA3145ECC2382 /* [CP] Embed Pods Frameworks */,
+				90A639539909A60D956FD25A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -258,41 +258,7 @@
 			shellPath = /bin/sh;
 			shellScript = "set -e\n\nexport ENTRY_FILE=index.tsx\nexport NODE_BINARY=node\n../node_modules/react-native/scripts/react-native-xcode.sh\n";
 		};
-		284EC4405A430C23C023E894 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-resources-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Copy Pods Resources";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-resources-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		3FACAB2B8B42BA87009A08F0 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		5F7AF2B1381D67D143C072CE /* [CP] Check Pods Manifest.lock */ = {
+		129F2A5500BD2B0702CF88EB /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -312,6 +278,40 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+		2D5730DF050EA3145ECC2382 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		90A639539909A60D956FD25A /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-PyTorchCoreExample/Pods-PyTorchCoreExample-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		FD10A7F022414F080027D42C /* Start Packager */ = {
@@ -418,7 +418,7 @@
 		};
 		13B07F941A680F5B00A75B9A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B45861040773D80865054E7E /* Pods-PyTorchCoreExample.debug.xcconfig */;
+			baseConfigurationReference = C903E3BAD2657D810045F2F8 /* Pods-PyTorchCoreExample.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;
@@ -449,7 +449,7 @@
 		};
 		13B07F951A680F5B00A75B9A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 75ACA95208C815B7E8090268 /* Pods-PyTorchCoreExample.release.xcconfig */;
+			baseConfigurationReference = DE7E2312B49F3A37CEDD00FB /* Pods-PyTorchCoreExample.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES = YES;

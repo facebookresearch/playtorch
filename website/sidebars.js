@@ -23,6 +23,7 @@ module.exports = {
     'tutorials/get-started',
     'tutorials/image-classification',
     'tutorials/question-answering',
+    'tutorials/mnist-digit-classification',
     'tutorials/prepare-custom-model',
     'tutorials/server-model',
     'tutorials/connecting-to-a-server',

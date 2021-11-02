@@ -15,8 +15,8 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
 
     private let captureButtonSize = 75.0
     private let captureButtonMargin = 16.0
-    private let switchCameraButtonSize = 25.0
-    private let switchCameraButtonMargin = 25.0
+    private let switchCameraButtonSize = 36.0
+    private let switchCameraButtonMargin = 30.0
     private let photoOutput = AVCapturePhotoOutput()
     private var videoOutput: AVCaptureVideoDataOutput!
     private var captureSession: AVCaptureSession!
@@ -68,7 +68,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
         let width = self.bounds.width
         cameraLayer?.frame = CGRect(x: 0, y: 0, width: width, height: height)
         captureButton?.frame = CGRect(x: Double(width)/2.0 - captureButtonSize/2.0, y: Double(height) - captureButtonSize - captureButtonMargin, width: captureButtonSize, height: captureButtonSize)
-        switchCameraButton?.frame = CGRect(x: Double(width) - switchCameraButtonMargin - switchCameraButtonSize, y: switchCameraButtonMargin, width: switchCameraButtonSize, height: switchCameraButtonSize)
+        switchCameraButton?.frame = CGRect(x: Double(width) - switchCameraButtonMargin - switchCameraButtonSize, y: Double(self.bounds.height) - captureButtonMargin - (captureButtonSize - switchCameraButtonSize) / 2.0 - switchCameraButtonSize, width: switchCameraButtonSize, height: switchCameraButtonSize)
         captureButton?.isHidden = hideCaptureButton
     }
 
@@ -105,8 +105,8 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
         }
         switchCameraButton = UIButton()
         switchCameraButton?.tintColor = UIColor.white
-        switchCameraButton?.setTitle("F", for: .normal) //TODO(T96787380) replace with design asset
-        switchCameraButton?.frame = CGRect(x: Double(self.bounds.width) - switchCameraButtonMargin, y: switchCameraButtonMargin, width: switchCameraButtonSize, height: switchCameraButtonSize)
+        switchCameraButton?.setImage(UIImage(named: "baseline_flip_camera"), for: .normal)
+        switchCameraButton?.frame = CGRect(x: Double(self.bounds.width) - switchCameraButtonMargin, y: Double(self.bounds.height) - captureButtonMargin - (captureButtonSize - switchCameraButtonSize) / 2.0 - switchCameraButtonSize, width: switchCameraButtonSize, height: switchCameraButtonSize)
         switchCameraButton?.addTarget(self, action: #selector(switchCameraInput), for: .touchDown)
         if let switchCameraButton = switchCameraButton {
             self.addSubview(switchCameraButton)

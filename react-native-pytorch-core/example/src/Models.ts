@@ -46,3 +46,10 @@ export const NLPModels: ModelInfo[] = [
     model: require('../models/bert_qa.ptl'),
   },
 ];
+
+export const AudioModels: ModelInfo[] = [
+  {
+    name: 'Wav2Vec2',
+    model: require('../models/wav2vec2.ptl'),
+  },
+];

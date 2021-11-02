@@ -1,0 +1,11 @@
+{
+    "pack": {
+      "type": "tensor_from_audio",
+      "audio": "audio",
+      "sampleRate": 16000
+    },
+    "unpack": {
+      "type": "string",
+      "key": "answer"
+    }
+  }

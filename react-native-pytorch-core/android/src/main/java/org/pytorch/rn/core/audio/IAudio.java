@@ -8,5 +8,5 @@
 package org.pytorch.rn.core.audio;
 
 public interface IAudio {
-  IAudioRecord getAudioRecord();
+  short[] getData();
 }

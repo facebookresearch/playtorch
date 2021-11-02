@@ -37,6 +37,7 @@ import org.json.JSONException;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.pytorch.rn.core.audio.Audio;
 import org.pytorch.rn.core.image.Image;
 import org.pytorch.rn.core.javascript.JSContext;
 import org.pytorch.rn.core.ml.MobileModelModule;
@@ -305,9 +306,7 @@ public class IValuePackerInstrumentedTest {
     final JavaOnlyMap params = new JavaOnlyMap();
     final int sec = 3;
     final short[] sdata = new short[16000 * sec];
-    TestAudioRecordImpl audioRecord = new TestAudioRecordImpl(sdata);
-    TestAudio audio = new TestAudio(audioRecord);
-    JSContext.NativeJSRef ref = JSContext.wrapObject(audio);
+    JSContext.NativeJSRef ref = JSContext.wrapObject(new Audio(sdata));
     params.putMap("audio", ref.getJSRef());
     params.putInt("sample_rate", 16000);
 

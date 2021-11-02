@@ -33,7 +33,6 @@ import org.json.JSONObject;
 import org.pytorch.IValue;
 import org.pytorch.Tensor;
 import org.pytorch.rn.core.audio.IAudio;
-import org.pytorch.rn.core.audio.IAudioRecord;
 import org.pytorch.rn.core.image.IImage;
 import org.pytorch.rn.core.javascript.JSContext;
 
@@ -366,6 +365,12 @@ public class BaseIValuePacker implements IIValuePacker {
     return array;
   }
 
+  private static void unpackString(
+      final IValue ivalue, final JSONObject jobject, final WritableMap map) throws JSONException {
+    final String key = jobject.getString(JSON_KEY);
+    map.putString(key, ivalue.toStr());
+  }
+
   private static void unpackTensor(
       final IValue ivalue, final JSONObject jobject, final WritableMap map) throws JSONException {
     final String key = jobject.getString(JSON_KEY);
@@ -614,47 +619,14 @@ public class BaseIValuePacker implements IIValuePacker {
   private static IValue packAudio(final JSONObject jobject, final ReadableMap params)
       throws JSONException {
     final IAudio audio = unwrapObject(jobject, params, JSON_AUDIO);
-    final IAudioRecord audioRecord = audio.getAudioRecord();
-    final int sampleRate = params.getInt("sample_rate");
 
-    // Guess for unknown duration of audio records
-    int durationSeconds = 10;
-    if (params.hasKey("duration_seconds")) {
-      durationSeconds = params.getInt("duration_seconds");
-    }
-    int floatBufferSize = sampleRate * durationSeconds;
-    FloatBuffer floatBuffer = Tensor.allocateFloatBuffer(floatBufferSize);
-
-    final int bufferSizeInShorts = 2048;
-    final short[] buffer = new short[bufferSizeInShorts];
-
-    int read = 0;
-    int readTotal = 0;
-    while ((read = audioRecord.read(buffer, 0, bufferSizeInShorts)) > 0) {
-      if (readTotal + read > floatBufferSize) {
-        final int newFloatBufferSize = floatBufferSize * 2;
-        final FloatBuffer newFloatBuffer = Tensor.allocateFloatBuffer(newFloatBufferSize);
-        newFloatBuffer.put(floatBuffer);
-        floatBufferSize = newFloatBufferSize;
-        floatBuffer = newFloatBuffer;
-      }
-
-      for (int i = 0; i < read; i++) {
-        floatBuffer.put(buffer[i] / (float) Short.MAX_VALUE);
-      }
-
-      readTotal += read;
+    final short[] audioData = audio.getData();
+    final FloatBuffer floatBuffer = Tensor.allocateFloatBuffer(audioData.length);
+    for (int i = 0; i < audioData.length; i++) {
+      floatBuffer.put(audioData[i] / (float) Short.MAX_VALUE);
     }
 
-    if (floatBuffer.capacity() > readTotal) {
-      final FloatBuffer newFloatBuffer = Tensor.allocateFloatBuffer(readTotal);
-      for (int i = 0; i < readTotal; ++i) {
-        newFloatBuffer.put(floatBuffer.get());
-      }
-      floatBuffer = newFloatBuffer;
-    }
-
-    return IValue.from(Tensor.fromBlob(floatBuffer, new long[] {1, readTotal}));
+    return IValue.from(Tensor.fromBlob(floatBuffer, new long[] {1, audioData.length}));
   }
 
   private BertTokenizer getBertTokenizer(PackerContext packerContext)

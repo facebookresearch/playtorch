@@ -7,8 +7,6 @@
 
 package org.pytorch.rn.core.audio;
 
-import androidx.annotation.NonNull;
-
 public interface IAudioRecord {
-  int read(@NonNull short[] audioData, int offsetInShorts, int sizeInShorts);
+  short[] getData();
 }

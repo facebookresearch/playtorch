@@ -7,12 +7,14 @@
 
 package org.pytorch.rn.core.audio;
 
-import android.media.AudioRecord;
+public class Audio implements IAudio {
+  private final short[] mData;
 
-public class Audio {
-  final AudioRecord audioRecord;
+  public Audio(short[] data) {
+    this.mData = data;
+  }
 
-  public Audio(AudioRecord audioRecord) {
-    this.audioRecord = audioRecord;
+  public short[] getData() {
+    return mData;
   }
 }

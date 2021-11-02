@@ -45,6 +45,7 @@ import AstroBirdExample from './apiTest/AstroBirdExample';
 import MNIST from './models/MNIST';
 import Distilbert from './models/Distilbert';
 import DETR from './models/DETR';
+import Wav2Vec2 from './models/Wav2Vec2';
 
 export type Tool = {
   icon?: React.ReactNode;
@@ -102,6 +103,13 @@ const tools: ToolSection = [
         subtitle: 'A playground to experiment with the PyTorch Core API',
         apiTest: false,
         component: Distilbert,
+      },
+      {
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
+        title: 'Wav2Vec2',
+        subtitle: 'Example to test the Wav2Vec2 model',
+        apiTest: false,
+        component: Wav2Vec2,
       },
     ],
   },

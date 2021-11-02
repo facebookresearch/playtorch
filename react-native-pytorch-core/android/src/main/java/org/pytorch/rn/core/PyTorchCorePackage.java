@@ -14,6 +14,7 @@ import com.facebook.react.uimanager.ViewManager;
 import java.util.Arrays;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
+import org.pytorch.rn.core.audio.AudioModule;
 import org.pytorch.rn.core.camera.CameraViewManager;
 import org.pytorch.rn.core.canvas.CanvasRenderingContext2DModule;
 import org.pytorch.rn.core.canvas.CanvasViewManager;
@@ -29,7 +30,8 @@ public class PyTorchCorePackage implements ReactPackage {
         new MobileModelModule(reactContext),
         new ImageModule(reactContext),
         new ImageDataModule(reactContext),
-        new CanvasRenderingContext2DModule(reactContext));
+        new CanvasRenderingContext2DModule(reactContext),
+        new AudioModule(reactContext));
   }
 
   @Override

@@ -9,9 +9,16 @@ import zipfile
 from pathlib import Path
 
 import torch
+import torchaudio
 import torchvision
+from torch import Tensor
 from torch.utils.mobile_optimizer import optimize_for_mobile
-from transformers import DistilBertTokenizer, DistilBertForQuestionAnswering
+from torchaudio.models.wav2vec2.utils.import_huggingface import import_huggingface_model
+from transformers import (
+    DistilBertTokenizer,
+    DistilBertForQuestionAnswering,
+    Wav2Vec2ForCTC,
+)
 
 print(f"torch version {torch.__version__}")
 
@@ -107,11 +114,106 @@ def export_nlp_models():
     bundle_live_spec_and_export_model("bert_qa", traced_model)
 
 
+def export_audio_models():
+    print("Exporting Audio models")
+
+    class SpeechRecognizer(torch.nn.Module):
+        def __init__(self, model):
+            super().__init__()
+            self.model = model
+            self.labels = [
+                "<s>",
+                "<pad>",
+                "</s>",
+                "<unk>",
+                "|",
+                "E",
+                "T",
+                "A",
+                "O",
+                "N",
+                "I",
+                "H",
+                "S",
+                "R",
+                "D",
+                "L",
+                "U",
+                "M",
+                "W",
+                "C",
+                "F",
+                "G",
+                "Y",
+                "P",
+                "B",
+                "V",
+                "K",
+                "'",
+                "X",
+                "J",
+                "Q",
+                "Z",
+            ]
+
+        def forward(self, waveforms: Tensor) -> str:
+            """Given a single channel speech data, return transcription.
+            Args:
+                waveforms (Tensor): Speech tensor. Shape `[1, num_frames]`.
+            Returns:
+                str: The resulting transcript
+            """
+            logits, _ = self.model(waveforms)  # [batch, num_seq, num_label]
+            best_path = torch.argmax(logits[0], dim=-1)  # [num_seq,]
+            prev = ""
+            hypothesis = ""
+            for i in best_path:
+                char = self.labels[i]
+                if char == prev:
+                    continue
+                if char == "<s>":
+                    prev = ""
+                    continue
+                hypothesis += char
+                prev = char
+            return hypothesis.replace("|", " ")
+
+    # Load Wav2Vec2 pretrained model from Hugging Face Hub
+    model = Wav2Vec2ForCTC.from_pretrained("facebook/wav2vec2-base-960h")
+    # Convert the model to torchaudio format, which supports TorchScript.
+    model = import_huggingface_model(model)
+    # Remove weight normalization which is not supported by quantization.
+    model.encoder.transformer.pos_conv_embed.__prepare_scriptable__()
+    model = model.eval()
+    # Attach decoder
+    model = SpeechRecognizer(model)
+
+    # Apply quantization / script / optimize for motbile
+    quantized_model = torch.quantization.quantize_dynamic(
+        model, qconfig_spec={torch.nn.Linear}, dtype=torch.qint8
+    )
+    scripted_model = torch.jit.script(quantized_model)
+    optimized_model = optimize_for_mobile(scripted_model)
+
+    # Sanity check
+    waveform, _ = torchaudio.load("scent_of_a_woman_future.wav")
+    print("Result:", optimized_model(waveform))
+
+    name = "wav2vec2"
+
+    spec = Path(f"{name}.pt.live.spec.json").read_text()
+    extra_files = {}
+    extra_files["model/live.spec.json"] = spec
+    optimized_model._save_for_lite_interpreter(f"{name}.ptl", _extra_files=extra_files)
+    print(f"Model {name} successfully exported")
+
+
 def main():
     export_image_classification_models()
     export_image_segmentation_models()
     export_mnist_model()
     export_nlp_models()
+    export_audio_models()
 
 
 if __name__ == "__main__":

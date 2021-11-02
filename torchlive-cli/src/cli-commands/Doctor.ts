@@ -28,6 +28,7 @@ import yarn from '../commands/Yarn';
 import {print as printHeader} from '../utils/header';
 import {execCommandSync, getEnv} from '../utils/SystemUtils';
 import {isCommandInstalled} from '../utils/ToolingUtils';
+import pod from '../commands/ios/Pod';
 
 export function extractVersion(
   cmd: string,
@@ -181,6 +182,9 @@ const runDoctor = async (): Promise<void> => {
     }),
     new HealthCheck('Android Emulator', emulator, {
       minVersion: semver.coerce('30.5.6.0'),
+    }),
+    new HealthCheck('CocoaPods', pod, {
+      minVersion: semver.parse('1.10.2'),
     }),
   ];
 

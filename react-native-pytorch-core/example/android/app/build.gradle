@@ -146,15 +146,7 @@ android {
      *    > More than one file was found with OS independent path 'lib/x86/libfbjni.so'
      */
     packagingOptions {
-        pickFirst 'lib/x86/libpytorch_jni.so'
-        pickFirst 'lib/x86/libfbjni.so'
-        pickFirst 'lib/x86/libc++_shared.so'
-        pickFirst 'lib/armeabi-v7a/libfbjni.so'
-        pickFirst 'lib/arm64-v8a/libc++_shared.so'
-        pickFirst 'lib/x86_64/libc++_shared.so'
-        pickFirst 'lib/arm64-v8a/libfbjni.so'
-        pickFirst 'lib/x86_64/libfbjni.so'
-        pickFirst 'lib/armeabi-v7a/libc++_shared.so'
+        pickFirst '**/*.so'
     }
 
     defaultConfig {

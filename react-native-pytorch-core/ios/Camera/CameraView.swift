@@ -103,11 +103,19 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
         if let _ = switchCameraButton?.superview {
             switchCameraButton?.removeFromSuperview()
         }
+
         switchCameraButton = UIButton()
         switchCameraButton?.tintColor = UIColor.white
-        switchCameraButton?.setImage(UIImage(named: "baseline_flip_camera"), for: .normal)
         switchCameraButton?.frame = CGRect(x: Double(self.bounds.width) - switchCameraButtonMargin, y: Double(self.bounds.height) - captureButtonMargin - (captureButtonSize - switchCameraButtonSize) / 2.0 - switchCameraButtonSize, width: switchCameraButtonSize, height: switchCameraButtonSize)
         switchCameraButton?.addTarget(self, action: #selector(switchCameraInput), for: .touchDown)
+
+        let bundle = Bundle(for: CameraView.self)
+        if let url = bundle.url(forResource: "PyTorchCore", withExtension: "bundle") {
+            let coreBundle = Bundle(url: url)
+            let flipCameraImage = UIImage(named: "FlipCamera", in: coreBundle, compatibleWith: nil)
+            switchCameraButton?.setImage(flipCameraImage, for: .normal)
+        }
+
         if let switchCameraButton = switchCameraButton {
             self.addSubview(switchCameraButton)
         }

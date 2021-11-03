@@ -31,6 +31,13 @@
 }
 
 /* You can override the default Infima variables here. */
+
+/**
+ Reference to Infirma as these variables are not yet documented
+ https://github.com/facebookincubator/infima/blob/main/packages/core/styles/common/variables.pcss
+ https://github.com/facebookincubator/infima/tree/main/packages/core/styles/content
+*/
+
 :root {
   --ifm-color-primary: #EE4C2C;
   --ifm-color-primary-dark: rgb(33, 175, 144);
@@ -41,22 +48,28 @@
   --ifm-color-primary-lightest: rgb(146, 224, 208);
   --ifm-code-font-size: 0.8em;
   --ifm-button-border-color: #EE4C2C;
-  --ifm-font-family-base: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;;
+  --ifm-font-family-base: FreightSansLFPro, FreightSans, -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;
   --ifm-font-size-base: 16px;
+  --ifm-font-family-monospace: "Andale Mono", Menlo, Monaco, Consolas, monospace;
+  --ifm-code-color: #666666;
 
   --ifm-h1-font-size: 2.5rem;
-  --ifm-h2-font-size: 2rem;
-  --ifm-h3-font-size: 1.5rem;
+  --ifm-h2-font-size: 1.5rem;
+  --ifm-h3-font-size: 1.2rem;
   --ifm-heading-font-weight: 600;
   --ifm-code-border-radius: 3px;
+
+  --ifm-menu-color-active: #FFFFFF;
+  --ifm-menu-color-background-active: #DE3412;
+
+  --ifm-global-radius: 3px;
+
+  /* nav bar */
+  --ifm-navbar-height: 5rem;
 }
 
 p {
   line-height: 1.45;
-}
-
-code {
-  border-width: 1px;
 }
 
 .button--lg {
@@ -175,4 +188,92 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 /* CLI style */
 .codeBlockTitle {
   background-color: #123;
+}
+
+
+
+
+/* side bar menu override */
+.menu {
+  padding: 0;
+}
+
+.menu__link {
+  border-radius: 0;
+  font-size: 0.875rem;
+  padding: var(--ifm-menu-link-padding-vertical) var(--ifm-menu-link-padding-horizontal);
+}
+
+.menu__list-item {
+  margin: 0;
+}
+
+.menu__link {
+  border-top: 1px solid #e6e6e6;
+}
+
+.menu__link--sublist, .menu__list > .menu__list-item > .menu__link {
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.menu__list-item:first-child .menu__link {
+  border-top: none;
+
+}
+
+
+.menu__list .menu__list .menu__link {
+  border-top: none;
+  font-weight: 400;
+  text-transform: none;
+}
+
+.menu__link--sublist:after {
+  background: none;
+  filter: none;
+  content: '–';
+  position: relative;
+  top: auto; right: auto;
+  line-height: 1.25rem;
+  width: auto; height: auto;
+  transform: none;
+  transition: none;
+  font-size: 1.2rem;
+  width: 1rem;
+  text-align: right;
+}
+
+.menu__link--sublist.menu__link--active {
+  color: var(--ifm-menu-color);
+}
+
+.menu__list-item--collapsed .menu__link--sublist:after {
+  content: '+';
+  transform: none;
+}
+
+/* Docs markdown */
+
+.markdown > h2 {
+  text-transform: uppercase;
+  font-weight: 400;
+  --ifm-h2-font-size: 1.5rem;
+
+}
+
+.markdown > h3 {
+  --ifm-h3-font-size: 1rem;
+  border-top: 2px solid #DE3412;
+  padding: 15px;
+  background-color: #F6F6F6;
+  font-weight: 400;
+}
+
+
+code {
+  --ifm-code-background: transparent;
+  --ifm-code-padding-vertical: 0;
+  border-radius: 0;
+  border: none;
 }

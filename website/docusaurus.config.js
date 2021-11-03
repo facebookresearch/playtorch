@@ -23,6 +23,10 @@ module.exports = {
   organizationName: 'facebookexperimental',
   projectName: 'pytorch-live',
   themeConfig: {
+    colorMode: {
+      defaultMode: 'light',
+      disableSwitch: true,
+    },
     prism: {
       theme: require('prism-react-renderer/themes/dracula'),
       darkTheme: require('prism-react-renderer/themes/dracula'),
@@ -35,14 +39,24 @@ module.exports = {
       },
       items: [
         {
+          href: '/',
+          position: 'right',
+          label: 'Home',
+        },
+        {
+          to: 'showcase',
+          position: 'right',
+          label: 'Showcase',
+        },
+        {
           type: 'doc',
           docId: 'tutorials/get-started',
-          position: 'left',
+          position: 'right',
           label: 'Tutorials',
         },
         {
           type: 'doc',
-          position: 'left',
+          position: 'right',
           docId: 'api/core/index',
           label: 'API',
         },

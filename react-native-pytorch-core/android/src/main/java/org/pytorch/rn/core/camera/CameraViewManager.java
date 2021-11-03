@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.camera.core.CameraSelector;
 import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.react.bridge.ReadableArray;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.common.MapBuilder;
 import com.facebook.react.uimanager.SimpleViewManager;
@@ -22,6 +23,8 @@ import java.util.Map;
 public class CameraViewManager extends SimpleViewManager<CameraView> {
 
   public static final String REACT_CLASS = "PyTorchCoreCameraView";
+
+  public final int COMMAND_TAKE_PICTURE = 1;
 
   private final ReactApplicationContext mReactContext;
 
@@ -39,6 +42,24 @@ public class CameraViewManager extends SimpleViewManager<CameraView> {
   @Override
   protected CameraView createViewInstance(@NonNull ThemedReactContext reactContext) {
     return new CameraView(mReactContext);
+  }
+
+  @Nullable
+  @Override
+  public Map<String, Integer> getCommandsMap() {
+    return MapBuilder.of("takePicture", COMMAND_TAKE_PICTURE);
+  }
+
+  @Override
+  public void receiveCommand(
+      @NonNull CameraView view, String commandId, @Nullable ReadableArray args) {
+    super.receiveCommand(view, commandId, args);
+    int commandIdInt = Integer.parseInt(commandId);
+    switch (commandIdInt) {
+      case COMMAND_TAKE_PICTURE:
+        view.takePicture();
+        break;
+    }
   }
 
   @Nullable

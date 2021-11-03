@@ -136,7 +136,7 @@ public class CameraView extends ConstraintLayout {
               pressAnimation.start();
               mCaptureButton.animate().scaleX(SCALE_BUTTON_BY).setDuration(DURATION);
               mCaptureButton.animate().scaleY(SCALE_BUTTON_BY).setDuration(DURATION);
-              capturePhoto();
+              takePicture();
               break;
             case MotionEvent.ACTION_UP:
               releaseAnimation.start();
@@ -184,7 +184,7 @@ public class CameraView extends ConstraintLayout {
         ContextCompat.getMainExecutor(mReactContext));
   }
 
-  private void capturePhoto() {
+  protected void takePicture() {
     if (mImageCapture != null) {
       mImageCapture.takePicture(
           ContextCompat.getMainExecutor(mReactContext),

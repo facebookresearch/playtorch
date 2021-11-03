@@ -8,8 +8,7 @@
  */
 
 import * as React from 'react';
-import {useCallback} from 'react';
-import {requireNativeComponent, ViewProps} from 'react-native';
+import {findNodeHandle, requireNativeComponent, UIManager, ViewProps} from 'react-native';
 import {Image, wrapRef} from './ImageModule';
 import type {NativeJSRef} from './NativeJSRef';
 
@@ -101,12 +100,15 @@ export interface CameraProps extends ViewProps {
   onFrame? (image: Image): void;
 }
 
+const nativeCameraViewName = 'PyTorchCoreCameraView';
+
 const PyTorchCoreCameraView = requireNativeComponent<CameraProps>(
-  'PyTorchCoreCameraView'
+  nativeCameraViewName
 );
 
 /**
  * A camera component with [[CameraProps.onCapture]] and [[CameraProps.onFrame]] callbacks.
+ * To programmatically trigger a capture, call the [[takePicture]] function.
  *
  * ```typescript
  * export default function App() {
@@ -137,45 +139,61 @@ const PyTorchCoreCameraView = requireNativeComponent<CameraProps>(
  *
  * @component
  */
-export function Camera({
-  onFrame,
-  onCapture,
-  hideCaptureButton,
-  targetResolution,
-  facing,
-  ...otherProps
-}: CameraProps) {
+export class Camera extends React.PureComponent<CameraProps> {
+  cameraRef: React.RefObject<any>;
 
-  const handleFrame = useCallback(
-    (event: any) => {
-      const { nativeEvent } = event;
-      const { ID } = nativeEvent;
-      const ref: NativeJSRef = { ID };
-      const image = wrapRef(ref);
-      onFrame != null && onFrame(image);
-    },
-    [onFrame]
-  );
+  constructor(props: CameraProps) {
+    super(props);
+    this.cameraRef = React.createRef();
+  }
 
-  const handleCapture = useCallback(
-    (event: any) => {
-      const { nativeEvent } = event;
-      const { ID } = nativeEvent;
-      const ref: NativeJSRef = { ID };
-      const image = wrapRef(ref);
-      onCapture != null && onCapture(image);
-    },
-    [onCapture]
-  );
+  takePicture() {
+    if (this.cameraRef.current) {
+      UIManager.dispatchViewManagerCommand(
+        findNodeHandle(this.cameraRef.current),
+        UIManager.getViewManagerConfig(nativeCameraViewName).Commands.takePicture.toString(),
+        []
+      );
+    }
+  }
 
-  return (
-    <PyTorchCoreCameraView
-      {...otherProps}
-      hideCaptureButton={hideCaptureButton}
-      onCapture={handleCapture}
-      onFrame={onFrame != null ? handleFrame : undefined}
-      targetResolution={targetResolution}
-      facing={facing}
-    />
-  );
+  _handleOnCapture = (event: any) => {
+    const { onCapture } = this.props;
+    const { nativeEvent } = event;
+    const { ID } = nativeEvent;
+    const ref: NativeJSRef = { ID };
+    const image = wrapRef(ref);
+    onCapture != null && onCapture(image);
+  };
+
+  _handleOnFrame = (event: any) => {
+    const { onFrame } = this.props;
+    const { nativeEvent } = event;
+    const { ID } = nativeEvent;
+    const ref: NativeJSRef = { ID };
+    const image = wrapRef(ref);
+    onFrame != null && onFrame(image);
+  };
+
+  render() {
+    const {
+      facing,
+      hideCaptureButton,
+      onFrame,
+      targetResolution,
+      ...otherProps
+    } = this.props;
+
+    return (
+      <PyTorchCoreCameraView
+        {...otherProps}
+        facing={facing}
+        hideCaptureButton={hideCaptureButton}
+        onCapture={this._handleOnCapture}
+        onFrame={onFrame != null ? this._handleOnFrame : undefined}
+        ref={this.cameraRef}
+        targetResolution={targetResolution}
+      />
+    );
+  }
 }

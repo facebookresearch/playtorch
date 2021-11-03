@@ -16,4 +16,10 @@ class CameraManager: RCTViewManager {
     return cameraView
   }
 
+  @objc func takePicture(_ reactTag: NSNumber) {
+    self.bridge!.uiManager.addUIBlock { (uiManager: RCTUIManager?, viewRegistry:[NSNumber : UIView]?) in
+      let view: CameraView = viewRegistry![reactTag] as! CameraView;
+      view.captureImage();
+    }
+  }
 }

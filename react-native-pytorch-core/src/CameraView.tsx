@@ -151,7 +151,7 @@ export class Camera extends React.PureComponent<CameraProps> {
     if (this.cameraRef.current) {
       UIManager.dispatchViewManagerCommand(
         findNodeHandle(this.cameraRef.current),
-        UIManager.getViewManagerConfig(nativeCameraViewName).Commands.takePicture.toString(),
+        UIManager.getViewManagerConfig(nativeCameraViewName).Commands.takePicture,
         []
       );
     }

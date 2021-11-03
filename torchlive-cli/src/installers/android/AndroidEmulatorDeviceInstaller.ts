@@ -13,10 +13,13 @@ import os from 'os';
 import path from 'path';
 import fs from 'fs';
 import * as ini from 'ini';
-import {getSDKPath} from '../../android/AndroidSDK';
 import {AndroidVirtualDeviceName} from '../../utils/ToolingUtils';
 import {TaskContext} from '../../task/Task';
-import {IInstallerTask, getInstallerErrorMitigationMessage} from '../IInstaller';
+import {
+  IInstallerTask,
+  getInstallerErrorMitigationMessage,
+} from '../IInstaller';
+import cliPkgInfo from '../../../package.json';
 
 export default class AndroidEmulatorDeviceInstaller
   extends AbstractAndroidCommandLineTools
@@ -38,7 +41,7 @@ export default class AndroidEmulatorDeviceInstaller
     const result = execCommandSync(
       `${cltPath} list avd -c | grep ${AndroidVirtualDeviceName} &> /dev/null && echo 1 || echo 0`,
     );
-    return result === '1';
+    return result === '1' && this.isEmulatorUpToDate();
   }
 
   mitigateOnError(): string {
@@ -49,18 +52,27 @@ export default class AndroidEmulatorDeviceInstaller
   }
 
   async run(context: TaskContext): Promise<void> {
+    if (
+      !this.isEmulatorUpToDate() &&
+      !(await this.getUserConsentUpdate(context))
+    ) {
+      context.update(
+        `[Warning] Skipping the installation/update of emulator may lead to unexpected exception when running PyTorchLive on android emulator.`,
+      );
+      // wait for 2 second for user to read the warning message.
+      await new Promise(f => setTimeout(f, 2000));
+      return;
+    }
     const cltPath = this.getCommandLineToolPath();
     context.update(`Setting up ${this.getDescription()}`);
     const cmd = `echo "no" | ${cltPath} create avd --name "${AndroidVirtualDeviceName}" --device "pixel" --force --abi google_apis/x86_64 --package "system-images;android-29;google_apis;x86_64"`;
     await execCommand(context, cmd);
 
-    const configPath = path.join(
-      os.homedir(),
-      `.android/avd/${AndroidVirtualDeviceName}.avd/config.ini`,
-    );
+    const configPath = this._getConfigPath();
 
     let config = ini.parse(fs.readFileSync(configPath, 'utf-8'));
     config = Object.assign(config, {
+      'torchlive.cli.version': cliPkgInfo.version,
       'PlayStore.enabled': false,
       'abi.type': 'x86_64',
       'avd.ini.encoding': 'UTF-8',
@@ -79,7 +91,6 @@ export default class AndroidEmulatorDeviceInstaller
       'hw.dPad': 'no',
       'hw.device.hash2': 'MD5:6b5943207fe196d842659d2e43022e20',
       'hw.device.manufacturer': 'Google',
-      'hw.device.name': 'pixel_4',
       'hw.gps': 'yes',
       'hw.gpu.enabled': 'yes',
       'hw.gpu.mode': 'host',
@@ -104,5 +115,28 @@ export default class AndroidEmulatorDeviceInstaller
 
     const configStr = ini.stringify(config);
     fs.writeFileSync(configPath, configStr, {encoding: 'utf-8'});
+  }
+
+  _getConfigPath(): string {
+    return path.join(
+      os.homedir(),
+      `.android/avd/${AndroidVirtualDeviceName}.avd/config.ini`,
+    );
+  }
+
+  private isEmulatorUpToDate(): boolean {
+    const configPath = this._getConfigPath();
+    let config = ini.parse(fs.readFileSync(configPath, 'utf-8'));
+    return config['torchlive.cli.version'] === cliPkgInfo.version;
+  }
+
+  async getUserConsentUpdate(context: TaskContext): Promise<boolean> {
+    const userConfirm = await context.task.prompt<boolean>({
+      type: 'confirm',
+      message: `The installed PyTorch Live Android emulator is out of date.
+
+Would you like to update the Android simulator?`,
+    });
+    return userConfirm;
   }
 }

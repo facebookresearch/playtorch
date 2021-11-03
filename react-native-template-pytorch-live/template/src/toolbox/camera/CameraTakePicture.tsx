@@ -9,21 +9,17 @@
 
 import {useIsFocused} from '@react-navigation/native';
 import * as React from 'react';
-import {useCallback, useState} from 'react';
+import {useCallback} from 'react';
+import {StyleSheet, View} from 'react-native';
 import {Camera, Image} from 'react-native-pytorch-core';
-import ImageClass from '../../components/ImageClass';
-import {ModelInfo, ImageClassificationModels} from '../../Models';
-import ModelSelector from '../../components/ModelSelector';
+import ImageClassInfo from '../../components/ImageClassInfo';
+import {ImageClassificationModels} from '../../Models';
 import useImageModelInference from '../../useImageModelInference';
-import {StyleSheet} from 'react-native';
 
 export default function CameraTakePicture() {
   const isFocused = useIsFocused();
-  const [activeModelInfo, setActiveModelInfo] = useState<ModelInfo>(
-    ImageClassificationModels[0],
-  );
   const {imageClass, metrics, processImage} = useImageModelInference(
-    activeModelInfo,
+    ImageClassificationModels[0],
   );
 
   const handleCapture = useCallback(
@@ -43,13 +39,9 @@ export default function CameraTakePicture() {
           targetResolution={{width: 480, height: 640}}
         />
       )}
-      <ModelSelector
-        style={styles.actions}
-        modelInfos={ImageClassificationModels}
-        defaultModelInfo={activeModelInfo}
-        onSelectModelInfo={setActiveModelInfo}
-      />
-      <ImageClass imageClass={imageClass} metrics={metrics} />
+      <View style={styles.info}>
+        <ImageClassInfo imageClass={imageClass} metrics={metrics} />
+      </View>
     </>
   );
 }
@@ -58,9 +50,11 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
   },
-  actions: {
+  info: {
     position: 'absolute',
-    top: 20,
-    left: 20,
+    top: 0,
+    left: 0,
+    right: 0,
+    margin: 30,
   },
 });

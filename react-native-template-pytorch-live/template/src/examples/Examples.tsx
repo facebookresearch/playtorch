@@ -183,6 +183,10 @@ export default function Examples() {
       initialRouteName="Examples"
       screenOptions={{
         cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        headerTitleAlign: 'center',
+        headerTitleStyle: {
+          fontSize: 16,
+        },
       }}>
       <Stack.Screen
         name="Examples"
@@ -195,6 +199,9 @@ export default function Examples() {
             key={example.key}
             name={example.key}
             component={example.component}
+            options={{
+              title: example.name,
+            }}
           />
         );
       })}

@@ -11,12 +11,11 @@ import * as React from 'react';
 import {useState, useCallback} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {ImageUtil} from 'react-native-pytorch-core';
-import ImageClass from '../components/ImageClass';
+import ImageClassInfo from '../components/ImageClassInfo';
 import {ModelInfo, ImageClassificationModels} from '../Models';
 import ModelSelector from '../components/ModelSelector';
 import PredefinedImageList from '../components/PredefinedImageList';
 import useImageModelInference from '../useImageModelInference';
-import {HintText} from '../components/UIComponents';
 
 export default function PhotosExample() {
   const [activeModelInfo, setActiveModelInfo] = useState<ModelInfo>(
@@ -30,7 +29,8 @@ export default function PhotosExample() {
     (url: string) => {
       (async () => {
         const image = await ImageUtil.fromURL(url);
-        processImage(image);
+        await processImage(image);
+        setLastURL(url);
         setHint(false);
       })();
     },
@@ -38,32 +38,56 @@ export default function PhotosExample() {
   );
 
   const [hint, setHint] = useState(true);
+  const [lastURL, setLastURL] = useState<string>();
 
   return (
-    <>
+    <View style={styles.container}>
       <PredefinedImageList onSelectImage={handleImageURL} />
-      <View style={styles.info}>
+
+      <View style={styles.actions}>
         <ModelSelector
           style={styles.actions}
           modelInfos={ImageClassificationModels}
           defaultModelInfo={activeModelInfo}
-          onSelectModelInfo={setActiveModelInfo}
+          onSelectModelInfo={model => {
+            setActiveModelInfo(model);
+            if (lastURL) {
+              handleImageURL(lastURL);
+            }
+          }}
         />
-        <ImageClass imageClass={imageClass} metrics={metrics} />
       </View>
-      {hint && <HintText text="Click an image to test the current model" />}
-    </>
+      <View style={styles.info}>
+        <ImageClassInfo
+          placeholder={
+            hint ? 'Select an AI model and click an image to test it' : ''
+          }
+          numberOfLines={2}
+          imageClass={imageClass}
+          metrics={metrics}
+        />
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignSelf: 'stretch',
+  },
   info: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
+    margin: 30,
   },
   actions: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
   },
 });

@@ -140,7 +140,7 @@ const tools: ToolSection = [
         title: 'POST Request',
         subtitle: 'Send a POST request to server and receive a mock response',
         component: PostRequest,
-      }
+      },
     ],
   },
 ];
@@ -170,6 +170,10 @@ export default function Toolbox() {
       <Stack.Navigator
         screenOptions={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 16,
+          },
         }}>
         <Stack.Screen name="API" options={{headerShown: false}}>
           {props => (

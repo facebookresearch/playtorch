@@ -11,8 +11,13 @@ export const PTLColors: {[key: string]: string} = {
   black: '#000000',
   white: '#ffffff',
   light: '#ffcac2',
-  neutral: '#00000099',
   dark: '#262626',
+  semiBlack: '#000000cc',
+  semiWhite: '#ffffffcc',
+  neutralBlack: '#00000099',
+  neutralWhite: '#ffffff99',
+  tintBlack: '#00000022',
+  tintWhite: '#ffffff22',
   accent1: '#4F25C6',
   accent2: '#ee4c2c',
   accent3: '#cc2faa',
@@ -24,4 +29,10 @@ export const PTLFontSizes: {[key: string]: number} = {
   h2: 24,
   h3: 20,
   p: 16,
+  small: 12,
+};
+
+export const PTLVisual: {[key: string]: number} = {
+  borderRadius: 5,
+  padding: 20,
 };

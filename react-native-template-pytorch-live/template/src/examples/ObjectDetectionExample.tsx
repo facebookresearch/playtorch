@@ -21,9 +21,7 @@
  } from 'react-native';
  import useObjectDetection, {BoundingBox} from '../useObjectDetection';
  import {PTLColors as colors, PTLFontSizes as fontsizes} from '../components/UISettings';
- import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
- import {HintText} from '../components/UIComponents';
-import { color } from 'react-native-reanimated';
+ import {HintText, IconButton} from '../components/UIComponents';
 
  const modelInfo: ModelInfo = {
    name: 'DETR',
@@ -163,11 +161,7 @@ import { color } from 'react-native-reanimated';
 
 
        {!loading && !capturing && (
-         <TouchableOpacity style={{alignSelf: 'center'}} onPress={handleReset}>
-           <View style={styles.button}>
-            <Icon name="camera" size={42} color={colors.dark} />
-           </View>
-         </TouchableOpacity>
+         <IconButton icon="camera" style={styles.cameraButton} onPress={handleReset} />
        )}
      </View>
    );
@@ -193,17 +187,10 @@ import { color } from 'react-native-reanimated';
      left: 0,
      right: 0,
    },
-   button: {
-     backgroundColor: colors.white,
-     width: 90,
-     height: 90,
-     alignSelf: 'flex-end',
-     borderRadius: 50,
+   cameraButton: {
      marginBottom: 30,
-     alignItems: 'center',
-     justifyContent: 'center',
-     borderWidth: 5,
-     borderColor: "#00000022"
+     borderWidth: 3,
+     borderColor: colors.tintBlack,
    }
 
  });

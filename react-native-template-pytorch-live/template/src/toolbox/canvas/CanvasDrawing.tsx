@@ -17,8 +17,8 @@ import React, {
 } from 'react';
 import {StyleSheet, LayoutRectangle} from 'react-native';
 import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
-import {event} from 'react-native-reanimated';
 import {Animator} from '../../utils/Animator';
+import {PTLColors as colors} from '../../components/UISettings';
 
 // This is an example of creating a simple animation using Animator utility class
 export default function CanvasAnimator() {
@@ -78,26 +78,23 @@ export default function CanvasAnimator() {
         const trail = trailRef.current;
         if (trail != null) {
           const size = [layout?.width || 0, layout?.height || 0];
-          const center = size.map(s => s / 2);
-
-          // clear previous canvas drawing and then redraw
-          ctx.clear();
 
           // fill background by drawing a rect
-          ctx.fillStyle = '#4f25c6';
+          ctx.fillStyle = colors.accent1;
           ctx.fillRect(0, 0, size[0], size[1]);
 
           // Draw text when there's no drawing
           if (trail.length === 0) {
-            ctx.fillStyle = '#ffe9e6';
+            ctx.fillStyle = colors.white;
             ctx.font = 'bold 50px sans-serif';
-            ctx.fillText('Draw', 20, 70);
-            ctx.fillText('Something', 20, 125);
+            ctx.fillText('Draw', 20, 230);
+            ctx.fillStyle = colors.light;
+            ctx.fillText('Something', 20, 285);
           }
 
           // Draw the trail
-          ctx.strokeStyle = '#fff';
-          ctx.lineWidth = 15;
+          ctx.strokeStyle = colors.accent3;
+          ctx.lineWidth = 25;
           ctx.lineJoin = 'round';
           ctx.lineCap = 'round';
           ctx.miterLimit = 1;

@@ -11,6 +11,7 @@ import {useIsFocused} from '@react-navigation/native';
 import React, {useCallback, useLayoutEffect, useState} from 'react';
 import {StyleSheet, LayoutRectangle} from 'react-native';
 import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
+import {PTLColors as colors} from '../../components/UISettings';
 
 export default function CanvasStarter() {
   const isFocused = useIsFocused();
@@ -35,11 +36,8 @@ export default function CanvasStarter() {
       const size = [layout?.width || 0, layout?.height || 0];
       const center = size.map(s => s / 2);
 
-      // clear previous canvas drawing and then redraw
-      ctx.clear();
-
       // fill background by drawing a rect
-      ctx.fillStyle = '#ff4c2c';
+      ctx.fillStyle = colors.accent1;
       ctx.fillRect(0, 0, size[0], size[1]);
 
       // clear an area if needed
@@ -51,8 +49,16 @@ export default function CanvasStarter() {
       );
 
       // draw a circle at center
-      ctx.fillStyle = '#4f25c6';
-      ctx.fillCircle(center[0], center[1], 20);
+      ctx.fillStyle = colors.accent2;
+      ctx.beginPath();
+      ctx.arc(center[0], center[1], 20, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = colors.black;
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(center[0], center[1], 30, Math.PI / 2, Math.PI + Math.PI / 2);
+      ctx.stroke();
 
       // Need to include this at the end, for now.
       ctx.invalidate();

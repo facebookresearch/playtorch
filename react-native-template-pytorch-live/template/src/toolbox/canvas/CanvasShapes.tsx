@@ -11,6 +11,7 @@ import {useIsFocused} from '@react-navigation/native';
 import React, {useCallback, useLayoutEffect, useState} from 'react';
 import {StyleSheet, LayoutRectangle} from 'react-native';
 import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
+import {PTLColors as colors} from '../../components/UISettings';
 
 export default function CanvasShapes() {
   const isFocused = useIsFocused();
@@ -40,32 +41,39 @@ export default function CanvasShapes() {
       ctx.clear();
 
       // draw background rect
-      ctx.fillStyle = '#ff4c2c';
+      ctx.fillStyle = colors.accent3;
       ctx.fillRect(0, 0, size[0], size[1]);
 
       // draw circle
-      ctx.fillStyle = '#4f25c6';
+      ctx.fillStyle = colors.accent1;
       ctx.fillCircle(center[0], center[1], radius);
 
       // draw bottom arc
-      ctx.strokeStyle = '#000000';
+      ctx.strokeStyle = colors.black;
       ctx.lineWidth = 5;
+      ctx.beginPath();
       ctx.arc(center[0], center[1], radius, 0, Math.PI / 2);
+      ctx.stroke();
 
       // draw rects
-      ctx.fillStyle = '#86daff';
+      ctx.fillStyle = colors.accent4;
       ctx.fillRect(center[0] - radius, center[1] - radius, radius, radius);
 
-      ctx.strokeStyle = '#86daff';
+      ctx.strokeStyle = colors.white;
       ctx.lineWidth = 5;
       ctx.strokeRect(center[0], center[1], radius, radius);
 
       // draw top arc
-      ctx.strokeStyle = '#ffffff';
-      ctx.lineWidth = 30;
+      ctx.strokeStyle = colors.light;
+      ctx.lineWidth = 20;
       ctx.beginPath();
-      ctx.arc(center[0], center[1], radius, Math.PI, Math.PI + Math.PI / 2);
-      ctx.fill();
+      ctx.arc(
+        center[0],
+        center[1],
+        radius + 10,
+        Math.PI,
+        Math.PI + Math.PI / 2,
+      );
       ctx.stroke();
 
       // Need to include this at the end, for now.

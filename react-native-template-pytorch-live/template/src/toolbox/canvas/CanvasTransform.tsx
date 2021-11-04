@@ -11,6 +11,7 @@ import {useIsFocused} from '@react-navigation/native';
 import React, {useCallback, useLayoutEffect, useState} from 'react';
 import {StyleSheet, LayoutRectangle} from 'react-native';
 import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
+import {PTLColors as colors} from '../../components/UISettings';
 
 export default function CanvasStarter() {
   const isFocused = useIsFocused();
@@ -36,38 +37,36 @@ export default function CanvasStarter() {
       const half = size.map(s => s / 2);
       const quarter = size.map(s => s / 4);
 
-      // clear previous canvas drawing and then redraw
-      ctx.clear();
-
       // fill background by drawing a rect
-      ctx.fillStyle = '#ffcac2';
+      ctx.fillStyle = colors.accent4;
       ctx.fillRect(0, 0, size[0], size[1]);
 
       // Here we draw the 4 quadrants by first translating to center
       // And then do additional translations inside save/restore
 
+      ctx.save();
       ctx.translate(half[0], half[1]);
 
       ctx.save();
       ctx.translate(-quarter[0], -quarter[1]); // top-left
-      ctx.fillStyle = '#ff4c2c';
+      ctx.fillStyle = colors.black;
       ctx.fillRect(0, 0, quarter[0], quarter[1]);
       ctx.restore();
 
       ctx.save();
       ctx.translate(0, -quarter[1]); // top-right
-      ctx.fillStyle = '#4f25c6';
+      ctx.fillStyle = colors.accent1;
       ctx.fillRect(0, 0, quarter[0], quarter[1]);
       ctx.restore();
 
       ctx.save();
       ctx.translate(-quarter[0], 0); // bottom-left
-      ctx.fillStyle = '#4f25c6';
+      ctx.fillStyle = colors.accent1;
       ctx.fillRect(0, 0, quarter[0], quarter[1]);
       ctx.restore();
 
       ctx.save(); // bottom-right (no addition translation)
-      ctx.fillStyle = '#ff4c2c';
+      ctx.fillStyle = colors.white;
       ctx.fillRect(0, 0, quarter[0], quarter[1]);
       ctx.restore();
 
@@ -81,7 +80,7 @@ export default function CanvasStarter() {
       ctx.translate(quarter[0] / 2, quarter[1] / 2); // translate to center of quadrant
       ctx.scale(0.5, 0.5);
       ctx.translate(-quarter[0] / 2, -quarter[1] / 2); // and back
-      ctx.strokeStyle = '#42e3ddaa';
+      ctx.strokeStyle = colors.white;
       ctx.strokeRect(0, 0, quarter[0], quarter[1]);
       ctx.restore();
 
@@ -90,7 +89,7 @@ export default function CanvasStarter() {
       ctx.scale(1.25, 1.25);
       ctx.translate(0, -quarter[1]);
       ctx.lineWidth = 10;
-      ctx.strokeStyle = '#42e3ddaa';
+      ctx.strokeStyle = `${colors.accent3}cc`;
       ctx.strokeRect(0, 0, quarter[0], quarter[1]);
       ctx.restore();
 
@@ -101,7 +100,7 @@ export default function CanvasStarter() {
       ctx.rotate(Math.PI / 6);
       ctx.translate(-quarter[0] / 2, -quarter[1] / 2);
       ctx.lineWidth = 10;
-      ctx.strokeStyle = '#42e3ddaa';
+      ctx.strokeStyle = `${colors.accent3}cc`;
       ctx.strokeRect(0, 0, quarter[0], quarter[1]);
       ctx.restore();
 
@@ -109,8 +108,11 @@ export default function CanvasStarter() {
       ctx.save();
       ctx.setTransform(0.75, 0.2, 0.4, 0.75, half[0], half[1]);
       ctx.lineWidth = 10;
-      ctx.strokeStyle = '#42e3ddaa';
+      ctx.strokeStyle = `${colors.accent3}cc`;
       ctx.strokeRect(0, 0, quarter[0], quarter[1]);
+      ctx.restore();
+
+      // restore the first translation
       ctx.restore();
 
       // Need to include this at the end, for now.

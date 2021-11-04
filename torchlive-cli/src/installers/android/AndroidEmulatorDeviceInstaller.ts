@@ -23,7 +23,8 @@ import cliPkgInfo from '../../../package.json';
 
 export default class AndroidEmulatorDeviceInstaller
   extends AbstractAndroidCommandLineTools
-  implements IInstallerTask {
+  implements IInstallerTask
+{
   constructor() {
     super('tools/bin/avdmanager');
   }
@@ -126,16 +127,19 @@ export default class AndroidEmulatorDeviceInstaller
 
   private isEmulatorUpToDate(): boolean {
     const configPath = this._getConfigPath();
-    let config = ini.parse(fs.readFileSync(configPath, 'utf-8'));
-    return config['torchlive.cli.version'] === cliPkgInfo.version;
+    if (fs.existsSync(configPath)) {
+      const config = ini.parse(fs.readFileSync(configPath, 'utf-8'));
+      return config['torchlive.cli.version'] === cliPkgInfo.version;
+    }
+    return false;
   }
 
   async getUserConsentUpdate(context: TaskContext): Promise<boolean> {
     const userConfirm = await context.task.prompt<boolean>({
       type: 'confirm',
-      message: `The installed PyTorch Live Android emulator is out of date.
+      message: `The PyTorch Live Android emulator is either missing or out-of-date.
 
-Would you like to update the Android simulator?`,
+Would you like to create or update the PyTorch Live Android emulator?`,
     });
     return userConfirm;
   }

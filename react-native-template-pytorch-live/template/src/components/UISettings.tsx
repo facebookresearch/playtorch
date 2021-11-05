@@ -10,7 +10,7 @@
 export const PTLColors: {[key: string]: string} = {
   black: '#000000',
   white: '#ffffff',
-  light: '#ffcac2',
+  light: '#ffdad2',
   dark: '#262626',
   semiBlack: '#000000cc',
   semiWhite: '#ffffffcc',
@@ -29,10 +29,23 @@ export const PTLFontSizes: {[key: string]: number} = {
   h2: 24,
   h3: 20,
   p: 16,
+  smaller: 14,
   small: 12,
 };
 
 export const PTLVisual: {[key: string]: number} = {
   borderRadius: 5,
   padding: 20,
+  smallPadding: 10,
+};
+
+export const PTLTextBoxStyle = {
+  color: PTLColors.dark,
+  borderWidth: 1,
+  borderColor: PTLColors.tintBlack,
+  flex: 1,
+  padding: PTLVisual.smallPadding,
+  backgroundColor: PTLColors.white,
+  fontSize: PTLFontSizes.p,
+  borderRadius: PTLVisual.borderRadius,
 };

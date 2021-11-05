@@ -23,6 +23,15 @@ import useNLPQAModelInference from '../useNLPQAModelInference';
 import ModelPreloader from '../components/ModelPreloader';
 import {ScrollView} from 'react-native-gesture-handler';
 
+import {
+  PTLColors as colors,
+  PTLFontSizes as fontsizes,
+  PTLVisual as visuals,
+  PTLTextBoxStyle,
+} from '../components/UISettings';
+
+import {BasicButton, DoubleLineRow} from '../components/UIComponents';
+
 export default function NLPExample() {
   const [text, setText] = useState(
     'PyTorch Live is an open source playground for everyone to discover, build, test and share on-device AI demos built on PyTorch. The PyTorch Live monorepo includes the PyTorch Live command line interface (i.e., torchlive), a React Native package to interface with PyTorch Mobile, and a React Native template with examples ready to be deployed on mobile devices.',
@@ -31,47 +40,43 @@ export default function NLPExample() {
   const [activeModelInfo, setActiveModelInfo] = useState<ModelInfo>(
     NLPModels[0],
   );
-  const {answer, metrics, isProcessing, processQA} = useNLPQAModelInference(
-    activeModelInfo,
-  );
+  const {answer, metrics, isProcessing, processQA} =
+    useNLPQAModelInference(activeModelInfo);
 
   return (
     <ModelPreloader modelInfos={NLPModels} loadAsync={true}>
       <ScrollView style={styles.container}>
-        <View style={[styles.row]}>
-          <Text style={styles.label}>Text</Text>
+        <DoubleLineRow label="Source Text">
           <TextInput
-            style={styles.textArea}
+            style={[PTLTextBoxStyle, {padding: 20}]}
             onChangeText={text => setText(text)}
             multiline={true}
             placeholder="Text"
             autoCorrect={false}
             value={text}
           />
-        </View>
-        <View style={styles.row}>
-          <Text style={styles.label}>Question</Text>
-          <View style={styles.askBox}>
+        </DoubleLineRow>
+        <DoubleLineRow label="Question">
+          <View style={[PTLTextBoxStyle, styles.textActionOuter]}>
             <TextInput
-              style={styles.askInput}
+              style={[PTLTextBoxStyle, {borderWidth: 0}]}
               onChangeText={question => setQuestion(question)}
               placeholder="Ask a question..."
               autoCorrect={false}
               value={question}
             />
-
-            <TouchableOpacity
+            <BasicButton
               disabled={isProcessing}
+              size="small"
               onPress={() => processQA(text, question)}>
-              <View style={isProcessing ? styles.askButtonDisabled : styles.askButton}>
-                <Text style={styles.askButtonText}>Ask</Text>
-              </View>
-            </TouchableOpacity>
+              Ask
+            </BasicButton>
           </View>
-        </View>
-        <View
-          style={[styles.row, !answer && !isProcessing && styles.rowHidden]}>
-          <Text style={styles.label}>Answer</Text>
+        </DoubleLineRow>
+        <DoubleLineRow
+          label="Answer"
+          bold={true}
+          style={!answer && !isProcessing && {opacity: 0}}>
           <Text style={styles.answer}>
             {isProcessing && <ActivityIndicator size="small" color="tomato" />}
             {answer}
@@ -82,7 +87,7 @@ export default function NLPExample() {
               {metrics?.inferenceTime}/u={metrics?.unpackTime})
             </Text>
           )}
-        </View>
+        </DoubleLineRow>
       </ScrollView>
     </ModelPreloader>
   );
@@ -91,82 +96,22 @@ export default function NLPExample() {
 const styles = StyleSheet.create({
   container: {
     padding: 10,
-    backgroundColor: '#ffe9e6',
+    backgroundColor: colors.light,
   },
-  row: {
-    padding: 15,
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
-  rowHidden: {
-    opacity: 0,
-  },
-  label: {
-    color: '#334455',
-    fontWeight: 'bold',
-    fontSize: 14,
-    marginBottom: 5,
-  },
-  textArea: {
-    color: '#112233',
-    borderWidth: 1,
-    borderColor: '#ff4c2c33',
-    flex: 1,
-    padding: 20,
-    backgroundColor: '#ffffff',
-    fontSize: 16,
-    borderRadius: 25,
-  },
-  askInput: {
-    color: '#112233',
-    borderWidth: 0,
-    flex: 1,
-    height: 40,
-    marginLeft: 10,
-    fontSize: 16,
-  },
-  askBox: {
+  textActionOuter: {
     flex: 1,
     flexDirection: 'row',
-    borderWidth: 1,
-    borderColor: '#ff4c2c33',
-    height: 50,
+    alignItems: 'center',
     padding: 5,
-    backgroundColor: '#ffffff',
-    fontSize: 16,
-    marginRight: 5,
-    borderRadius: 25,
-    alignItems: 'center',
-  },
-  askButton: {
-    width: 60,
-    height: 40,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ff4c2c',
-  },
-  askButtonDisabled: {
-    width: 60,
-    height: 40,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#eeeeee',
-  },
-  askButtonText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 2,
+    paddingRight: 10,
   },
   answer: {
     fontSize: 16,
-    color: '#ff4c2c',
+    color: colors.accent2,
   },
   smallLabel: {
     fontSize: 12,
-    color: '#667788',
+    color: colors.neutralBlack,
     fontFamily: 'Courier New',
   },
 });

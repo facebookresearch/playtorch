@@ -10,7 +10,6 @@
 import React, {useState} from 'react';
 import {
   StyleSheet,
-  Button,
   Text,
   TextInput,
   Switch,
@@ -20,29 +19,29 @@ import {
   Alert,
 } from 'react-native';
 
+import {
+  PTLColors as colors,
+  PTLTextBoxStyle,
+} from '../../components/UISettings';
+import {
+  SingleLineRow,
+  DoubleLineRow,
+  BasicButton,
+  IconButton,
+  HintText,
+} from '../../components/UIComponents';
+
 const burgerData = [
   {
     id: 'a',
-    title: '100% pasture-raised or vegan',
-  },
-  {
-    id: 'b',
     title: '100% organic',
   },
   {
-    id: 'c',
-    title: '100% local',
-  },
-  {
-    id: 'd',
-    title: '100% hand crafted',
-  },
-  {
-    id: 'e',
+    id: 'b',
     title: '100% freshly made',
   },
   {
-    id: 'f',
+    id: 'c',
     title: '100% open sourced',
   },
 ];
@@ -56,53 +55,57 @@ export default function UIStarter() {
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollContainer}>
         {/* The header's text will change based on state changes triggered by the UI elements */}
-        <View style={[styles.row, styles.head]}>
-          <Text style={[styles.label, {fontWeight: 'bold'}]}>
-            🔥 Burger Live 🍔
-          </Text>
-          <Text style={styles.small}>{`A perfect ${vegan ? 'vegan ' : ''}${
-            name ? 'burger for ' + name : ''
-          }`}</Text>
+        <View style={styles.head}>
+          <HintText text="🔥 UI examples for ordering a burger 🍔" />
         </View>
 
         {/* Text input example */}
-        <View style={styles.row}>
-          <Text style={styles.label}>Name</Text>
+        <SingleLineRow label="Name" divider={true}>
           <TextInput
-            style={styles.textInput}
+            style={PTLTextBoxStyle}
             placeholder="Your name"
-            placeholderTextColor="#00000033"
+            placeholderTextColor={colors.tintBlack}
             onSubmitEditing={evt => setName(evt.nativeEvent.text)}
           />
-        </View>
+        </SingleLineRow>
+
+        {/* Text input with IconButton example */}
+        <SingleLineRow label="Condiments" divider={true}>
+          <View style={[PTLTextBoxStyle, styles.textActionOuter]}>
+            <TextInput
+              style={[PTLTextBoxStyle, {borderWidth: 0}]}
+              onChangeText={text => {}}
+              placeholder="Ketchup?"
+              placeholderTextColor={colors.tintBlack}
+              autoCorrect={false}
+            />
+            <IconButton size="small" background={colors.accent2} icon="plus" />
+          </View>
+        </SingleLineRow>
 
         {/* Switch toggle example */}
-        <View style={styles.row}>
-          <Text style={styles.label}>Vegan</Text>
+        <SingleLineRow label="Vegan" divider={true}>
           <Switch
-            thumbColor="#000000"
-            trackColor={{false: '#aabbcc', true: '#00cc99'}}
+            thumbColor={colors.accent1}
+            trackColor={{false: colors.tintBlack, true: colors.accent3}}
             value={vegan}
             onValueChange={setVegan}
           />
-        </View>
+        </SingleLineRow>
 
         {/* A minimal example of creating a list using map. You can also using FlatList component (though not inside a ScrollView) */}
-        <View style={[styles.info]}>
-          <Text style={[styles.label, {marginBottom: 20}]}>
-            Our Burgers Are:{' '}
-          </Text>
+        <DoubleLineRow label="Our Burgers Are" divider={true}>
           {burgerData.map(({id, title}) => (
             <Text key={id} style={styles.listItem}>
               {title}
             </Text>
           ))}
-        </View>
+        </DoubleLineRow>
 
         {/* Multi-line text area example */}
-        <View style={styles.row}>
+        <DoubleLineRow label="Special Instructions">
           <TextInput
-            style={styles.textArea}
+            style={PTLTextBoxStyle}
             placeholder="Add special request"
             placeholderTextColor="#00000033"
             multiline={true}
@@ -110,17 +113,16 @@ export default function UIStarter() {
             onChangeText={t => setNote(t)}
             value={note}
           />
-        </View>
+        </DoubleLineRow>
 
-        {/* Button example that opens the native Alert UIvc */}
-        <View style={styles.row}>
-          <Button
-            title="Order Now"
-            onPress={() =>
-              Alert.alert('Thanks!', 'Your burger will be ready soon!')
-            }
-          />
-        </View>
+        {/* Button example that opens the native Alert UI */}
+        <BasicButton
+          style={{margin: 20}}
+          onPress={() =>
+            Alert.alert('Thanks!', 'Your burger will be ready soon!')
+          }>
+          Order Now
+        </BasicButton>
       </ScrollView>
     </SafeAreaView>
   );
@@ -132,63 +134,21 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContainer: {
-    backgroundColor: '#f3f5f9',
-  },
-  row: {
-    padding: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#00000009',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    backgroundColor: colors.light,
   },
   head: {
-    flexDirection: 'column',
-    backgroundColor: '#FFFFFF',
-    borderTopColor: '#00CC99',
-    borderTopWidth: 2,
+    height: 150,
+    backgroundColor: colors.tintBlack,
   },
-  info: {
-    padding: 20,
-    borderBottomWidth: 1,
-    borderBottomColor: '#00000009',
-    flexDirection: 'column',
-  },
-  small: {
-    fontSize: 14,
-    color: '#00000066',
-    marginVertical: 5,
-  },
-  label: {
-    color: '#112233',
-    fontSize: 16,
-  },
-  textInput: {
-    color: '#112233',
-    borderWidth: 1,
-    borderColor: '#00000022',
-    flex: 0.5,
-    height: 50,
-    padding: 10,
-    backgroundColor: '#ffffff',
-    fontSize: 16,
-  },
-  textArea: {
-    color: '#112233',
-    borderWidth: 1,
-    borderColor: '#00000022',
+  textActionOuter: {
     flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
     padding: 10,
-    backgroundColor: '#ffffff',
-    fontSize: 14,
-  },
-  list: {
-    marginTop: 20,
+    paddingRight: 10,
   },
   listItem: {
-    backgroundColor: '#00000011',
-    color: '#112233',
-    padding: 10,
-    marginBottom: 1,
+    color: colors.accent2,
+    fontWeight: 'bold',
   },
 });

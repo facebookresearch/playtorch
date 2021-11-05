@@ -20,12 +20,20 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
+import {
+  PTLColors as colors,
+  PTLFontSizes as fontsizes,
+  PTLTextBoxStyle,
+  PTLVisual as visuals,
+} from '../../components/UISettings';
 
- /**
-  * In this async function, we send the request and wait for the server's response
-  * @param prompt the text content in the input field. The server will returned as is.
-  * @returns an object with {prompt:string, success:boolean, generated_text:string}
-  */
+import {BasicButton, DoubleLineRow} from '../../components/UIComponents';
+
+/**
+ * In this async function, we send the request and wait for the server's response
+ * @param prompt the text content in the input field. The server will returned as is.
+ * @returns an object with {prompt:string, success:boolean, generated_text:string}
+ */
 async function fetchData(prompt: string): Promise<string> {
   // This API simply returns anything that is passed to request
   const url = 'https://httpbin.org/anything';
@@ -79,38 +87,33 @@ export default function MyDemo() {
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView style={styles.scrollContainer}>
-        <View style={styles.row}>
-          <Text style={styles.label}>
-            This example shows how to send and receive text data via POST
+        <DoubleLineRow
+          label="This example shows how to send and receive text data via POST
             request. You can repurpose this to build an NLP prototype (eg,
-            GPT-3) if you implement a server-side AI model.
-          </Text>
-          <View style={styles.promptBox}>
+            GPT-3) if you implement a server-side AI model.">
+          <View style={PTLTextBoxStyle}>
             <TextInput
               style={styles.textArea}
               onChangeText={txt => setPrompt(txt)}
               placeholder="Once upon a time..."
-              placeholderTextColor="#00000033"
+              placeholderTextColor={colors.tintBlack}
               multiline={true}
               numberOfLines={6}
               autoCorrect={false}
               value={prompt}
             />
-            <TouchableOpacity disabled={loading} onPress={getText}>
-              <View style={styles.sendButton}>
-                <Text style={styles.buttonText}>Send</Text>
-              </View>
-            </TouchableOpacity>
+            <BasicButton disabled={loading} onPress={getText}>
+              Send
+            </BasicButton>
           </View>
-        </View>
+        </DoubleLineRow>
 
-        <View style={[styles.row]}>
-          <Text style={styles.label}>Response:</Text>
+        <DoubleLineRow label="Response">
           <Text style={styles.answer}>
             {loading && <ActivityIndicator size="small" color="tomato" />}
             {result}
           </Text>
-        </View>
+        </DoubleLineRow>
       </ScrollView>
     </SafeAreaView>
   );
@@ -121,65 +124,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   scrollContainer: {
-    backgroundColor: '#ffcac2',
+    backgroundColor: colors.light,
     padding: 30,
-  },
-  row: {
-    flex: 1,
-    padding: 15,
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
-  rowHidden: {
-    opacity: 0,
-  },
-  label: {
-    fontSize: 14,
-    color: '#00000099',
-    marginBottom: 5,
   },
   textArea: {
     flex: 1,
     alignSelf: 'stretch',
     textAlignVertical: 'top',
     marginLeft: 5,
-    color: '#112233',
-    fontSize: 16,
-  },
-  promptBox: {
-    flex: 1,
-    flexDirection: 'column',
-    borderColor: '#ff4c2c33',
-    backgroundColor: '#ffffff',
-    fontSize: 16,
-    borderRadius: 5,
-    borderWidth: 1,
-    padding: 10,
-    marginRight: 5,
-    marginVertical: 20,
-    alignItems: 'flex-end',
-    alignSelf: 'stretch',
-  },
-  sendButton: {
-    backgroundColor: '#812ce5',
-    paddingVertical: 15,
-    paddingHorizontal: 40,
-    alignSelf: 'auto',
-    borderRadius: 5,
-  },
-  buttonText: {
-    color: '#ffffff',
-    fontSize: 14,
-    fontWeight: 'bold',
-    marginBottom: 2,
+    color: colors.dark,
+    fontSize: fontsizes.p,
   },
   answer: {
-    fontSize: 21,
-    color: '#000000',
-  },
-  smallLabel: {
-    fontSize: 12,
-    color: '#667788',
-    fontFamily: 'Courier New',
+    fontSize: fontsizes.p,
+    color: colors.accent2,
   },
 });

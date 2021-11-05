@@ -14,6 +14,7 @@ import {TaskContext} from '../task/Task';
 import {execCommandSync, getEnv, spawnCommand} from '../utils/SystemUtils';
 import {executeCommandForTask} from '../utils/TaskUtils';
 import {AndroidVirtualDeviceName} from '../utils/ToolingUtils';
+import {prompt} from 'enquirer';
 
 const sleep = (time: number) => {
   return new Promise(resolve => setTimeout(resolve, time));
@@ -87,10 +88,57 @@ const runAndroid = async (options: RunAndroidOptions): Promise<void> => {
     await bootAndWaitForDevice(context, options.name);
   }
 
+  if (isMetroPortOccupied()) {
+    const userConsent = await getUserConsentOnFreeingPortForMetro();
+    if (userConsent) {
+      execCommandSync('lsof -ti tcp:8081 | xargs kill');
+    } else {
+      throw new Error(
+        `Unable to start Metro bundler. Port 8081 is already in use`,
+      );
+    }
+  }
+
   // Build app and deploy on to virtual device (and/or connected physical
   // device).
   await runYarnAndroid(context);
 };
+
+export function isMetroPortOccupied(): boolean {
+  try {
+    const pid = execCommandSync('lsof -t -i :8081').split('\n').pop();
+    if (pid == null) {
+      return false;
+    }
+    const processWd = execCommandSync(`lsof -p ${pid} | grep cwd`)
+      .split(/\s+/)
+      .pop();
+    const currentWd = process.cwd();
+    return !(processWd === currentWd);
+  } catch {
+    return false;
+  }
+}
+
+export async function getUserConsentOnFreeingPortForMetro(): Promise<boolean> {
+  try {
+    const processes = execCommandSync('lsof -i :8081');
+    const answer = await prompt([
+      {
+        type: 'confirm',
+        name: 'userConfirm',
+        message: `Cannot start Metro server on port 8081 because another processes are running on it:
+
+${processes}
+
+Would you like to terminate the processes running on port 8081 and start Metro?`,
+      },
+    ]);
+    return answer['userConfirm'];
+  } catch {
+    return false;
+  }
+}
 
 export function makeRunAndroidCommand() {
   return new Command('run-android')

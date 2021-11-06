@@ -38,11 +38,11 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/facebookexperimental/pytorch-live/react-native-pytorch-core",
+  "repository": "https://github.com/pytorch/live/tree/main/react-native-pytorch-core",
   "author": "Facebook, Inc.",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/facebookexperimental/pytorch-live/issues"
+    "url": "https://github.com/pytorch/live/issues"
   },
   "homepage": "https://facebookexperimental.github.io/pytorch-live",
   "publishConfig": {

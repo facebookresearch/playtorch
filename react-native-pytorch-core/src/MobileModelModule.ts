@@ -13,6 +13,7 @@ import {
   ImageResolvedAssetSource,
   ImageRequireSource,
 } from 'react-native';
+import type {ModelPath} from './Models';
 
 const {resolveAssetSource} = Image;
 
@@ -21,7 +22,7 @@ const {PyTorchCoreMobileModelModule: MobileModelModule} = NativeModules;
 /**
  * Cache for previously resolved model paths (i.e., asset sources).
  */
-const MODEL_PATH_CACHE: {[key: number]: ImageResolvedAssetSource} = {};
+const MODEL_PATH_CACHE: {[key: string]: ImageResolvedAssetSource} = {};
 
 /**
  * Resolves the model asset source. It will first try to find the asset source
@@ -30,16 +31,33 @@ const MODEL_PATH_CACHE: {[key: number]: ImageResolvedAssetSource} = {};
  *
  * @param modelPath The model path (i.e., a `require`).
  */
-const getModelAssetSource = (
+function getModelAssetSource(
   modelPath: ImageRequireSource,
-): ImageResolvedAssetSource => {
+): ImageResolvedAssetSource {
   let source = MODEL_PATH_CACHE[modelPath];
   if (source == null) {
     source = resolveAssetSource(modelPath);
     MODEL_PATH_CACHE[modelPath] = source;
   }
   return source;
-};
+}
+
+/**
+ * Checks if the passed in model path is a string or a resolvable asset source.
+ * In case the path is a string it will be used as a URI. If it is a resolvable
+ * asset source, it will resolve the asset source and get its URI.
+ *
+ * @param modelPath The model path as require or uri (i.e., `require`).
+ * @returns A URI to resolve the model.
+ */
+function getModelUri(modelPath: ModelPath): string {
+  if (typeof modelPath === 'string') {
+    return modelPath;
+  } else {
+    const source = getModelAssetSource(modelPath);
+    return source.uri;
+  }
+}
 
 export interface ModelResultMetrics {
   /**
@@ -92,9 +110,9 @@ export interface MobileModel {
    * take significantly longer. This function allows to preload a model ahead
    * of time before running the first inference.
    *
-   * @param modelPath The model path (i.e., a `require`).
+   * @param modelPath The model path as require or uri (i.e., `require`).
    */
-  preload(modelPath: ImageRequireSource): Promise<void>;
+  preload(modelPath: ModelPath): Promise<void>;
 
   /**
    * Unload all model. If any model were loaded previously, they will be discarded.
@@ -108,6 +126,10 @@ export interface MobileModel {
    *
    * ```typescript
    * const classificationModel = require('../models/mobilenet_v3_small.ptl');
+   *
+   * // or
+   *
+   * const classificationModel = require('https://example.com/models/mobilenet_v3_small.ptl');
    *
    * const image: Image = await ImageUtils.fromURL('https://image.url');
    *
@@ -126,28 +148,22 @@ export interface MobileModel {
    * const className = CLASSES[idx];
    * ```
    *
-   * @param modelPath The model path (i.e., `require`).
+   * @param modelPath The model path as require or uri (i.e., `require`).
    * @param params The input parameters for the model.
    */
-  execute<T>(
-    modelPath: ImageRequireSource,
-    params: any,
-  ): Promise<ModelResult<T>>;
+  execute<T>(modelPath: ModelPath, params: any): Promise<ModelResult<T>>;
 }
 
 export const MobileModel: MobileModel = {
-  async preload(modelPath: ImageRequireSource): Promise<void> {
-    const source = getModelAssetSource(modelPath);
-    return await MobileModelModule.preload(source.uri);
+  async preload(modelPath: ModelPath): Promise<void> {
+    const uri = getModelUri(modelPath);
+    return await MobileModelModule.preload(uri);
   },
   async unload(): Promise<void> {
     return await MobileModelModule.unload();
   },
-  async execute<T>(
-    modelPath: ImageRequireSource,
-    params: any,
-  ): Promise<ModelResult<T>> {
-    const source = getModelAssetSource(modelPath);
-    return await MobileModelModule.execute(source.uri, params);
+  async execute<T>(modelPath: ModelPath, params: any): Promise<ModelResult<T>> {
+    const uri = getModelUri(modelPath);
+    return await MobileModelModule.execute(uri, params);
   },
 };

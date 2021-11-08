@@ -8,8 +8,8 @@
  */
 
 export {Image, ImageUtil} from './ImageModule';
-export {MobileModel, ModelResultMetrics, ModelResult} from './MobileModelModule';
-export {ModelInfo} from "./Models"
+export {MobileModel, ModelResult, ModelResultMetrics} from './MobileModelModule';
+export {ModelInfo, ModelPath} from "./Models"
 export {Camera, CameraFacing} from './CameraView';
 export {Canvas, CanvasRenderingContext2D} from './CanvasView';
 export {AudioUtil} from './audio/AudioModule';

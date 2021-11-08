@@ -25,6 +25,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
     private var backInput: AVCaptureInput!
     private var frontCamera: AVCaptureDevice!
     private var frontInput: AVCaptureInput!
+    private var previousImageFrame: Image?
     @objc public var onCapture: RCTDirectEventBlock?
     @objc public var onFrame: RCTDirectEventBlock?
     @objc public var hideCaptureButton: Bool = false
@@ -267,6 +268,13 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
     }
 
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+        // Check if the previous image frame was released in JavaScript. If the
+        // image was not released, then the closed flag in the image frame is
+        // false and the current frame will be skipped to avoid the data
+        // processing pipeline from congesting.
+        if previousImageFrame != nil && previousImageFrame!.isClosed() == false {
+            return
+        }
         guard let onFrame = onFrame else { return }
         guard let cvBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             print("Could not get sample buffer")
@@ -274,8 +282,9 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
             //TODO(T92857704) Eventually forward Error to React Native using promises
         }
         let ciImage = CIImage(cvImageBuffer: cvBuffer)
-        let bitmapImage = Image(image: ciImage)
-        let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
+        let imageFrame = Image(image: ciImage)
+        let ref = JSContext.wrapObject(object: imageFrame).getJSRef()
+        previousImageFrame = imageFrame
         onFrame(ref)
     }
 }

@@ -35,7 +35,8 @@ class JSContext {
 
     public static func release(jsRef: [ String : String ]) throws {
         guard let id = jsRef[ID_KEY] else { throw JSContextError.invalidParam }
-        refs.removeValue(forKey: id)?.release()
+        let removedJSRef = refs.removeValue(forKey: id)
+        try removedJSRef?.release()
     }
 
     public static func wrapObject(object: Any) -> NativeJSRef {
@@ -65,10 +66,13 @@ class JSContext {
         }
 
         public func getObject() -> Any {
-            return mObject
+            return mObject as Any
         }
 
-        public func release() {
+        public func release() throws -> Void {
+            if let image = mObject as? Image {
+                try image.close()
+            }
             mId = nil
             mObject = nil
             mJSRef = nil

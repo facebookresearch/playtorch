@@ -14,6 +14,7 @@ enum ImageError: Error {
 public class Image: IImage {
 
     private var image: IImage
+    private var closed: Bool = false
 
     init(image: CGImage) {
         self.image = BitmapImage(image: image)
@@ -60,6 +61,10 @@ public class Image: IImage {
     }
 
     public func close() throws -> Void {
-        try self.image.close()
+        self.closed = true
+    }
+
+    public func isClosed() -> Bool {
+        return self.closed
     }
 }

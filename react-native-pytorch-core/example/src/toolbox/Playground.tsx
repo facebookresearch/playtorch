@@ -17,6 +17,7 @@ import {
   CanvasRenderingContext2D,
   Image,
   ImageUtil,
+  MobileModel,
 } from 'react-native-pytorch-core';
 import {StyleSheet} from 'react-native';
 
@@ -32,6 +33,7 @@ export default function Playground() {
 
       setTimeout(async () => {
         const context = contextRef.current;
+        await MobileModel.execute(path, {});
         if (context != null) {
           context.clear();
           const loadedImage = await ImageUtil.fromFile(path);

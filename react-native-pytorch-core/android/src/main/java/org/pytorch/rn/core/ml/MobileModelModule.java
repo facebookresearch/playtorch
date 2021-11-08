@@ -137,12 +137,20 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
 
     Uri uri = Uri.parse(modelUri);
 
-    // Get file path to cache model or load model from cache if loading from Uri fails
-    File targetFile = new File(mReactContext.getCacheDir(), uri.getPath());
+    // Load model from local file system if the scheme is file or if it doesn't
+    // have a scheme (i.e., `null`), which means it is likely a local file if
+    // URI.
+    File targetFile;
+    if (uri.getScheme() == null || "file".equals(uri.getScheme())) {
+      targetFile = new File(uri.getPath());
+    } else {
+      // Get file path to cache model or load model from cache if loading from URI fails
+      targetFile = new File(mReactContext.getCacheDir(), uri.getPath());
 
-    // Always try to load model from uri to make sure it's always the latest version. Only if
-    // fetching the model from the uri fails, it will load the cached version (if exists).
-    FileUtils.downloadUriToFile(modelUri, targetFile);
+      // Always try to load model from uri to make sure it's always the latest version. Only if
+      // fetching the model from the uri fails, it will load the cached version (if exists).
+      FileUtils.downloadUriToFile(modelUri, targetFile);
+    }
 
     Log.d(REACT_MODULE, "Absolute local model path: " + targetFile.getAbsolutePath());
 

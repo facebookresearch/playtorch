@@ -55,15 +55,12 @@ public class MobileModelModule: NSObject {
                     self.execute(modelPath, params: params, resolver: resolve, rejecter: reject)
                 }
             }
-            mModulesAndSpecs[modelKey] = ModuleHolder()
             fetchCacheAndLoadModel(modelUri: modelPath as String, completionHandler: completionHandler)
         }
     }
 
     @objc(preload:resolver:rejecter:)
     public func preload(_ modelUri: NSString, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
-        let modelKey = getKey(path: modelUri as String)
-        mModulesAndSpecs[modelKey] = ModuleHolder()
         let completionHandler: (String?) -> Void  = { error in
             if let error = error {
                 reject(RCTErrorUnspecified, error, nil)
@@ -81,42 +78,56 @@ public class MobileModelModule: NSObject {
     }
 
     func fetchCacheAndLoadModel(modelUri: String, completionHandler: @escaping (String?) -> Void) {
-        let modelKey = getKey(path: modelUri)
         if let modelUrl = URL(string: modelUri) {
+
+            // Load model from local file system if the scheme is file or if it
+            // doesn't have a scheme (i.e., `nil`), which means it is likely a
+            // local file if URI.
+            if (modelUrl.scheme == nil || modelUrl.scheme == "file") {
+                self.loadModelFromURL(modelUri: modelUri, url: modelUrl, completionHandler: completionHandler)
+            }
+            else {
             let modelTask = URLSession.shared.downloadTask(with: modelUrl) { urlOrNil, responseOrNil, errorOrNil in
                 guard let tempURL = urlOrNil else { completionHandler("Error downloading file"); return }
-
-                // Try to fetch live.spec.json from model file
-                let extraFiles = NSMutableDictionary()
-                extraFiles.setValue("", forKey: "model/live.spec.json")
-
-                // Note: regardless what initial value is set for the key "model/live.spec.json", the
-                // TorchModule.load method will set an empty string if the model file is not bundled inside the
-                // model file.
-                if let module = Module.load(tempURL.path, extraFiles: extraFiles) {
-                    self.mModulesAndSpecs[modelKey]?.setModule(module: module)
-
-                    let modelSpec = extraFiles["model/live.spec.json"] as? String ?? ""
-                    if (!modelSpec.isEmpty) {
-                        do {
-                            let data = Data(modelSpec.utf8)
-                            let modelSpec = try JSON(data: data)
-                            self.mModulesAndSpecs[modelKey]?.setSpec(modelSpec: modelSpec)
-                            completionHandler(nil)
-                        }
-                        catch {
-                            completionHandler("Could not fetch json file: \(error)")
-                        }
-                    } else {
-                        self.fetchModelSpec(modelUri: modelUri, completionHandler: completionHandler)
-                    }
-                } else {
-                    completionHandler("Could not convert downloaded file into Torch Module")
-                }
+                self.loadModelFromURL(modelUri: modelUri, url: tempURL, completionHandler: completionHandler)
             }
             modelTask.resume()
+            }
         } else {
             completionHandler("Could not create URLSession with provided URL")
+        }
+    }
+
+    func loadModelFromURL(modelUri: String, url: URL, completionHandler: @escaping (String?) -> Void) -> Void {
+        let modelKey = getKey(path: modelUri)
+
+        // Try to fetch live.spec.json from model file
+        let extraFiles = NSMutableDictionary()
+        extraFiles.setValue("", forKey: "model/live.spec.json")
+
+        // Note: regardless what initial value is set for the key "model/live.spec.json", the
+        // TorchModule.load method will set an empty string if the model file is not bundled inside the
+        // model file.
+        if let module = Module.load(url.path, extraFiles: extraFiles) {
+            self.mModulesAndSpecs[modelKey] = ModuleHolder()
+            self.mModulesAndSpecs[modelKey]?.setModule(module: module)
+
+            let modelSpec = extraFiles["model/live.spec.json"] as? String ?? ""
+            if (!modelSpec.isEmpty) {
+                do {
+                    let data = Data(modelSpec.utf8)
+                    let modelSpec = try JSON(data: data)
+                    self.mModulesAndSpecs[modelKey]?.setSpec(modelSpec: modelSpec)
+                    completionHandler(nil)
+                }
+                catch {
+                    completionHandler("Could not fetch json file: \(error)")
+                }
+            } else {
+                self.fetchModelSpec(modelUri: modelUri, completionHandler: completionHandler)
+            }
+        } else {
+            completionHandler("Could not convert downloaded file into Torch Module")
         }
     }
 

@@ -5,10 +5,12 @@ on:
     branches: [main]
     paths:
       - 'website/**'
+      - 'react-native-pytorch-core/src/**'
   pull_request:
     branches: [main]
     paths:
       - 'website/**'
+      - 'react-native-pytorch-core/src/**'
 
 jobs:
   checks:

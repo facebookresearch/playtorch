@@ -19,6 +19,7 @@ import com.facebook.react.bridge.ReadableMap;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -102,6 +103,19 @@ public class ImageModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void fromFile(String filepath, Promise promise) {
+    File file = new File(filepath);
+    if (file.exists()) {
+      Bitmap bitmap = BitmapFactory.decodeFile(filepath);
+      IImage image = new Image(bitmap);
+      JSContext.NativeJSRef ref = JSContext.wrapObject(image);
+      promise.resolve(ref.getJSRef());
+    } else {
+      promise.reject(new Error("File does not exist " + filepath));
+    }
+  }
+
+  @ReactMethod
   public void fromBundle(final String uriString, Promise promise) {
     Uri uri = Uri.parse(uriString);
 
@@ -131,5 +145,20 @@ public class ImageModule extends ReactContextBaseJavaModule {
     IImage image = new Image(imageData, pixelDensity);
     JSContext.NativeJSRef ref = JSContext.wrapObject(image);
     promise.resolve(ref.getJSRef());
+  }
+
+  @ReactMethod
+  public void toFile(final ReadableMap imageRef, Promise promise) {
+    try {
+      IImage image = JSContext.unwrapObject(imageRef);
+      Bitmap bitmap = image.getBitmap();
+      File cacheDir = mReactContext.getCacheDir();
+      File file = File.createTempFile("image", ".png", cacheDir);
+      FileOutputStream outputStream = new FileOutputStream(file);
+      bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+      promise.resolve(file.getAbsolutePath());
+    } catch (IOException e) {
+      promise.reject(e);
+    }
   }
 }

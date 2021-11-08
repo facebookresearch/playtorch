@@ -10,24 +10,40 @@
 import {useIsFocused} from '@react-navigation/native';
 import * as React from 'react';
 import {useCallback} from 'react';
-import {Camera, CameraFacing, Image} from 'react-native-pytorch-core';
-import useImageModelInference from '../useImageModelInference';
+import {
+  Camera,
+  CameraFacing,
+  Canvas,
+  CanvasRenderingContext2D,
+  Image,
+  ImageUtil,
+} from 'react-native-pytorch-core';
 import {StyleSheet} from 'react-native';
-import ImageClass from '../components/ImageClass';
 
-export default function CameraTakePicture() {
+export default function Playground() {
   const isFocused = useIsFocused();
-  const {imageClass, metrics, processImage} = useImageModelInference({
-    model: require('../../models/mobilenet_v3_small.ptl'),
-    name: 'MobileNet V3',
-  });
+  const contextRef = React.useRef<CanvasRenderingContext2D>();
 
   const handleCapture = useCallback(
     async (image: Image) => {
-      await processImage(image);
+      const path = await ImageUtil.toFile(image);
+      console.log('file path', path);
       image.release();
+
+      setTimeout(async () => {
+        const context = contextRef.current;
+        if (context != null) {
+          context.clear();
+          const loadedImage = await ImageUtil.fromFile(path);
+          context.drawImage(loadedImage, 0, 0, 4 * 48, 4 * 64);
+          context.invalidate();
+          setTimeout(() => {
+            loadedImage.release();
+          },10);
+        }
+      }, 1000);
     },
-    [processImage],
+    [contextRef],
   );
 
   if (!isFocused) {
@@ -37,18 +53,26 @@ export default function CameraTakePicture() {
   return (
     <>
       <Camera
-        onFrame={handleCapture}
+        onCapture={handleCapture}
         style={styles.camera}
         targetResolution={{width: 480, height: 640}}
         facing={CameraFacing.BACK}
       />
-      <ImageClass imageClass={imageClass} metrics={metrics} />
+      <Canvas
+        style={styles.canvas}
+        onContext2D={context => {
+          contextRef.current = context;
+        }}
+      />
     </>
   );
 }
 
 const styles = StyleSheet.create({
   camera: {
+    flex: 1,
+  },
+  canvas: {
     flex: 1,
   },
   actions: {

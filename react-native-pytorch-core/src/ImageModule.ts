@@ -141,21 +141,6 @@ const getImageAssetSource = (
  * be drawn on a canvas.
  */
 export const ImageUtil = {
-  /**
-   * The `load` function loads an [[Image]] from a URL. Be aware that the
-   * `load` function is an `async` function and needs to be `await`ed to access
-   * the loaded image.
-   *
-   * ```typescript
-   * const image: Image = await ImageUtils.fromURL('https://image.url');
-   * ```
-   *
-   * @param url The image url.
-   */
-  async fromURL(url: string): Promise<Image> {
-    const ref: NativeJSRef = await ImageModule.fromURL(url);
-    return wrapRef(ref);
-  },
 
   /**
    * The `fromBundle` function loads an [[Image]] that is bundled with the
@@ -169,13 +154,29 @@ export const ImageUtil = {
    */
   async fromBundle(imagePath: ImageRequireSource): Promise<Image> {
     const source = getImageAssetSource(imagePath);
-    if(Platform.OS === 'ios') {
+    if (Platform.OS === 'ios') {
       const ref: NativeJSRef = await ImageModule.fromBundle(source)
       return wrapRef(ref)
     } else {
       const ref: NativeJSRef = await ImageModule.fromBundle(source.uri);
       return wrapRef(ref);
     }
+  },
+
+  /**
+   * The `fromFile` function loads an [[Image]] at the filepath (e.g., stored
+   * on the file system).
+   *
+   * ```typescript
+   * const image: Image = await ImageUtils.fromFile('/data/0/pytorch/image.png');
+   * ```
+   *
+   * @param path The file path to the image.
+   * @returns An image instance.
+   */
+  async fromFile(path: string): Promise<Image> {
+    const ref: NativeJSRef = await ImageModule.fromFile(path);
+    return wrapRef(ref);
   },
 
   /**
@@ -188,5 +189,37 @@ export const ImageUtil = {
     const imageDataRef: NativeJSRef = {ID: imageData.ID};
     const ref: NativeJSRef = await ImageModule.fromImageData(imageDataRef);
     return wrapRef(ref);
-  }
+  },
+
+  /**
+   * The `fromURL` function loads an [[Image]] from a URL. Be aware that the
+   * `fromURL` function is an `async` function and needs to be `await`ed to
+   * access the loaded image.
+   *
+   * ```typescript
+   * const image: Image = await ImageUtils.fromURL('https://image.url');
+   * ```
+   *
+   * @param url The image url.
+   * @returns An image instance.
+   */
+  async fromURL(url: string): Promise<Image> {
+    const ref: NativeJSRef = await ImageModule.fromURL(url);
+    return wrapRef(ref);
+  },
+
+
+  /**
+   * Saves an image to a file.
+   *
+   * ```typescript
+   * const path: string = ImageUtils.toFile(image);
+   * ```
+   *
+   * @param image Image to save.
+   * @returns path Path to image file.
+   */
+  async toFile(image: Image): Promise<string> {
+    return await ImageModule.toFile(image);
+  },
 };

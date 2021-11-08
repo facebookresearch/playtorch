@@ -35,6 +35,25 @@ public class ImageModule: NSObject {
         }
     }
 
+    @objc(fromFile:resolver:rejecter:)
+    public func fromFile(_ filepath: NSString, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
+        let path = filepath as String
+        let url = URL(fileURLWithPath: path)
+        do {
+            let data = try Data(contentsOf: url)
+            guard let uiImage = UIImage(data: data), let cgImage = uiImage.cgImage else {
+                reject(RCTErrorUnspecified, "Couldn't load image \(path)", nil)
+                return
+            }
+            let image = Image(image: cgImage)
+            let ref = JSContext.wrapObject(object: image).getJSRef()
+            resolve(ref)
+        }
+        catch {
+            reject(RCTErrorUnspecified, "Couldn't load file \(path)", nil)
+        }
+    }
+
     @objc(fromBundle:resolver:rejecter:)
     public func fromBundle(_ assetImage: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) {
         DispatchQueue.main.sync {
@@ -66,6 +85,33 @@ public class ImageModule: NSObject {
                 reject(RCTErrorUnspecified, "Could't create image from image data: \(error)", error)
             }
         }
+    }
+
+    @objc(toFile:resolver:rejecter:)
+    public func toFile(_ imageRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject:RCTPromiseRejectBlock) -> Void {
+        do {
+            let image = try ImageModule.unwrapImage(imageRef)
+            guard let bitmap = image.getBitmap() else {
+                print("Could not get bitmap from image")
+                return
+            }
+            let uiImage = UIImage(cgImage: bitmap)
+            if let data = uiImage.pngData() {
+                let uuidFilename = NSUUID().uuidString
+                let filename = getDocumentsDirectory().appendingPathComponent("\(uuidFilename).png")
+                try? data.write(to: filename)
+                resolve(filename.path)
+            }
+        }
+        catch {
+            reject(RCTErrorUnspecified, "Invalid image reference \(error)", error)
+            return
+        }
+    }
+
+    func getDocumentsDirectory() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0]
     }
 
     public static func unwrapImage(_ imageRef: NSDictionary) throws -> IImage {

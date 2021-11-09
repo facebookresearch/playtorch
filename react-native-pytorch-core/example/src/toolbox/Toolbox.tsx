@@ -46,6 +46,7 @@ import MNIST from './models/MNIST';
 import Distilbert from './models/Distilbert';
 import DETR from './models/DETR';
 import Wav2Vec2 from './models/Wav2Vec2';
+import FastNeuralStyle from './models/FastNeuralStyle';
 
 export type Tool = {
   icon?: React.ReactNode;
@@ -99,8 +100,15 @@ const tools: ToolSection = [
       },
       {
         icon: <Icon name="clipboard-text" size={32} color="white" />,
+        title: 'Fast Neural Style',
+        subtitle: 'Example for a neural style transfer model',
+        apiTest: false,
+        component: FastNeuralStyle,
+      },
+      {
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'Distilbert',
-        subtitle: 'A playground to experiment with the PyTorch Core API',
+        subtitle: 'Example for the Distilbert NLP Q&A model',
         apiTest: false,
         component: Distilbert,
       },

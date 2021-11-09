@@ -25,6 +25,7 @@ import javac from '../commands/Javac';
 import node from '../commands/Node';
 import watchman from '../commands/Watchman';
 import yarn from '../commands/Yarn';
+import python from '../commands/Python';
 import {print as printHeader} from '../utils/header';
 import {execCommandSync, getEnv} from '../utils/SystemUtils';
 import {isCommandInstalled} from '../utils/ToolingUtils';
@@ -144,6 +145,9 @@ const runDoctor = async (): Promise<void> => {
   const healthChecks: IHealthCheck[] = [
     new HealthCheck('Homebrew', homebrew, {
       minVersion: null,
+    }),
+    new HealthCheck('Python', python, {
+      minVersion: semver.parse('3.7.5'),
     }),
     new HealthCheck('Watchman', watchman, {
       minVersion: null,

@@ -133,19 +133,14 @@ export interface MobileModel {
    *
    * const image: Image = await ImageUtils.fromURL('https://image.url');
    *
-   * const { result: {scores} } = await MobileModel.execute(
+   * const { result: {maxIdx} } = await MobileModel.execute(
    *   classificationModel,
    *   {
    *     image,
-   *     cropWidth: size,
-   *     cropHeight: size,
-   *     scaleWidth: 224,
-   *     scaleHeight: 224,
    *   }
    * );
    *
-   * const idx = argmax(scores);
-   * const className = CLASSES[idx];
+   * const topClass = ImageClasses(scores);
    * ```
    *
    * @param modelPath The model path as require or uri (i.e., `require`).

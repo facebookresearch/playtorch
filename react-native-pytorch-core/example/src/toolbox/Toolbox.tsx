@@ -47,6 +47,7 @@ import Distilbert from './models/Distilbert';
 import DETR from './models/DETR';
 import Wav2Vec2 from './models/Wav2Vec2';
 import FastNeuralStyle from './models/FastNeuralStyle';
+import MobileNetV3 from './models/MobileNetV3';
 
 export type Tool = {
   icon?: React.ReactNode;
@@ -84,6 +85,13 @@ const tools: ToolSection = [
   {
     title: 'Models',
     data: [
+      {
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
+        title: 'MobileNet V3',
+        subtitle: 'Example image classificaion with MobileNet V3',
+        apiTest: false,
+        component: MobileNetV3,
+      },
       {
         icon: <Icon name="clipboard-text" size={32} color="white" />,
         title: 'MNIST',

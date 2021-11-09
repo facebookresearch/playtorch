@@ -7,10 +7,7 @@
  * @format
  */
 
-export type ModelInfo = {
-  name: string;
-  model: number;
-};
+import type {ModelInfo} from 'react-native-pytorch-core';
 
 // Example for how to export a model with the live.spec.json bundled as extra files
 // Google Colab: https://colab.research.google.com/drive/1vGlRddixmdJvyJ0kTl3uYXuXZ8Q2Ir4C

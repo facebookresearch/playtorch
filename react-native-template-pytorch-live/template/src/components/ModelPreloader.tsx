@@ -11,11 +11,7 @@ import * as React from 'react';
 import {ReactNode, useEffect, useState} from 'react';
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
 import {MobileModel} from 'react-native-pytorch-core';
-
-type ModelInfo = {
-  name: string;
-  model: number;
-};
+import type {ModelInfo} from 'react-native-pytorch-core';
 
 type Props = {
   modelInfos: ModelInfo[];

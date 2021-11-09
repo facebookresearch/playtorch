@@ -8,13 +8,8 @@
  */
 
 import {useCallback, useState} from 'react';
-
-import {
-  Image,
-  MobileModel,
-  ModelResultMetrics,
-  ModelInfo,
-} from 'react-native-pytorch-core';
+import {Image, MobileModel} from 'react-native-pytorch-core';
+import type {ModelResultMetrics, ModelInfo} from 'react-native-pytorch-core';
 
 export type BoundingBox = {
   objectClass: string;
@@ -33,16 +28,15 @@ export default function useObjectDetection(modelInfo: ModelInfo) {
       const imageWidth = image.getWidth();
       const imageHeight = image.getHeight();
       const size = Math.min(imageWidth, imageHeight);
-      const {result, metrics: m} = await MobileModel.execute<
-        ObjectDetectionResult
-      >(modelInfo.model, {
-        image,
-        cropWidth: size,
-        cropHeight: size,
-        scaleWidth: 800,
-        scaleHeight: 800,
-        probabilityThreshold: 0.7,
-      });
+      const {result, metrics: m} =
+        await MobileModel.execute<ObjectDetectionResult>(modelInfo.model, {
+          image,
+          cropWidth: size,
+          cropHeight: size,
+          scaleWidth: 800,
+          scaleHeight: 800,
+          probabilityThreshold: 0.7,
+        });
 
       // Adjust bounds to image size
       const boundingBoxes: BoundingBox[] = result.boundingBoxes.map(

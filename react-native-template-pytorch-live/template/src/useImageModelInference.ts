@@ -8,13 +8,8 @@
  */
 
 import {useCallback, useState} from 'react';
-
-import {
-  Image,
-  MobileModel,
-  ModelResultMetrics,
-  ModelInfo,
-} from 'react-native-pytorch-core';
+import {Image, MobileModel} from 'react-native-pytorch-core';
+import type {ModelResultMetrics, ModelInfo} from 'react-native-pytorch-core';
 
 const MobileNetV3Classes = require('./MobileNetV3Classes');
 

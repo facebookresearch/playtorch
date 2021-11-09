@@ -12,16 +12,15 @@ import {useState} from 'react';
 import {
   View,
   TextInput,
-  TouchableOpacity,
   StyleSheet,
   Text,
   ActivityIndicator,
 } from 'react-native';
-import {ModelInfo, NLPModels} from '../Models';
-import ModelSelector from '../components/ModelSelector';
+import {NLPModels} from '../Models';
 import useNLPQAModelInference from '../useNLPQAModelInference';
 import ModelPreloader from '../components/ModelPreloader';
 import {ScrollView} from 'react-native-gesture-handler';
+import type {ModelInfo} from 'react-native-pytorch-core';
 
 import {
   PTLColors as colors,

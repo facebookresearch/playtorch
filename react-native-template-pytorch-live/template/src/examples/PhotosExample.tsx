@@ -12,10 +12,11 @@ import {useState, useCallback} from 'react';
 import {StyleSheet, View, Text} from 'react-native';
 import {ImageUtil} from 'react-native-pytorch-core';
 import ImageClassInfo from '../components/ImageClassInfo';
-import {ModelInfo, ImageClassificationModels} from '../Models';
+import {ImageClassificationModels} from '../Models';
 import ModelSelector from '../components/ModelSelector';
 import PredefinedImageList from '../components/PredefinedImageList';
 import useImageModelInference from '../useImageModelInference';
+import type {ModelInfo} from 'react-native-pytorch-core';
 
 export default function PhotosExample() {
   const [activeModelInfo, setActiveModelInfo] = useState<ModelInfo>(

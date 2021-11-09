@@ -13,18 +13,18 @@ import {useCallback, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Camera, Image} from 'react-native-pytorch-core';
 import ImageClassInfo from '../components/ImageClassInfo';
-import {ModelInfo, ImageClassificationModels} from '../Models';
+import {ImageClassificationModels} from '../Models';
 import ModelSelector from '../components/ModelSelector';
 import useImageModelInference from '../useImageModelInference';
+import type {ModelInfo} from 'react-native-pytorch-core';
 
 export default function CameraExample() {
   const isFocused = useIsFocused();
   const [activeModelInfo, setActiveModelInfo] = useState<ModelInfo>(
     ImageClassificationModels[0],
   );
-  const {imageClass, metrics, processImage} = useImageModelInference(
-    activeModelInfo,
-  );
+  const {imageClass, metrics, processImage} =
+    useImageModelInference(activeModelInfo);
 
   const handleFrame = useCallback(
     async (image: Image) => {

@@ -9,8 +9,7 @@
 
 import {useCallback, useState} from 'react';
 import {MobileModel} from 'react-native-pytorch-core';
-import {ModelResultMetrics} from 'react-native-pytorch-core/lib/typescript/MobileModelModule';
-import {ModelInfo} from './Models';
+import type {ModelInfo, ModelResultMetrics} from 'react-native-pytorch-core';
 
 const MODEL_INPUT_LENGTH = 360;
 

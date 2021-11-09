@@ -62,6 +62,8 @@ class BaseIValuePacker {
             value = try unpackTensor(ivalue: ivalue, unpack: unpack)
         case "argmax":
             value = try unpackArgmax(ivalue: ivalue, unpack: unpack)
+        case "tensor_to_image":
+            value = try unpackTensorToImage(ivalue: ivalue, unpack: unpack)
         case "bert_decode_qa_answer":
             value = try decodeBertQAAnswer(ivalue: ivalue, unpack: unpack)
         case "bounding_boxes":
@@ -194,6 +196,69 @@ class BaseIValuePacker {
         default:
             throw BaseIValuePackerError.InvalidDType
         }
+    }
+
+    private func unpackTensorToImage(ivalue: IValue, unpack: JSON) throws -> Any {
+        guard let tensor = ivalue.toTensor() else {
+            throw BaseIValuePackerError.InvalidUnpackType
+        }
+        guard let cgImage = tensorToBitmap(tensor: tensor) else {
+            throw BaseIValuePackerError.InvalidUnpackType
+        }
+        let image = Image(image: cgImage)
+        return JSContext.wrapObject(object: image).getJSRef()
+    }
+
+    private func tensorToBitmap(tensor: Tensor) -> CGImage? {
+        let data = tensor.getDataAsArray() as! [Float32]
+        let shape = tensor.shape
+
+        let w = shape[3].intValue
+        let h = shape[2].intValue
+
+        // Determine the min/max value of data
+        var max: Float32 = 0
+        var min: Float32 = Float32.greatestFiniteMagnitude
+        for f in data {
+            if (f > max) {
+              max = f
+            }
+            if (f < min) {
+              min = f
+            }
+        }
+
+        let delta = (max - min)
+        var rgba: [UInt8] = [UInt8](repeating: 0, count: 4 * w * h)
+        for i in 0..<(w * h) {
+            rgba[4 * i] = (UInt8) ((data[i] - min) / delta * 255);
+            rgba[4 * i + 1] = (UInt8) ((data[w * h + i] - min) / delta * 255);
+            rgba[4 * i + 2] = (UInt8) ((data[w * h * 2 + i] - min) / delta * 255);
+            rgba[4 * i + 3] = 255
+        }
+
+        let dataForProvider: Data = Data(rgba)
+        let bytesPerPixel = 4
+        let bitsPerPixel = 32
+        let bytesPerRow = bytesPerPixel * w
+        let bitsPerComponent = 8
+        let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
+        let provider: CGDataProvider! = CGDataProvider(data: dataForProvider as CFData)
+
+        let cgImage = CGImage(
+            width: w,
+            height: h,
+            bitsPerComponent: bitsPerComponent,
+            bitsPerPixel: bitsPerPixel,
+            bytesPerRow: bytesPerRow,
+            space: CGColorSpaceCreateDeviceRGB(),
+            bitmapInfo: bitmapInfo,
+            provider: provider,
+            decode: nil,
+            shouldInterpolate: false,
+            intent: .defaultIntent
+        )
+        return cgImage
     }
 
     private func packString(modelSpec: JSON, params: NSDictionary) throws -> IValue? {

@@ -151,6 +151,7 @@ export const ImageUtil = {
    * `await`ed to access the loaded image.
    *
    * @param imagePath The model path (i.e., a `require`).
+   * @returns A promise resolving into an [[Image]].
    */
   async fromBundle(imagePath: ImageRequireSource): Promise<Image> {
     const source = getImageAssetSource(imagePath);
@@ -172,7 +173,7 @@ export const ImageUtil = {
    * ```
    *
    * @param path The file path to the image.
-   * @returns An image instance.
+   * @returns A promise resolving into an [[Image]].
    */
   async fromFile(path: string): Promise<Image> {
     const ref: NativeJSRef = await ImageModule.fromFile(path);
@@ -183,6 +184,7 @@ export const ImageUtil = {
    * Transforms an [[ImageData]] into an [[Image]] object.
    *
    * @param imageData The ImageData that will be transformed into an [[Image]].
+   * @returns A promise resolving into an [[Image]].
    */
   async fromImageData(imageData: ImageData): Promise<Image> {
     // Only send NativeJSRef ID to native and omit other fields
@@ -201,13 +203,21 @@ export const ImageUtil = {
    * ```
    *
    * @param url The image url.
-   * @returns An image instance.
+   * @returns A promise resolving into an [[Image]].
    */
   async fromURL(url: string): Promise<Image> {
     const ref: NativeJSRef = await ImageModule.fromURL(url);
     return wrapRef(ref);
   },
 
+  /**
+   * Releases am image and ultimately frees memory.
+   *
+   * @param image Image that will be released.
+   */
+  async release(image: Image): Promise<void> {
+    return await ImageModule.release(image);
+  },
 
   /**
    * Saves an image to a file.

@@ -8,6 +8,7 @@
 package org.pytorch.rn.core.ml.processing;
 
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.media.Image;
 import com.facebook.react.bridge.Arguments;
@@ -156,6 +157,10 @@ public class BaseIValuePacker implements IIValuePacker {
             BaseIValuePacker.JSON_STRING,
             (ivalue, jobject, map, packerContext) ->
                 map.putString(jobject.getString(JSON_KEY), ivalue.toStr()))
+        .register(
+            "tensor_to_image",
+            (ivalue, jobject, map, packerContext) ->
+                map.putMap(jobject.getString(JSON_KEY), unpackTensorToImage(ivalue)))
         .register(
             "tensor_to_string",
             (ivalue, jobject, map, packerContext) ->
@@ -460,6 +465,49 @@ public class BaseIValuePacker implements IIValuePacker {
     for (int i = 0; i < n; ++i) {
       registry.unpack(iarray[i], jarray.getJSONObject(i), map, packerContext);
     }
+  }
+
+  private ReadableMap unpackTensorToImage(final IValue ivalue) {
+    Tensor tensor = ivalue.toTensor();
+    Bitmap bitmap = tensorToBitmap(tensor);
+    IImage image = new org.pytorch.rn.core.image.Image(bitmap);
+    JSContext.NativeJSRef ref = JSContext.wrapObject(image);
+    return ref.getJSRef();
+  }
+
+  private Bitmap tensorToBitmap(Tensor tensor) {
+    float[] data = tensor.getDataAsFloatArray();
+    long[] shape = tensor.shape();
+    int width = (int) shape[3];
+    int height = (int) shape[2];
+
+    Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+
+    // Determine the min/max value of data
+    float max = 0;
+    float min = Float.MAX_VALUE;
+    for (float f : data) {
+      if (f > max) {
+        max = f;
+      }
+      if (f < min) {
+        min = f;
+      }
+    }
+
+    int delta = (int) (max - min);
+    for (int i = 0; i < width * height; i++) {
+      int r = (int) ((data[i] - min) / delta * 255.0f);
+      int g = (int) ((data[i + width * height] - min) / delta * 255.0f);
+      int b = (int) ((data[i + width * height * 2] - min) / delta * 255.0f);
+
+      int x = i / height;
+      int y = i % width;
+
+      int color = Color.rgb(r, g, b);
+      bitmap.setPixel(x, y, color);
+    }
+    return bitmap;
   }
 
   private String decodeTensorToString(

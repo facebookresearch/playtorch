@@ -22,6 +22,13 @@ class ScaleTransform implements IImageTransform {
   }
 
   public static ScaleTransform parse(JSONObject jobject) throws JSONException {
+    if (!jobject.has(BaseIValuePacker.JSON_WIDTH) || !jobject.has(BaseIValuePacker.JSON_HEIGHT)) {
+      throw new JSONException(
+          BaseIValuePacker.JSON_WIDTH
+              + " and "
+              + BaseIValuePacker.JSON_HEIGHT
+              + " property are required for scale transform");
+    }
     return new ScaleTransform(
         jobject.getInt(BaseIValuePacker.JSON_WIDTH), jobject.getInt(BaseIValuePacker.JSON_HEIGHT));
   }

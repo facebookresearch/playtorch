@@ -29,9 +29,6 @@ export default function useImageModelInference(modelInfo: ModelInfo) {
 
   const processImage = useCallback(
     async (image: Image) => {
-      const width = image.getWidth();
-      const height = image.getHeight();
-      const size = Math.min(width, height);
       const {
         result: {maxIdx, confidence},
         metrics: m,
@@ -39,10 +36,6 @@ export default function useImageModelInference(modelInfo: ModelInfo) {
         modelInfo.model,
         {
           image,
-          cropWidth: size,
-          cropHeight: size,
-          scaleWidth: 224,
-          scaleHeight: 224,
         },
       );
       const className = MobileNetV3Classes[maxIdx];

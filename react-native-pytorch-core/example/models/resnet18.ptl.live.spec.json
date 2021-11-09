@@ -10,8 +10,8 @@
       {
         "type": "image_to_image",
         "name": "scale",
-        "width": "$scaleWidth",
-        "height": "$scaleHeight"
+        "width": 224,
+        "height": 224
       },
       {
         "type": "image_to_tensor",

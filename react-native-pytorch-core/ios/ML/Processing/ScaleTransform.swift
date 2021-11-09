@@ -24,8 +24,12 @@ class ScaleTransform: IImageTransform {
     }
 
     public static func parse(transform: JSON) throws -> ScaleTransform {
-        let widthString = transform["width"].string!
-        let heightString = transform["height"].string!
+        if !transform["width"].exists() || !transform["height"].exists() {
+            throw ScaleTranformError.NoDimensProvided
+        }
+
+        let widthString = transform["width"].stringValue
+        let heightString = transform["height"].stringValue
         let width = Float(widthString)!
         let height = Float(heightString)!
         return ScaleTransform(width: width, height: height)

@@ -18,7 +18,8 @@ import {execCommand, isLinux, isMacOS, platform} from '../../utils/SystemUtils';
 import {IInstallerTask, getInstallerErrorMitigationMessage, getUserConsentOnInstallerOrQuit} from '../IInstaller';
 
 export default class AndroidSDKInstaller implements IInstallerTask {
-  _sdkManagerFilepath = 'cmdline-tools/bin/sdkmanager';
+  _possibleSdkManagerFilepaths = ['cmdline-tools/bin/sdkmanager', 'tools/bin/sdkmanager'];
+
 
   isValid(): boolean {
     return isMacOS();
@@ -31,7 +32,9 @@ export default class AndroidSDKInstaller implements IInstallerTask {
   isInstalled(): boolean {
     const sdkPath = getSDKPath();
     if (sdkPath !== null) {
-      return fs.existsSync(path.join(sdkPath, this._sdkManagerFilepath));
+      return this._possibleSdkManagerFilepaths.some((sdkManagerFilepath) =>
+        fs.existsSync(path.join(sdkPath, sdkManagerFilepath))
+      );
     }
     return false;
   }
@@ -46,7 +49,7 @@ export default class AndroidSDKInstaller implements IInstallerTask {
   async run(context: TaskContext): Promise<void> {
     context.update('Installing cmdline-tools');
     const cltPath = await this.downloadCommandLineTools();
-    const sdkManager = path.join(cltPath, this._sdkManagerFilepath);
+    const sdkManager = path.join(cltPath, this._possibleSdkManagerFilepaths[0]);
 
     const sdkRoot = getDefaultSDKPath();
 
@@ -85,7 +88,7 @@ export default class AndroidSDKInstaller implements IInstallerTask {
           zip.extractAllTo(dirPath, true);
 
           fs.chmod(
-            path.join(dirPath, this._sdkManagerFilepath),
+            path.join(dirPath, this._possibleSdkManagerFilepaths[0]),
             0o755,
             err => {
               if (err) {

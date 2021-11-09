@@ -445,7 +445,7 @@ export interface CanvasRenderingContext2D {
   /**
    * Invalidate the canvas resulting in a repaint.
    */
-  invalidate(): void;
+  invalidate(): Promise<void>;
 
   /**
    * The `lineTo()`, part of the Canvas 2D API, adds a straight line to the
@@ -857,8 +857,8 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
         },
       };
     },
-    invalidate(): void {
-      CanvasRenderingContext2DModule.invalidate(ref);
+    async invalidate(): Promise<void> {
+      return await CanvasRenderingContext2DModule.invalidate(ref);
     },
     lineTo(x: number, y: number): void {
       CanvasRenderingContext2DModule.lineTo(ref, x, y);

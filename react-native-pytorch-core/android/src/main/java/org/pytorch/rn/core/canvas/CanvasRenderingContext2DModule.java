@@ -39,11 +39,12 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void invalidate(ReadableMap canvasRef) {
+  public void invalidate(ReadableMap canvasRef, Promise promise) {
     mMainHandler.post(
         () -> {
           CanvasRenderingContext2D ctx = JSContext.unwrapObject(canvasRef);
           ctx.invalidate();
+          promise.resolve(null);
         });
   }
 

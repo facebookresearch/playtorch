@@ -7,47 +7,54 @@
  * @format
  */
 
-import {useCallback, useState} from 'react';
+ import {useCallback, useState} from 'react';
 
-import {Image, MobileModel} from 'react-native-pytorch-core';
-import {ModelResultMetrics} from 'react-native-pytorch-core/lib/typescript/MobileModelModule';
-import {ModelInfo} from './Models';
+ import {
+   Image,
+   MobileModel,
+   ModelResultMetrics,
+   ModelInfo,
+ } from 'react-native-pytorch-core';
 
-const MobileNetV3Classes = require('./MobileNetV3Classes');
+ const MobileNetV3Classes = require('./MobileNetV3Classes');
 
-type ImageClassificationResult = {
-  maxIdx: number;
-};
+ type ImageClassificationResult = {
+   maxIdx: number;
+   confidence: number;
+ };
 
-export default function useImageModelInference(modelInfo: ModelInfo) {
-  const [metrics, setMetrics] = useState<ModelResultMetrics>();
-  const [imageClass, setImageClass] = useState<string>();
+ export default function useImageModelInference(modelInfo: ModelInfo) {
+   const [metrics, setMetrics] = useState<ModelResultMetrics>();
+   const [imageClass, setImageClass] = useState<string>();
 
-  const processImage = useCallback(
-    async (image: Image) => {
-      const width = image.getWidth();
-      const height = image.getHeight();
-      const size = Math.min(width, height);
-      const {
-        result: {maxIdx},
-        metrics,
-      } = await MobileModel.execute<ImageClassificationResult>(modelInfo.model, {
-        image,
-        cropWidth: size,
-        cropHeight: size,
-        scaleWidth: 224,
-        scaleHeight: 224,
-      });
-      const className = MobileNetV3Classes[maxIdx];
-      setImageClass(className);
-      setMetrics(metrics);
-    },
-    [modelInfo.model, setImageClass, setMetrics],
-  );
+   const processImage = useCallback(
+     async (image: Image) => {
+       const width = image.getWidth();
+       const height = image.getHeight();
+       const size = Math.min(width, height);
+       const {
+         result: {maxIdx, confidence},
+         metrics: m,
+       } = await MobileModel.execute<ImageClassificationResult>(
+         modelInfo.model,
+         {
+           image,
+           cropWidth: size,
+           cropHeight: size,
+           scaleWidth: 224,
+           scaleHeight: 224,
+         },
+       );
+       const className = MobileNetV3Classes[maxIdx];
+       setImageClass(`${className} (confidence ${confidence.toFixed(2)})`);
+       setMetrics(m);
+     },
+     [modelInfo.model, setImageClass, setMetrics],
+   );
 
-  return {
-    imageClass,
-    metrics,
-    processImage,
-  };
-}
+   return {
+     imageClass,
+     metrics,
+     processImage,
+   };
+ }

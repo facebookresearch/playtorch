@@ -49,6 +49,7 @@ public class BaseIValuePacker implements IIValuePacker {
   private static final String JSON_VALUE = "value";
   private static final String JSON_ITEMS = "items";
   private static final String JSON_KEY = "key";
+  private static final String JSON_VALUE_KEY = "valueKey";
   private static final String JSON_UNPACK = "unpack";
   private static final String JSON_PACK = "pack";
   private static final String JS_OUTPUT = "output";
@@ -416,12 +417,16 @@ public class BaseIValuePacker implements IIValuePacker {
     return maxIdx;
   }
 
-  private static float[] softmax(float[] confidences, int from, int to) {
+  private static float[] softmax(float[] data) {
+    return softmax(data, 0, data.length);
+  }
+
+  private static float[] softmax(float[] data, int from, int to) {
     float[] softmax = new float[to - from];
     float expSum = 0;
 
     for (int i = from; i < to; i++) {
-      softmax[i - from] = (float) Math.exp(confidences[i]);
+      softmax[i - from] = (float) Math.exp(data[i]);
       expSum += softmax[i - from];
     }
 
@@ -431,25 +436,57 @@ public class BaseIValuePacker implements IIValuePacker {
     return softmax;
   }
 
-  private double softmax(double input, double[] neuronValues) {
-    double total = Arrays.stream(neuronValues).map(Math::exp).sum();
-    return Math.exp(input) / total;
+  private static float[] softmax(long[] data) {
+    return softmax(data, 0, data.length);
+  }
+
+  private static float[] softmax(long[] data, int from, int to) {
+    float[] softmax = new float[to - from];
+    float expSum = 0;
+
+    for (int i = from; i < to; i++) {
+      softmax[i - from] = (float) Math.exp(data[i]);
+      expSum += softmax[i - from];
+    }
+
+    for (int i = 0; i < softmax.length; i++) {
+      softmax[i] /= expSum;
+    }
+    return softmax;
   }
 
   private static void unpackArgmax(
       final IValue ivalue, final JSONObject jobject, final WritableMap map) throws JSONException {
     final String key = jobject.getString(JSON_KEY);
+    String valueKey = null;
+    if (jobject.has(JSON_VALUE_KEY)) {
+      valueKey = jobject.getString(JSON_VALUE_KEY);
+    }
     final String dtype = jobject.getString(JSON_DTYPE);
+
+    int maxIdx;
     switch (dtype) {
       case JSON_FLOAT:
-        map.putInt(key, unpackArgmaxFloatData(ivalue.toTensor().getDataAsFloatArray()));
-        return;
+        float[] floatData = ivalue.toTensor().getDataAsFloatArray();
+        maxIdx = unpackArgmaxFloatData(floatData);
+        map.putInt(key, maxIdx);
+        if (valueKey != null) {
+          float[] floatSoftmax = softmax(floatData);
+          map.putDouble(valueKey, floatSoftmax[maxIdx]);
+        }
+        break;
       case JSON_LONG:
-        map.putInt(key, unpackArgmaxLongData(ivalue.toTensor().getDataAsLongArray()));
-        return;
+        long[] longData = ivalue.toTensor().getDataAsLongArray();
+        maxIdx = unpackArgmaxLongData(longData);
+        map.putInt(key, maxIdx);
+        if (valueKey != null) {
+          float[] floatSoftmax = softmax(longData);
+          map.putDouble(valueKey, floatSoftmax[maxIdx]);
+        }
+        break;
+      default:
+        throw new IllegalArgumentException("Unknown dtype");
     }
-
-    throw new IllegalArgumentException("Unknown dtype");
   }
 
   private void unpackArray(

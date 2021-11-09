@@ -20,6 +20,7 @@ const MobileNetV3Classes = require('./MobileNetV3Classes');
 
 type ImageClassificationResult = {
   maxIdx: number;
+  confidence: number;
 };
 
 export default function useImageModelInference(modelInfo: ModelInfo) {
@@ -32,8 +33,8 @@ export default function useImageModelInference(modelInfo: ModelInfo) {
       const height = image.getHeight();
       const size = Math.min(width, height);
       const {
-        result: {maxIdx},
-        metrics,
+        result: {maxIdx, confidence},
+        metrics: m,
       } = await MobileModel.execute<ImageClassificationResult>(
         modelInfo.model,
         {
@@ -45,8 +46,8 @@ export default function useImageModelInference(modelInfo: ModelInfo) {
         },
       );
       const className = MobileNetV3Classes[maxIdx];
-      setImageClass(className);
-      setMetrics(metrics);
+      setImageClass(`${className} (confidence ${confidence.toFixed(2)})`);
+      setMetrics(m);
     },
     [modelInfo.model, setImageClass, setMetrics],
   );

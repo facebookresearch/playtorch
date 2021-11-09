@@ -26,6 +26,7 @@
   "unpack": {
     "type": "argmax",
     "dtype": "float",
-    "key": "maxIdx"
+    "key": "maxIdx",
+    "valueKey": "confidence"
   }
 }

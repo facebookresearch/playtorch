@@ -13,8 +13,8 @@ import org.json.JSONObject;
 
 class CenterCropTransform implements IImageTransform {
 
-  private final int outWidth;
-  private final int outHeight;
+  private final float outWidth;
+  private final float outHeight;
 
   protected CenterCropTransform(int outWidth, int outHeight) {
     this.outWidth = outWidth;
@@ -22,6 +22,12 @@ class CenterCropTransform implements IImageTransform {
   }
 
   protected static CenterCropTransform parse(JSONObject jobject) throws JSONException {
+    // If no width or height is defined, it will fallback to a default crop
+    // ratio, which means it will center crop to the min dimension of the input
+    // image.
+    if (!jobject.has(BaseIValuePacker.JSON_WIDTH) || !jobject.has(BaseIValuePacker.JSON_HEIGHT)) {
+      return new CenterCropTransform(-1, -1);
+    }
     int width = jobject.getInt(BaseIValuePacker.JSON_WIDTH);
     int height = jobject.getInt(BaseIValuePacker.JSON_HEIGHT);
     return new CenterCropTransform(width, height);
@@ -29,13 +35,13 @@ class CenterCropTransform implements IImageTransform {
 
   @Override
   public Bitmap transform(Bitmap bitmap) {
-    final int width = bitmap.getWidth();
-    final int height = bitmap.getHeight();
+    final float width = (float) bitmap.getWidth();
+    final float height = (float) bitmap.getHeight();
 
     final float ratio = width / height;
     final float cropRatio = outWidth / outHeight;
-    int cropWidth;
-    int cropHeight;
+    float cropWidth;
+    float cropHeight;
     if (cropRatio > ratio) {
       // landscape
       cropWidth = width;
@@ -50,9 +56,10 @@ class CenterCropTransform implements IImageTransform {
       throw new IllegalStateException();
     }
 
-    final int offsetX = (width - cropWidth) / 2;
-    final int offsetY = (height - cropHeight) / 2;
+    final float offsetX = (width - cropWidth) / 2;
+    final float offsetY = (height - cropHeight) / 2;
 
-    return Bitmap.createBitmap(bitmap, offsetX, offsetY, cropWidth, cropHeight);
+    return Bitmap.createBitmap(
+        bitmap, (int) offsetX, (int) offsetY, (int) cropWidth, (int) cropHeight);
   }
 }

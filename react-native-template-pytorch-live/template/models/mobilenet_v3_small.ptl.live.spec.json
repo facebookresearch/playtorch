@@ -5,9 +5,7 @@
     "transforms": [
       {
         "type": "image_to_image",
-        "name": "center_crop",
-        "width": "$cropWidth",
-        "height": "$cropHeight"
+        "name": "center_crop"
       },
       {
         "type": "image_to_image",

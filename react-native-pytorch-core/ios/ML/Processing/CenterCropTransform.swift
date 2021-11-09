@@ -12,6 +12,7 @@ class CenterCropTransform: IImageTransform {
 
     enum CenterCropTransformError: Error {
         case IllegalState
+        case ParseDimension
         case UnwrappingOptional
         case NoDimensProvided
     }
@@ -25,10 +26,22 @@ class CenterCropTransform: IImageTransform {
     }
 
     static func parse(transform: JSON) throws -> CenterCropTransform {
-        let widthString = transform["width"].string!
-        let heightString = transform["height"].string!
-        let width = Float(widthString)!
-        let height = Float(heightString)!
+        // If no width or height is defined, it will fallback to a default crop
+        // ratio, which means it will center crop to the min dimension of the
+        // input image.
+        if !transform["width"].exists() || !transform["height"].exists() {
+            return CenterCropTransform(outWidth: -1, outHeight: -1)
+        }
+
+        let widthString = transform["width"].stringValue
+        let heightString = transform["height"].stringValue
+
+        guard let width = Float(widthString),
+              let height = Float(heightString)
+        else {
+            throw CenterCropTransformError.ParseDimension
+        }
+
         return CenterCropTransform(outWidth: width, outHeight: height)
     }
 

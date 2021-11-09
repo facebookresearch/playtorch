@@ -175,7 +175,7 @@ export default function CanvasAnimator() {
             ctx.stroke();
 
             // draw texts that shift positions based on user's touch position
-            ctx.fillStyle = colors.neutral;
+            ctx.fillStyle = colors.neutralBlack;
             ctx.font = `bold ${fontsizes.h3}px sans-serif`;
             ctx.fillText(
               'Share, discover and use AI models.',

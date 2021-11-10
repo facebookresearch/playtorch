@@ -6,9 +6,9 @@ id: cli
 
 The PyTorch Live CLI (i.e., `torchlive-cli`) provides a set of commands to help you install build dependencies, initialize new PyTorch Live projects, build and deploy them to emulator or physical devices.
 
-```shell npm2yarn
-npm install torchlive-cli -g
-```
+## Prerequisites
+
+- **Node.js**: If you don't have it already, you can download Node.js LTS [from its website](https://nodejs.org/) or install via [Homebrew](https://formulae.brew.sh/formula/node) (ie, `brew install node`).
 
 ## Index {#index}
 
@@ -18,7 +18,7 @@ import TOCInline from "@theme/TOCInline"
 
 ## PyTorch Live CLI commands {#torchlive-cli-commands}
 
-Below is a list of Docusaurus CLI commands and their usages:
+Below is a list of PyTorch Live CLI commands and their usages:
 
 #### Options {#options}
 
@@ -27,47 +27,69 @@ Below is a list of Docusaurus CLI commands and their usages:
 | `--version`   | Prints the CLI version |
 | `--help`      | Shows the CLI help     |
 
-### `torchlive setup-dev` {#torchlive-cli-setup-dev}
+### `npx torchlive-cli setup-dev` {#torchlive-cli-setup-dev}
 
-The torchlive CLI provides a setup routine to install all required build dependencies including the OpenJDK, Android SDK, Android SDK Manager, Android Virtual Device Manager, Android Emulator, Node.js, Yarn, Watchman and it installs a default emulator device ready to be used with PyTorch Live projects.
+The PyTorch Live CLI provides a setup routine to install all required build dependencies including tooling like Yarn, Watchman, and CocoaPods, SDKs like OpenJDK, Android SDK, Android SDK Manager, Android Virtual Device Manager, and an Android Emulator, and it installs a default emulator device ready to be used with PyTorch Live projects.
 
 ```shell
-torchlive setup-dev
+npx torchlive-cli setup-dev
 ```
 
 :::note
 
-The command requires `sudo` access and can take approximately 20 minutes to complete. This depends on your laptop configuration and what dependencies have been installed previously.
+The command may require `sudo` access for installing the different dependencies and can take approximately 20 minutes to complete. This depends on your laptop configuration, internet speed, and what dependencies have been installed previously.
 
 :::
 
 :::note
 
-You only need to run the `torchlive setup-dev` command once and it is not necessary to run the command every time before you start a new project.
-If everything goes well, the terminal will looks similar to the following output.
+You only need to run the `npx torchlive-cli setup-dev` command once and it is not necessary to run the command every time before you start a new project. However, it is recommended to re-run this command once in a while to update development dependencies over time.
 
 :::
 
-### `torchlive init [options] [name]` {#torchlive-cli-init}
+If everything goes well, the terminal will looks similar to the following output.
+
+```
+➜  npx torchlive-cli setup-dev
+  _                 _     _ _
+ | |_ ___  _ __ ___| |__ | (_)_   _____
+ | __/ _ \| '__/ __| '_ \| | \ \ / / _ \
+ | || (_) | | | (__| | | | | |\ V /  __/
+  \__\___/|_|  \___|_| |_|_|_| \_/ \___|
+
+torchlive version 0.0.2-alpha.19
+✔ Homebrew (3.3.3)
+✔ OpenJDK (1.8.0)
+✔ Watchman (null)
+↓ Node (16.13.0) [SKIPPED]
+✔ Yarn (1.22.15)
+✔ Android SDK
+✔ Android SDK Manager
+✔ Android Emulator
+✔ CocoaPods (1.11.2)
+```
+
+### `npx-torchlive-cli init [options] [name]` {#torchlive-cli-init}
 
 Initialize a new PyTorch Live project.
 
 ```shell
-torchlive init MyFirstProject
+npx torchlive-cli init MyFirstProject
 ```
 
 #### Options {#torchlive-cli-init-options}
 
-| Name         | Default                              | Description                                            |
-| ------------ | ------------------------------------ | ------------------------------------------------------ |
-| `--template` | `react-native-template-pytorch-live` | Specifies the template used to generate a new project. |
+| Name             | Default                              | Description                                           |
+| ---------------- | ------------------------------------ | ----------------------------------------------------- |
+| `--template`     | `react-native-template-pytorch-live` | Specifies the template used to generate a new project |
+| `--skip-install` |                                      | Skips dependencies installation step                  |
 
-### `torchlive run-android [options]` {#torchlive-cli-run-android}
+### `npx torchlive-cli run-android [options]` {#torchlive-cli-run-android}
 
 Runs the PyTorch Live project on an Android emulator. It will run the project on a physical device if it is connected.
 
 ```shell
-torchlive run-android
+npx torchlive-cli run-android
 ```
 
 :::info
@@ -80,48 +102,66 @@ More details are on the Android [configure on-device developer options](https://
 
 :::
 
-### `torchlive clean` {#torchlive-cli-clean}
+#### Options {#torchlive-cli-run-android-options}
+
+| Name             | Default                              | Description                                                         |
+| ---------------- | ------------------------------------ | ------------------------------------------------------------------- |
+| `--name`, `-n`   | `"pytorch_live"`                     | Run PyTorch Live project on a specific Android Virtual Device (AVD) |
+
+### `npx torchlive-cli run-ios` {#torchlive-cli-run-ios}
+
+Runs the PyTorch Live project on an iOS simulator.
+
+```shell
+npx torchlive-cli run-ios
+```
+
+### `npx torchlive-cli emulator [options]` {#torchlive-cli-emulator}
+
+Starts the "pytorch_live" Android Virtual Device emulator.
+
+### `npx torchlive-cli clean` {#torchlive-cli-clean}
 
 Cleans the build files and directories.
 
 ```shell
-torchlive clean
+npx torchlive-cli clean
 ```
 
-### `torchlive emulator` {#torchlive-cli-emulator}
+### `npx torchlive-cli emulator` {#torchlive-cli-emulator}
 
 Starts the emulator without building, deploying, and running the PyTorch Live project.
 
 ```shell
-torchlive emulator
+npx torchlive-cli emulator
 ```
 
-### `torchlive doctor` {#torchlive-cli-doctor}
+### `npx torchlive-cli doctor` {#torchlive-cli-doctor}
 
 Runs health checks to verify if all necessary dependencies are installed.
 
 ```shell
-torchlive doctor
+npx torchlive-cli doctor
 ```
 
 :::note
 
-Run the `torchlive setup-dev` command if any of the health checks fail.
+Run the `npx torchlive-cli setup-dev` command if any of the health checks fail.
 
 :::
 
-### `torchlive log` {#torchlive-cli-log}
+### `npx torchlive-cli log` {#torchlive-cli-log}
 
 Prints the PyTorch Live CLI logs to the terminal.
 
 ```shell
-torchlive log
+npx torchlive-cli log
 ```
 
-### `torchlive help [command]` {#torchlive-cli-help}
+### `npx torchlive-cli help [command]` {#torchlive-cli-help}
 
 Shows additional help for a command.
 
 ```shell
-torchlive help init
+npx torchlive-cli help init
 ```

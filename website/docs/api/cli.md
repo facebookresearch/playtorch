@@ -112,6 +112,12 @@ More details are on the Android [configure on-device developer options](https://
 
 Runs the PyTorch Live project on an iOS simulator.
 
+:::info
+
+In order to run a PyTorch Live project on an iOS simulator or a physical iOS device, you need to install Xcode from the Apple App Store on your macOS device. PyTorch Live currently supports Xcode version 12.5 or later.
+
+:::
+
 ```shell
 npx torchlive-cli run-ios
 ```

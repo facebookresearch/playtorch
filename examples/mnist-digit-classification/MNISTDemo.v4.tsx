@@ -25,7 +25,7 @@ type TrailPoint = {
 };
 
 // This is the custom model you have trained. See the tutorial for more on preparing a PyTorch model for mobile.
-const mnistModel = require('../../../models/mnist.ptl');
+const mnistModel = require('../../models/mnist.ptl');
 
 type MNISTResult = {
   num: number;

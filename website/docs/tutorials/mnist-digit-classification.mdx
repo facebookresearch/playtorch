@@ -633,7 +633,7 @@ type TrailPoint = {
 };
 
 // This is the custom model you have trained. See the tutorial for more on preparing a PyTorch model for mobile.
-const mnistModel = require('../../../models/mnist.ptl');
+const mnistModel = require('../../models/mnist.ptl');
 
 type MNISTResult = {
   num: number;
@@ -690,8 +690,23 @@ This hook will take in the `canvasSize` and give us back two things:
 1. `result` - a state variable that holds the sorted list of `MNISTResult`s from the model
 2. `classify` - a function that takes in the `canvas` context, extracts an image from it, processes the image, and then updates the `result` state variable
 
+In our `classify` callback, we use some of the PTL core components, including the newly imported `ImageUtil` object.
+
+The `ImageUtil` object allows us to take the `imageData` we pull from the canvas and turn it into an `Image` that can be used by our model.
+
+You'll also see that we call the `release` function on both our `imageData` and our `image` variables as soon as we are done using them. This is a vital step to make sure we don't run out of memory on images we no longer need.
+
 
 ```tsx title="MyDemos.tsx"
+import React, {useCallback, useEffect, useState, useRef} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
+import {
+  Canvas,
+  CanvasRenderingContext2D,
+  Image,
+  ImageUtil,
+  MobileModel,
+} from 'react-native-pytorch-core';
 .
 .
 .

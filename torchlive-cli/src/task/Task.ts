@@ -7,7 +7,7 @@
  * @format
  */
 
-import {ListrContext, ListrRendererFactory, ListrTaskWrapper} from 'listr2';
+import {ListrContext, ListrRendererFactory, ListrTaskWrapper, ListrGetRendererTaskOptions, ListrDefaultRenderer} from 'listr2';
 
 export type TaskContext = {
   update(message: string): void;
@@ -20,4 +20,5 @@ export interface ITask {
   isValid(): boolean;
   mitigateOnError(): string;
   run(context: TaskContext): Promise<void>;
+  getOptions?(): ListrGetRendererTaskOptions<ListrDefaultRenderer>;
 }

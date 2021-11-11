@@ -14,6 +14,10 @@ import {print as printHeader} from '../utils/header';
 import {getEnv} from '../utils/SystemUtils';
 import {executeCommandForTask, runTasks} from '../utils/TaskUtils';
 import {isCommandInstalled} from '../utils/ToolingUtils';
+import {ListrGetRendererTaskOptions, ListrDefaultRenderer} from 'listr2';
+import chalk from 'chalk';
+
+const NOBREAKSPACE_INTEDENTATION = '‎ ‎ ‎ ‎ ';
 
 type InitOptions = {
   template: string;
@@ -37,6 +41,12 @@ class InitTask implements ITask {
     return `project ${this.name}`;
   }
 
+  getOptions(): ListrGetRendererTaskOptions<ListrDefaultRenderer> {
+    return {
+      persistentOutput: true,
+    }
+  }
+
   mitigateOnError(): string {
     return `💥 Failed to initialize ${this.name} project. \
 Please run 'react-native init <project-name> --template react-native-template-pytorch-live'
@@ -49,7 +59,17 @@ please refer to https://github.com/pytorch/live/issues for more info.`;
   async run(context: TaskContext): Promise<void> {
     await this.initProject(context);
     await this.installProjectDependencies(context);
-    context.update(`Initialized ${this.getDescription()}`);
+    context.update(`Initialized ${this.getDescription()}
+${NOBREAKSPACE_INTEDENTATION}
+${chalk.green('Run instructions for Android')}:
+${NOBREAKSPACE_INTEDENTATION}• Have an Android emulator running (quickest way to get started), or a device connected.
+${NOBREAKSPACE_INTEDENTATION}• cd ${this.name} && npx torchlive-cli run-android
+${NOBREAKSPACE_INTEDENTATION}
+${chalk.blue('Run instructions for iOS')}:
+${NOBREAKSPACE_INTEDENTATION}• cd ${this.name} && npx torchlive-cli run-ios
+${NOBREAKSPACE_INTEDENTATION}${chalk.grey('- or -')}
+${NOBREAKSPACE_INTEDENTATION}• Open ${this.name}/ios/${this.name}.xcworkspace in Xcode or run "xed -b ios"
+${NOBREAKSPACE_INTEDENTATION}• Hit the Run button`);
   }
 
   async initProject(context: TaskContext): Promise<void> {

@@ -13,6 +13,8 @@ import {
   ListrContext,
   ListrRendererFactory,
   ListrTaskWrapper,
+  ListrBaseClassOptions,
+  ListrRenderer,
 } from 'listr2';
 import {Observable} from 'rxjs';
 import {
@@ -50,6 +52,7 @@ export async function runTasks(tasks: ITask[]): Promise<void> {
 
           return false;
         },
+        options: validTask.getOptions(),
         task(
           ctx: ListrContext,
           task: ListrTaskWrapper<ListrContext, ListrRendererFactory>,

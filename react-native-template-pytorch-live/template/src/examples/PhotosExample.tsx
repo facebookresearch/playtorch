@@ -9,7 +9,7 @@
 
 import * as React from 'react';
 import {useState, useCallback} from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {ImageUtil} from 'react-native-pytorch-core';
 import ImageClassInfo from '../components/ImageClassInfo';
 import {ImageClassificationModels} from '../Models';
@@ -17,14 +17,14 @@ import ModelSelector from '../components/ModelSelector';
 import PredefinedImageList from '../components/PredefinedImageList';
 import useImageModelInference from '../useImageModelInference';
 import type {ModelInfo} from 'react-native-pytorch-core';
+import ModelPreloader from '../components/ModelPreloader';
 
 export default function PhotosExample() {
   const [activeModelInfo, setActiveModelInfo] = useState<ModelInfo>(
     ImageClassificationModels[0],
   );
-  const {imageClass, metrics, processImage} = useImageModelInference(
-    activeModelInfo,
-  );
+  const {imageClass, metrics, processImage} =
+    useImageModelInference(activeModelInfo);
 
   const handleImageURL = useCallback(
     (url: string) => {
@@ -42,33 +42,35 @@ export default function PhotosExample() {
   const [lastURL, setLastURL] = useState<string>();
 
   return (
-    <View style={styles.container}>
-      <PredefinedImageList onSelectImage={handleImageURL} />
+    <ModelPreloader modelInfos={ImageClassificationModels}>
+      <View style={styles.container}>
+        <PredefinedImageList onSelectImage={handleImageURL} />
 
-      <View style={styles.actions}>
-        <ModelSelector
-          style={styles.actions}
-          modelInfos={ImageClassificationModels}
-          defaultModelInfo={activeModelInfo}
-          onSelectModelInfo={model => {
-            setActiveModelInfo(model);
-            if (lastURL) {
-              handleImageURL(lastURL);
+        <View style={styles.actions}>
+          <ModelSelector
+            style={styles.actions}
+            modelInfos={ImageClassificationModels}
+            defaultModelInfo={activeModelInfo}
+            onSelectModelInfo={model => {
+              setActiveModelInfo(model);
+              if (lastURL) {
+                handleImageURL(lastURL);
+              }
+            }}
+          />
+        </View>
+        <View style={styles.info}>
+          <ImageClassInfo
+            placeholder={
+              hint ? 'Select an AI model and click an image to test it' : ''
             }
-          }}
-        />
+            numberOfLines={2}
+            imageClass={imageClass}
+            metrics={metrics}
+          />
+        </View>
       </View>
-      <View style={styles.info}>
-        <ImageClassInfo
-          placeholder={
-            hint ? 'Select an AI model and click an image to test it' : ''
-          }
-          numberOfLines={2}
-          imageClass={imageClass}
-          metrics={metrics}
-        />
-      </View>
-    </View>
+    </ModelPreloader>
   );
 }
 

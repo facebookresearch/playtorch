@@ -26,6 +26,20 @@ export const ImageClassificationModels: ModelInfo[] = [
   },
 ];
 
+export const MultiClassClassificationModels: ModelInfo[] = [
+  {
+    name: 'MNIST',
+    model: require('../models/mnist.ptl'),
+  },
+];
+
+export const ObjectDetectionModels: ModelInfo[] = [
+  {
+    name: 'DETR',
+    model: require('../models/detr_resnet50.ptl'),
+  },
+];
+
 export const NLPModels: ModelInfo[] = [
   {
     name: 'DistilBertQA',

@@ -26,6 +26,7 @@ export default function ModelPreloader({
 }: Props): React.ReactElement {
   const [isReady, setIsReady] = useState(false);
 
+  // Preload all models defined in `modelInfos` prop.
   useEffect(() => {
     async function preloadModel() {
       for (let i = 0; i < modelInfos.length; i++) {
@@ -34,8 +35,16 @@ export default function ModelPreloader({
       setIsReady(true);
     }
     preloadModel();
+
+    // Unload any preloaded models when the component unmounts. This will free
+    // memory used by the model.
+    return function () {
+      MobileModel.unload();
+    };
   }, [setIsReady, modelInfos]);
 
+  // If models aren't loaded async, this component will render a full screen
+  // overlay while loading models.
   if (!isReady && !loadAsync) {
     return (
       <View style={styles.container}>

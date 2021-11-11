@@ -20,14 +20,8 @@ import {NLPModels} from '../Models';
 import useNLPQAModelInference from '../useNLPQAModelInference';
 import ModelPreloader from '../components/ModelPreloader';
 import {ScrollView} from 'react-native-gesture-handler';
-import type {ModelInfo} from 'react-native-pytorch-core';
 
-import {
-  PTLColors as colors,
-  PTLFontSizes as fontsizes,
-  PTLVisual as visuals,
-  PTLTextBoxStyle,
-} from '../components/UISettings';
+import {PTLColors as colors, PTLTextBoxStyle} from '../components/UISettings';
 
 import {BasicButton, DoubleLineRow} from '../components/UIComponents';
 
@@ -36,14 +30,12 @@ export default function NLPExample() {
     'PyTorch Live is an open source playground for everyone to discover, build, test and share on-device AI demos built on PyTorch. The PyTorch Live monorepo includes the PyTorch Live command line interface (i.e., torchlive), a React Native package to interface with PyTorch Mobile, and a React Native template with examples ready to be deployed on mobile devices.',
   );
   const [question, setQuestion] = useState('What is PyTorch Live?');
-  const [activeModelInfo, setActiveModelInfo] = useState<ModelInfo>(
+  const {answer, metrics, isProcessing, processQA} = useNLPQAModelInference(
     NLPModels[0],
   );
-  const {answer, metrics, isProcessing, processQA} =
-    useNLPQAModelInference(activeModelInfo);
 
   return (
-    <ModelPreloader modelInfos={NLPModels} loadAsync={true}>
+    <ModelPreloader modelInfos={NLPModels}>
       <ScrollView style={styles.container}>
         <DoubleLineRow label="Source Text">
           <TextInput

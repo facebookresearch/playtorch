@@ -28,6 +28,8 @@ import {
   PTLColors as colors,
   PTLFontSizes as fontsizes,
 } from '../components/UISettings';
+import ModelPreloader from '../components/ModelPreloader';
+import {MultiClassClassificationModels} from '../Models';
 
 // This is the custom model you have trained. See the tutorial for more on preparing a PyTorch model for mobile.
 const mnistModel = require('../../models/mnist.ptl');
@@ -322,7 +324,7 @@ export default function MNISTExample() {
   }
 
   return (
-    <>
+    <ModelPreloader modelInfos={MultiClassClassificationModels}>
       <Canvas
         style={StyleSheet.absoluteFill}
         onContext2D={setCtx}
@@ -355,7 +357,7 @@ export default function MNISTExample() {
             : ''}
         </Text>
       </View>
-    </>
+    </ModelPreloader>
   );
 }
 

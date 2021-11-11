@@ -46,11 +46,6 @@ module.exports = {
           label: 'Home',
         },
         {
-          to: 'showcase',
-          position: 'right',
-          label: 'Showcase',
-        },
-        {
           type: 'doc',
           docId: 'tutorials/get-started',
           position: 'right',
@@ -61,6 +56,11 @@ module.exports = {
           position: 'right',
           docId: 'api/core/index',
           label: 'API',
+        },
+        {
+          to: 'community',
+          position: 'right',
+          label: 'Community',
         },
         {
           href: 'https://github.com/facebookexperimental/pytorch-live',
@@ -81,16 +81,16 @@ module.exports = {
               to: '/',
             },
             {
-              label: 'Showcase',
-              to: '/showcase',
-            },
-            {
               label: 'Tutorials',
               to: '/docs/tutorials/get-started',
             },
             {
               label: 'API',
               to: '/docs/api/core',
+            },
+            {
+              label: 'Community',
+              to: '/community',
             },
             {
               label: 'PyTorch',

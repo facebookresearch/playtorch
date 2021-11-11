@@ -1,0 +1,65 @@
+/**
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @format
+ */
+
+.heroBanner {
+  padding: 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.heroTitle {
+  margin: 70px auto;
+  color: var(--ifm-color-gray-0);
+  text-align: center;
+}
+
+.socialCard {
+  padding: 1rem 1.5rem;
+  background-color: var(--ifm-color-gray-0);
+  color: var(--ifm-color-gray-80);
+  font-weight: 600;
+  display: inline-block;
+  margin: 1rem;
+}
+
+h2 {
+  text-transform: uppercase;
+  font-weight: 400;
+  --ifm-h2-font-size: 1.5rem;
+  letter-spacing: 0.05rem;
+  margin: 3rem 0 1rem;
+}
+
+.showcaseInfo {
+  margin-bottom: 3rem;
+}
+
+.showCard {
+  height: 300px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
+  margin-right: 30px;
+  margin-bottom: 30px;
+}
+
+.showCard .cardThumbnail {
+  display: block;
+  background-color: var(--ifm-color-gray-800);
+  height: 180px;
+  border-bottom: 2px solid var(--ifm-color-primary);
+}
+
+.showCard .cardContent {
+  padding: 20px;
+}
+
+.showCard .cardCTA {
+  font-size: 1.5rem;
+  padding: 2rem;
+}

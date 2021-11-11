@@ -28,7 +28,7 @@ module.exports = {
       disableSwitch: true,
     },
     prism: {
-      theme: require('prism-react-renderer/themes/dracula'),
+      theme: require('prism-react-renderer/themes/github'),
       darkTheme: require('prism-react-renderer/themes/dracula'),
     },
     navbar: {

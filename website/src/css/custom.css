@@ -43,8 +43,8 @@
   --ifm-color-secondary: #de3412;
   --ifm-color-success: #2b7d6d;
   --ifm-color-info: #30748F;
-  --ifm-color-warning: #ffba00;
-  --ifm-color-danger: #fa383e;
+  --ifm-color-warning: #812ce5;
+  --ifm-color-danger: #e32d5b;
 
   --ifm-color-gray-0: var(--ifm-color-white);
   --ifm-color-gray-100: #f6f6f6;
@@ -324,23 +324,81 @@ ul.table-of-contents li:first-child {
 
 /* Docs markdown */
 
-.markdown > h2 {
-  text-transform: uppercase;
-  font-weight: 400;
-  --ifm-h2-font-size: 1.5rem;
-  letter-spacing: 0.05rem;
-  margin: 1.5rem 0;
-  margin-top: 2rem;
+/* Heading for docs */
 
+.markdown h2 {
+  padding: 1rem;
+  --ifm-h2-font-size: 1rem;
+  font-weight: 400;
+  letter-spacing: 0.02rem;
+  background-color: var(--ifm-color-gray-100);
+  color: var(--ifm-color-gray-800);
+  border-top: 2px solid var(--ifm-color-primary);
 }
 
-.markdown > h3 {
+.markdown h3 {
   --ifm-h3-font-size: 1.5rem;
   font-weight: 400;
   letter-spacing: 0.02rem;
   margin: 1.5rem 0;
 }
 
+.markdown h4 {
+  text-transform: uppercase;
+  --ifm-h3-font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.02rem;
+  margin: 2rem 0 0.5rem;
+}
+
+.markdown table th, .markdown table td {
+  padding: 0.25rem 0.5rem;
+  font-size: 0.85rem;
+}
+
+.markdown table th {
+  font-weight: 400;
+  background-color: var(--ifm-color-gray-100);
+}
+
+.markdown table td {
+  font-weight: 600;
+}
+
+.markdown hr {
+  border-top: 1px solid var(--ifm-color-gray-300);
+  border-bottom: none;
+}
+
+/* Heading for tutorials */
+
+.markdown .tutorial-page  h2 {
+  text-transform: uppercase;
+  font-weight: 400;
+  --ifm-h2-font-size: 1.5rem;
+  letter-spacing: 0.05rem;
+  margin: 1.5rem 0;
+  margin-top: 2rem;
+  border: none;
+  padding: 0;
+  background-color: transparent;
+}
+
+
+.markdown .tutorial-page h3 {
+  --ifm-h3-font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.02rem;
+  margin: 1.5rem 0;
+  border: none;
+  padding: 0;
+  background-color: transparent;
+}
+
+.markdown .tutorial-page h3:first-child {
+  /* fix the top margin of the heading sentence, because we now wrap it inside tutorial-page class */
+  margin-top: 0;
+}
 
 code {
   --ifm-code-background: transparent;
@@ -382,6 +440,11 @@ code {
 .admonition.admonition-tip h5 {
   background-color: var(--ifm-color-success);
 }
+
+.admonition.admonition-caution h5 {
+  background-color: var(--ifm-color-warning);
+}
+
 
 .admonition-content {
   padding: 20px;

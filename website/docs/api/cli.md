@@ -4,6 +4,8 @@ id: cli
 
 # CLI
 
+<div className="tutorial-page">
+
 The PyTorch Live CLI (i.e., `torchlive-cli`) provides a set of commands to help you install build dependencies, initialize new PyTorch Live projects, build and deploy them to emulator or physical devices.
 
 ## Prerequisites
@@ -171,3 +173,5 @@ Shows additional help for a command.
 ```shell
 npx torchlive-cli help init
 ```
+
+</div>

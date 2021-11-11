@@ -5,6 +5,8 @@ sidebar_position: 5
 
 # Model Specification
 
+<div className="tutorial-page">
+
 Model specification specifies the structure of model input and output, allowing the use of prebuilt transformations.
 
 It is stored as [extra_file of the model](https://pytorch.org/docs/stable/generated/torch.jit.load.html#torch.jit.load) 'model/live.spec.json'.
@@ -241,3 +243,5 @@ unpack type:
   }
 }
 ```
+
+</div>

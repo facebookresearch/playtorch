@@ -57,6 +57,7 @@ please refer to https://github.com/pytorch/live/issues for more info.`;
   }
 
   async run(context: TaskContext): Promise<void> {
+    context.task.title = `${this.getDescription()} (initializing, this can take a few minutes.)`;
     await this.initProject(context);
     await this.installProjectDependencies(context);
     context.update(`Initialized ${this.getDescription()}
@@ -69,7 +70,9 @@ ${chalk.blue('Run instructions for iOS')}:
 ${NOBREAKSPACE_INTEDENTATION}• cd ${this.name} && npx torchlive-cli run-ios
 ${NOBREAKSPACE_INTEDENTATION}${chalk.grey('- or -')}
 ${NOBREAKSPACE_INTEDENTATION}• Open ${this.name}/ios/${this.name}.xcworkspace in Xcode or run "xed -b ios"
-${NOBREAKSPACE_INTEDENTATION}• Hit the Run button`);
+${NOBREAKSPACE_INTEDENTATION}• Hit the Run button`
+    );
+    context.task.title = this.getDescription();
   }
 
   async initProject(context: TaskContext): Promise<void> {

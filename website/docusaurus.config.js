@@ -36,6 +36,8 @@ module.exports = {
       logo: {
         alt: 'PyTorch Live Logo',
         src: 'img/PyTorchLive_Logo.png',
+        href: 'https://pytorch.org',
+        target: '_self',
       },
       items: [
         {
@@ -72,15 +74,27 @@ module.exports = {
       style: 'dark',
       links: [
         {
-          title: 'Docs',
+          title: 'PyTorch Live',
           items: [
             {
-              label: 'Tutorial',
-              to: '/docs/tutorials/image-classification',
+              label: 'Home',
+              to: '/',
             },
             {
-              label: 'Model Specification',
-              to: '/docs/api/model-spec',
+              label: 'Showcase',
+              to: '/showcase',
+            },
+            {
+              label: 'Tutorials',
+              to: '/docs/tutorials/get-started',
+            },
+            {
+              label: 'API',
+              to: '/docs/api/core',
+            },
+            {
+              label: 'PyTorch',
+              to: 'https://pytorch.org',
             },
           ],
         },
@@ -88,17 +102,12 @@ module.exports = {
           title: 'Community',
           items: [
             {
+              label: 'GitHub',
+              href: 'https://github.com/pytorch/live/',
+            },
+            {
               label: 'Stack Overflow',
               href: 'https://stackoverflow.com/questions/tagged/pytorch-live',
-            },
-          ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
             },
           ],
         },

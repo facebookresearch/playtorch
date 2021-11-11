@@ -9,6 +9,8 @@ import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
 
 # Prepare Custom Model
 
+### In this tutorial, we will learn how to prepare a custom AI model so that it can be integrated into a PyTorch Live demo.
+
 PyTorch Live works with high-level data types such as images and strings. To run inference, these high-level data types need to be transformed into tensors and the model output needs to be transformed into high-level data types. Transforming a high-level data type into a tensor is called `pack` and transforming a tensor into a high-level data type is called `unpack`.
 
 Each model will have a `pack` and an `unpack`. Both are specified in the PyTorch Live Spec (or Live Spec for short). The Live Spec has to be bundled with the model `ptl` file as `extra_files`.

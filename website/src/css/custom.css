@@ -39,7 +39,25 @@
 */
 
 :root {
-  --ifm-color-primary: #EE4C2C;
+  --ifm-color-primary: #ee4c2c;
+  --ifm-color-secondary: #de3412;
+  --ifm-color-success: #2b7d6d;
+  --ifm-color-info: #30748F;
+  --ifm-color-warning: #ffba00;
+  --ifm-color-danger: #fa383e;
+
+  --ifm-color-gray-0: var(--ifm-color-white);
+  --ifm-color-gray-100: #f6f6f6;
+  --ifm-color-gray-200: #e6e6e6;
+  --ifm-color-gray-300: #dadde1;
+  --ifm-color-gray-400: #ccd0d5;
+  --ifm-color-gray-500: #bec3c9;
+  --ifm-color-gray-600: #8d949e;
+  --ifm-color-gray-700: #606770;
+  --ifm-color-gray-800: #444950;
+  --ifm-color-gray-900: #1c1e21;
+  --ifm-color-gray-1000: var(--ifm-color-black);
+
   --ifm-color-primary-dark: rgb(33, 175, 144);
   --ifm-color-primary-darker: rgb(31, 165, 136);
   --ifm-color-primary-darkest: rgb(26, 136, 112);
@@ -47,7 +65,7 @@
   --ifm-color-primary-lighter: rgb(102, 212, 189);
   --ifm-color-primary-lightest: rgb(146, 224, 208);
   --ifm-code-font-size: 0.8em;
-  --ifm-button-border-color: #EE4C2C;
+  --ifm-button-border-color: #ee4c2c;
   --ifm-font-family-base: FreightSansLFPro, FreightSans, -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;
   --ifm-font-size-base: 16px;
   --ifm-font-family-monospace: "Andale Mono", Menlo, Monaco, Consolas, monospace;
@@ -58,6 +76,7 @@
   --ifm-h3-font-size: 1.2rem;
   --ifm-heading-font-weight: 600;
   --ifm-code-border-radius: 3px;
+  --ifm-leading: 1.5rem;
 
   --ifm-menu-color-active: #FFFFFF;
   --ifm-menu-color-background-active: #DE3412;
@@ -69,7 +88,11 @@
 }
 
 p {
-  line-height: 1.45;
+  line-height: 1.35;
+}
+
+strong {
+  font-weight: 600;
 }
 
 .button--lg {
@@ -175,7 +198,7 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 
 .hero__cta:hover {
   text-decoration: none;
-  background-color: #ee4c2c;
+  background-color: var(--ifm-color-primary);
   color: #fff;
   box-shadow: 0 5px 30px 3px rgba(0,0,0,.3);
 }
@@ -191,17 +214,48 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 }
 
 
+/* Docusaurus Theme override - temporary fixes using !important */
+[class^='docTitle'] {
+  font-size: 1.875rem !important;
+  text-transform: uppercase;
+  font-weight: 400;
+  letter-spacing: 0.15rem;
+  color: var(--ifm-color-primary);
+}
+
+[class^=docItemContainer] {
+  padding: 1.5rem 2.5rem !important;
+}
+
+@media only screen and (max-width: 996px) {
+  [class^=docItemContainer] {
+    padding: 0.5rem 1rem !important;
+  }
+}
+
+@media (min-width: 997px) and (max-width: 1320px) {
+  [class^=docMainContainer] .container {
+    max-width: 100% !important;
+  }
+}
+
+[class^=surveyLinkBox] {
+  border-radius: 3px !important;
+  background-color: var(--ifm-color-primary) !important;
+}
+
 
 
 /* side bar menu override */
-.menu {
-  padding: 0;
+.menu__list {
+  border-bottom: 1px solid var(--ifm-color-gray-200);
 }
 
 .menu__link {
   border-radius: 0;
   font-size: 0.875rem;
   padding: var(--ifm-menu-link-padding-vertical) var(--ifm-menu-link-padding-horizontal);
+  padding-top: calc( var(--ifm-menu-link-padding-vertical) + 0.2rem );
 }
 
 .menu__list-item {
@@ -209,12 +263,13 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 }
 
 .menu__link {
-  border-top: 1px solid #e6e6e6;
+  border-top: 1px solid var(--ifm-color-gray-200);
 }
 
 .menu__link--sublist, .menu__list > .menu__list-item > .menu__link {
   font-weight: 600;
   text-transform: uppercase;
+  letter-spacing: 0.02rem;
 }
 
 .menu__list-item:first-child .menu__link {
@@ -253,21 +308,37 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   transform: none;
 }
 
+.menu--responsive > .button.button--secondary {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  color: var(--ifm-color-gray-0);
+  padding: 0;
+}
+
+/* Right side nav */
+
+ul.table-of-contents li:first-child {
+  display: none;
+}
+
 /* Docs markdown */
 
 .markdown > h2 {
   text-transform: uppercase;
   font-weight: 400;
   --ifm-h2-font-size: 1.5rem;
+  letter-spacing: 0.05rem;
+  margin: 1.5rem 0;
+  margin-top: 2rem;
 
 }
 
 .markdown > h3 {
-  --ifm-h3-font-size: 1rem;
-  border-top: 2px solid #DE3412;
-  padding: 15px;
-  background-color: #F6F6F6;
+  --ifm-h3-font-size: 1.5rem;
   font-weight: 400;
+  letter-spacing: 0.02rem;
+  margin: 1.5rem 0;
 }
 
 
@@ -276,4 +347,69 @@ code {
   --ifm-code-padding-vertical: 0;
   border-radius: 0;
   border: none;
+}
+
+
+/* info boxes */
+.admonition {
+  background-color: var(--ifm-color-gray-100);
+  padding: 0;
+  font-size: 0.9rem;
+  border-radius: 3px;
+  border: none;
+  margin: 40px 0;
+  overflow: hidden;
+}
+
+.admonition-icon svg {
+  width: 0.6rem;
+  height: 0.6rem;
+  margin: 0 0.1rem;
+  fill: var(--ifm-color-gray-0);
+}
+
+.admonition h5 {
+  padding: 7px;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.admonition.admonition-note h5, .admonition.admonition-info h5 {
+  background-color: var(--ifm-color-info);
+  color: var(--ifm-color-gray-0);
+}
+
+.admonition.admonition-tip h5 {
+  background-color: var(--ifm-color-success);
+}
+
+.admonition-content {
+  padding: 20px;
+  color: var(--ifm-color-gray-800);
+}
+
+
+/* Tabs */
+.tabs .tabs__item {
+  font-weight: 600;
+}
+
+.tabs .tabs__item {
+  border-width: 2px;;
+}
+
+
+
+/* footer */
+.footer--dark {
+  font-size: 0.9rem;
+  --ifm-footer-link-color: var(--ifm-color-gray-0);
+}
+
+.footer__title {
+  font-weight: 600;
+}
+
+.footer--dark a:hover {
+  text-decoration: none;
 }

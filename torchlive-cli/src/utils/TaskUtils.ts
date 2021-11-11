@@ -27,6 +27,7 @@ import {StringBuilder} from './StringBuilder';
 import {getEnv} from './SystemUtils';
 
 const Logger = getLogger('TaskUtils');
+const NOBREAKSPACE = '‎ ';
 
 export async function runTasks(tasks: ITask[]): Promise<void> {
   const validTasks = tasks.filter(task => task.isValid());
@@ -121,7 +122,7 @@ export async function executeCommandForTask(
     const process = spawn(cmd, args, mergedOptions);
 
     process.stdout.on('data', data => {
-      const message = String(data).trim();
+      const message = String(data).trimEnd().replace(/ /g, NOBREAKSPACE);
       Logger.info(message);
       context.update(message);
     });

@@ -26,6 +26,7 @@ import node from '../commands/Node';
 import watchman from '../commands/Watchman';
 import yarn from '../commands/Yarn';
 import python from '../commands/Python';
+import reactNative from '../commands/ReactNative'
 import {print as printHeader} from '../utils/header';
 import {execCommandSync, getEnv} from '../utils/SystemUtils';
 import {isCommandInstalled} from '../utils/ToolingUtils';
@@ -98,6 +99,16 @@ function indent(spaces: number): string {
 function runHealthCheck(healthCheck: IHealthCheck, ind: number = 2): void {
   const command = healthCheck.getCommand();
   console.log(`${indent(ind - 2)}${chalk.green(healthCheck.getTitle())}`);
+  if (healthCheck.getShouldRemove()) {
+    if (!command.isInstalled()) {
+      console.log(`${indent(ind)}✅ package does not exist.`)
+    } else {
+      console.log(`${indent(ind)}📍 path: ${command.getPath()}`);
+      console.log(`${indent(ind)}🚫 package should not exist, please remove.`)
+    }
+    console.log();
+    return;
+  }
   if (command.isInstalled()) {
     console.log(`${indent(ind)}📍 path: ${command.getPath()}`);
     if (!command.isVersionless()) {
@@ -154,6 +165,10 @@ const runDoctor = async (): Promise<void> => {
     }),
     new HealthCheck('Node.js', node, {
       minVersion: semver.parse('12.15.0'),
+    }),
+    new HealthCheck('React Native should not be installed locally', reactNative, {
+      minVersion: null,
+      shouldRemove: true,
     }),
     new HealthCheck('Yarn', yarn, {
       minVersion: semver.parse('1.17.0-20190429.1820'),

@@ -26,6 +26,7 @@ type HealthCheckRequirement = {
   minVersion: SemVer | null;
   packages?: Package[];
   parseInstalledPackages?(): Package[];
+  shouldRemove?: boolean;
 };
 
 export type IHealthCheckConfig = {
@@ -37,6 +38,7 @@ export interface IHealthCheck {
   getTitle(): string;
   getCommand(): ICommand;
   getMinVersion(): SemVer | null;
+  getShouldRemove(): boolean | null;
   satisfies(): boolean;
   hasPackages(): boolean;
   getRequiredPackages(): Package[];
@@ -69,6 +71,10 @@ export default class HealthCheck implements IHealthCheck {
 
   getMinVersion(): SemVer | null {
     return this.requirement.minVersion;
+  }
+
+  getShouldRemove(): boolean | null {
+    return this.requirement.shouldRemove;
   }
 
   satisfies(): boolean {

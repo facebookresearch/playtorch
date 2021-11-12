@@ -47,10 +47,16 @@ class InitTask implements ITask {
 
   mitigateOnError(): string {
     return `💥 Failed to initialize ${this.name} project. \
-Please run 'react-native init <project-name> --template react-native-template-pytorch-live'
+Please run 'npx react-native init <project-name> --template react-native-template-pytorch-live'
 for more debug info.
 
-If you still run into issue, \
+${isCommandInstalled('react-native') && chalk.blue(`The following package installed locally might cause unexpected behavior, please uninstall them and rerun the commands.
+
+• react-native
+
+ref: https://reactnative.dev/docs/environment-setup)`)}
+
+If you still run into issues, \
 please refer to https://github.com/pytorch/live/issues for more info.`;
   }
 

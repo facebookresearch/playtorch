@@ -13,6 +13,8 @@ import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
 
 If you haven't installed the PyTorch Live CLI yet, please [follow this tutorial](get-started) to get started.
 
+If you get lost at any point in this tutorial, completed examples of each step can be found [here](https://github.com/pytorch/live/tree/main/examples/question-answering/).
+
 ## Initialize New Project
 
 Let's start by initializing a new project `QuestionAnsweringTutorial` with the PyTorch Live CLI.
@@ -55,7 +57,7 @@ Let's get started with the UI for the question answering. Create a file `Questio
 
 ```tsx title="./src/demos/QuestionAnsweringDemo.tsx"
 import * as React from 'react';
-import {Button, Text, TextInput, View} from 'react-native';
+import { Button, Text, TextInput, View } from 'react-native';
 
 export default function QuestionAnsweringDemo() {
   return (
@@ -104,7 +106,7 @@ Great! Next, add some styling to the question answering component.
 
 ```tsx {2,6-8,10,15-25} title="./src/demos/QuestionAnsweringDemo.tsx"
 import * as React from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function QuestionAnsweringDemo() {
   return (
@@ -141,8 +143,8 @@ Add an event handler to the `Ask` button. The event handler `handleAsk` will be 
 
 ```tsx {6-14,18-20} title="./src/demos/QuestionAnsweringDemo.tsx"
 import * as React from 'react';
-import {useState} from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import { useState } from 'react';
+import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
 
 export default function QuestionAnsweringDemo() {
   const [text, setText] = useState('');
@@ -191,9 +193,9 @@ It will use the `bert_qa.ptl` model that is already prepared for PyTorch Live. Y
 
 ```tsx {2,4-5,7-10,15-18,21,29} title="./src/demos/QuestionAnsweringDemo.tsx"
 import * as React from 'react';
-import {useState} from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
-import {ModelInfo} from '../Models';
+import { useState } from 'react';
+import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import type { ModelInfo } from 'react-native-pytorch-core';
 import useNLPQAModelInference from '../useNLPQAModelInference';
 
 const modelInfo: ModelInfo = {
@@ -245,9 +247,9 @@ Add user feedback while the inference is running. The `useNLPQAModelInference` h
 
 ```tsx {17,30} title="./src/demos/QuestionAnsweringDemo.tsx"
 import * as React from 'react';
-import {useState} from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
-import {ModelInfo} from '../Models';
+import { useState } from 'react';
+import { Button, StyleSheet, Text, TextInput, View } from 'react-native';
+import type { ModelInfo } from 'react-native-pytorch-core';
 import useNLPQAModelInference from '../useNLPQAModelInference';
 
 const modelInfo: ModelInfo = {

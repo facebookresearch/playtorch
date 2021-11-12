@@ -59,7 +59,7 @@ Let's get started with the UI for the image classification. Create a file `Image
 import * as React from 'react';
 import {Text} from 'react-native';
 
-export default function ImageClassifactionDemo() {
+export default function ImageClassificationDemo() {
   return (
     <Text>Image Classification</Text>
   );
@@ -78,11 +78,11 @@ The `MyDemos.tsx` already contains code. Replace the code with the code below.
 
 ```tsx title="./src/demos/MyDemos.tsx"
 import * as React from 'react';
-import ImageClassifactionDemo from './ImageClassificationDemo';
+import ImageClassificationDemo from './ImageClassificationDemo';
 
 export default function MyDemos() {
   return (
-    <ImageClassifactionDemo />
+    <ImageClassificationDemo />
   );
 }
 ```
@@ -225,8 +225,7 @@ Replace the `console.log` with the `processImage` function and pass in the image
 ```tsx {4-5,7-10,14,17,24} title="./src/demos/ImageClassificationDemo.tsx"
 import * as React from 'react';
 import {Text, StyleSheet, View} from 'react-native';
-import {Camera, Image} from 'react-native-pytorch-core';
-import {ModelInfo} from '../Models';
+import {Camera, Image, ModelInfo} from 'react-native-pytorch-core';
 import useImageModelInference from '../useImageModelInference';
 
 const modelInfo: ModelInfo = {
@@ -324,8 +323,7 @@ To process images frame by frame without the need to press the capture button, r
 ```tsx {25-29} title="./src/demos/ImageClassificationDemo.tsx"
 import * as React from 'react';
 import {Text, StyleSheet, View} from 'react-native';
-import {Camera, Image} from 'react-native-pytorch-core';
-import {ModelInfo} from '../Models';
+import {Camera, Image, ModelInfo} from 'react-native-pytorch-core';
 import useImageModelInference from '../useImageModelInference';
 
 const modelInfo: ModelInfo = {

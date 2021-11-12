@@ -8,15 +8,15 @@
  */
 
 import * as React from 'react';
-import { Button, Text, TextInput, View } from 'react-native';
+import {Button, Text, TextInput, View} from 'react-native';
 
 export default function QuestionAnsweringDemo() {
-    return (
-        <View>
-            <TextInput placeholder="Text" />
-            <TextInput placeholder="Question" />
-            <Button title="Ask" onPress={() => { }} />
-            <Text>Question Answering</Text>
-        </View>
-    );
+  return (
+    <View>
+      <TextInput placeholder="Text" />
+      <TextInput placeholder="Question" />
+      <Button title="Ask" onPress={() => {}} />
+      <Text>Question Answering</Text>
+    </View>
+  );
 }

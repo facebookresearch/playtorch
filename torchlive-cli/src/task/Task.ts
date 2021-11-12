@@ -16,9 +16,9 @@ export type TaskContext = {
 };
 
 export interface ITask {
+  taskRendererOptions?: ListrGetRendererTaskOptions<ListrDefaultRenderer>;
   getDescription(): string;
   isValid(): boolean;
   mitigateOnError(): string;
   run(context: TaskContext): Promise<void>;
-  getOptions?(): ListrGetRendererTaskOptions<ListrDefaultRenderer>;
 }

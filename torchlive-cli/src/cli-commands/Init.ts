@@ -26,12 +26,16 @@ type InitOptions = {
 
 class InitTask implements ITask {
   private name: string;
-  private options: InitOptions;
+  private initOptions: InitOptions;
 
-  constructor(name: string, options: InitOptions) {
+  constructor(name: string, initOptions: InitOptions) {
     this.name = name;
-    this.options = options;
+    this.initOptions = initOptions;
   }
+
+  taskRendererOptions: ListrGetRendererTaskOptions<ListrDefaultRenderer> = {
+    persistentOutput: true,
+  };
 
   isValid(): boolean {
     return isCommandInstalled('yarn', getEnv()) && isCommandInstalled('npx');
@@ -39,12 +43,6 @@ class InitTask implements ITask {
 
   getDescription(): string {
     return `project ${this.name}`;
-  }
-
-  getOptions(): ListrGetRendererTaskOptions<ListrDefaultRenderer> {
-    return {
-      persistentOutput: true,
-    }
   }
 
   mitigateOnError(): string {
@@ -76,17 +74,17 @@ ${NOBREAKSPACE_INTEDENTATION}• Hit the Run button`
   }
 
   async initProject(context: TaskContext): Promise<void> {
-    context.update(`Init template ${this.options.template}`);
+    context.update(`Init template ${this.initOptions.template}`);
 
     const args = [
       'react-native',
       'init',
       this.name,
       '--template',
-      this.options.template,
+      this.initOptions.template,
     ];
 
-    if (this.options.skipInstall) {
+    if (this.initOptions.skipInstall) {
       args.push('--skip-install');
     }
 

@@ -53,7 +53,7 @@ export async function runTasks(tasks: ITask[]): Promise<void> {
 
           return false;
         },
-        options: validTask.getOptions(),
+        options: validTask.taskRendererOptions,
         task(
           ctx: ListrContext,
           task: ListrTaskWrapper<ListrContext, ListrRendererFactory>,

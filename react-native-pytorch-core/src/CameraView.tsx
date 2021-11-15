@@ -8,7 +8,12 @@
  */
 
 import * as React from 'react';
-import {findNodeHandle, requireNativeComponent, UIManager, ViewProps} from 'react-native';
+import {
+  findNodeHandle,
+  requireNativeComponent,
+  UIManager,
+  ViewProps,
+} from 'react-native';
 import {Image, wrapRef} from './ImageModule';
 import type {NativeJSRef} from './NativeJSRef';
 
@@ -37,12 +42,12 @@ export enum CameraFacing {
   /**
    * Camera facing the opposite direction as the device's screen.
    */
-  BACK = "back",
+  BACK = 'back',
 
   /**
    * Camera facing the same direction as the device's screen.
    */
-  FRONT = "front",
+  FRONT = 'front',
 }
 
 /**
@@ -75,7 +80,7 @@ export interface CameraProps extends ViewProps {
   /**
    * Direction the camera faces relative to the device's screen.
    */
-  facing?: CameraFacing,
+  facing?: CameraFacing;
 
   /**
    * Callback with an [[Image]] after capture button was pressed.
@@ -97,14 +102,13 @@ export interface CameraProps extends ViewProps {
    *
    * @param image An [[Image]] reference.
    */
-  onFrame? (image: Image): void;
+  onFrame?(image: Image): void;
 }
 
 const nativeCameraViewName = 'PyTorchCoreCameraView';
 
-const PyTorchCoreCameraView = requireNativeComponent<CameraProps>(
-  nativeCameraViewName
-);
+const PyTorchCoreCameraView =
+  requireNativeComponent<CameraProps>(nativeCameraViewName);
 
 /**
  * A camera component with [[CameraProps.onCapture]] and [[CameraProps.onFrame]] callbacks.
@@ -147,35 +151,76 @@ export class Camera extends React.PureComponent<CameraProps> {
     this.cameraRef = React.createRef();
   }
 
-  takePicture() {
+  /**
+   * The [[takePicture]] function captures an image from the camera and then
+   * trigger the [[onCapture]] callback registered on the [[Camera]]
+   * component.
+   *
+   * ```typescript
+   * export default function Playground() {
+   *   const cameraRef = React.useRef<Camera>(null);
+   *
+   *   async function handleCapture(image: Image) {
+   *     // Use captured image before releasing it.
+   *     image.release();
+   *   }
+   *
+   *   function handleTakePicture() {
+   *     const camera = cameraRef.current;
+   *     if (camera != null) {
+   *       camera.takePicture();
+   *     }
+   *   }
+   *
+   *   return (
+   *     <>
+   *       <Camera
+   *         ref={cameraRef}
+   *         onCapture={handleCapture}
+   *         hideCaptureButton={true}
+   *         style={StyleSheet.absoluteFill}
+   *         targetResolution={{width: 480, height: 640}}
+   *         facing={CameraFacing.BACK}
+   *       />
+   *       <Button title="Take Picture" onPress={handleTakePicture} />
+   *     </>
+   *   );
+   * }
+   * ```
+   */
+  public takePicture(): void {
     if (this.cameraRef.current) {
+      const takePictureCommandId =
+        UIManager.getViewManagerConfig(nativeCameraViewName).Commands
+          .takePicture;
+      const cameraViewHandle = findNodeHandle(this.cameraRef.current);
       UIManager.dispatchViewManagerCommand(
-        findNodeHandle(this.cameraRef.current),
-        UIManager.getViewManagerConfig(nativeCameraViewName).Commands.takePicture,
-        []
+        cameraViewHandle,
+        takePictureCommandId,
+        [],
       );
     }
   }
 
-  _handleOnCapture = (event: any) => {
-    const { onCapture } = this.props;
-    const { nativeEvent } = event;
-    const { ID } = nativeEvent;
-    const ref: NativeJSRef = { ID };
+  private handleOnCapture = (event: any): void => {
+    const {onCapture} = this.props;
+    const {nativeEvent} = event;
+    const {ID} = nativeEvent;
+    const ref: NativeJSRef = {ID};
     const image = wrapRef(ref);
     onCapture != null && onCapture(image);
   };
 
-  _handleOnFrame = (event: any) => {
-    const { onFrame } = this.props;
-    const { nativeEvent } = event;
-    const { ID } = nativeEvent;
-    const ref: NativeJSRef = { ID };
+  private handleOnFrame = (event: any): void => {
+    const {onFrame} = this.props;
+    const {nativeEvent} = event;
+    const {ID} = nativeEvent;
+    const ref: NativeJSRef = {ID};
     const image = wrapRef(ref);
     onFrame != null && onFrame(image);
   };
 
-  render() {
+  public render(): React.ReactNode {
     const {
       facing,
       hideCaptureButton,
@@ -189,8 +234,8 @@ export class Camera extends React.PureComponent<CameraProps> {
         {...otherProps}
         facing={facing}
         hideCaptureButton={hideCaptureButton}
-        onCapture={this._handleOnCapture}
-        onFrame={onFrame != null ? this._handleOnFrame : undefined}
+        onCapture={this.handleOnCapture}
+        onFrame={onFrame != null ? this.handleOnFrame : undefined}
         ref={this.cameraRef}
         targetResolution={targetResolution}
       />

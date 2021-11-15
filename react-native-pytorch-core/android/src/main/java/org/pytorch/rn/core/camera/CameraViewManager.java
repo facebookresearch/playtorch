@@ -52,12 +52,21 @@ public class CameraViewManager extends SimpleViewManager<CameraView> {
 
   @Override
   public void receiveCommand(
-      @NonNull CameraView view, String commandId, @Nullable ReadableArray args) {
-    super.receiveCommand(view, commandId, args);
+      @NonNull CameraView cameraView, int commandId, @Nullable ReadableArray args) {
+    switch (commandId) {
+      case COMMAND_TAKE_PICTURE:
+        cameraView.takePicture();
+        break;
+    }
+  }
+
+  @Override
+  public void receiveCommand(
+      @NonNull CameraView cameraView, String commandId, @Nullable ReadableArray args) {
     int commandIdInt = Integer.parseInt(commandId);
     switch (commandIdInt) {
       case COMMAND_TAKE_PICTURE:
-        view.takePicture();
+        cameraView.takePicture();
         break;
     }
   }

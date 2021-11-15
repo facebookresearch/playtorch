@@ -48,6 +48,7 @@ import DETR from './models/DETR';
 import Wav2Vec2 from './models/Wav2Vec2';
 import FastNeuralStyle from './models/FastNeuralStyle';
 import MobileNetV3 from './models/MobileNetV3';
+import CameraTakePicture from './apiTest/camera/CameraTakePicture';
 
 export type Tool = {
   icon?: React.ReactNode;
@@ -130,7 +131,19 @@ const tools: ToolSection = [
     ],
   },
   {
-    title: 'API Test',
+    title: 'Camera API Test',
+    data: [
+      {
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
+        title: 'Camera#takePicture',
+        subtitle: 'Manually calling takePicture API on camera',
+        apiTest: true,
+        component: CameraTakePicture,
+      },
+    ],
+  },
+  {
+    title: 'Canvas API Test',
     data: [
       {
         icon: <Icon name="clipboard-text" size={32} color="white" />,

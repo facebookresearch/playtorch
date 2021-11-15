@@ -144,8 +144,9 @@ const PyTorchCoreCameraView =
  * @component
  */
 export class Camera extends React.PureComponent<CameraProps> {
-  cameraRef: React.RefObject<any>;
+  private cameraRef: React.RefObject<any>;
 
+  /** @internal */
   constructor(props: CameraProps) {
     super(props);
     this.cameraRef = React.createRef();
@@ -157,7 +158,7 @@ export class Camera extends React.PureComponent<CameraProps> {
    * component.
    *
    * ```typescript
-   * export default function Playground() {
+   * export default function CameraTakePicture() {
    *   const cameraRef = React.useRef<Camera>(null);
    *
    *   async function handleCapture(image: Image) {
@@ -220,6 +221,7 @@ export class Camera extends React.PureComponent<CameraProps> {
     onFrame != null && onFrame(image);
   };
 
+  /** @internal */
   public render(): React.ReactNode {
     const {
       facing,

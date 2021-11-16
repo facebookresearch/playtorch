@@ -30,11 +30,12 @@ Let's get started!
 
 ## Prerequisites
 
-- **Our beta release only supports MacOS**. Windows and Linux supports are coming soon.
+- **Our beta release only supports MacOS**. Windows and Linux supports are coming soon. However, you can [follow the manual installation instructions to get started on Windows and Linux](get-started-manually).
 - **Node.js**: If you don't have it already, you can download Node.js LTS [from its website](https://nodejs.org/) or install via [Homebrew](https://formulae.brew.sh/formula/node) (ie, `brew install node`).
 - **Xcode**: If you want to run the app on an iOS simulator or a physical iOS device, you need to install Xcode from the Apple App Store on your macOS device. PyTorch Live currently supports Xcode version 12.5 or later.
 
 ## Installation
+
 Setting up the build environment can be tedious and difficult. PyTorch Live provides a setup routine to install the required dependencies automatically for you. It will try to install the following libraries and tools:
 
 - OpenJDK
@@ -47,6 +48,12 @@ Setting up the build environment can be tedious and difficult. PyTorch Live prov
 - Yarn
 - Watchman
 - Default emulator device
+
+:::note
+
+Check out the [manual installation process](get-started-manually) if your operating system is Windows or Linux or if the PyTorch Live command line tool `torchlive-cli` fails for you!
+
+:::
 
 Now let's run this **setup-dev** command and get the build environment ready for development:
 

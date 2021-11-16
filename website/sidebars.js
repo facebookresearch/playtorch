@@ -20,7 +20,12 @@
 
 module.exports = {
   docs: [
-    'tutorials/get-started',
+    {
+      type: 'category',
+      label: 'Get Started',
+      collapsed: false,
+      items: ['tutorials/get-started', 'tutorials/get-started-manually'],
+    },
     'tutorials/image-classification',
     'tutorials/question-answering',
     'tutorials/mnist-digit-classification',

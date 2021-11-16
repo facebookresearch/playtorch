@@ -65,8 +65,6 @@ export function createCommand(
   command: string,
   options?: CreateCommandOptions,
 ): ICommand {
-  let version: SemVer | null = null;
-
   const commands: ICommands = options?.commands || {
     macOS: {
       execute(args: readonly string[]): string | null {
@@ -126,16 +124,12 @@ export function createCommand(
     if (options?.versionless) {
       return null;
     }
-    if (version !== null) {
-      return version;
-    }
     if (options?.getVersion != null) {
-      version = options.getVersion();
+      return options.getVersion();
     } else {
       const rawVersion = execute(['--version']);
-      version = semver.parse(rawVersion);
+      return semver.parse(rawVersion);
     }
-    return version;
   }
 
   return {

@@ -34,3 +34,6 @@ dist/
 
 # Apple Desktop Services Store
 .DS_Store
+
+# Jest Coverage
+src/coverage/

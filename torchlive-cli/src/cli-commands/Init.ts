@@ -74,7 +74,8 @@ ${chalk.blue('Run instructions for iOS')}:
 ${NOBREAKSPACE_INTEDENTATION}• cd ${this.name} && npx torchlive-cli run-ios
 ${NOBREAKSPACE_INTEDENTATION}${chalk.grey('- or -')}
 ${NOBREAKSPACE_INTEDENTATION}• Open ${this.name}/ios/${this.name}.xcworkspace in Xcode or run "xed -b ios"
-${NOBREAKSPACE_INTEDENTATION}• Hit the Run button`
+${NOBREAKSPACE_INTEDENTATION}• Hit the Run button
+${NOBREAKSPACE_INTEDENTATION}`
     );
     context.task.title = this.getDescription();
   }

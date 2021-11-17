@@ -25,6 +25,8 @@ class BaseIValuePacker {
         case PackStringError
         case DecodeBertError
         case DecodeObjectsError
+        case AudioUnwrapError
+        case DecodeStringError
     }
 
     var packerContext = [String: Any]()
@@ -45,6 +47,8 @@ class BaseIValuePacker {
             return try packImage(modelSpec: modelSpecification, params: params)
         case "tensor_from_string":
             return try packString(modelSpec: modelSpecification, params: params)
+        case "tensor_from_audio":
+            return try packAudio(modelSpec: modelSpecification, params: params)
         default:
             throw BaseIValuePackerError.InvalidTransformType
         }
@@ -69,6 +73,8 @@ class BaseIValuePacker {
             try decodeBertQAAnswer(ivalue: ivalue, unpack: unpack, map: &map)
         case "bounding_boxes":
             try decodeObjects(ivalue: ivalue, unpack: unpack, params: params, map: &map)
+        case "string":
+            try decodeTensorToString(ivalue: ivalue, unpack: unpack, map: &map)
         default:
             throw BaseIValuePackerError.InvalidUnpackType
         }
@@ -88,6 +94,29 @@ class BaseIValuePacker {
             }
         } catch {
             throw BaseIValuePackerError.ImageUnwrapError
+        }
+    }
+
+    private func packAudio(modelSpec: JSON, params: NSDictionary) throws -> IValue? {
+        do {
+            if let audioId = (params["audio"] as? NSDictionary)?["ID"] as? String {
+                let audio = try AudioModule.unwrapAudio(audioId)
+
+                let MAX_VALUE = 32767
+                var floatArray : [Float] = []
+                for n in audio.getData() {
+                    floatArray.append(Float(n) / Float(MAX_VALUE))
+                }
+
+                guard let tensor = Tensor.fromBlob(data: &floatArray, shape: [1, NSNumber(value: 16000*5)], dtype: .float) else {
+                    throw BaseIValuePackerError.AudioUnwrapError
+                }
+                return IValue.fromTensor(tensor)
+            } else {
+                throw BaseIValuePackerError.AudioUnwrapError
+            }
+        } catch {
+            throw BaseIValuePackerError.AudioUnwrapError
         }
     }
 
@@ -138,7 +167,7 @@ class BaseIValuePacker {
                 specSrc = specSrc.replacingOccurrences(of: "$\(key)", with: value)
             } else {
                 if let key = key as? String {
-                    if key != "image" {
+                    if key != "image" && key != "audio" {
                         throw BaseIValuePackerError.InvalidParam
                     }
                 } else {
@@ -302,6 +331,17 @@ class BaseIValuePacker {
         default:
             throw BaseIValuePackerError.PackStringError
         }
+    }
+
+    private func decodeTensorToString(ivalue: IValue, unpack: JSON, map: inout [String: Any]) throws -> Void {
+        guard let key = unpack["key"].string else {
+            throw BaseIValuePackerError.MissingKeyParam
+        }
+
+        guard let answer = ivalue.toString() else {
+            throw BaseIValuePackerError.DecodeStringError
+        }
+        map[key] = answer
     }
 
     private func decodeBertQAAnswer(ivalue: IValue, unpack: JSON, map: inout [String: Any]) throws -> Void {

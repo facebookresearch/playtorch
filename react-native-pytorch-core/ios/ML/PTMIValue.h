@@ -25,6 +25,8 @@ NS_SWIFT_NAME(IValue)
 
 - (nullable NSDictionary<NSString*, PTMIValue*>*)toDictStringKey;
 
+- (nullable NSString*)toString;
+
 @end
 
 NS_ASSUME_NONNULL_END

@@ -39,6 +39,15 @@
     return [PTMTensor fromTensor:tensor];
 }
 
+- (nullable NSString*)toString {
+    if (_ivalue.toString() == NO) {
+        return nil;
+    }
+    
+    auto answer = _ivalue.toString();
+    return [NSString stringWithUTF8String:answer->string().c_str()];
+}
+
 - (nullable NSDictionary<NSString*, PTMIValue*>*)toDictStringKey {
     if (_ivalue.isGenericDict() == NO) {
         return nil;

@@ -14,10 +14,12 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.uimanager.ReactInvalidPropertyException;
 import org.pytorch.rn.core.image.IImage;
 import org.pytorch.rn.core.javascript.JSContext;
 
+@ReactModule(name = "PyTorchCoreCanvasRenderingContext2DModule")
 public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
 
   public static final String REACT_MODULE = "PyTorchCoreCanvasRenderingContext2DModule";

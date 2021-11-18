@@ -20,6 +20,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
+import com.facebook.react.module.annotations.ReactModule;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
@@ -39,6 +40,7 @@ import org.pytorch.rn.core.ml.processing.IIValuePacker;
 import org.pytorch.rn.core.ml.processing.PackerContext;
 import org.pytorch.rn.core.utils.FileUtils;
 
+@ReactModule(name = "PyTorchCoreMobileModelModule")
 public class MobileModelModule extends ReactContextBaseJavaModule {
 
   public static final String REACT_MODULE = "PyTorchCoreMobileModelModule";

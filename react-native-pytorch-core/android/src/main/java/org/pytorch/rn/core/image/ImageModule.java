@@ -16,6 +16,7 @@ import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.module.annotations.ReactModule;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,6 +28,7 @@ import org.pytorch.rn.core.canvas.ImageData;
 import org.pytorch.rn.core.javascript.JSContext;
 import org.pytorch.rn.core.utils.FileUtils;
 
+@ReactModule(name = "PyTorchCoreImageModule")
 public class ImageModule extends ReactContextBaseJavaModule {
 
   public static final String REACT_MODULE = "PyTorchCoreImageModule";

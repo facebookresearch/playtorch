@@ -43,7 +43,7 @@ import org.pytorch.rn.core.utils.FileUtils;
 @ReactModule(name = "PyTorchCoreMobileModelModule")
 public class MobileModelModule extends ReactContextBaseJavaModule {
 
-  public static final String REACT_MODULE = "PyTorchCoreMobileModelModule";
+  public static final String NAME = "PyTorchCoreMobileModelModule";
 
   private ReactApplicationContext mReactContext;
 
@@ -58,7 +58,7 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
   @NonNull
   @Override
   public String getName() {
-    return REACT_MODULE;
+    return NAME;
   }
 
   @ReactMethod
@@ -66,7 +66,7 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
     executorService.execute(
         () -> {
           try {
-            Log.d(REACT_MODULE, "Preload model: " + modelUri);
+            Log.d(NAME, "Preload model: " + modelUri);
             fetchCacheAndLoadModel(modelUri);
             promise.resolve(null);
           } catch (JSONException
@@ -126,7 +126,7 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
 
             promise.resolve(inferenceResult);
           } catch (Exception e) {
-            Log.e(REACT_MODULE, "Error on model fetch and forward:", e);
+            Log.e(NAME, "Error on model fetch and forward:", e);
             promise.reject(e);
           }
         });
@@ -135,7 +135,7 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
   private ModuleHolder fetchCacheAndLoadModel(final String modelUri)
       throws JSONException, ClassNotFoundException, NoSuchMethodException, InstantiationException,
           IllegalAccessException, InvocationTargetException {
-    Log.d(REACT_MODULE, "Load model: " + modelUri);
+    Log.d(NAME, "Load model: " + modelUri);
 
     Uri uri = Uri.parse(modelUri);
 
@@ -154,7 +154,7 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
       FileUtils.downloadUriToFile(modelUri, targetFile);
     }
 
-    Log.d(REACT_MODULE, "Absolute local model path: " + targetFile.getAbsolutePath());
+    Log.d(NAME, "Absolute local model path: " + targetFile.getAbsolutePath());
 
     // Try to fetch live.spec.json from model file
     Map<String, String> extraFiles = new HashMap<>();

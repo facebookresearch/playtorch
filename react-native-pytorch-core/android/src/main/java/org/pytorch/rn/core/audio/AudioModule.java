@@ -24,7 +24,7 @@ import org.pytorch.rn.core.javascript.JSContext;
 @ReactModule(name = "PyTorchCoreAudioModule")
 public class AudioModule extends ReactContextBaseJavaModule {
 
-  public static final String REACT_MODULE = "PyTorchCoreAudioModule";
+  public static final String NAME = "PyTorchCoreAudioModule";
 
   private static final int REQUEST_RECORD_AUDIO = 13;
   private static final int SAMPLE_RATE = 16000;
@@ -39,12 +39,12 @@ public class AudioModule extends ReactContextBaseJavaModule {
   @NotNull
   @Override
   public String getName() {
-    return REACT_MODULE;
+    return NAME;
   }
 
   @ReactMethod
   public void record(final int length, final Promise promise) {
-    Log.d(REACT_MODULE, "started recording");
+    Log.d(NAME, "started recording");
 
     requestMicrophonePermission();
 
@@ -65,7 +65,7 @@ public class AudioModule extends ReactContextBaseJavaModule {
                         bufferSize);
 
                 if (record.getState() != AudioRecord.STATE_INITIALIZED) {
-                  Log.e(REACT_MODULE, "Audio Record can't initialize!");
+                  Log.e(NAME, "Audio Record can't initialize!");
                   return;
                 }
                 record.startRecording();
@@ -82,7 +82,7 @@ public class AudioModule extends ReactContextBaseJavaModule {
                   shortsToCopy = Math.min(numberOfShort, recordingLength - audioDataOffset);
                   System.arraycopy(audioBuffer, 0, audioData, audioDataOffset, shortsToCopy);
                   audioDataOffset += shortsToCopy;
-                  Log.d(REACT_MODULE, String.format("shortsRead=%d", shortsRead));
+                  Log.d(NAME, String.format("shortsRead=%d", shortsRead));
                 }
 
                 record.stop();
@@ -92,7 +92,7 @@ public class AudioModule extends ReactContextBaseJavaModule {
                 JSContext.NativeJSRef ref = JSContext.wrapObject(audio);
                 promise.resolve(ref.getJSRef());
               } catch (Exception e) {
-                Log.e(REACT_MODULE, "Error recording audio:", e);
+                Log.e(NAME, "Error recording audio:", e);
                 promise.reject(e);
               }
             });

@@ -19,7 +19,7 @@ import org.pytorch.rn.core.javascript.JSContext;
 @ReactModule(name = "PyTorchCoreImageDataModule")
 public class ImageDataModule extends ReactContextBaseJavaModule {
 
-  public static final String REACT_MODULE = "PyTorchCoreImageDataModule";
+  public static final String NAME = "PyTorchCoreImageDataModule";
 
   public ImageDataModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -28,7 +28,7 @@ public class ImageDataModule extends ReactContextBaseJavaModule {
   @NonNull
   @Override
   public String getName() {
-    return REACT_MODULE;
+    return NAME;
   }
 
   @ReactMethod

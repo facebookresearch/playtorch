@@ -22,7 +22,7 @@ import org.pytorch.rn.core.javascript.JSContext;
 @ReactModule(name = "PyTorchCoreCanvasRenderingContext2DModule")
 public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
 
-  public static final String REACT_MODULE = "PyTorchCoreCanvasRenderingContext2DModule";
+  public static final String NAME = "PyTorchCoreCanvasRenderingContext2DModule";
 
   private final ReactApplicationContext mReactContext;
 
@@ -37,7 +37,7 @@ public class CanvasRenderingContext2DModule extends ReactContextBaseJavaModule {
   @NonNull
   @Override
   public String getName() {
-    return REACT_MODULE;
+    return NAME;
   }
 
   @ReactMethod

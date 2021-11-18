@@ -31,7 +31,7 @@ import org.pytorch.rn.core.utils.FileUtils;
 @ReactModule(name = "PyTorchCoreImageModule")
 public class ImageModule extends ReactContextBaseJavaModule {
 
-  public static final String REACT_MODULE = "PyTorchCoreImageModule";
+  public static final String NAME = "PyTorchCoreImageModule";
 
   private ReactApplicationContext mReactContext;
 
@@ -43,7 +43,7 @@ public class ImageModule extends ReactContextBaseJavaModule {
   @NonNull
   @Override
   public String getName() {
-    return REACT_MODULE;
+    return NAME;
   }
 
   @ReactMethod

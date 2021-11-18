@@ -35,7 +35,7 @@ module.exports = {
       title: '',
       logo: {
         alt: 'PyTorch Live Logo',
-        src: 'img/PyTorchLive_Logo.png',
+        src: 'img/pytorch_logo_black.png',
         href: 'https://pytorch.org',
         target: '_self',
       },
@@ -43,7 +43,7 @@ module.exports = {
         {
           href: '/',
           position: 'right',
-          label: 'Home',
+          label: 'PyTorch Live',
         },
         {
           type: 'doc',

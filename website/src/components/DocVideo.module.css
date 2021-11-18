@@ -3,9 +3,15 @@
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @format
  */
 
 .docVideo {
-    margin: 20px 0;
-    max-width: 600px;
+  margin: 20px 0;
+  max-width: 600px;
+}
+
+.noMargin {
+  margin: 0;
 }

@@ -18,43 +18,168 @@ import HomepageFeatures from '../components/HomepageFeatures';
 import DocVideo from '../components/DocVideo';
 import {InternalCTAButton} from '../fb/FBInternalComponents';
 
-function HomepageHeader() {
-  const {siteConfig} = useDocusaurusContext();
+function Row({
+  content,
+  button,
+  video,
+  odd,
+  textOnly = false,
+  head = false,
+  tail = false,
+  link,
+}) {
   return (
-    <header className={clsx('hero--primary', styles.heroBanner)}>
-      <div className="container">
-        <h1 className="hero__title">{siteConfig.title}</h1>
-        <div>
-          <Link className="hero__cta" to="/docs/tutorials/get-started">
-            Try our latest build
-          </Link>
-          <FbInternalOnly>
-            {typeof InternalCTAButton !== 'undefined' && (
-              <InternalCTAButton cls="hero__cta" />
-            )}
-          </FbInternalOnly>
+    <div
+      className={clsx([
+        styles.contentRow,
+        odd ? styles.odd : '',
+        head ? styles.firstRow : '',
+        tail ? styles.lastRow : '',
+      ])}>
+      <div className={clsx([styles.content])}>
+        <div className={clsx([styles.message, head ? styles.heading : ''])}>
+          {content}
         </div>
+        <a href={link || '#'}>
+          <div className={clsx([styles.buttonWrapper])}>{button}</div>
+        </a>
       </div>
-      <div className="hero__video">
-        <DocVideo
-          asset="demo_catdog"
-          style={{margin: 0}}
-          autoPlay={true}
-          loop={true}
-          controls={false}
-        />
+      <div className={clsx([styles.content])}>
+        {!textOnly && <div className={styles.video}>{video}</div>}
       </div>
-    </header>
+    </div>
   );
 }
 
 export default function Home() {
   const {siteConfig} = useDocusaurusContext();
+
+  const heroVideo = (
+    <DocVideo
+      asset="demo_catdog"
+      noMargin={true}
+      autoPlay={true}
+      loop={true}
+      controls={false}
+    />
+  );
+  const heroContent = (
+    <div>
+      <div className={styles.titleWrapper}>
+        <h1 className={styles.title}>PyTorch&nbsp;&nbsp;Live</h1>
+        <div className={styles.beta}>BETA</div>
+      </div>
+      <div>Build your AI-powered mobile apps in minutes</div>
+    </div>
+  );
+  const heroButton = <div className={styles.button}>Get Started</div>;
+
+  const firstPropVideo = (
+    <DocVideo
+      asset="demo_mnist"
+      noMargin={true}
+      autoPlay={true}
+      loop={true}
+      controls={false}
+    />
+  );
+  const firstPropContent =
+    'Quickly set up your dev environment and bootstrap ML mobile app projects';
+  const firstPropButton = (
+    <div className={styles.button}>Run our CLI tools</div>
+  );
+
+  const secondPropVideo = (
+    <DocVideo
+      asset="demo_model"
+      noMargin={true}
+      autoPlay={true}
+      loop={true}
+      controls={false}
+    />
+  );
+  const secondPropContent =
+    'Easily integrate on-device vision and language models into your apps';
+  const secondPropButton = (
+    <div className={styles.button}>Try Our Data Processing API</div>
+  );
+
+  const thirdPropVideo = (
+    <DocVideo
+      asset="demo_ui"
+      noMargin={true}
+      autoPlay={true}
+      loop={true}
+      controls={false}
+    />
+  );
+  const thirdPropContent =
+    'Build cross-platform mobile apps with PyTorch and React Native';
+  const thirdPropButton = (
+    <div className={styles.button}>Try our tutorials</div>
+  );
+
+  const forthPropVideo = (
+    <DocVideo
+      asset="demo_ui"
+      noMargin={true}
+      autoPlay={true}
+      loop={true}
+      controls={false}
+    />
+  );
+  const forthPropContent =
+    "Join our community of AI researchers, mobile developers and hackers. Let's unlock the vast potential of AI innovations together.";
+  const forthPropButton = (
+    <div className={styles.button}>Visit our community page</div>
+  );
+
   return (
-    <Layout title={`PyTorch Live`} description={`${siteConfig.title}`}>
-      <HomepageHeader />
+    <Layout>
       <main>
-        <HomepageFeatures />
+        <div className="container">
+          <Row
+            content={heroContent}
+            video={heroVideo}
+            button={heroButton}
+            odd={false}
+            head={true}
+            link="docs/tutorials/get-started"
+          />
+
+          <Row
+            content={firstPropContent}
+            video={firstPropVideo}
+            button={firstPropButton}
+            odd={true}
+            link="docs/tutorials/get-started"
+          />
+
+          <Row
+            content={secondPropContent}
+            video={secondPropVideo}
+            button={secondPropButton}
+            odd={false}
+            link="docs/tutorials/prepare-custom-model"
+          />
+
+          <Row
+            content={thirdPropContent}
+            video={thirdPropVideo}
+            button={thirdPropButton}
+            odd={true}
+            link="docs/tutorials/mnist-digit-classification"
+          />
+
+          <Row
+            content={forthPropContent}
+            video={forthPropVideo}
+            button={forthPropButton}
+            odd={false}
+            tail={true}
+            link="community"
+          />
+        </div>
       </main>
     </Layout>
   );

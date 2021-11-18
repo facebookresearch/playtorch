@@ -20,6 +20,12 @@
   text-align: center;
 }
 
+.showcase {
+  background-color: #fff;
+  display: flex;
+  flex: 1;
+}
+
 .socialCard {
   padding: 1rem 1.5rem;
   background-color: var(--ifm-color-gray-0);

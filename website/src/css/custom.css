@@ -87,6 +87,42 @@
   --ifm-navbar-height: 5rem;
 }
 
+.main-wrapper {
+  background-image:
+  radial-gradient(ellipse 70% 70% at 0% 0%,#050006ff 0%, #05000600 100%),
+  radial-gradient(ellipse 100% 20% at 100% 0%,#ee4c2cff 0%, #ee4c2c00 100%),
+  radial-gradient(ellipse 100% 60% at 70% 10%,#812CE5ff 0%, #812CE566 100%),
+  radial-gradient(farthest-corner at 0% 70%,#E93B43ff 0%, #E93B43ff 30%, #E93B4300 100%),
+  radial-gradient(farthest-corner at 100% 80%,#4A6BC7ff 0%, #4A6BC700 100%);
+
+  background-size: 125% 125%;
+
+  -webkit-animation: Animation 15s ease infinite;
+  -moz-animation: Animation 15s ease infinite;
+  animation: Animation 15s ease infinite;
+}
+
+@-webkit-keyframes Animation {
+  0%{background-position:10% 0%}
+  50%{background-position:90% 100%}
+  100%{background-position:10% 0%}
+}
+@-moz-keyframes Animation {
+  0%{background-position:10% 0%}
+  50%{background-position:90% 100%}
+  100%{background-position:10% 0%}
+}
+@keyframes Animation {
+  0%{background-position:10% 0%}
+  50%{background-position:90% 100%}
+  100%{background-position:10% 0%}
+}
+
+.main-wrapper.docs-wrapper {
+  background-image: none;
+  background-color: var(--ifm-color-gray-0);
+}
+
 p {
   line-height: 1.35;
 }
@@ -138,9 +174,7 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 
 .hero--primary {
   height: 60vh;
-  background-image: linear-gradient(30deg, #ee4c2ccc, #cc2faa99, #ffffff66, #26262699), linear-gradient(-70deg, #ee4c2c, #e32d5b, #812ce5, #ee4c2c, #cc2faa, #b932cc, #cc2f90);
   background-size: 600% 400%;
-  animation: gradient 60s ease-in-out infinite;
   min-height: 500px;
   height: 60vh;
 }
@@ -151,18 +185,6 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   flex-direction: column;
   justify-content: center;
   height: 100%;
-}
-
-@keyframes gradient {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
 }
 
 .hero__title {
@@ -315,6 +337,12 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   color: var(--ifm-color-gray-0);
   padding: 0;
 }
+
+/* nav bar */
+.navbar__brand {
+  margin-left: 1rem;
+}
+
 
 /* Right side nav */
 

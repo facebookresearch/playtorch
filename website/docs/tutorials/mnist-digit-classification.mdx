@@ -3,6 +3,9 @@ id: mnist-digit-classification
 sidebar_position: 7
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
 # MNIST Digit Classification
 
 <div className="tutorial-page">
@@ -25,10 +28,33 @@ Once that is done, let's go into a our newly created project and run it!
 
 ```shell
 cd MNISTClassifier
-yarn android
 ```
 
-![](/img/tutorial/connecting-to-a-server-model/cli-fresh-install.png "Screenshot of app after fresh init with CLI")
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios'},
+  ]}>
+  <TabItem value="android">
+
+  ```shell
+  npx torchlive-cli run-android
+  ```
+
+  ![](/img/tutorial/mnist-digit-classification/android/first-run.png "Screenshot of app after fresh init with CLI")
+
+  </TabItem>
+  <TabItem value="ios">
+
+  ```shell
+  npx torchlive-cli run-ios
+  ```
+
+  ![](/img/tutorial/mnist-digit-classification/ios/first-run.png "Screenshot of app after fresh init with CLI")
+
+  </TabItem>
+</Tabs>
 
 ## Adding Basic UI
 
@@ -40,8 +66,11 @@ Go ahead and start by copying the following code into the file `src/demos/MyDemo
 import React, {useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default function MNISTDemo() {
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
   const [canvasSize, setCanvasSize] = useState<number>(0);
   // `ctx` is drawing context to draw shapes
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
@@ -53,7 +82,7 @@ export default function MNISTDemo() {
         const {layout} = event.nativeEvent;
         setCanvasSize(Math.min(layout?.width || 0, layout?.height || 0));
       }}>
-      <View style={styles.instruction}>
+      <View style={[styles.instruction, {marginTop: insets.top}]}>
         <Text style={styles.label}>Write a number</Text>
         <Text style={styles.label}>Let's test the MNIST model</Text>
       </View>
@@ -110,7 +139,31 @@ const styles = StyleSheet.create({
 
 Now you should see UI that looks exactly like the screenshot below.
 
-![](/img/tutorial/mnist-digit-classification/initial-ui.png "Screenshot of UI created with initial code")
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios'},
+  ]}>
+  <TabItem value="android">
+
+  ```shell
+  npx torchlive-cli run-android
+  ```
+
+  ![](/img/tutorial/mnist-digit-classification/android/initial-ui.png "Screenshot of UI created with initial code")
+
+  </TabItem>
+  <TabItem value="ios">
+
+  ```shell
+  npx torchlive-cli run-ios
+  ```
+
+  ![](/img/tutorial/mnist-digit-classification/ios/initial-ui.png "Screenshot of UI created with initial code")
+
+  </TabItem>
+</Tabs>
 
 Before we add more code, let's take a second to discuss some of what the above code does.
 
@@ -234,6 +287,7 @@ For more information on React Hooks, head over to the [React docs](https://react
 import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const COLOR_CANVAS_BACKGROUND = '#4F25C6';
 
@@ -263,7 +317,7 @@ export default function MNISTDemo() {
         const {layout} = event.nativeEvent;
         setCanvasSize(Math.min(layout?.width || 0, layout?.height || 0));
       }}>
-      <View style={styles.instruction}>
+      <View style={[styles.instruction, {marginTop: insets.top}]}>
         <Text style={styles.label}>Write a number</Text>
         <Text style={styles.label}>Let's test the MNIST model</Text>
       </View>
@@ -320,7 +374,31 @@ const styles = StyleSheet.create({
 
 Once you run your app, the My Demos screen should now look like this.
 
-![](/img/tutorial/connecting-to-a-server-model/cli-fresh-install.png "Screenshot of app after painting canvas light purple")
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios'},
+  ]}>
+  <TabItem value="android">
+
+  ```shell
+  npx torchlive-cli run-android
+  ```
+
+  ![](/img/tutorial/mnist-digit-classification/android/fill-canvas-bg.png "Screenshot of app after painting canvas light purple")
+
+  </TabItem>
+  <TabItem value="ios">
+
+  ```shell
+  npx torchlive-cli run-ios
+  ```
+
+  ![](/img/tutorial/mnist-digit-classification/ios/fill-canvas-bg.png "Screenshot of app after painting canvas light purple")
+
+  </TabItem>
+</Tabs>
 
 I know that was a lot of new stuff to simply paint our canvas light purple, but it provides us with a good foundation for when we draw more on our canvas.
 
@@ -370,6 +448,7 @@ Let's go over what we changed to make drawing possible:
 import React, {useCallback, useEffect, useState, useRef} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
 import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const COLOR_CANVAS_BACKGROUND = '#4F25C6';
 const COLOR_TRAIL_STROKE = '#FFFFFF';
@@ -380,6 +459,8 @@ type TrailPoint = {
 };
 
 export default function MNISTDemo() {
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
   const [canvasSize, setCanvasSize] = useState<number>(0);
 
   // `ctx` is drawing context to draw shapes
@@ -461,7 +542,7 @@ export default function MNISTDemo() {
         const {layout} = event.nativeEvent;
         setCanvasSize(Math.min(layout?.width || 0, layout?.height || 0));
       }}>
-      <View style={styles.instruction}>
+      <View style={[styles.instruction, {marginTop: insets.top}]}>
         <Text style={styles.label}>Write a number</Text>
         <Text style={styles.label}>
           Let's see if the AI model will get it right
@@ -497,7 +578,7 @@ export default function MNISTDemo() {
 
 Run this code and we should now be able to do some drawing like you can see in the video below.
 
-![](/img/tutorial/mnist-digit-classification/initial-laggy-drawing.gif "Screen recording of drawing on canvas with laggy screen")
+![](/img/tutorial/mnist-digit-classification/android/initial-laggy-drawing.gif "Screen recording of drawing on canvas with laggy screen")
 
 As you will notice, the drawing seems to glitch out at times, especially as the trail gets longer and longer. Let's fix that next.
 
@@ -596,7 +677,31 @@ Output: a number that functions as an ID for the callback. You can use that numb
 
 Once you have those changes in your code, go ahead and refresh the app and see how much smoother drawing is.
 
-![](/img/tutorial/mnist-digit-classification/smooth-drawing.gif "Screen recording of drawing on canvas with smooth animation")
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios'},
+  ]}>
+  <TabItem value="android">
+
+  ```shell
+  npx torchlive-cli run-android
+  ```
+
+  ![](/img/tutorial/mnist-digit-classification/android/smooth-drawing.gif "Screen recording of drawing on canvas with smooth animation")
+
+  </TabItem>
+  <TabItem value="ios">
+
+  ```shell
+  npx torchlive-cli run-ios
+  ```
+
+  ![](/img/tutorial/mnist-digit-classification/ios/smooth-drawing.gif "Screen recording of drawing on canvas with smooth animation")
+
+  </TabItem>
+</Tabs>
 
 With silky smooth drawing in place, we are now ready to start working with our the MNIST model.
 
@@ -627,6 +732,7 @@ import {
   Image,
   MobileModel,
 } from 'react-native-pytorch-core';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const COLOR_CANVAS_BACKGROUND = '#4F25C6';
 const COLOR_TRAIL_STROKE = '#FFFFFF';
@@ -711,6 +817,7 @@ import {
   ImageUtil,
   MobileModel,
 } from 'react-native-pytorch-core';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 .
 .
 .
@@ -830,6 +937,8 @@ const numLabels: NumberLabelSet[] = [
 ];
 
 export default function MNISTDemo() {
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
   const [canvasSize, setCanvasSize] = useState<number>(0);
 
   // `ctx` is drawing context to draw shapes
@@ -869,7 +978,31 @@ export default function MNISTDemo() {
 
 When you run the code, you should see it display results properly in the bottom left corner like the screen recording below.
 
-![](/img/tutorial/mnist-digit-classification/model-running.gif "Screen recording of user drawing numbers and model results displaying correct answers")
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios'},
+  ]}>
+  <TabItem value="android">
+
+  ```shell
+  npx torchlive-cli run-android
+  ```
+
+  ![](/img/tutorial/mnist-digit-classification/android/model-running.gif "Screen recording of user drawing numbers and model results displaying correct answers")
+
+  </TabItem>
+  <TabItem value="ios">
+
+  ```shell
+  npx torchlive-cli run-ios
+  ```
+
+  ![](/img/tutorial/mnist-digit-classification/ios/model-running.gif "Screen recording of user drawing numbers and model results displaying correct answers")
+
+  </TabItem>
+</Tabs>
 
 And with that we have a working MNIST classifier!
 

@@ -15,6 +15,7 @@ import {
   Image,
   MobileModel,
 } from 'react-native-pytorch-core';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 const COLOR_CANVAS_BACKGROUND = '#4F25C6';
 const COLOR_TRAIL_STROKE = '#FFFFFF';
@@ -35,7 +36,7 @@ type MNISTResult = {
 /**
  * The React hook provides MNIST model inference on an input image.
  */
-function useMNISTModel() {
+ function useMNISTModel() {
   const processImage = useCallback(async (image: Image) => {
     // Runs model inference on input image
     const {
@@ -63,6 +64,8 @@ function useMNISTModel() {
 }
 
 export default function MNISTDemo() {
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
   const [canvasSize, setCanvasSize] = useState<number>(0);
 
   // `ctx` is drawing context to draw shapes
@@ -140,7 +143,7 @@ export default function MNISTDemo() {
 
   useEffect(() => {
     draw();
-  }, [draw]);
+  }, [draw]); // update only when layout or context changes
 
   return (
     <View
@@ -149,7 +152,7 @@ export default function MNISTDemo() {
         const {layout} = event.nativeEvent;
         setCanvasSize(Math.min(layout?.width || 0, layout?.height || 0));
       }}>
-      <View style={styles.instruction}>
+      <View style={[styles.instruction, {marginTop: insets.top}]}>
         <Text style={styles.label}>Write a number</Text>
         <Text style={styles.label}>
           Let's see if the AI model will get it right

@@ -59,13 +59,6 @@ function getPath(): string | null {
   return null;
 }
 
-const command = createCommand('java', {
-  commands,
-  getVersion,
-  parseVersion,
-  getPath,
-});
-
 function getVersion(): SemVer {
   let rawVersion = command.execute(['-version']);
   const matches = rawVersion.match(/\sversion\s\"([\d\.\_]*)\"/);
@@ -74,5 +67,12 @@ function getVersion(): SemVer {
   }
   return parseVersion(rawVersion);
 }
+
+const command = createCommand('java', {
+  commands,
+  getVersion,
+  parseVersion,
+  getPath,
+});
 
 export default command as ICommand;

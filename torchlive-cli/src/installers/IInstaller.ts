@@ -37,15 +37,14 @@ export function getInstallerErrorMitigationMessage(
   externalLink: string,
 ): string {
   const msg =
-    `💥 Installation of ${task.getDescription()} failed.
+    `💥 Installation of ${task.getDescription()} failed because of the error reported above.
 
-Please go to ${externalLink} and manually install the package.
+Please address the reported error. Alternatively, install the package manually from ${externalLink}.
 
-Once you complete the installation, \
-you can run the 'npx torchlive-cli setup-dev' again to continue the setup.
+Then run 'npx torchlive-cli setup-dev' again to continue the setup.
 
-If you still run into issue, \
-please refer to https://github.com/pytorch/live/issues for more info.`;
+If you still run into the issue, \
+please visit https://github.com/pytorch/live/issues to search for similar issues or to report yours.`;
   return msg;
 }
 

@@ -28,6 +28,7 @@ type CreateCommandOptions = {
   getVersion?(): SemVer;
   parseVersion?(version: string | SemVer | null): SemVer;
   getPath?(): string | null;
+  isInstalled?(): boolean;
   commands?: ICommands;
 };
 
@@ -109,6 +110,9 @@ export function createCommand(
   }
 
   function isInstalled(): boolean {
+    if (options?.isInstalled != null) {
+      return options.isInstalled();
+    }
     return getPath() !== null;
   }
 

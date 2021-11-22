@@ -1,0 +1,8 @@
+{
+  "name": "react-native-template-pytorch-live",
+  "version": "0.0.1",
+  "description": "React Native template for PyTorch Live",
+  "repository": "",
+  "author": "Facebook",
+  "license": "MIT"
+}

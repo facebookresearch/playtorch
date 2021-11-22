@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+  <item android:state_pressed="true">
+    <layer-list>
+      <!-- Outer stroke -->
+      <item android:width="@dimen/camera_button_size" android:height="@dimen/camera_button_size">
+        <shape android:shape="oval">
+          <stroke android:width="@dimen/camera_button_border" android:color="@android:color/white" />
+        </shape>
+      </item>
+      <!-- Smaller inner circle -->
+      <item>
+        <shape android:shape="oval">
+          <stroke android:width="@dimen/camera_button_inner_border_pressed" android:color="@android:color/transparent" />
+          <solid android:color="@android:color/white" />
+        </shape>
+      </item>
+    </layer-list>
+  </item>
+  <item>
+    <layer-list>
+      <!-- Outer stroke -->
+      <item android:width="@dimen/camera_button_size" android:height="@dimen/camera_button_size">
+        <shape android:shape="oval">
+          <stroke android:width="@dimen/camera_button_border" android:color="@android:color/white" />
+        </shape>
+      </item>
+      <!-- Smaller inner circle -->
+      <item>
+        <shape android:shape="oval">
+          <stroke android:width="@dimen/camera_button_inner_border_normal" android:color="@android:color/transparent" />
+          <solid android:color="@android:color/white" />
+        </shape>
+      </item>
+    </layer-list>
+  </item>
+</selector>

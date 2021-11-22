@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "rootDir": ".",
+        "outDir": "../build/",
+        "esModuleInterop": true,
+        "resolveJsonModule": true
+    },
+    "references": [ // this is how we declare a dependency from
+        {
+            "path": "../"
+        } // this project to the one at the root dir`
+    ]
+}

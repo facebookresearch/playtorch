@@ -1,0 +1,96 @@
+{
+  "pack": {
+    "type": "tuple",
+    "items": [
+      {
+        "type": "tensor_from_image",
+        "image": "image1",
+        "transforms": [
+          {
+            "type": "image_to_image",
+            "name": "center_crop",
+            "width": "$width",
+            "height": "$height"
+          },
+          {
+            "type": "image_to_image",
+            "name": "scale",
+            "width": "$width",
+            "height": "$height"
+          },
+          {
+            "type": "image_to_tensor",
+            "name": "rgb_norm",
+            "mean": [
+              0.0,
+              0.0,
+              0.0
+            ],
+            "std": [
+              1.0,
+              1.0,
+              1.0
+            ]
+          }
+        ]
+      },
+      {
+        "type": "tensor",
+        "dtype": "float",
+        "sizes": [
+          1,
+          3
+        ],
+        "items": [
+          "$width",
+          "$height",
+          "$scale"
+        ]
+      },
+      {
+        "type": "tensor",
+        "dtype": "float",
+        "sizes": [
+          1
+        ],
+        "items": [
+          "$should_run_track"
+        ]
+      },
+      {
+        "type": "tensor",
+        "dtype": "float",
+        "sizes": [
+          "$rois_n",
+          4
+        ],
+        "items": "$rois"
+      }
+    ]
+  },
+  "unpack": {
+    "type": "tuple",
+    "items": [
+      {
+        "type": "tensor",
+        "key": "image1",
+        "dtype": "float"
+      },
+      {
+        "type": "tensor",
+        "key": "image_info",
+        "dtype": "float"
+      },
+      {
+        "type": "tensor",
+        "key": "should_run_track",
+        "dtype": "float"
+      },
+      {
+        "type": "tensor",
+        "key": "previous_rois",
+        "dtype": "float"
+      }
+    ]
+  }
+}

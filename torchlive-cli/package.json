@@ -1,0 +1,65 @@
+{
+  "name": "torchlive-cli",
+  "version": "0.0.1",
+  "description": "PyTorch Live CLI",
+  "main": "index.js",
+  "license": "MIT",
+  "bin": {
+    "torchlive": "./build/index.js"
+  },
+  "scripts": {
+    "start": "ts-node --project src/tsconfig.json ./src/index.ts",
+    "test": "jest",
+    "tsc": "tsc --project ./src/tsconfig.json",
+    "build": "tsc --project ./src/tsconfig.json",
+    "build:dev": "tsc --project ./src/tsconfig.json -w",
+    "dist": "ts-node ./scripts/package.ts",
+    "dist:pkg": "yarn build && pkg ."
+  },
+  "devDependencies": {
+    "@types/adm-zip": "^0.4.34",
+    "@types/chalk": "^2.2.0",
+    "@types/commander": "^2.12.2",
+    "@types/figlet": "^1.5.1",
+    "@types/ini": "^1.3.30",
+    "@types/jest": "^26.0.23",
+    "@types/mock-fs": "^4.13.0",
+    "@types/node": "^14.14.41",
+    "@types/semver": "^7.3.5",
+    "@types/tmp": "^0.2.0",
+    "jest": "^26.6.3",
+    "mock-fs": "^4.14.0",
+    "pkg": "^4.5.1",
+    "ts-jest": "^26.5.5",
+    "ts-node": "^9.1.1",
+    "typescript": "^4.2.4"
+  },
+  "dependencies": {
+    "adm-zip": "^0.5.5",
+    "chalk": "^4.1.0",
+    "commander": "^7.2.0",
+    "enquirer": "^2.3.6",
+    "execa": "^5.0.0",
+    "figlet": "^1.5.0",
+    "ini": "^2.0.0",
+    "listr2": "^3.7.1",
+    "moment": "^2.29.1",
+    "semver": "^7.3.5",
+    "tmp": "^0.2.1"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "rootDir": "src"
+  },
+  "pkg": {
+    "scripts": "build/**/*.js",
+    "assets": [
+      "assets/**/*",
+      "node_modules/figlet/fonts/Standard.flf"
+    ],
+    "targets": [
+      "node14-macos-x64"
+    ],
+    "outputPath": "dist"
+  }
+}

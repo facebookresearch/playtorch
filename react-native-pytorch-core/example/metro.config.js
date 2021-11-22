@@ -13,8 +13,8 @@ const escape = require('escape-string-regexp');
 const pak = require('../package.json');
 
 // get defaults assetExts array
-const defaultAssetExts = require('metro-config/src/defaults/defaults')
-  .assetExts;
+const defaultAssetExts =
+  require('metro-config/src/defaults/defaults').assetExts;
 
 const root = path.resolve(__dirname, '..');
 

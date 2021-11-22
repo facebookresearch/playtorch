@@ -15,9 +15,8 @@ import useImageFromURL from '../../utils/useImageFromURL';
 
 export default function CanvasAnimation() {
   const isFocused = useIsFocused();
-  const [drawingContext, setDrawingContext] = useState<
-    CanvasRenderingContext2D
-  >();
+  const [drawingContext, setDrawingContext] =
+    useState<CanvasRenderingContext2D>();
 
   const handleContext2D = useCallback(
     async (ctx: CanvasRenderingContext2D) => {
@@ -122,7 +121,7 @@ export default function CanvasAnimation() {
 
     rafHandle = requestAnimationFrame(animate);
 
-    return function() {
+    return function () {
       isRunningAnimation = false;
       if (rafHandle != null) {
         cancelAnimationFrame(rafHandle);

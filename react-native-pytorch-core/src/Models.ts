@@ -7,7 +7,7 @@
  * @format
  */
 
-import type {ImageRequireSource} from "react-native";
+import type {ImageRequireSource} from 'react-native';
 
 /**
  * An ML model can be loaded from three different sources, and must be one of

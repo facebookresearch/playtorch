@@ -41,9 +41,8 @@ function drawArcGrid(
 
 export default function CanvasArcMatrix() {
   const isFocused = useIsFocused();
-  const [drawingContext, setDrawingContext] = useState<
-    CanvasRenderingContext2D
-  >();
+  const [drawingContext, setDrawingContext] =
+    useState<CanvasRenderingContext2D>();
 
   const handleContext2D = useCallback(
     async (ctx: CanvasRenderingContext2D) => {

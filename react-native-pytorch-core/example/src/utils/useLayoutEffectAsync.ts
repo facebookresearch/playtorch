@@ -9,10 +9,15 @@
 
 import {useLayoutEffect} from 'react';
 
-function useLayoutEffectAsync(
+export default function useLayoutEffectAsync(
   asyncFunction: () => Promise<void>,
   deps?: any[],
 ) {
+  const allDeps = [asyncFunction];
+  if (deps != null) {
+    allDeps.push(...deps);
+  }
+
   useLayoutEffect(() => {
     let isMounted = true;
     (async () => {
@@ -22,10 +27,9 @@ function useLayoutEffectAsync(
       }
       await asyncFunction();
     })();
-    return function() {
+    return function () {
       isMounted = false;
     };
-  }, deps);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [asyncFunction, ...(deps || [])]);
 }
-
-export default useLayoutEffectAsync;

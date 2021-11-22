@@ -98,13 +98,13 @@ function useMNISTCanvasInference(canvasSize: number) {
       imageData.release();
 
       // Run MNIST inference on the image
-      const result = await processImage(image);
+      const processedResult = await processImage(image);
 
       // Release image to free memory
       image.release();
 
       // Set result state to force re-render of component that uses this hook
-      setResult(result);
+      setResult(processedResult);
 
       // If not force run, add a little timeout to give device time to process
       // other things
@@ -282,7 +282,8 @@ export default function MNIST() {
       onLayout={event => {
         const {layout} = event.nativeEvent;
         setCanvasSize(Math.min(layout?.width || 0, layout?.height || 0));
-      }}>
+      }}
+    >
       <View style={styles.instruction}>
         <Text style={styles.label}>Write a number</Text>
         <Text style={styles.label}>

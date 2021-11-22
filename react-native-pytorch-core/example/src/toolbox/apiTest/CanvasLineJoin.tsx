@@ -14,9 +14,8 @@ import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
 
 export default function CanvasLineJoin() {
   const isFocused = useIsFocused();
-  const [drawingContext, setDrawingContext] = useState<
-    CanvasRenderingContext2D
-  >();
+  const [drawingContext, setDrawingContext] =
+    useState<CanvasRenderingContext2D>();
 
   const handleContext2D = useCallback(
     async (ctx: CanvasRenderingContext2D) => {

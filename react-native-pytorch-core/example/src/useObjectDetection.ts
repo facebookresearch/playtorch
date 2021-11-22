@@ -33,16 +33,15 @@ export default function useObjectDetection(modelInfo: ModelInfo) {
       const imageWidth = image.getWidth();
       const imageHeight = image.getHeight();
       const size = Math.min(imageWidth, imageHeight);
-      const {result, metrics: m} = await MobileModel.execute<
-        ObjectDetectionResult
-      >(modelInfo.model, {
-        image,
-        cropWidth: size,
-        cropHeight: size,
-        scaleWidth: 800,
-        scaleHeight: 800,
-        probabilityThreshold: 0.7,
-      });
+      const {result, metrics: m} =
+        await MobileModel.execute<ObjectDetectionResult>(modelInfo.model, {
+          image,
+          cropWidth: size,
+          cropHeight: size,
+          scaleWidth: 800,
+          scaleHeight: 800,
+          probabilityThreshold: 0.7,
+        });
 
       // Adjust bounds to image size
       const boundingBoxes: BoundingBox[] = result.boundingBoxes.map(

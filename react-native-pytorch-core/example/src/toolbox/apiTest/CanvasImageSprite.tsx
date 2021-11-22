@@ -65,7 +65,7 @@ export default function CanvasImageSprite() {
       ctx.invalidate();
     }
 
-    return function() {
+    return function () {
       ctx?.clear();
       ctx?.invalidate();
     };

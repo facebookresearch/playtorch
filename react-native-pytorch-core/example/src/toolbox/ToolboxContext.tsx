@@ -30,7 +30,7 @@ type Props = {
   children: React.ReactChild;
 };
 
-export default function({children}: Props) {
+export default function ({children}: Props) {
   const [activeTool, setActiveTool] = useState<Tool>();
   return (
     <ToolboxContext.Provider value={{activeTool, setActiveTool}}>

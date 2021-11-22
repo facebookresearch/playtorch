@@ -328,7 +328,8 @@ export default function Toolbox() {
       <Stack.Navigator
         screenOptions={{
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-        }}>
+        }}
+      >
         <Stack.Screen name="API" options={{headerShown: false}}>
           {props => (
             <ToolboxList

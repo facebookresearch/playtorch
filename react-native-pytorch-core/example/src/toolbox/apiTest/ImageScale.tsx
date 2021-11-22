@@ -21,9 +21,8 @@ export default function ImageScale() {
   const isFocused = useIsFocused();
   const [catImage, setCatImage] = useState<Image>();
   const [scaledCatImage, setScaledCatImage] = useState<Image>();
-  const [drawingContext, setDrawingContext] = useState<
-    CanvasRenderingContext2D
-  >();
+  const [drawingContext, setDrawingContext] =
+    useState<CanvasRenderingContext2D>();
 
   const handleContext2D = useCallback(
     async (ctx: CanvasRenderingContext2D) => {

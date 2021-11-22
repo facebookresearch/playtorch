@@ -10,11 +10,12 @@
 import * as React from 'react';
 import {useCallback} from 'react';
 import {
-  Image, SectionList,
+  Image,
+  SectionList,
   StyleSheet,
   Text,
   TouchableOpacity,
-  View
+  View,
 } from 'react-native';
 import type {Tool, ToolSection} from './Toolbox';
 import {useToolboxContext} from './ToolboxContext';
@@ -44,7 +45,8 @@ export default function ToolboxList({tools, onSelect}: Props) {
           onPress={() => {
             setActiveTool(item);
             onSelect(item);
-          }}>
+          }}
+        >
           <View style={styles.listItem}>
             <View style={[styles.listItemThumbnail, apiTest && styles.apiTest]}>
               {item.icon}
@@ -65,7 +67,8 @@ export default function ToolboxList({tools, onSelect}: Props) {
       <View style={styles.full}>
         <Image
           style={styles.gradient}
-          source={require('../../assets/images/gradient_bg3.png')} />
+          source={require('../../assets/images/gradient_bg3.png')}
+        />
       </View>
       <SectionList
         style={styles.container}

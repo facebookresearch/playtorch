@@ -56,11 +56,11 @@ export default function NLPExample() {
 
           <TouchableOpacity
             disabled={isProcessing}
-            onPress={() => processQA(text, question)}>
+            onPress={() => processQA(text, question)}
+          >
             <View
-              style={
-                isProcessing ? styles.askButtonDisabled : styles.askButton
-              }>
+              style={isProcessing ? styles.askButtonDisabled : styles.askButton}
+            >
               <Text style={styles.askButtonText}>Ask</Text>
             </View>
           </TouchableOpacity>

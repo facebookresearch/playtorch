@@ -119,13 +119,15 @@
       "prettier/prettier": [
         "error",
         {
-          "quoteProps": "consistent",
+          "bracketSameLine": true,
+          "bracketSpacing": false,
           "singleQuote": true,
-          "tabWidth": 2,
-          "trailingComma": "es5",
-          "useTabs": false
+          "trailingComma": "all",
+          "arrowParens": "avoid"
         }
-      ]
+      ],
+      "no-shadow": "off",
+      "@typescript-eslint/no-shadow": ["error"]
     }
   },
   "eslintIgnore": [
@@ -133,11 +135,11 @@
     "lib/"
   ],
   "prettier": {
-    "quoteProps": "consistent",
+    "bracketSameLine": true,
+    "bracketSpacing": false,
     "singleQuote": true,
-    "tabWidth": 2,
-    "trailingComma": "es5",
-    "useTabs": false
+    "trailingComma": "all",
+    "arrowParens": "avoid"
   },
   "react-native-builder-bob": {
     "source": "src",

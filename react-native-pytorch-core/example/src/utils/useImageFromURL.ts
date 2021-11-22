@@ -22,7 +22,7 @@ export default function useImageFromURL(url: string) {
       // an unmounted component.
       isMounted && setImage(img);
     })();
-    return function() {
+    return function () {
       isMounted = false;
     };
   }, [setImage, url]);

@@ -14,7 +14,7 @@ import {
   NativeModules,
   Platform,
 } from 'react-native';
-import type { ImageData } from './CanvasView';
+import type {ImageData} from './CanvasView';
 import type {NativeJSRef} from './NativeJSRef';
 
 const {resolveAssetSource} = RNImage;
@@ -141,7 +141,6 @@ const getImageAssetSource = (
  * be drawn on a canvas.
  */
 export const ImageUtil = {
-
   /**
    * The `fromBundle` function loads an [[Image]] that is bundled with the
    * React Native app bundle. The function param is a `require` with a relative
@@ -156,8 +155,8 @@ export const ImageUtil = {
   async fromBundle(imagePath: ImageRequireSource): Promise<Image> {
     const source = getImageAssetSource(imagePath);
     if (Platform.OS === 'ios') {
-      const ref: NativeJSRef = await ImageModule.fromBundle(source)
-      return wrapRef(ref)
+      const ref: NativeJSRef = await ImageModule.fromBundle(source);
+      return wrapRef(ref);
     } else {
       const ref: NativeJSRef = await ImageModule.fromBundle(source.uri);
       return wrapRef(ref);

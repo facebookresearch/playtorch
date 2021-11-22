@@ -14,9 +14,8 @@ import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
 
 export default function CanvasTextAlign() {
   const isFocused = useIsFocused();
-  const [drawingContext, setDrawingContext] = useState<
-    CanvasRenderingContext2D
-  >();
+  const [drawingContext, setDrawingContext] =
+    useState<CanvasRenderingContext2D>();
   const [layout, setLayout] = useState<LayoutRectangle>();
 
   const handleContext2D = useCallback(

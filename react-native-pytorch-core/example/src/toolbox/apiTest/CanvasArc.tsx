@@ -14,9 +14,8 @@ import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
 
 export default function CanvasArc() {
   const isFocused = useIsFocused();
-  const [drawingContext, setDrawingContext] = useState<
-    CanvasRenderingContext2D
-  >();
+  const [drawingContext, setDrawingContext] =
+    useState<CanvasRenderingContext2D>();
 
   const handleContext2D = useCallback(
     async (ctx: CanvasRenderingContext2D) => {
@@ -39,7 +38,7 @@ export default function CanvasArc() {
           let radius = 20; // Arc radius
           let startAngle = 0; // Starting point on circle
           let endAngle = Math.PI + (Math.PI * j) / 2; // End point on circle
-          let counterclockwise = i % 2 == 1; // Draw counterclockwise
+          let counterclockwise = i % 2 === 1; // Draw counterclockwise
 
           ctx.arc(x, y, radius, startAngle, endAngle, counterclockwise);
 

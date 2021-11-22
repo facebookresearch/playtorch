@@ -15,9 +15,8 @@ import useImageFromURL from '../../utils/useImageFromURL';
 
 export default function CanvasDrawImage() {
   const isFocused = useIsFocused();
-  const [drawingContext, setDrawingContext] = useState<
-    CanvasRenderingContext2D
-  >();
+  const [drawingContext, setDrawingContext] =
+    useState<CanvasRenderingContext2D>();
 
   const flamingoImage = useImageFromURL(
     'https://ids.si.edu/ids/deliveryService?max_w=800&id=NZP-20090127-0422MM-000002',

@@ -32,7 +32,7 @@ export default function NLPExample() {
 
   return (
     <ScrollView style={styles.container}>
-      <View style={[styles.row]}>
+      <View style={styles.row}>
         <Text style={styles.label}>Text</Text>
         <TextInput
           style={styles.textArea}
@@ -103,14 +103,15 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   textArea: {
-    color: '#112233',
-    borderWidth: 1,
-    borderColor: '#ff4c2c33',
-    flex: 1,
-    padding: 20,
     backgroundColor: '#ffffff',
-    fontSize: 16,
+    borderColor: '#ff4c2c33',
     borderRadius: 25,
+    borderWidth: 1,
+    color: '#112233',
+    flex: 1,
+    fontSize: 16,
+    padding: 20,
+    width: '100%',
   },
   askInput: {
     color: '#112233',

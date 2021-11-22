@@ -28,17 +28,26 @@ export default function ModelPreloader({
 
   // Preload all models defined in `modelInfos` prop.
   useEffect(() => {
+    // The useEffect doesn't work with async functions out of the box. If the
+    // ModelPreloader component unmounts before the models preloaded, it will
+    // eventually call set setIsReady state on an unmounted component after the
+    // async models preload returns. The isMounted flag keeps track of the
+    // mounted state and only calls setIsReady if the component is still
+    // mounted.
+    let isMounted = true;
+
     async function preloadModel() {
       for (let i = 0; i < modelInfos.length; i++) {
         await MobileModel.preload(modelInfos[i].model);
       }
-      setIsReady(true);
+      isMounted && setIsReady(true);
     }
     preloadModel();
 
     // Unload any preloaded models when the component unmounts. This will free
     // memory used by the model.
     return function () {
+      isMounted = false;
       MobileModel.unload();
     };
   }, [setIsReady, modelInfos]);

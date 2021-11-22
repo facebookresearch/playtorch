@@ -14,10 +14,51 @@
   overflow: hidden;
 }
 
-.heroTitle {
-  margin: 70px auto;
+.title {
   color: var(--ifm-color-gray-0);
+  font-size: 4rem;
+  font-weight: 300;
+  text-transform: uppercase;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+}
+
+.subtitle {
+  font-size: 2.2rem;
+  line-height: 2.5rem;
+  text-align: left;
+  font-weight: 300;
+  color: var(--ifm-color-gray-0);
+  margin: 0;
+  margin-top: 3rem;
+}
+
+h2 {
+  font-weight: 400;
+  --ifm-h2-font-size: 2.2rem;
+  letter-spacing: 0.05rem;
+  margin: 5rem 0 0.7rem;
   text-align: center;
+}
+
+h4.cardTitle {
+  font-size: 2rem;
+  font-weight: 400;
+  color: #000;
+  margin: 1.5rem 0 0;
+}
+
+.social {
+  height: 3rem;
+  margin-top: 2rem;
+}
+
+.socialIcon {
+  display: inline-block;
+  margin-right: 1.8rem;
+  width: 2rem;
+  height: 2rem;
 }
 
 .showcase {
@@ -26,46 +67,43 @@
   flex: 1;
 }
 
-.socialCard {
-  padding: 1rem 1.5rem;
-  background-color: var(--ifm-color-gray-0);
-  color: var(--ifm-color-gray-80);
-  font-weight: 600;
-  display: inline-block;
-  margin: 1rem;
-}
-
-h2 {
-  text-transform: uppercase;
-  font-weight: 400;
-  --ifm-h2-font-size: 1.5rem;
-  letter-spacing: 0.05rem;
-  margin: 3rem 0 1rem;
+.graphic {
+  width: 100%;
+  height: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .showcaseInfo {
   margin-bottom: 3rem;
+  text-align: center;
 }
 
 .showCard {
-  height: 300px;
-  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
-  margin-right: 30px;
   margin-bottom: 30px;
 }
 
-.showCard .cardThumbnail {
+.cardThumbnail {
   display: block;
-  background-color: var(--ifm-color-gray-800);
-  height: 180px;
-  border-bottom: 2px solid var(--ifm-color-primary);
+
+  min-height: 200px;
+  height: 15vw;
+  max-height: 300px;
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
-.showCard .cardContent {
-  padding: 20px;
+.cardContent {
+  padding: 0px;
 }
 
-.showCard .cardCTA {
+.cardCTA {
   font-size: 1.5rem;
   padding: 2rem;
+}
+
+.lastRow {
+  margin-top: 10rem;
 }

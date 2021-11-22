@@ -9,8 +9,9 @@
 
 .titleWrapper {
   padding: 0;
-  margin-bottom: 3rem;
-  position: relative;
+  margin-top: 1rem;
+  position: absolute;
+  top: 0;
 }
 
 h1.title {
@@ -36,6 +37,7 @@ h1.title {
 }
 
 .contentRow {
+  position: relative;
   padding: 2rem;
   color: var(--ifm-color-gray-0);
   clear: both;

@@ -24,7 +24,11 @@ module.exports = {
       type: 'category',
       label: 'Get Started',
       collapsed: false,
-      items: ['tutorials/get-started', 'tutorials/get-started-manually'],
+      items: [
+        'tutorials/get-started',
+        'tutorials/get-started-manually',
+        'tutorials/add-package',
+      ],
     },
     {
       type: 'category',

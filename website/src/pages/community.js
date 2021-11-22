@@ -39,18 +39,20 @@ function Community() {
 
   return (
     <Layout title="Community">
-      <div className={clsx('hero--primary', styles.heroBanner)}>
+      <div className={clsx(styles.heroBanner)}>
         <div className="container">
-          <div className="row">
-            <div className="col col--6">
-              <h1 className={styles.title}>Community</h1>
-              <div className={styles.subtitle}>
-                Let's unlock the vast potential of AI innovations together
-              </div>
-              <div className={styles.social}>
-                <SocialIcon name="discord" />
-                <SocialIcon name="github" />
-                <SocialIcon name="twitter" />
+          <div className={clsx(['row', styles.headRow])}>
+            <div className={clsx(['col', 'col--6', styles.headContent])}>
+              <div>
+                <h1 className={styles.title}>Community</h1>
+                <div className={styles.subtitle}>
+                  Let's unlock the vast potential of AI innovations together
+                </div>
+                <div className={styles.social}>
+                  <SocialIcon name="discord" />
+                  <SocialIcon name="github" />
+                  <SocialIcon name="twitter" />
+                </div>
               </div>
             </div>
             <div className="col col--6">
@@ -65,7 +67,7 @@ function Community() {
         <div className={clsx(['container', 'margin-bottom--l'])}>
           <div className="row">
             <div className="col col--12">
-              <h2>Community Showcase</h2>
+              <h2 className={styles.showcaseTitle}>Community Showcase</h2>
               <p className={styles.showcaseInfo}>
                 Share what you have made with us. Create a PR in GitHub or fill
                 out <a href="#">this form</a>. <br />
@@ -98,7 +100,7 @@ function Community() {
               </Card>
             </div>
           </div>
-          <div className={clsx(['row', styles.lastRow])}>
+          <div className={clsx(['row', styles.tailRow])}>
             <div className="col col--4 col--offset-2">
               <Card
                 thumbnail="social_card1.jpg"

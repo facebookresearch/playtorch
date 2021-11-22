@@ -172,63 +172,7 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   background-color: rgba(0, 0, 0, 0.3);
 }
 
-.hero--primary {
-  height: 60vh;
-  background-size: 600% 400%;
-  min-height: 500px;
-  height: 60vh;
-}
 
-.hero--primary > .container {
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
-}
-
-.hero__title {
-  font-size: 3.2rem;
-  line-height: 1.25;
-  text-align: left;
-  width: 55vw;
-  font-weight: 300;
-  color: #000000cc;
-}
-
-.hero__video {
-  z-index: 1;
-  position: absolute;
-  top: 0px; right: 10vw;
-  min-height: 500px;
-  height: 60vh;
-  padding: 20px;
-}
-
-.hero__cta {
-  display: inline-block;
-  padding: 10px 20px;
-  border-radius: 5px;
-  color: #fff;
-  background-color: #000000cc;
-  font-weight: 500;
-  font-size: 1.25rem;
-  margin: 10px 10px 0 0;
-  box-shadow: 0 0 0px 0px rgba(0,0,0,.2);
-  transition: box-shadow .5s ease, background-color .3s ease;
-}
-
-.hero__cta:hover {
-  text-decoration: none;
-  background-color: var(--ifm-color-primary);
-  color: #fff;
-  box-shadow: 0 5px 30px 3px rgba(0,0,0,.3);
-}
-
-.video__hero_video {
-  width: 100%;
-  height: auto;
-}
 
 /* CLI style */
 .codeBlockTitle {

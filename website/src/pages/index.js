@@ -40,8 +40,8 @@ function Row({
         <div className={clsx([styles.message, head ? styles.heading : ''])}>
           {content}
         </div>
-        <a href={link || '#'}>
-          <div className={clsx([styles.buttonWrapper])}>{button}</div>
+        <a className={clsx([styles.buttonWrapper])} href={link || '#'}>
+          {button}
         </a>
       </div>
       <div className={clsx([styles.content])}>
@@ -101,7 +101,7 @@ export default function Home() {
   const secondPropContent =
     'Easily integrate on-device vision and language models into your apps';
   const secondPropButton = (
-    <div className={styles.button}>Try Our Data Processing API</div>
+    <div className={styles.button}>Check out the API</div>
   );
 
   const thirdPropVideo = (
@@ -131,7 +131,7 @@ export default function Home() {
   const forthPropContent =
     "Join our community of AI researchers, mobile developers and hackers. Let's unlock the vast potential of AI innovations together.";
   const forthPropButton = (
-    <div className={styles.button}>Visit our community page</div>
+    <div className={styles.button}>Join our community</div>
   );
 
   return (

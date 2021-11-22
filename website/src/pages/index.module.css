@@ -52,7 +52,7 @@ h1.title {
 }
 
 .firstRow {
-  margin-top: 3rem;
+  margin-top: 5rem;
 }
 
 .lastRow {
@@ -72,8 +72,8 @@ h1.title {
 }
 
 .video {
-  padding: 10px;
-  border-radius: 10px;
+  padding: 15px;
+  border-radius: 20px;
   background-color: #000;
   width: 300px;
   margin-left: 120px;
@@ -116,10 +116,62 @@ h1.title {
   width: 100%;
   margin-left: 120px;
   margin-right: auto;
+  display: inline-block;
+  text-decoration: none;
 }
 
+.buttonWrapper:hover .button {
+  background-color: #ee4c2c;
+}
+
+/* Tablet */
 @media screen and (max-width: 966px) {
   .contentRow {
     flex-direction: column-reverse;
+  }
+}
+
+/* Mobile */
+@media only screen and (max-width: 600px) {
+  .message,
+  .video,
+  .buttonWrapper {
+    margin-left: auto;
+    margin-right: auto;
+    align-self: center;
+    text-align: center;
+    align-self: center;
+  }
+
+  .button {
+    padding: 0 2rem;
+  }
+
+  .video {
+    width: 50vw;
+  }
+
+  h1.title {
+    font-size: 12vw;
+  }
+
+  .firstRow {
+    margin-top: 8rem;
+  }
+
+  .titleWrapper {
+    top: -4rem;
+  }
+
+  .video {
+    padding: 10px;
+    border-radius: 20px;
+  }
+
+  .heading,
+  .message {
+    font-size: 1.6rem;
+    line-height: 2rem;
+    margin-top: 2rem;
   }
 }

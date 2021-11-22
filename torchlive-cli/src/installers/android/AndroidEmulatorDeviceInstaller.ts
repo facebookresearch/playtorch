@@ -58,7 +58,7 @@ export default class AndroidEmulatorDeviceInstaller
       !(await this.getUserConsentUpdate(context))
     ) {
       context.update(
-        `[Warning] Skipping the installation/update of emulator may lead to unexpected exception when running PyTorchLive on android emulator.`,
+        '[Warning] Skipping the installation/update of emulator may lead to unexpected exception when running PyTorchLive on android emulator.',
       );
       // wait for 2 second for user to read the warning message.
       await new Promise(f => setTimeout(f, 2000));

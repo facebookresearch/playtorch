@@ -15,11 +15,17 @@ import {getDefaultSDKPath, getSDKPath} from '../../android/AndroidSDK';
 import {TaskContext} from '../../task/Task';
 import {downloadFile} from '../../utils/FileUtils';
 import {execCommand, isLinux, isMacOS, platform} from '../../utils/SystemUtils';
-import {IInstallerTask, getInstallerErrorMitigationMessage, getUserConsentOnInstallerOrQuit} from '../IInstaller';
+import {
+  IInstallerTask,
+  getInstallerErrorMitigationMessage,
+  getUserConsentOnInstallerOrQuit,
+} from '../IInstaller';
 
 export default class AndroidSDKInstaller implements IInstallerTask {
-  _possibleSdkManagerFilepaths = ['cmdline-tools/bin/sdkmanager', 'tools/bin/sdkmanager'];
-
+  _possibleSdkManagerFilepaths = [
+    'cmdline-tools/bin/sdkmanager',
+    'tools/bin/sdkmanager',
+  ];
 
   isValid(): boolean {
     return isMacOS();
@@ -32,8 +38,8 @@ export default class AndroidSDKInstaller implements IInstallerTask {
   isInstalled(): boolean {
     const sdkPath = getSDKPath();
     if (sdkPath !== null) {
-      return this._possibleSdkManagerFilepaths.some((sdkManagerFilepath) =>
-        fs.existsSync(path.join(sdkPath, sdkManagerFilepath))
+      return this._possibleSdkManagerFilepaths.some(sdkManagerFilepath =>
+        fs.existsSync(path.join(sdkPath, sdkManagerFilepath)),
       );
     }
     return false;
@@ -53,7 +59,11 @@ export default class AndroidSDKInstaller implements IInstallerTask {
 
     const sdkRoot = getDefaultSDKPath();
 
-    await getUserConsentOnInstallerOrQuit(this, context, 'https://developer.android.com/studio/terms');
+    await getUserConsentOnInstallerOrQuit(
+      this,
+      context,
+      'https://developer.android.com/studio/terms',
+    );
 
     const basicsCmd = `yes | ${sdkManager} --sdk_root=${sdkRoot} "tools"`;
     await execCommand(context, basicsCmd);
@@ -73,14 +83,14 @@ export default class AndroidSDKInstaller implements IInstallerTask {
 
       const url = `https://dl.google.com/android/repository/commandlinetools-${type}-6858069_latest.zip`;
 
-      tmp.dir((err, dirPath, _dirCleanupCallback) => {
-        if (err) {
-          reject(err);
+      tmp.dir((dirError, dirPath, _dirCleanupCallback) => {
+        if (dirError) {
+          reject(dirError);
           return;
         }
-        tmp.file(async (err, filePath, _fd, cleanupCallback) => {
-          if (err) {
-            reject(err);
+        tmp.file(async (fileError, filePath, _fd, cleanupCallback) => {
+          if (fileError) {
+            reject(fileError);
             return;
           }
           await downloadFile(url, filePath);
@@ -90,9 +100,9 @@ export default class AndroidSDKInstaller implements IInstallerTask {
           fs.chmod(
             path.join(dirPath, this._possibleSdkManagerFilepaths[0]),
             0o755,
-            err => {
-              if (err) {
-                reject(err);
+            chmodError => {
+              if (chmodError) {
+                reject(chmodError);
                 return;
               }
 

@@ -19,7 +19,7 @@ const command = createCommand('emulator', {
 
 function getVersion(): SemVer {
   let rawVersion = command.execute(['-version']);
-  const matches = rawVersion.match(/version\s([\d\.]*)\s/);
+  const matches = rawVersion.match(/version\s([\d.]*)\s/);
   if (matches !== null && matches.length > 1) {
     return semver.coerce(matches[1]);
   }

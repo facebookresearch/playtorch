@@ -13,12 +13,17 @@ import path from 'path';
 import {getSDKPath, isPackageInstalled} from '../../android/AndroidSDK';
 import {TaskContext} from '../../task/Task';
 import {execCommand, isMacOS, spawnCommand} from '../../utils/SystemUtils';
-import {IInstallerTask, getInstallerErrorMitigationMessage, getUserConsentOnInstallerOrQuit} from '../IInstaller';
+import {
+  IInstallerTask,
+  getInstallerErrorMitigationMessage,
+  getUserConsentOnInstallerOrQuit,
+} from '../IInstaller';
 import AbstractAndroidCommandLineTools from './AbstractAndroidCommandLineTools';
 
 export default class AndroidSDKManagerInstaller
   extends AbstractAndroidCommandLineTools
-  implements IInstallerTask {
+  implements IInstallerTask
+{
   constructor() {
     super('tools/bin/sdkmanager');
   }
@@ -66,7 +71,11 @@ export default class AndroidSDKManagerInstaller
       {encoding: 'utf-8'},
     );
 
-    await getUserConsentOnInstallerOrQuit(this, context, 'https://developer.android.com/studio/terms.');
+    await getUserConsentOnInstallerOrQuit(
+      this,
+      context,
+      'https://developer.android.com/studio/terms.',
+    );
 
     const licensesCmd = `yes | ${cltPath} --licenses`;
     execCommand(context, licensesCmd);

@@ -9,7 +9,10 @@
 
 import {exec} from 'child_process';
 import {ICommand} from '../../commands/ICommand';
-import {ICommandInstallerTask, getInstallerErrorMitigationMessage}from './../IInstaller';
+import {
+  ICommandInstallerTask,
+  getInstallerErrorMitigationMessage,
+} from './../IInstaller';
 import {isCommandInstalled} from '../../utils/ToolingUtils';
 import {isMacOS} from '../../utils/SystemUtils';
 import {TaskContext} from '../../task/Task';
@@ -45,7 +48,10 @@ export default class CocoaPodsInstaller implements ICommandInstallerTask {
 
     // Elevate privileges to have sudo access, which is required to install
     // CocoaPods.
-    const s = await sudo(context, 'CocoaPods install requires `sudo` access\n\nPassword:');
+    const s = await sudo(
+      context,
+      'CocoaPods install requires `sudo` access\n\nPassword:',
+    );
 
     return new Promise(async (resolve, reject) => {
       context.update(`Installing ${this.getDescription()}`);

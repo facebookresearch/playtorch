@@ -13,8 +13,6 @@ import {
   ListrContext,
   ListrRendererFactory,
   ListrTaskWrapper,
-  ListrBaseClassOptions,
-  ListrRenderer,
 } from 'listr2';
 import {Observable} from 'rxjs';
 import {

@@ -16,7 +16,7 @@ jest.mock('fs');
 
 jest.mock('os', () => {
   const os = jest.requireActual('os');
-  os.homedir = function() {
+  os.homedir = function () {
     return TEST_HOMEDIR;
   };
   return os;

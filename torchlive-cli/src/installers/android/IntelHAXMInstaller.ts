@@ -11,7 +11,10 @@ import {execSync} from 'child_process';
 import {TaskContext} from '../../task/Task';
 import {isMacOS} from '../../utils/SystemUtils';
 import {executeCommandForTask} from '../../utils/TaskUtils';
-import {IInstallerTask, getInstallerErrorMitigationMessage} from '../IInstaller';
+import {
+  IInstallerTask,
+  getInstallerErrorMitigationMessage,
+} from '../IInstaller';
 
 export default class IntelHAXMInstaller implements IInstallerTask {
   getDescription(): string {

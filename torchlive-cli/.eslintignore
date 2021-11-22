@@ -1,0 +1,6 @@
+node_modules/
+debugger-ui/
+templates/
+global-cli/
+build/
+coverage/

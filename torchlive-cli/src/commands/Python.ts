@@ -15,7 +15,7 @@ const command = createCommand('python3', {getVersion}) as ICommand;
 
 function getVersion(): SemVer {
   let rawVersion = command.execute(['--version']);
-  const matches = rawVersion.match(/Python\s([\d\.]+)/);
+  const matches = rawVersion.match(/Python\s([\d.]+)/);
   if (matches !== null && matches.length > 1) {
     rawVersion = matches[1];
   }

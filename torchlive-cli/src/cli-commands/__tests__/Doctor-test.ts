@@ -44,7 +44,7 @@ This program is a derivative of the QEMU CPU emulator (www.qemu.org).
   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
   GNU General Public License for more details.
 `);
-    const version = getVersion('emulator', '-version', /version\s([\d\.]*)\s/);
+    const version = getVersion('emulator', '-version', /version\s([\d.]*)\s/);
     expect(version).toBe('30.5.3.0');
     expect(isCommandInstalledMock).toBeCalledTimes(1);
     expect(execCommandSyncMock).toBeCalledTimes(1);
@@ -60,7 +60,7 @@ This program is a derivative of the QEMU CPU emulator (www.qemu.org).
     const version = getVersionFromStderr(
       'java2',
       '-version',
-      /\sversion\s\"([\d\.\_]*)\"/,
+      /\sversion\s"([\d._]*)"/,
     );
     expect(version).toBe('1.8.0_282');
     expect(isCommandInstalledMock).toBeCalledTimes(1);

@@ -7,7 +7,13 @@
  * @format
  */
 
-import {ListrContext, ListrRendererFactory, ListrTaskWrapper, ListrGetRendererTaskOptions, ListrDefaultRenderer} from 'listr2';
+import {
+  ListrContext,
+  ListrRendererFactory,
+  ListrTaskWrapper,
+  ListrGetRendererTaskOptions,
+  ListrDefaultRenderer,
+} from 'listr2';
 
 export type TaskContext = {
   update(message: string): void;

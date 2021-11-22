@@ -50,11 +50,14 @@ class InitTask implements ITask {
 Please run 'npx react-native init <project-name> --template react-native-template-pytorch-live'
 for more debug info.
 
-${isCommandInstalled('react-native') && chalk.blue(`The following package installed locally might cause unexpected behavior, please uninstall them and rerun the commands.
+${
+  isCommandInstalled('react-native') &&
+  chalk.blue(`The following package installed locally might cause unexpected behavior, please uninstall them and rerun the commands.
 
 • react-native
 
-ref: https://reactnative.dev/docs/environment-setup)`)}
+ref: https://reactnative.dev/docs/environment-setup)`)
+}
 
 If you still run into issues, \
 please refer to https://github.com/pytorch/live/issues for more info.`;
@@ -73,10 +76,11 @@ ${NOBREAKSPACE_INTEDENTATION}
 ${chalk.blue('Run instructions for iOS')}:
 ${NOBREAKSPACE_INTEDENTATION}• cd ${this.name} && npx torchlive-cli run-ios
 ${NOBREAKSPACE_INTEDENTATION}${chalk.grey('- or -')}
-${NOBREAKSPACE_INTEDENTATION}• Open ${this.name}/ios/${this.name}.xcworkspace in Xcode or run "xed -b ios"
+${NOBREAKSPACE_INTEDENTATION}• Open ${this.name}/ios/${
+      this.name
+    }.xcworkspace in Xcode or run "xed -b ios"
 ${NOBREAKSPACE_INTEDENTATION}• Hit the Run button
-${NOBREAKSPACE_INTEDENTATION}`
-    );
+${NOBREAKSPACE_INTEDENTATION}`);
     context.task.title = this.getDescription();
   }
 

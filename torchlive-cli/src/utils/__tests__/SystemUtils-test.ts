@@ -16,7 +16,7 @@ const TEST_HOMEDIR = '/Users/torchlive';
 jest.mock('os', () => {
   const os = jest.requireActual('os');
   os.platform = platform;
-  os.homedir = function() {
+  os.homedir = function () {
     return TEST_HOMEDIR;
   };
   return os;

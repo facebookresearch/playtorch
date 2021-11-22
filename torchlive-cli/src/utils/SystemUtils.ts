@@ -33,11 +33,11 @@ export function isWindows(): boolean {
 function addToEnvPath(
   env: NodeJS.ProcessEnv,
   paths: string[],
-  path: string,
+  binPath: string,
 ): void {
-  if (fs.existsSync(path)) {
-    if (!env.PATH.includes(path)) {
-      paths.push(path);
+  if (fs.existsSync(binPath)) {
+    if (!env.PATH.includes(binPath)) {
+      paths.push(binPath);
     }
   }
 }

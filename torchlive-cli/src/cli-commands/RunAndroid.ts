@@ -49,7 +49,7 @@ function waitForDevice(): Promise<void> {
 }
 
 function waitForSysBootCompleted(): Promise<void> {
-  return new Promise(async (resolve, reject) => {
+  return new Promise(async (resolve, _reject) => {
     while (true) {
       const isBootCompleted =
         execCommandSync('adb shell getprop sys.boot_completed') === '1';
@@ -94,7 +94,7 @@ const runAndroid = async (options: RunAndroidOptions): Promise<void> => {
       execCommandSync('lsof -ti tcp:8081 | xargs kill');
     } else {
       throw new Error(
-        `Unable to start Metro bundler. Port 8081 is already in use`,
+        'Unable to start Metro bundler. Port 8081 is already in use',
       );
     }
   }
@@ -123,7 +123,7 @@ export function isMetroPortOccupied(): boolean {
 export async function getUserConsentOnFreeingPortForMetro(): Promise<boolean> {
   try {
     const processes = execCommandSync('lsof -i :8081');
-    const answer = await prompt([
+    const answer = await prompt<{userConfirm: boolean}>([
       {
         type: 'confirm',
         name: 'userConfirm',
@@ -134,7 +134,7 @@ ${processes}
 Would you like to terminate the processes running on port 8081 and start Metro?`,
       },
     ]);
-    return answer['userConfirm'];
+    return answer.userConfirm;
   } catch {
     return false;
   }

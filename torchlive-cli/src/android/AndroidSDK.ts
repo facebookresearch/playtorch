@@ -117,7 +117,7 @@ export function getInstalledPackages(): Package[] {
 
   const packages: Package[] = [];
 
-  const regex = /^\s\s(\S+)\s*\|\s([\d\.]+)\s+\|\s(.*)\s+\|\s(.+)\s*$/gm;
+  const regex = /^\s\s(\S+)\s*\|\s([\d.]+)\s+\|\s(.*)\s+\|\s(.+)\s*$/gm;
 
   let m: RegExpExecArray;
   while ((m = regex.exec(splitListOutput)) !== null) {
@@ -126,41 +126,41 @@ export function getInstalledPackages(): Package[] {
       regex.lastIndex++;
     }
 
-    let path: string;
-    let version: string;
-    let description: string;
-    let location: string;
+    let packagePath: string;
+    let packageVersion: string;
+    let packageDescription: string;
+    let packageLocation: string;
 
     // The result can be accessed through the `m`-variable.
     m.forEach((match, groupIndex) => {
       switch (groupIndex) {
         case 1:
-          path = match;
+          packagePath = match;
           break;
         case 2:
-          version = match;
+          packageVersion = match;
           break;
         case 3:
-          description = match;
+          packageDescription = match;
           break;
         case 4:
-          location = match;
+          packageLocation = match;
           break;
       }
     });
 
     packages.push({
-      path,
-      version,
-      description,
-      location,
+      path: packagePath,
+      version: packageVersion,
+      description: packageDescription,
+      location: packageLocation,
     });
   }
 
   return packages;
 }
 
-export function isPackageInstalled(path: string): boolean {
+export function isPackageInstalled(filePath: string): boolean {
   const packages = getInstalledPackages();
-  return packages.findIndex(pkg => pkg.path === path) > -1;
+  return packages.findIndex(pkg => pkg.path === filePath) > -1;
 }

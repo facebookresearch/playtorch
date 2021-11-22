@@ -16,16 +16,16 @@ export function downloadFile(url: string, dest: string): Promise<void> {
     https
       .get(url, response => {
         response.pipe(file);
-        file.on('finish', function() {
+        file.on('finish', function () {
           file.close();
           resolve();
         });
       })
-      .on('error', function(err) {
-        fs.unlink(dest, err => {
-          reject(err);
+      .on('error', function (httpsError) {
+        fs.unlink(dest, unlinkError => {
+          reject(unlinkError);
         });
-        reject(err);
+        reject(httpsError);
       });
   });
 }

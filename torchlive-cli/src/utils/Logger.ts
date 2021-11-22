@@ -21,8 +21,8 @@ type Transport = {
   log(name: string, type: string, message: string): Promise<void>;
 };
 
-const LOG_FILE_PREFIX = `torchlive`;
-const LOG_FILE_EXTENSION = `log`;
+const LOG_FILE_PREFIX = 'torchlive';
+const LOG_FILE_EXTENSION = 'log';
 const LOG_FILE_REGEX = new RegExp(`${LOG_FILE_PREFIX}\\.log\\.\\d`);
 
 // 10 MB
@@ -135,10 +135,10 @@ export function getLogger(name: string, transport?: Transport): Logger {
     await transport.log(name, 'INFO', message);
   }
 
-  async function error(message: string, error?: Error): Promise<void> {
+  async function error(message: string, anError?: Error): Promise<void> {
     let logMessage = message;
-    if (error != null) {
-      logMessage += `\n${error}`;
+    if (anError != null) {
+      logMessage += `\n${anError}`;
     }
     await transport.log(name, 'ERROR', logMessage);
   }

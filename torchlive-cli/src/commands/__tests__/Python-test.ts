@@ -12,16 +12,12 @@ import semver from 'semver';
 
 describe('Python command tests', () => {
   test('test python getVersion success', () => {
-    jest
-      .spyOn(python, 'execute')
-      .mockReturnValueOnce('Python 3.7.5');
+    jest.spyOn(python, 'execute').mockReturnValueOnce('Python 3.7.5');
     expect(python.getVersion()).toStrictEqual(semver.parse('3.7.5'));
   });
 
   test('test python getVersion Fail', () => {
-    jest
-      .spyOn(python, 'execute')
-      .mockReturnValueOnce('');
+    jest.spyOn(python, 'execute').mockReturnValueOnce('');
     expect(python.getVersion()).toBeNull();
   });
 });

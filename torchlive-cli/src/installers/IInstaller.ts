@@ -36,8 +36,7 @@ export function getInstallerErrorMitigationMessage(
   task: ITask,
   externalLink: string,
 ): string {
-  const msg =
-    `💥 Installation of ${task.getDescription()} failed because of the error reported above.
+  const msg = `💥 Installation of ${task.getDescription()} failed because of the error reported above.
 
 Please address the reported error. Alternatively, install the package manually from ${externalLink}.
 
@@ -48,7 +47,11 @@ please visit https://github.com/pytorch/live/issues to search for similar issues
   return msg;
 }
 
-export async function getUserConsentOnInstallerOrQuit(task: IInstallerTask, context: TaskContext, licenseLink: string): Promise<void> {
+export async function getUserConsentOnInstallerOrQuit(
+  task: IInstallerTask,
+  context: TaskContext,
+  licenseLink: string,
+): Promise<void> {
   const userConsent = await context.task.prompt<boolean>({
     type: 'confirm',
     name: 'userConsent',
@@ -60,7 +63,9 @@ Do you accept the license?`,
   });
 
   if (!userConsent) {
-    throw new Error(`Stopping installation of ${task.getDescription()}, it is required to accept Android Software Development Kit License Agreement.`);
+    throw new Error(
+      `Stopping installation of ${task.getDescription()}, it is required to accept Android Software Development Kit License Agreement.`,
+    );
   }
   context.update('Accepted licenses agreement');
 }

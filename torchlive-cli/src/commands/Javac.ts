@@ -10,7 +10,7 @@
 import execa from 'execa';
 import {existsSync} from 'fs';
 import semver, {SemVer} from 'semver';
-import {createCommand, getCommand, ICommands} from '../utils/CommandUtils';
+import {createCommand, ICommands} from '../utils/CommandUtils';
 import {execaCommandSync, getEnv, isMacOS} from '../utils/SystemUtils';
 import {isCommandInstalled} from '../utils/ToolingUtils';
 import {ICommand} from './ICommand';
@@ -45,7 +45,7 @@ const commands: ICommands = {
 function parseVersion(rawVersion: string): SemVer {
   // Convert '_' to '-' because semver cannot handle '_'. This is needed for
   // `java -version`.
-  const escapedRawVersion = rawVersion.replace(/\_/g, '-');
+  const escapedRawVersion = rawVersion.replace(/_/g, '-');
   return semver.parse(escapedRawVersion) || semver.coerce(escapedRawVersion);
 }
 
@@ -61,7 +61,7 @@ function getPath(): string | null {
 
 function getVersion(): SemVer {
   let rawVersion = command.execute(['-version']);
-  const matches = rawVersion.match(/\sversion\s\"([\d\.\_]*)\"/);
+  const matches = rawVersion.match(/\sversion\s"([\d._]*)"/);
   if (matches !== null && matches.length > 1) {
     rawVersion = matches[1];
   }

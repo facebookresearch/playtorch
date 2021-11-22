@@ -17,7 +17,7 @@ const command = createCommand('brew', {
 
 function getVersion(): SemVer {
   let rawVersion = command.execute(['--version']);
-  const matches = rawVersion.match(/Homebrew\s([\d\.]+)/);
+  const matches = rawVersion.match(/Homebrew\s([\d.]+)/);
   if (matches !== null && matches.length > 1) {
     rawVersion = matches[1];
   }

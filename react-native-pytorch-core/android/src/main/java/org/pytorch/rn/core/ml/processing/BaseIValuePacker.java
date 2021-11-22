@@ -247,6 +247,11 @@ public class BaseIValuePacker implements IIValuePacker {
 
     final int startIdx = argmax(startLogits);
     final int endIdx = argmax(endLogits);
+    // Return null (i.e., no answer found) if start index is outside the lower bounds of the tokens
+    // or if start index is the same as the end index.
+    if (startIdx < 0 || startIdx == endIdx) {
+      return null;
+    }
     long[] tokenIds = (long[]) packerContext.get("token_ids");
     if (tokenIds == null) {
       throw new IllegalStateException("Expected 'token_ids' in packerContext");

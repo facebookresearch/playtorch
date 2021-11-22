@@ -368,6 +368,16 @@ class BaseIValuePacker {
         let startIdx = argmax(array: startLogits, dtype: startLogitTensor.dtype)
         let endIdx = argmax(array: endLogits, dtype: endLogitTensor.dtype)
 
+        // Return null (i.e., no answer found) if start index is outside the
+        // lower bounds of the tokens or if start index is the same as the end
+        // index.
+        if startIdx < 0 || startIdx == endIdx {
+            // Setting the answer nil is not necessarily required, but it is
+            // explicit that the returned answer is nil (undefined in JS)
+            map[key] = nil
+            return
+        }
+
         if startIdx > endIdx {
             throw BaseIValuePackerError.DecodeBertError
         }

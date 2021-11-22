@@ -29,18 +29,23 @@ export default function useNLPQAModelInference(modelInfo: ModelInfo) {
 
       const inputText = `[CLS] ${question} [SEP] ${text} [SEP]`;
       const {
-        result: {answer},
-        metrics,
+        result: {answer: ans},
+        metrics: m,
       } = await MobileModel.execute<NLPQAResult>(modelInfo.model, {
         text: inputText,
         modelInputLength: MODEL_INPUT_LENGTH,
       });
 
-      setAnswer(answer);
-      setMetrics(metrics);
+      if (ans !== null) {
+        setAnswer(ans);
+      } else {
+        setAnswer('No answer found');
+      }
+
+      setMetrics(m);
       setIsProcessing(false);
     },
-    [setIsProcessing, setAnswer, setMetrics],
+    [setIsProcessing, setAnswer, setMetrics, modelInfo.model],
   );
 
   return {

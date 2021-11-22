@@ -63,5 +63,6 @@ buck-out/
 yalc.lock
 
 # PyTorch mobile models
+models/*.ptl
 models/*.pt
 models/venv

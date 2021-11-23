@@ -19,7 +19,7 @@ Each model will have a `pack` and an `unpack`. Both are specified in the PyTorch
 
 This section will guide you step-by-step for how to bundle the Live Spec with `pack` and `unpack` for an image classification model, more specifically the MobileNet V3 (small) model.
 
-We can do this bundling step from anywhere in our filesystem that has access to `python`, but we'll do it in `<PYTORCH_LIVE_PROJECT>/models` so the bundled model is in place and ready to go when we're done.
+We can do this bundling step from anywhere in our filesystem that has access to `python`. If you already have a PyTorch Live project, follow these steps from a subdirectory in the project directory, for example, `<PYTORCH_LIVE_PROJECT>/models`, so that the bundled model is in place and ready to go when we're done.
 
 ## Create Live Spec
 
@@ -71,32 +71,15 @@ python3 -m venv venv
 source venv/bin/activate
 ```
 
-### Install `torch` and `torchvision` dependencies.
+### Install `torch` and `torchvision` dependencies
 
-The Python script requires `torch` and `torchvision`. Use the Python package manager (`pip`) to install both dependencies.
+The Python script requires `torch` and `torchvision`. Use the Python package manager (`pip3` or simply `pip` in a virtual environment) to install both dependencies.
 
-<Tabs
-  defaultValue="venv"
-  values={[
-    {label: 'Virtual Environment', value: 'venv'},
-    {label: 'No Virtual Environment', value: 'no-venv'},
-  ]}>
-  <TabItem value="venv">
+```shell
+pip3 install torch torchvision
+```
 
-  ```shell
-  pip install torch torchvision
-  ```
-
-  </TabItem>
-  <TabItem value="no-venv">
-
-  ```shell
-  pip3 install torch torchvision
-  ```
-
-  </TabItem>
-</Tabs>
-
+### Build the Model
 
 The following script will download the MobileNet V3 model from the PyTorch Hub, optimize it for mobile use, and bundle the Live Spec as extra file with the `ptl` file.
 
@@ -122,29 +105,15 @@ print("model successfully exported")
 
 Create the `make_model.py` file, add the Python script above, and then run Python script to create `mobilenet_v3_small.ptl`.
 
-<Tabs
-  defaultValue="venv"
-  values={[
-    {label: 'Virtual Environment', value: 'venv'},
-    {label: 'No Virtual Environment', value: 'no-venv'},
-  ]}>
-  <TabItem value="venv">
+```shell
+python3 make_model.py
+```
 
-  ```shell
-  python make_model.py
-  ```
+If you already have a PyTorch Live project, and you haven't run the commands in the `<PYTORCH_LIVE_PROJECT>/models` directory, copy `mobilenet_v3_small.ptl` to the `<PYTORCH_LIVE_PROJECT>/models` directory. It will now be accessible to load and run in your PyTorch Live project using the path `models/mobilenet_v3_small.ptl`.
 
-  </TabItem>
-  <TabItem value="no-venv">
+## Learn More About Live Spec
 
-  ```shell
-  python3 make_model.py
-  ```
-
-  </TabItem>
-</Tabs>
-
-If you haven't run the commands in the `<PYTORCH_LIVE_PROJECT>/models` directory, copy the `mobilenet_v3_small.ptl` file to the `<PYTORCH_LIVE_PROJECT>/models` directory.
+For additional details about the Live Spec JSON format and its transforms, read the [model specification](../api/model-spec.md) page in the API documentation.
 
 ## Give us feedback
 

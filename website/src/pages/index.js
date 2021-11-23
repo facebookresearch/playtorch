@@ -61,6 +61,7 @@ export default function Home() {
       autoPlay={true}
       loop={true}
       controls={false}
+      poster="demo_catdog.png"
     />
   );
   const heroContent = (
@@ -81,12 +82,13 @@ export default function Home() {
       autoPlay={true}
       loop={true}
       controls={false}
+      poster="demo_mnist.png"
     />
   );
   const firstPropContent =
     'Quickly set up your dev environment and bootstrap ML mobile app projects';
   const firstPropButton = (
-    <div className={styles.button}>Run our CLI tools</div>
+    <div className={styles.button}>Run CLI setup tool</div>
   );
 
   const secondPropVideo = (
@@ -96,6 +98,7 @@ export default function Home() {
       autoPlay={true}
       loop={true}
       controls={false}
+      poster="demo_model.png"
     />
   );
   const secondPropContent =

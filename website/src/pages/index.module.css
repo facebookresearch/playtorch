@@ -16,7 +16,7 @@
 
 h1.title {
   font-size: 4rem;
-  font-weight: 300;
+  font-weight: 400;
   text-transform: uppercase;
   color: #fff;
   white-space: nowrap;
@@ -75,8 +75,14 @@ h1.title {
   padding: 15px;
   border-radius: 20px;
   background-color: #000;
-  width: 300px;
+  max-width: 300px;
+  width: 30vw;
+  min-height: min(60vw, 600px);
   margin-left: 120px;
+}
+
+.odd .video {
+  margin-left: 0px;
 }
 
 .noMargin {
@@ -87,9 +93,13 @@ h1.title {
   font-size: 2.2rem;
   line-height: 2.5rem;
   text-align: left;
-  font-weight: 300;
-  margin-left: 120px;
+  font-weight: 400;
+  margin-left: 0px;
   margin-right: auto;
+}
+
+.odd .message {
+  margin-left: 120px;
 }
 
 .heading {
@@ -113,11 +123,14 @@ h1.title {
 }
 
 .buttonWrapper {
-  width: 100%;
-  margin-left: 120px;
+  margin-left: 0px;
   margin-right: auto;
   display: inline-block;
   text-decoration: none;
+}
+
+.odd .buttonWrapper {
+  margin-left: 120px;
 }
 
 .buttonWrapper:hover .button {
@@ -125,22 +138,50 @@ h1.title {
 }
 
 /* Tablet */
-@media screen and (max-width: 966px) {
-  .contentRow {
-    flex-direction: column-reverse;
+@media only screen and (max-width: 1024px) {
+  .message,
+  .buttonWrapper {
+    margin-left: 50px;
+  }
+  .video {
+    margin-left: 50px;
+  }
+
+  h1.title {
+    font-size: 6vw;
+  }
+
+  .beta {
+    top: -1.2rem;
+  }
+
+  .message {
+    font-size: 4.8vw;
+    line-height: 5.5vw;
   }
 }
 
 /* Mobile */
-@media only screen and (max-width: 600px) {
+@media only screen and (min-device-width: 375px) and (max-device-width: 812px) {
+  .contentRow {
+    flex-direction: column-reverse;
+  }
+
   .message,
   .video,
-  .buttonWrapper {
+  .buttonWrapper,
+  .odd .message,
+  .odd .video,
+  .odd .buttonWrapper {
     margin-left: auto;
     margin-right: auto;
     align-self: center;
     text-align: center;
     align-self: center;
+  }
+
+  .buttonWrapper {
+    width: 100%;
   }
 
   .button {
@@ -149,6 +190,7 @@ h1.title {
 
   .video {
     width: 50vw;
+    min-height: 100vw;
   }
 
   h1.title {
@@ -156,11 +198,12 @@ h1.title {
   }
 
   .firstRow {
-    margin-top: 8rem;
+    margin-top: 20vh;
   }
 
   .titleWrapper {
-    top: -4rem;
+    top: -10vh;
+    left: 10vw;
   }
 
   .video {

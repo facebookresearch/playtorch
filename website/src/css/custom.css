@@ -5,29 +5,26 @@
  * work well for content-centric websites.
  */
 
- @font-face{
-  font-family:FreightSans;font-weight:700;font-style:normal;src:url("/static/fonts/FreightSans/freight-sans-bold.woff2") format("woff2"),url("/static/fonts/FreightSans/freight-sans-bold.woff") format("woff")
+@font-face{
+  font-family:FreightSansLFPro;font-weight:400;font-style:normal;src:url("/static/fonts/FreightSansLFPro/FreigSanLFProBoo.woff2") format("woff2"),url("/static/fonts/FreightSansLFPro/FreigSanLFProBoo.woff") format("woff")
 }
 @font-face{
-  font-family:FreightSans;font-weight:700;font-style:italic;src:url("/static/fonts/FreightSans/freight-sans-bold-italic.woff2") format("woff2"),url("/static/fonts/FreightSans/freight-sans-bold-italic.woff") format("woff")
+  font-family:FreightSansLFPro;font-weight:400;font-style:italic;src:url("/static/fonts/FreightSansLFPro/FreigSanLFProBooIta.woff2") format("woff2"),url("/static/fonts/FreightSansLFPro/FreigSanLFProBooIta.woff") format("woff")
 }
 @font-face{
-  font-family:FreightSans;font-weight:500;font-style:normal;src:url("/static/fonts/FreightSans/freight-sans-medium.woff2") format("woff2"),url("/static/fonts/FreightSans/freight-sans-medium.woff") format("woff")
+  font-family:FreightSansLFPro;font-weight:700;font-style:normal;src:url("/static/fonts/FreightSansLFPro/FreigSanLFProBol.woff2") format("woff2"),url("/static/fonts/FreightSansLFPro/FreigSanLFProBol.woff") format("woff")
 }
 @font-face{
-  font-family:FreightSans;font-weight:500;font-style:italic;src:url("/static/fonts/FreightSans/freight-sans-medium-italic.woff2") format("woff2"),url("/static/fonts/FreightSans/freight-sans-medium-italic.woff") format("woff")
+  font-family:FreightSansLFPro;font-weight:700;font-style:italic;src:url("/static/fonts/FreightSansLFPro/FreigSanLFProBolIta.woff2") format("woff2"),url("/static/fonts/FreightSansLFPro/FreigSanLFProBolIta.woff") format("woff")
 }
 @font-face{
-  font-family:FreightSans;font-weight:100;font-style:normal;src:url("/static/fonts/FreightSans/freight-sans-light.woff2") format("woff2"),url("/static/fonts/FreightSans/freight-sans-light.woff") format("woff")
+  font-family:FreightSansLFPro;font-weight:300;font-style:normal;src:url("/static/fonts/FreightSansLFPro/FreigSanLFProLig.woff2") format("woff2"),url("/static/fonts/FreightSansLFPro/FreigSanLFProLig.woff") format("woff")
 }
 @font-face{
-  font-family:FreightSans;font-weight:100;font-style:italic;src:url("/static/fonts/FreightSans/freight-sans-light-italic.woff2") format("woff2"),url("/static/fonts/FreightSans/freight-sans-light-italic.woff") format("woff")
+  font-family:FreightSansLFPro;font-weight:500;font-style:normal;src:url("/static/fonts/FreightSansLFPro/FreigSanLFProMed.woff2") format("woff2"),url("/static/fonts/FreightSansLFPro/FreigSanLFProMed.woff") format("woff")
 }
 @font-face{
-  font-family:FreightSans;font-weight:400;font-style:italic;src:url("/static/fonts/FreightSans/freight-sans-book-italic.woff2") format("woff2"),url("/static/fonts/FreightSans/freight-sans-book-italic.woff") format("woff")
-}
-@font-face{
-  font-family:FreightSans;font-weight:400;font-style:normal;src:url("/static/fonts/FreightSans/freight-sans-book.woff2") format("woff2"),url("/static/fonts/FreightSans/freight-sans-book.woff")
+  font-family:FreightSansLFPro;font-weight:600;font-style:normal;src:url("/static/fonts/FreightSansLFPro/FreigSanLFProSem.woff2") format("woff2"),url("/static/fonts/FreightSansLFPro/FreigSanLFProSem.woff") format("woff")
 }
 
 /* You can override the default Infima variables here. */
@@ -66,7 +63,7 @@
   --ifm-color-primary-lightest: rgb(146, 224, 208);
   --ifm-code-font-size: 0.8em;
   --ifm-button-border-color: #ee4c2c;
-  --ifm-font-family-base: FreightSansLFPro, FreightSans, -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;
+  --ifm-font-family-base: FreightSansLFPro, -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Ubuntu,"Helvetica Neue",Arial,sans-serif;
   --ifm-font-size-base: 16px;
   --ifm-font-family-monospace: "Andale Mono", Menlo, Monaco, Consolas, monospace;
   --ifm-code-color: #666666;
@@ -285,6 +282,10 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
 /* nav bar */
 .navbar__brand {
   margin-left: 1rem;
+}
+
+.navbar__link {
+  font-weight: 500;
 }
 
 

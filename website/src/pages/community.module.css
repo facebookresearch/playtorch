@@ -120,7 +120,7 @@ h4.cardTitle {
 }
 
 /* Mobile */
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 768px) {
   .showcase {
     padding: 0 1rem;
   }

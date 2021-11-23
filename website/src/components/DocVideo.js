@@ -20,6 +20,7 @@ export default function DocVideo({
   loop,
   autoPlay,
   noMargin = false,
+  poster,
 }) {
   return (
     <video
@@ -30,7 +31,8 @@ export default function DocVideo({
       loop={loop}
       autoPlay={autoPlay}
       width={width}
-      height={height}>
+      height={height}
+      poster={poster ? require(`@site/static/img/${poster}`).default : null}>
       <source
         src={require(`@site/static/video/${asset}.mp4`).default}
         type="video/mp4"

@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => "12.0" }
-  s.source       = { :git => "https://github.com/facebookexperimental/pytorch-live.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/pytorch/live.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift}"
   s.private_header_files = ['ios/**/Internal/*.h']

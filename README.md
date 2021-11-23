@@ -8,7 +8,7 @@
   <strong>Making AI easier to use, for everyone.</strong>
 </p>
 
-[![Deploy Website](https://github.com/facebookexperimental/pytorch-live/actions/workflows/deploy-website.yml/badge.svg)](https://github.com/facebookexperimental/pytorch-live/actions/workflows/deploy-website.yml) [![Torchlive CLI](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-cli.yml/badge.svg)](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-cli.yml) [![Build Android Template App](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-template-android.yml/badge.svg)](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-template-android.yml) [![Build iOS Template App](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-template-ios.yml/badge.svg)](https://github.com/facebookexperimental/pytorch-live/actions/workflows/build-template-ios.yml)
+[![Deploy Website](https://github.com/pytorch/live/actions/workflows/deploy-website.yml/badge.svg)](https://github.com/pytorch/live/actions/workflows/deploy-website.yml) [![Torchlive CLI](https://github.com/pytorch/live/actions/workflows/build-cli.yml/badge.svg)](https://github.com/pytorch/live/actions/workflows/build-cli.yml) [![Build Android Template App](https://github.com/pytorch/live/actions/workflows/build-template-android.yml/badge.svg)](https://github.com/pytorch/live/actions/workflows/build-template-android.yml) [![Build iOS Template App](https://github.com/pytorch/live/actions/workflows/build-template-ios.yml/badge.svg)](https://github.com/pytorch/live/actions/workflows/build-template-ios.yml)
 
 <p>
   <a href="https://www.npmjs.org/package/react-native-pytorch-core">

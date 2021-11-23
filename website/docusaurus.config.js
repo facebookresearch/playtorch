@@ -63,7 +63,7 @@ module.exports = {
           label: 'Community',
         },
         {
-          href: 'https://github.com/facebookexperimental/pytorch-live',
+          href: 'https://github.com/pytorch/live',
           position: 'right',
           className: 'header-github-link',
           'aria-label': 'GitHub repository',
@@ -152,7 +152,7 @@ module.exports = {
           remarkPlugins: [[npm2yarn, {sync: true}], math],
           rehypePlugins: [katex],
           editUrl:
-            'https://github.com/facebookexperimental/pytorch-live/edit/master/website/',
+            'https://github.com/pytorch/live/edit/main/website/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

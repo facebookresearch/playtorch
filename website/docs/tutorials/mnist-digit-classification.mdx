@@ -215,6 +215,8 @@ This makes sure that our canvas is square and fits within the bounds of our scre
 .
 .
 export default function MNISTDemo() {
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
   const [canvasSize, setCanvasSize] = useState<number>(0);
 .
 .
@@ -292,6 +294,8 @@ import {useSafeAreaInsets} from 'react-native-safe-area-context';
 const COLOR_CANVAS_BACKGROUND = '#4F25C6';
 
 export default function MNISTDemo() {
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
   const [canvasSize, setCanvasSize] = useState<number>(0);
   // `ctx` is drawing context to draw shapes
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
@@ -617,6 +621,8 @@ To address this, we will make a few updates to our code, mainly in the `draw` fu
 .
 .
 export default function MNISTDemo() {
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
   const [canvasSize, setCanvasSize] = useState<number>(0);
 
   // `ctx` is drawing context to draw shapes

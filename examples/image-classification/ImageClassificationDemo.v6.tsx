@@ -1,3 +1,12 @@
+/**
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @format
+ */
+
 import * as React from 'react';
 import {Text, StyleSheet, View} from 'react-native';
 import {Camera, Image, MobileModel} from 'react-native-pytorch-core';
@@ -16,6 +25,9 @@ export default function ImageClassificationDemo() {
   // Get safe area insets to account for notches, etc.
   const insets = useSafeAreaInsets();
 
+  // Component state that holds the detected object class
+  const [objectClass, setObjectClass] = React.useState<string>('');
+
   async function handleImage(image: Image) {
     const {result} = await MobileModel.execute<ImageClassificationResult>(
       model,
@@ -27,8 +39,8 @@ export default function ImageClassificationDemo() {
     // Get max index (argmax) result to resolve the top class name
     const topClass = ImageClasses[result.maxIdx];
 
-    // Log top class to Metro console
-    console.log(topClass);
+    // Set object class state to be the top class detected in the image
+    setObjectClass(topClass);
 
     // It is important to release the image to avoid memory leaks
     image.release();
@@ -40,7 +52,7 @@ export default function ImageClassificationDemo() {
         styles.container,
         {marginTop: insets.top, marginBottom: insets.bottom},
       ]}>
-      <Text style={styles.label}>Image Classification</Text>
+      <Text style={styles.label}>Object: {objectClass}</Text>
       <Camera style={styles.camera} onCapture={handleImage} />
     </View>
   );

@@ -1,26 +1,32 @@
-@@ -1,8 +1,23 @@
+@@ -1,13 +1,30 @@
  import * as React from 'react';
--import { Text } from 'react-native';
+-import {Text, View} from 'react-native';
 +import {Text, StyleSheet, View} from 'react-native';
+ import {useSafeAreaInsets} from 'react-native-safe-area-context';
  
  export default function ImageClassificationDemo() {
--    return (
--        <Text>Image Classification</Text>
--    );
-+  return (
-+    <View style={styles.container}>
+   // Get safe area insets to account for notches, etc.
+   const insets = useSafeAreaInsets();
+   return (
+-    <View style={{marginTop: insets.top, marginBottom: insets.bottom}}>
+-      <Text>Image Classification</Text>
++    <View
++      style={[
++        styles.container,
++        {marginTop: insets.top, marginBottom: insets.bottom},
++      ]}>
 +      <Text style={styles.label}>Image Classification</Text>
-+    </View>
-+  );
+     </View>
+   );
  }
 +
 +const styles = StyleSheet.create({
 +  container: {
++    alignItems: 'center',
 +    backgroundColor: '#ffffff',
 +    display: 'flex',
-+    alignItems: 'center',
-+    padding: 20,
 +    flexGrow: 1,
++    padding: 20,
 +  },
 +  label: {
 +    marginBottom: 10,

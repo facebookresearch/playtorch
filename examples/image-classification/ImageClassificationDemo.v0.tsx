@@ -8,10 +8,15 @@
  */
 
 import * as React from 'react';
-import { Text } from 'react-native';
+import {Text, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default function ImageClassificationDemo() {
-    return (
-        <Text>Image Classification</Text>
-    );
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
+  return (
+    <View style={{marginTop: insets.top, marginBottom: insets.bottom}}>
+      <Text>Image Classification</Text>
+    </View>
+  );
 }

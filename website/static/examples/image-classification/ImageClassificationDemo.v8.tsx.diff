@@ -1,0 +1,13 @@
+@@ -49,7 +49,11 @@
+         {marginTop: insets.top, marginBottom: insets.bottom},
+       ]}>
+       <Text style={styles.label}>Object: {objectClass}</Text>
+-      <Camera style={styles.camera} onCapture={handleImage} />
++      <Camera
++        style={styles.camera}
++        onFrame={handleImage}
++        hideCaptureButton={true}
++      />
+     </View>
+   );
+ }

@@ -16,6 +16,9 @@ export default function ImageClassificationDemo() {
   // Get safe area insets to account for notches, etc.
   const insets = useSafeAreaInsets();
 
+  // Component state that holds the detected object class
+  const [objectClass, setObjectClass] = React.useState<string>('');
+
   async function handleImage(image: Image) {
     const {result} = await MobileModel.execute<ImageClassificationResult>(
       model,
@@ -24,11 +27,16 @@ export default function ImageClassificationDemo() {
       },
     );
 
-    // Get max index (argmax) result to resolve the top class name
-    const topClass = ImageClasses[result.maxIdx];
+    if (result.confidence > 0.3) {
+      // Get max index (argmax) result to resolve the top class name
+      const topClass = ImageClasses[result.maxIdx];
 
-    // Log top class to Metro console
-    console.log(topClass);
+      // Set object class state to be the top class detected in the image
+      setObjectClass(topClass);
+    } else {
+      // Reset the object class if confidence value is low
+      setObjectClass('');
+    }
 
     // It is important to release the image to avoid memory leaks
     image.release();
@@ -40,7 +48,7 @@ export default function ImageClassificationDemo() {
         styles.container,
         {marginTop: insets.top, marginBottom: insets.bottom},
       ]}>
-      <Text style={styles.label}>Image Classification</Text>
+      <Text style={styles.label}>Object: {objectClass}</Text>
       <Camera style={styles.camera} onCapture={handleImage} />
     </View>
   );

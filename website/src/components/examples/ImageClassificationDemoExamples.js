@@ -37,6 +37,18 @@ import V5Contents from '!!raw-loader!/static/examples/image-classification/Image
 
 import V5DiffContents from '!!raw-loader!/static/examples/image-classification/ImageClassificationDemo.v5.tsx.diff';
 
+import V6Contents from '!!raw-loader!/static/examples/image-classification/ImageClassificationDemo.v6.tsx';
+
+import V6DiffContents from '!!raw-loader!/static/examples/image-classification/ImageClassificationDemo.v6.tsx.diff';
+
+import V7Contents from '!!raw-loader!/static/examples/image-classification/ImageClassificationDemo.v7.tsx';
+
+import V7DiffContents from '!!raw-loader!/static/examples/image-classification/ImageClassificationDemo.v7.tsx.diff';
+
+import V8Contents from '!!raw-loader!/static/examples/image-classification/ImageClassificationDemo.v8.tsx';
+
+import V8DiffContents from '!!raw-loader!/static/examples/image-classification/ImageClassificationDemo.v8.tsx.diff';
+
 ImageClassificationDemoExamples.V0CodeBlock = function V0CodeBlock(props) {
   return <CodeBlock {...props} className="language-tsx">{V0Contents}</CodeBlock>
 };
@@ -79,6 +91,30 @@ ImageClassificationDemoExamples.V5CodeBlock = function V5CodeBlock(props) {
 
 ImageClassificationDemoExamples.V5DiffBlock = function V5DiffBlock(props) {
   return <CodeBlock {...props} className="language-diff">{V5DiffContents}</CodeBlock>
+};
+
+ImageClassificationDemoExamples.V6CodeBlock = function V6CodeBlock(props) {
+  return <CodeBlock {...props} className="language-tsx">{V6Contents}</CodeBlock>
+};
+
+ImageClassificationDemoExamples.V6DiffBlock = function V6DiffBlock(props) {
+  return <CodeBlock {...props} className="language-diff">{V6DiffContents}</CodeBlock>
+};
+
+ImageClassificationDemoExamples.V7CodeBlock = function V7CodeBlock(props) {
+  return <CodeBlock {...props} className="language-tsx">{V7Contents}</CodeBlock>
+};
+
+ImageClassificationDemoExamples.V7DiffBlock = function V7DiffBlock(props) {
+  return <CodeBlock {...props} className="language-diff">{V7DiffContents}</CodeBlock>
+};
+
+ImageClassificationDemoExamples.V8CodeBlock = function V8CodeBlock(props) {
+  return <CodeBlock {...props} className="language-tsx">{V8Contents}</CodeBlock>
+};
+
+ImageClassificationDemoExamples.V8DiffBlock = function V8DiffBlock(props) {
+  return <CodeBlock {...props} className="language-diff">{V8DiffContents}</CodeBlock>
 };
 
 export default ImageClassificationDemoExamples;

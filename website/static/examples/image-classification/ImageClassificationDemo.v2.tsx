@@ -1,10 +1,17 @@
 import * as React from 'react';
 import {Text, StyleSheet, View} from 'react-native';
 import {Camera} from 'react-native-pytorch-core';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default function ImageClassificationDemo() {
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
+    <View
+      style={[
+        styles.container,
+        {marginTop: insets.top, marginBottom: insets.bottom},
+      ]}>
       <Text style={styles.label}>Image Classification</Text>
       <Camera style={styles.camera} />
     </View>

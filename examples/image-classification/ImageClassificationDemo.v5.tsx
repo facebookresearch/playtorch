@@ -9,31 +9,48 @@
 
 import * as React from 'react';
 import {Text, StyleSheet, View} from 'react-native';
-import {Camera, Image, ModelInfo} from 'react-native-pytorch-core';
-import useImageModelInference from '../useImageModelInference';
+import {Camera, Image, MobileModel} from 'react-native-pytorch-core';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-const modelInfo: ModelInfo = {
-  name: 'MobileNet V3 Small',
-  model: require('../../models/mobilenet_v3_small.ptl'),
+const model = require('../../models/mobilenet_v3_small.ptl');
+
+type ImageClassificationResult = {
+  maxIdx: number;
+  confidence: number;
 };
 
+const ImageClasses = require('../MobileNetV3Classes');
+
 export default function ImageClassificationDemo() {
-  const {processImage, imageClass} = useImageModelInference(modelInfo);
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
 
   async function handleImage(image: Image) {
-    await processImage(image);
+    const {result} = await MobileModel.execute<ImageClassificationResult>(
+      model,
+      {
+        image,
+      },
+    );
+
+    // Get max index (argmax) result to resolve the top class name
+    const topClass = ImageClasses[result.maxIdx];
+
+    // Log top class to Metro console
+    console.log(topClass);
+
     // It is important to release the image to avoid memory leaks
     image.release();
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{imageClass}</Text>
-      <Camera
-        hideCaptureButton={true}
-        style={styles.camera}
-        onFrame={handleImage}
-      />
+    <View
+      style={[
+        styles.container,
+        {marginTop: insets.top, marginBottom: insets.bottom},
+      ]}>
+      <Text style={styles.label}>Image Classification</Text>
+      <Camera style={styles.camera} onCapture={handleImage} />
     </View>
   );
 }

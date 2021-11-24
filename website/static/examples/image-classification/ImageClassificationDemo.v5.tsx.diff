@@ -1,13 +1,31 @@
-@@ -20,7 +20,11 @@
-   return (
-     <View style={styles.container}>
-       <Text style={styles.label}>{imageClass}</Text>
--      <Camera style={styles.camera} onCapture={handleImage} />
-+      <Camera
-+        hideCaptureButton={true}
-+        style={styles.camera}
-+        onFrame={handleImage}
-+      />
-     </View>
-   );
- }
+@@ -10,18 +10,25 @@
+   confidence: number;
+ };
+ 
++const ImageClasses = require('../MobileNetV3Classes');
++
+ export default function ImageClassificationDemo() {
+   // Get safe area insets to account for notches, etc.
+   const insets = useSafeAreaInsets();
+ 
+   async function handleImage(image: Image) {
+-    const inferenceResult =
+-      await MobileModel.execute<ImageClassificationResult>(model, {
++    const {result} = await MobileModel.execute<ImageClassificationResult>(
++      model,
++      {
+         image,
+-      });
++      },
++    );
++
++    // Get max index (argmax) result to resolve the top class name
++    const topClass = ImageClasses[result.maxIdx];
+ 
+-    // Log model inference result to Metro console
+-    console.log(inferenceResult);
++    // Log top class to Metro console
++    console.log(topClass);
+ 
+     // It is important to release the image to avoid memory leaks
+     image.release();

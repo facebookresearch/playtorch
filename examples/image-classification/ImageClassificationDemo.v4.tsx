@@ -9,26 +9,40 @@
 
 import * as React from 'react';
 import {Text, StyleSheet, View} from 'react-native';
-import {Camera, Image, ModelInfo} from 'react-native-pytorch-core';
-import useImageModelInference from '../useImageModelInference';
+import {Camera, Image, MobileModel} from 'react-native-pytorch-core';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-const modelInfo: ModelInfo = {
-  name: 'MobileNet V3 Small',
-  model: require('../../models/mobilenet_v3_small.ptl'),
+const model = require('../../models/mobilenet_v3_small.ptl');
+
+type ImageClassificationResult = {
+  maxIdx: number;
+  confidence: number;
 };
 
 export default function ImageClassificationDemo() {
-  const {processImage, imageClass} = useImageModelInference(modelInfo);
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
 
   async function handleImage(image: Image) {
-    await processImage(image);
+    const inferenceResult =
+      await MobileModel.execute<ImageClassificationResult>(model, {
+        image,
+      });
+
+    // Log model inference result to Metro console
+    console.log(inferenceResult);
+
     // It is important to release the image to avoid memory leaks
     image.release();
   }
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.label}>{imageClass}</Text>
+    <View
+      style={[
+        styles.container,
+        {marginTop: insets.top, marginBottom: insets.bottom},
+      ]}>
+      <Text style={styles.label}>Image Classification</Text>
       <Camera style={styles.camera} onCapture={handleImage} />
     </View>
   );

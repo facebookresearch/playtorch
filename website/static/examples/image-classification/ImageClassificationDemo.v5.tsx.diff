@@ -1,0 +1,13 @@
+@@ -20,7 +20,11 @@
+   return (
+     <View style={styles.container}>
+       <Text style={styles.label}>{imageClass}</Text>
+-      <Camera style={styles.camera} onCapture={handleImage} />
++      <Camera
++        hideCaptureButton={true}
++        style={styles.camera}
++        onFrame={handleImage}
++      />
+     </View>
+   );
+ }

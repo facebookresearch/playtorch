@@ -1,0 +1,35 @@
+@@ -1,8 +1,15 @@
+ import * as React from 'react';
+ import {useState} from 'react';
+ import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
++import {MobileModel} from 'react-native-pytorch-core';
+ import {useSafeAreaInsets} from 'react-native-safe-area-context';
+ 
++const model = require('../../models/bert_qa.ptl');
++
++type QuestionAnsweringResult = {
++  answer: string;
++}
++
+ export default function QuestionAnsweringDemo() {
+   // Get safe area insets to account for notches, etc.
+   const insets = useSafeAreaInsets();
+@@ -11,10 +18,15 @@
+   const [question, setQuestion] = useState('');
+ 
+   async function handleAsk() {
+-    console.log({
+-      text,
+-      question,
++    const qaText = `[CLS] ${question} [SEP] ${text} [SEP]`;
++
++    const inferenceResult = await MobileModel.execute<QuestionAnsweringResult>(model, {
++      text: qaText,
++      modelInputLength: 360,
+     });
++
++    // Log model inference result to Metro console
++    console.log(inferenceResult);
+   }
+ 
+   return (

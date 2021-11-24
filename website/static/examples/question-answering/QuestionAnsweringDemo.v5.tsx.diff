@@ -1,0 +1,30 @@
+@@ -17,8 +17,11 @@
+   const [text, setText] = useState('');
+   const [question, setQuestion] = useState('');
+   const [answer, setAnswer] = useState('');
++  const [isProcessing, setIsProcessing] = useState(false);
+ 
+   async function handleAsk() {
++    setIsProcessing(true);
++
+     const qaText = `[CLS] ${question} [SEP] ${text} [SEP]`;
+ 
+     const {result} = await MobileModel.execute<QuestionAnsweringResult>(model, {
+@@ -32,6 +35,8 @@
+     } else {
+       setAnswer(result.answer);
+     }
++
++    setIsProcessing(false);
+   }
+ 
+   return (
+@@ -39,7 +44,7 @@
+       <TextInput style={[styles.item, styles.input]} placeholder="Text" placeholderTextColor="#CCC" multiline={true} value={text} onChangeText={setText} />
+       <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" value={question} onChangeText={setQuestion} />
+       <Button title="Ask" onPress={handleAsk} />
+-      <Text style={styles.item}>{answer}</Text>
++      <Text style={styles.item}>{isProcessing ? "Looking for the answer" : answer}</Text>
+     </View>
+   );
+ }

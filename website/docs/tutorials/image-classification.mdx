@@ -3,6 +3,8 @@ id: image-classification
 sidebar_position: 2
 ---
 
+import ExampleDiffCodeTabs from '@site/src/components/ExampleDiffCodeTabs';
+import ImageClassificationDemoExamples from '@site/src/components/examples/ImageClassificationDemoExamples';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
@@ -77,21 +79,7 @@ Keep the app open and running! Any code change will immediately be reflected aft
 
 Let's get started with the UI for the image classification. Go ahead and start by copying the following code into the file `src/demos/MyDemos.tsx`:
 
-```tsx title="./src/demos/MyDemos.tsx"
-import * as React from 'react';
-import {Text, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-export default function ImageClassificationDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-  return (
-    <View style={{marginTop: insets.top, marginBottom: insets.bottom}}>
-      <Text>Image Classification</Text>
-    </View>
-  );
-}
-```
+<ImageClassificationDemoExamples.V0CodeBlock title="src/demos/MyDemos.tsx" />
 
 :::note
 
@@ -127,34 +115,10 @@ The app starts with the "Examples" tab open. In order to see the changes you jus
 
 Great! Let's add some basic styling to the app UI. The styles will change the `View` component background to `#ffffff`, spans container view to maximum available width and height, centers components horizontally, and adds a padding of `20` pixels. The `Text` component will have a margin at the bottom to provide spacing between the text label and the `Camera` component that will be added in the next steps.
 
-```tsx title="./src/demos/MyDemos.tsx"
-import * as React from 'react';
-import {Text, StyleSheet, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-export default function ImageClassificationDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-  return (
-    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
-      <Text style={styles.label}>Image Classification</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#ffffff',
-    display: 'flex',
-    alignItems: 'center',
-    padding: 20,
-    flexGrow: 1,
-  },
-  label: {
-    marginBottom: 10,
-  },
-});
-```
+<ExampleDiffCodeTabs>
+  <ImageClassificationDemoExamples.V1DiffBlock />
+  <ImageClassificationDemoExamples.V1CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 <Tabs
   defaultValue="android"
@@ -178,39 +142,10 @@ const styles = StyleSheet.create({
 
 Next, let's add a `Camera` component to take pictures that can be used later for the ML model inference to classify what object is in the picture. The camera will also get a basic style to fill the remaining space in the container.
 
-```tsx title="./src/demos/MyDemos.tsx"
-import * as React from 'react';
-import {Text, StyleSheet, View} from 'react-native';
-import {Camera} from 'react-native-pytorch-core';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-export default function ImageClassificationDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-  return (
-    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
-      <Text style={styles.label}>Image Classification</Text>
-      <Camera style={styles.camera} />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-    flexGrow: 1,
-    padding: 20,
-  },
-  label: {
-    marginBottom: 10,
-  },
-  camera: {
-    flexGrow: 1,
-    width: '100%',
-  },
-});
-```
+<ExampleDiffCodeTabs>
+  <ImageClassificationDemoExamples.V2DiffBlock />
+  <ImageClassificationDemoExamples.V2CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 <Tabs
   defaultValue="android"
@@ -260,47 +195,10 @@ The `image.release()` function call is important to release the memory allocated
 
 :::
 
-```tsx title="./src/demos/MyDemos.tsx"
-import * as React from 'react';
-import {Text, StyleSheet, View} from 'react-native';
-import {Camera, Image} from 'react-native-pytorch-core';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-export default function ImageClassificationDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-
-  async function handleImage(image: Image) {
-    // Log captured image to Metro console
-    console.log(image);
-    // It is important to release the image to avoid memory leaks
-    image.release();
-  }
-
-  return (
-    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
-      <Text style={styles.label}>Image Classification</Text>
-      <Camera style={styles.camera} onCapture={handleImage} />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-    flexGrow: 1,
-    padding: 20,
-  },
-  label: {
-    marginBottom: 10,
-  },
-  camera: {
-    flexGrow: 1,
-    width: '100%',
-  },
-});
-```
+<ExampleDiffCodeTabs>
+  <ImageClassificationDemoExamples.V3DiffBlock />
+  <ImageClassificationDemoExamples.V3CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 Click on camera capture button and check logged output in terminal. It will log a JavaScript representation of the image to the console every time you click the capture button.
 
@@ -316,59 +214,10 @@ Don't forget the `await` keyword for the `MobileModel.execute` function call!
 
 Last, let's log the inference result to the console.
 
-```tsx title="./src/demos/MyDemos.tsx"
-import * as React from 'react';
-import {Text, StyleSheet, View} from 'react-native';
-import {Camera, Image, MobileModel} from 'react-native-pytorch-core';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-const model = require('../../models/mobilenet_v3_small.ptl');
-
-type ImageClassificationResult = {
-  maxIdx: number;
-  confidence: number;
-}
-
-export default function ImageClassificationDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-
-  async function handleImage(image: Image) {
-    const inferenceResult = await MobileModel.execute<ImageClassificationResult>(model, {
-      image,
-    });
-
-    // Log model inference result to Metro console
-    console.log(inferenceResult);
-
-    // It is important to release the image to avoid memory leaks
-    image.release();
-  }
-
-  return (
-    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
-      <Text style={styles.label}>Image Classification</Text>
-      <Camera style={styles.camera} onCapture={handleImage} />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-    flexGrow: 1,
-    padding: 20,
-  },
-  label: {
-    marginBottom: 10,
-  },
-  camera: {
-    flexGrow: 1,
-    width: '100%',
-  },
-});
-```
+<ExampleDiffCodeTabs>
+  <ImageClassificationDemoExamples.V4DiffBlock />
+  <ImageClassificationDemoExamples.V4CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 ![](/img/tutorial/image-classification/metro-console-log-inference-result.png)
 
@@ -382,64 +231,10 @@ Here, we require the JSON file into the `ImageClasses` variable and use `ImageCl
 
 Let's see what the `maxIdx` `673` resolves into by logging the `topClass` label to the console!
 
-```tsx title="./src/demos/MyDemos.tsx"
-import * as React from 'react';
-import {Text, StyleSheet, View} from 'react-native';
-import {Camera, Image, MobileModel} from 'react-native-pytorch-core';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-const model = require('../../models/mobilenet_v3_small.ptl');
-
-type ImageClassificationResult = {
-  maxIdx: number;
-  confidence: number;
-}
-
-const ImageClasses = require('../MobileNetV3Classes');
-
-export default function ImageClassificationDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-
-  async function handleImage(image: Image) {
-    const {result} = await MobileModel.execute<ImageClassificationResult>(model, {
-      image,
-    });
-
-    // Get max index (argmax) result to resolve the top class name
-    const topClass = ImageClasses[result.maxIdx];
-
-    // Log top class to Metro console
-    console.log(topClass);
-
-    // It is important to release the image to avoid memory leaks
-    image.release();
-  }
-
-  return (
-    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
-      <Text style={styles.label}>Image Classification</Text>
-      <Camera style={styles.camera} onCapture={handleImage} />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-    flexGrow: 1,
-    padding: 20,
-  },
-  label: {
-    marginBottom: 10,
-  },
-  camera: {
-    flexGrow: 1,
-    width: '100%',
-  },
-});
-```
+<ExampleDiffCodeTabs>
+  <ImageClassificationDemoExamples.V5DiffBlock />
+  <ImageClassificationDemoExamples.V5CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 ![](/img/tutorial/image-classification/metro-resolved-top-class.png)
 
@@ -459,67 +254,10 @@ For more information on [React Hooks](https://reactjs.org/docs/hooks-intro.html)
 
 :::
 
-```tsx title="./src/demos/MyDemos.tsx"
-import * as React from 'react';
-import {Text, StyleSheet, View} from 'react-native';
-import {Camera, Image, MobileModel} from 'react-native-pytorch-core';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-const model = require('../../models/mobilenet_v3_small.ptl');
-
-type ImageClassificationResult = {
-  maxIdx: number;
-  confidence: number;
-}
-
-const ImageClasses = require('../MobileNetV3Classes');
-
-export default function ImageClassificationDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-
-  // Component state that holds the detected object class
-  const [objectClass, setObjectClass] = React.useState<string>('');
-
-  async function handleImage(image: Image) {
-    const {result} = await MobileModel.execute<ImageClassificationResult>(model, {
-      image,
-    });
-
-    // Get max index (argmax) result to resolve the top class name
-    const topClass = ImageClasses[result.maxIdx];
-
-    // Set object class state to be the top class detected in the image
-    setObjectClass(topClass);
-
-    // It is important to release the image to avoid memory leaks
-    image.release();
-  }
-
-  return (
-    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
-      <Text style={styles.label}>Object: {objectClass}</Text>
-      <Camera style={styles.camera} onCapture={handleImage} />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-    flexGrow: 1,
-    padding: 20,
-  },
-  label: {
-    marginBottom: 10,
-  },
-  camera: {
-    flexGrow: 1,
-    width: '100%',
-  },
-});
-```
+<ExampleDiffCodeTabs>
+  <ImageClassificationDemoExamples.V6DiffBlock />
+  <ImageClassificationDemoExamples.V6CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 <Tabs
   defaultValue="android"
@@ -547,74 +285,10 @@ Nice! The model will return a top class for what it thinks is in the image. Howe
 
 Let's use this confidence value as a threshold, and only show top classes where the model has a confidence higher than `0.3` (the confidence range is [0, 1]).
 
-```tsx title="./src/demos/MyDemos.tsx"
-import * as React from 'react';
-import {Text, StyleSheet, View} from 'react-native';
-import {Camera, Image, MobileModel} from 'react-native-pytorch-core';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-const model = require('../../models/mobilenet_v3_small.ptl');
-
-type ImageClassificationResult = {
-  maxIdx: number;
-  confidence: number;
-}
-
-const ImageClasses = require('../MobileNetV3Classes');
-
-export default function ImageClassificationDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-
-  // Component state that holds the detected object class
-  const [objectClass, setObjectClass] = React.useState<string>('');
-
-  async function handleImage(image: Image) {
-    const {result} = await MobileModel.execute<ImageClassificationResult>(model, {
-      image,
-    });
-
-    if (result.confidence > 0.3) {
-
-      // Get max index (argmax) result to resolve the top class name
-      const topClass = ImageClasses[result.maxIdx];
-
-      // Set object class state to be the top class detected in the image
-      setObjectClass(topClass);
-    }
-    else {
-      // Reset the object class if confidence value is low
-      setObjectClass('');
-    }
-
-    // It is important to release the image to avoid memory leaks
-    image.release();
-  }
-
-  return (
-    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
-      <Text style={styles.label}>Object: {objectClass}</Text>
-      <Camera style={styles.camera} onCapture={handleImage} />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-    flexGrow: 1,
-    padding: 20,
-  },
-  label: {
-    marginBottom: 10,
-  },
-  camera: {
-    flexGrow: 1,
-    width: '100%',
-  },
-});
-```
+<ExampleDiffCodeTabs>
+  <ImageClassificationDemoExamples.V7DiffBlock />
+  <ImageClassificationDemoExamples.V7CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 ### Frame-by-Frame image processing
 
@@ -626,74 +300,10 @@ Known problem: If the images aren't immediately processed frame by frame, flip t
 
 :::
 
-```tsx title="./src/demos/MyDemos.tsx"
-import * as React from 'react';
-import {Text, StyleSheet, View} from 'react-native';
-import {Camera, Image, MobileModel} from 'react-native-pytorch-core';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-const model = require('../../models/mobilenet_v3_small.ptl');
-
-type ImageClassificationResult = {
-  maxIdx: number;
-  confidence: number;
-}
-
-const ImageClasses = require('../MobileNetV3Classes');
-
-export default function ImageClassificationDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-
-  // Component state that holds the detected object class
-  const [objectClass, setObjectClass] = React.useState<string>('');
-
-  async function handleImage(image: Image) {
-    const {result} = await MobileModel.execute<ImageClassificationResult>(model, {
-      image,
-    });
-
-    if (result.confidence > 0.3) {
-
-      // Get max index (argmax) result to resolve the top class name
-      const topClass = ImageClasses[result.maxIdx];
-
-      // Set object class state to be the top class detected in the image
-      setObjectClass(topClass);
-    }
-    else {
-      // Reset the object class if confidence value is low
-      setObjectClass('');
-    }
-
-    // It is important to release the image to avoid memory leaks
-    image.release();
-  }
-
-  return (
-    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
-      <Text style={styles.label}>Object: {objectClass}</Text>
-      <Camera style={styles.camera} onFrame={handleImage} hideCaptureButton={true} />
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    alignItems: 'center',
-    backgroundColor: '#ffffff',
-    flexGrow: 1,
-    padding: 20,
-  },
-  label: {
-    marginBottom: 10,
-  },
-  camera: {
-    flexGrow: 1,
-    width: '100%',
-  },
-});
-```
+<ExampleDiffCodeTabs>
+  <ImageClassificationDemoExamples.V8DiffBlock />
+  <ImageClassificationDemoExamples.V8CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 <Tabs
   defaultValue="android"

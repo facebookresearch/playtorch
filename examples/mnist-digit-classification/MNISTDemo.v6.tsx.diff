@@ -1,0 +1,98 @@
+@@ -97,6 +97,54 @@
+    };
+  }
+ 
++ type NumberLabelSet = {
++   english: string;
++   asciiSymbol: string;
++ };
++
++ const numLabels: NumberLabelSet[] = [
++   {
++     english: 'zero',
++     asciiSymbol: '🄌',
++   },
++   {
++     english: 'one',
++     asciiSymbol: '➊',
++   },
++   {
++     english: 'two',
++     asciiSymbol: '➋',
++   },
++   {
++     english: 'three',
++     asciiSymbol: '➌',
++   },
++   {
++     english: 'four',
++     asciiSymbol: '➍',
++   },
++   {
++     english: 'five',
++     asciiSymbol: '➎',
++   },
++   {
++     english: 'six',
++     asciiSymbol: '➏',
++   },
++   {
++     english: 'seven',
++     asciiSymbol: '➐',
++   },
++   {
++     english: 'eight',
++     asciiSymbol: '➑',
++   },
++   {
++     english: 'nine',
++     asciiSymbol: '➒',
++   },
++ ];
++
+  export default function MNISTDemo() {
+    // Get safe area insets to account for notches, etc.
+    const insets = useSafeAreaInsets();
+@@ -105,6 +153,8 @@
+    // `ctx` is drawing context to draw shapes
+    const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
+ 
++   const {classify, result} = useMNISTCanvasInference(canvasSize);
++
+    const trailRef = useRef<TrailPoint[]>([]);
+    const [drawingDone, setDrawingDone] = useState(false);
+    const animationHandleRef = useRef<number | null>(null);
+@@ -173,11 +223,12 @@
+ 
+    const handleEnd = useCallback(() => {
+      setDrawingDone(true);
+-   }, [setDrawingDone]);
++     if (ctx != null) classify(ctx);
++   }, [setDrawingDone, classify, ctx]);
+ 
+    useEffect(() => {
+      draw();
+-   }, [draw]);
++   }, [draw]); // update only when layout or context changes
+ 
+    return (
+      <View
+@@ -205,10 +256,16 @@
+        {drawingDone && (
+          <View style={[styles.resultView]} pointerEvents="none">
+            <Text style={[styles.label, styles.secondary]}>
+-             Highest confidence will go here
++             {result &&
++               `${numLabels[result[0].num].asciiSymbol} it looks like ${
++                 numLabels[result[0].num].english
++               }`}
+            </Text>
+            <Text style={[styles.label, styles.secondary]}>
+-             Second highest will go here
++             {result &&
++               `${numLabels[result[1].num].asciiSymbol} or it might be ${
++                 numLabels[result[1].num].english
++               }`}
+            </Text>
+          </View>
+        )}

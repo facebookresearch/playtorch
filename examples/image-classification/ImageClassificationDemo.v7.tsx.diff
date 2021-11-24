@@ -1,0 +1,21 @@
+@@ -27,11 +27,16 @@
+       },
+     );
+ 
+-    // Get max index (argmax) result to resolve the top class name
+-    const topClass = ImageClasses[result.maxIdx];
++    if (result.confidence > 0.3) {
++      // Get max index (argmax) result to resolve the top class name
++      const topClass = ImageClasses[result.maxIdx];
+ 
+-    // Set object class state to be the top class detected in the image
+-    setObjectClass(topClass);
++      // Set object class state to be the top class detected in the image
++      setObjectClass(topClass);
++    } else {
++      // Reset the object class if confidence value is low
++      setObjectClass('');
++    }
+ 
+     // It is important to release the image to avoid memory leaks
+     image.release();

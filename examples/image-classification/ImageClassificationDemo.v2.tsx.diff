@@ -1,0 +1,31 @@
+@@ -1,5 +1,6 @@
+ import * as React from 'react';
+ import {Text, StyleSheet, View} from 'react-native';
++import {Camera} from 'react-native-pytorch-core';
+ import {useSafeAreaInsets} from 'react-native-safe-area-context';
+ 
+ export default function ImageClassificationDemo() {
+@@ -12,6 +13,7 @@
+         {marginTop: insets.top, marginBottom: insets.bottom},
+       ]}>
+       <Text style={styles.label}>Image Classification</Text>
++      <Camera style={styles.camera} />
+     </View>
+   );
+ }
+@@ -20,11 +22,14 @@
+   container: {
+     alignItems: 'center',
+     backgroundColor: '#ffffff',
+-    display: 'flex',
+     flexGrow: 1,
+     padding: 20,
+   },
+   label: {
+     marginBottom: 10,
+   },
++  camera: {
++    flexGrow: 1,
++    width: '100%',
++  },
+ });

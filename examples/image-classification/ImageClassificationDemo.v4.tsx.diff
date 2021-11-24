@@ -1,0 +1,32 @@
+@@ -1,15 +1,28 @@
+ import * as React from 'react';
+ import {Text, StyleSheet, View} from 'react-native';
+-import {Camera, Image} from 'react-native-pytorch-core';
++import {Camera, Image, MobileModel} from 'react-native-pytorch-core';
+ import {useSafeAreaInsets} from 'react-native-safe-area-context';
+ 
++const model = require('../../models/mobilenet_v3_small.ptl');
++
++type ImageClassificationResult = {
++  maxIdx: number;
++  confidence: number;
++};
++
+ export default function ImageClassificationDemo() {
+   // Get safe area insets to account for notches, etc.
+   const insets = useSafeAreaInsets();
+ 
+   async function handleImage(image: Image) {
+-    // Log captured image to Metro console
+-    console.log(image);
++    const inferenceResult =
++      await MobileModel.execute<ImageClassificationResult>(model, {
++        image,
++      });
++
++    // Log model inference result to Metro console
++    console.log(inferenceResult);
++
+     // It is important to release the image to avoid memory leaks
+     image.release();
+   }

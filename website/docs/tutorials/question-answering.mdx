@@ -3,13 +3,15 @@ id: question-answering
 sidebar_position: 3
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
 
 # Question Answering
 
 <div className="tutorial-page">
 
-### In this tutorial, we will integrate an on-device NLP (Natural Language Processing) model that can answer questions about a short paragraph of text.
+### In this tutorial, you will integrate an on-device NLP (Natural Language Processing) model that can answer questions about a short paragraph of text.
 
 If you haven't installed the PyTorch Live CLI yet, please [follow this tutorial](get-started) to get started.
 
@@ -25,7 +27,7 @@ npx torchlive-cli init QuestionAnsweringTutorial
 
 :::note
 
-The project init can take a few minutes depending on your internet connection and your machine.
+The project init can take a few minutes depending on your internet connection and your computer.
 
 :::
 
@@ -35,15 +37,37 @@ After completion, navigate to the `QuestionAnsweringTutorial` directory created 
 cd QuestionAnsweringTutorial
 ```
 
-### Run the project in the emulator
+### Run the project in the Android emulator or iOS Simulator
 
-Run the QuestionAnsweringTutorial project in the Android emulator with the PyTorch Live CLI. The `run-android` command will start the Android emulator, build, deploy, and run the app. The app is named PyTorch Live Example.
+The `run-android` and `run-ios` commands from the PyTorch Live CLI allow you to run the question answering project in the Android emulator or iOS Simulator.
 
-```shell
-npx torchlive-cli run-android
-```
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios-sim'},
+  ]}>
+  <TabItem value="android">
 
-![](/img/tutorial/question_answering_tutorial1.png "The PyTorch Live app running in a virtual device emulator")
+  ```shell
+  npx torchlive-cli run-android
+  ```
+
+  The app will deploy and run on your physical Android device if it is connected to your computer via USB, and it is in developer mode. There are more details on that in the [Get Started tutorial](get-started).
+
+  ![](/img/tutorial/question-answering/android/first-run.png "Screenshot of app after fresh init with CLI")
+
+  </TabItem>
+  <TabItem value="ios-sim">
+
+  ```shell
+  npx torchlive-cli run-ios
+  ```
+
+  ![](/img/tutorial/question-answering/ios/first-run.png "Screenshot of app after fresh init with CLI")
+
+  </TabItem>
+</Tabs>
 
 :::tip
 
@@ -53,15 +77,18 @@ Keep the app open and running! Any code change will immediately be reflected aft
 
 ## Question Answering Demo
 
-Let's get started with the UI for the question answering. Create a file `QuestionAnsweringDemo.tsx` in `./src/demos`, copy and paste the code below, and save the file. The initial code creates a component rendering two text inputs, a button, and a text with `Question Answering`.
+Let's get started with the UI for the question answering. Go ahead and start by copying the following code into the file `src/demos/MyDemos.tsx`:
 
-```tsx title="./src/demos/QuestionAnsweringDemo.tsx"
+```tsx title="./src/demos/MyDemos.tsx"
 import * as React from 'react';
 import {Button, Text, TextInput, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default function QuestionAnsweringDemo() {
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
   return (
-    <View>
+    <View style={{marginTop: insets.top, marginBottom: insets.bottom}}>
       <TextInput placeholder="Text" />
       <TextInput placeholder="Question" />
       <Button title="Ask" onPress={() => {}} />
@@ -71,9 +98,7 @@ export default function QuestionAnsweringDemo() {
 }
 ```
 
-### Add Question Answering Demo to demos list
-
-For the `QuestionAnsweringDemo` component to render in the `QuestionAnsweringTutorial` app, add it to the `MyDemos` component.
+The initial code creates a component rendering two text inputs, a button, and a text with `Question Answering`.
 
 :::note
 
@@ -81,36 +106,38 @@ The `MyDemos.tsx` already contains code. Replace the code with the code below.
 
 :::
 
-```tsx title="./src/demos/MyDemos.tsx"
-import * as React from 'react';
-import QuestionAnsweringDemo from './QuestionAnsweringDemo';
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios-sim'},
+  ]}>
+  <TabItem value="android">
 
-export default function MyDemos() {
-  return (
-    <QuestionAnsweringDemo />
-  );
-}
-```
+  ![](/img/tutorial/question-answering/android/initial-ui.png "Screenshot of initial user interface")
 
-![](/img/tutorial/question_answering_tutorial2.png)
+  </TabItem>
+  <TabItem value="ios-sim">
 
-:::caution
+  ![](/img/tutorial/question-answering/ios/initial-ui.png "Screenshot of initial user interface")
 
-Tap on the "My Demos" tab to view your changes.
-
-:::
+  </TabItem>
+</Tabs>
 
 ### Style the component
 
-Great! Next, add some styling to the question answering component.
+Great! Let's, add some basic styling to the app UI. The styles will add a padding of `10` pixels for the container `View` component. It will also add padding and margin to the `TextInput` components, the ask `Button` and the output `Text`, so they aren't squeezed together.
 
-```tsx {2,6-8,10,15-25} title="./src/demos/QuestionAnsweringDemo.tsx"
+```tsx title="./src/demos/MyDemos.tsx"
 import * as React from 'react';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default function QuestionAnsweringDemo() {
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
       <TextInput style={[styles.item, styles.input]} multiline={true} placeholder="Text" placeholderTextColor="#CCC" />
       <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" />
       <Button title="Ask" onPress={() => {}} />
@@ -125,6 +152,7 @@ const styles = StyleSheet.create({
   },
   item: {
     margin: 10,
+    padding: 10,
   },
   input: {
     borderWidth: 1,
@@ -133,24 +161,44 @@ const styles = StyleSheet.create({
 });
 ```
 
-![](/img/tutorial/question_answering_tutorial3.png)
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios-sim'},
+  ]}>
+  <TabItem value="android">
+
+  ![](/img/tutorial/question-answering/android/simple-styles.png "Screenshot after applying simple component styles")
+
+  </TabItem>
+  <TabItem value="ios-sim">
+
+  ![](/img/tutorial/question-answering/ios/simple-styles.png "Screenshot after applying simple component styles")
+
+  </TabItem>
+</Tabs>
 
 ### Add state and event handler
 
-Add state to the text inputs. React provides the `useState` hook to save component state. A `useState` hook returns an array with two items (or tuple). The first item (index `0`) is the current state and the second item (index `1`) is the set state function to update the state. In this change, it uses two `useState` hooks, one for the `text` state and one for the `question` state.
+Next, add state to the text inputs, to keep track of the input content. React provides the `useState` hook to save component state. A `useState` hook returns an array with two items (or tuple). The first item (index `0`) is the current state and the second item (index `1`) is the set state function to update the state. In this change, it uses two `useState` hooks, one for the `text` state and one for the `question` state.
 
-Add an event handler to the `Ask` button. The event handler `handleAsk` will be called when the button is pressed and log the `text` state and `question` state to the console (i.e., it will log what is typed into the text inputs).
+Add an event handler to the `Ask` button. The event handler `handleAsk` will be called when the button is pressed. For testing, let's log the `text` state and `question` state to the console (i.e., it will log what is typed into the text inputs).
 
-```tsx {6-14,18-20} title="./src/demos/QuestionAnsweringDemo.tsx"
+```tsx title="./src/demos/MyDemos.tsx"
 import * as React from 'react';
 import {useState} from 'react';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
 export default function QuestionAnsweringDemo() {
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
+
   const [text, setText] = useState('');
   const [question, setQuestion] = useState('');
 
-  function handleAsk() {
+  async function handleAsk() {
     console.log({
       text,
       question,
@@ -158,7 +206,7 @@ export default function QuestionAnsweringDemo() {
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
       <TextInput style={[styles.item, styles.input]} placeholder="Text" placeholderTextColor="#CCC" multiline={true} value={text} onChangeText={setText} />
       <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" value={question} onChangeText={setQuestion} />
       <Button title="Ask" onPress={handleAsk} />
@@ -173,6 +221,7 @@ const styles = StyleSheet.create({
   },
   item: {
     margin: 10,
+    padding: 10,
   },
   input: {
     borderWidth: 1,
@@ -181,42 +230,171 @@ const styles = StyleSheet.create({
 });
 ```
 
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios-sim'},
+  ]}>
+  <TabItem value="android">
+
+  ![](/img/tutorial/question-answering/android/event-handler-and-more-style.png "Screenshot event handler and more styling")
+
+  </TabItem>
+  <TabItem value="ios-sim">
+
+  ![](/img/tutorial/question-answering/ios/event-handler-and-more-style.png "Screenshot event handler and more styling")
+
+  </TabItem>
+</Tabs>
+
 Type into both text inputs, click the `Ask` button, and check logged output in terminal.
 
-![](/img/tutorial/question_answering_tutorial4.png)
+![](/img/tutorial/question-answering/metro-console-log.png)
 
 ### Run model inference
 
-Fantastic! Now use the `useNLPQAModelInference` hook to run inference on the `text` and `question`. The hook provides a `processQA` function and an `answer`. Replace the `console.log` with the `processQA` function and pass in the `text` and `question`. When the inference finishes, the component re-renders with the answer set as content of the `Text` component.
+Fantastic! Now let's use the text and question and run inference on a question answering model.
+
+We'll require the Distilbert SQuAD model (i.e., `bert_qa.ptl`) and add the `QuestionAnsweringResult` type for type-safety. Then, we call the `execute` function on the `MobileModel` object with the model as first argument and an object with the `text` and `question` and the `modelInputLength` second argument.
+
+:::info
+
+The `text` and `question` states are concatenated into a sequence including two special tokens `[CLS]` and `[SEP]`. This sequence format is how the model was trained and is expected as input. The first
+token of every sequence is always a special classification token (i.e., `[CLS]`). Sentence pairs are packed together into a single sequence put between a special separator token (i.e., `[SEP]`). A sequence ends with a `[SEP]` token.
+
+The `modelInputLength` defines the max token size. Simply speaking, an ML model works with numbers (i.e., tensors), so the sequence has to be converted into numbers. This is handled by PyTorch Live transparently. The `bert_qa.ptl` model uses a subword-based tokenizer to split words into smaller subwords that are mapped to numbers using a dictionary. For example, the word "hello" is first tokenized into the two tokens "hell" and "##o", and then both tokens are looked up in a pre-defined vocabulary that maps tokens to numbers. In consequence the word, "hello" is based on two tokens.
+
+Note that `360` is the maximum token size for the `text` and `question` (and the three special tokens). It may be faster to reduce the `modelInputLength` to less than `360` if it is known that the use case works with short sequences.
+
+:::
+
+:::note
 
 It will use the `bert_qa.ptl` model that is already prepared for PyTorch Live. You can follow the [Prepare Custom Model](prepare-custom-model) tutorial to prepare your own NLP model and use this model instead for question answering.
 
-```tsx {2,4-5,7-10,15-18,21,29} title="./src/demos/QuestionAnsweringDemo.tsx"
+:::
+
+Don't forget the `await` keyword for the `MobileModel.execute` function call!
+
+Last, let's log the inference result to the console.
+
+```tsx title="./src/demos/MyDemos.tsx"
 import * as React from 'react';
 import {useState} from 'react';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
-import type {ModelInfo} from 'react-native-pytorch-core';
-import useNLPQAModelInference from '../useNLPQAModelInference';
+import {MobileModel} from 'react-native-pytorch-core';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-const modelInfo: ModelInfo = {
-  name: 'Bert Q&A',
-  model: require('../../models/bert_qa.ptl'),
+const model = require('../../models/bert_qa.ptl');
+
+type QuestionAnsweringResult = {
+  answer: string;
 }
 
 export default function QuestionAnsweringDemo() {
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
+
   const [text, setText] = useState('');
   const [question, setQuestion] = useState('');
-  const {
-    answer,
-    processQA,
-  } = useNLPQAModelInference(modelInfo);
 
-  function handleAsk() {
-    processQA(text, question);
+  async function handleAsk() {
+    const qaText = `[CLS] ${question} [SEP] ${text} [SEP]`;
+
+    const inferenceResult = await MobileModel.execute<QuestionAnsweringResult>(model, {
+      text: qaText,
+      modelInputLength: 360,
+    });
+
+    // Log model inference result to Metro console
+    console.log(inferenceResult);
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
+      <TextInput style={[styles.item, styles.input]} placeholder="Text" placeholderTextColor="#CCC" multiline={true} value={text} onChangeText={setText} />
+      <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" value={question} onChangeText={setQuestion} />
+      <Button title="Ask" onPress={handleAsk} />
+      <Text style={styles.item}>Question Answering</Text>
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    padding: 10,
+  },
+  item: {
+    margin: 10,
+    padding: 10,
+  },
+  input: {
+    borderWidth: 1,
+    color: '#000',
+  }
+});
+```
+
+![](/img/tutorial/question-answering/metro-console-log-inference-result.png)
+
+The logged inference result is a JavaScript object containing the inference result including the `answer` and inference metrics (i.e., inference time, pack time, unpack time, and total time).
+
+Can you guess what the `text` was for the returned `answer`?
+
+### Show the answer
+
+Ok! So, we have an `answer`. Instead of having the end-user looking at a console log, we will render the answer in the app. We'll add a state for the `answer` using a React Hook, and when an answer is returned, we'll set it using the `setAnswer` function.
+
+The user interface will automatically re-render whenever the `setAnswer` function is called with a new value, so you don't have to worry about calling anything else besides this function. On re-render, the `answer` variable will have this new value, so we can use it to render it on the screen.
+
+:::note
+
+The `React.useState` is a React Hook. Hooks allow React function components, like our `QuestionAnsweringDemo` function component, to remember things.
+
+For more information on [React Hooks](https://reactjs.org/docs/hooks-intro.html), head over to the React docs where you can read or watch explanations.
+
+:::
+
+```tsx title="./src/demos/MyDemos.tsx"
+import * as React from 'react';
+import {useState} from 'react';
+import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
+import {MobileModel} from 'react-native-pytorch-core';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
+
+const model = require('../../models/bert_qa.ptl');
+
+type QuestionAnsweringResult = {
+  answer: string;
+}
+
+export default function QuestionAnsweringDemo() {
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
+
+  const [text, setText] = useState('');
+  const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
+
+  async function handleAsk() {
+    const qaText = `[CLS] ${question} [SEP] ${text} [SEP]`;
+
+    const {result} = await MobileModel.execute<QuestionAnsweringResult>(model, {
+      text: qaText,
+      modelInputLength: 360,
+    });
+
+    // No answer found if the answer is null
+    if (result.answer == null) {
+      setAnswer('No answer found');
+    } else {
+      setAnswer(result.answer);
+    }
+  }
+
+  return (
+    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
       <TextInput style={[styles.item, styles.input]} placeholder="Text" placeholderTextColor="#CCC" multiline={true} value={text} onChangeText={setText} />
       <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" value={question} onChangeText={setQuestion} />
       <Button title="Ask" onPress={handleAsk} />
@@ -231,6 +409,7 @@ const styles = StyleSheet.create({
   },
   item: {
     margin: 10,
+    padding: 10,
   },
   input: {
     borderWidth: 1,
@@ -239,39 +418,74 @@ const styles = StyleSheet.create({
 });
 ```
 
-![](/img/tutorial/question_answering_tutorial5.png)
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios-sim'},
+  ]}>
+  <TabItem value="android">
+
+  ![](/img/tutorial/question-answering/android/inference-example.png "Screenshot of question answering inference result")
+
+  </TabItem>
+  <TabItem value="ios-sim">
+
+  ![](/img/tutorial/question-answering/ios/inference-example.png "Screenshot of question answering inference result")
+
+  </TabItem>
+</Tabs>
+
+It looks like the model correctly answered the question!
 
 ### Add user feedback
 
-Add user feedback while the inference is running. The `useNLPQAModelInference` hook also provides an `isProcessing` state which is `true` when the inference is running and `false` otherwise. The `isProcessing` is used to render "Looking for the answer" while the model inference is running and it will render the answer when it is done.
+It can take a few milliseconds for the model to return the answer. Let's add a `isProcessing`  state which is `true` when the inference is running and `false` otherwise. The `isProcessing` is used to render "Looking for the answer" while the model inference is running and it will render the answer when it is done.
 
-```tsx {17,30} title="./src/demos/QuestionAnsweringDemo.tsx"
+```tsx title="./src/demos/MyDemos.tsx"
 import * as React from 'react';
 import {useState} from 'react';
 import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
-import type {ModelInfo} from 'react-native-pytorch-core';
-import useNLPQAModelInference from '../useNLPQAModelInference';
+import {MobileModel} from 'react-native-pytorch-core';
+import {useSafeAreaInsets} from 'react-native-safe-area-context';
 
-const modelInfo: ModelInfo = {
-  name: 'Bert Q&A',
-  model: require('../../models/bert_qa.ptl'),
+const model = require('../../models/bert_qa.ptl');
+
+type QuestionAnsweringResult = {
+  answer: string;
 }
 
 export default function QuestionAnsweringDemo() {
+  // Get safe area insets to account for notches, etc.
+  const insets = useSafeAreaInsets();
+
   const [text, setText] = useState('');
   const [question, setQuestion] = useState('');
-  const {
-    answer,
-    isProcessing,
-    processQA,
-  } = useNLPQAModelInference(modelInfo);
+  const [answer, setAnswer] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
 
-  function handleAsk() {
-    processQA(text, question);
+  async function handleAsk() {
+    setIsProcessing(true);
+
+    const qaText = `[CLS] ${question} [SEP] ${text} [SEP]`;
+
+    const {result} = await MobileModel.execute<QuestionAnsweringResult>(model, {
+      text: qaText,
+      modelInputLength: 360,
+    });
+
+    // No answer found if the answer is null
+    if (result.answer == null) {
+      setAnswer('No answer found');
+    } else {
+      setAnswer(result.answer);
+    }
+
+    setIsProcessing(false);
   }
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
       <TextInput style={[styles.item, styles.input]} placeholder="Text" placeholderTextColor="#CCC" multiline={true} value={text} onChangeText={setText} />
       <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" value={question} onChangeText={setQuestion} />
       <Button title="Ask" onPress={handleAsk} />
@@ -286,6 +500,7 @@ const styles = StyleSheet.create({
   },
   item: {
     margin: 10,
+    padding: 10,
   },
   input: {
     borderWidth: 1,
@@ -294,7 +509,23 @@ const styles = StyleSheet.create({
 });
 ```
 
-![](/img/tutorial/question_answering_tutorial6.png) ![](/img/tutorial/question_answering_tutorial5.png)
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS', value: 'ios'},
+  ]}>
+  <TabItem value="android">
+
+  ![](/img/tutorial/question-answering/android/user-feedback.gif "Screenshot for showing question answering with user feedback")
+
+  </TabItem>
+  <TabItem value="ios">
+
+  ![](/img/tutorial/question-answering/ios/user-feedback.gif "Screenshot for showing question answering with user feedback")
+
+  </TabItem>
+</Tabs>
 
 ## Give us feedback
 

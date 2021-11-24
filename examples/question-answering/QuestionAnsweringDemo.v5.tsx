@@ -25,17 +25,27 @@ export default function QuestionAnsweringDemo() {
 
   const [text, setText] = useState('');
   const [question, setQuestion] = useState('');
+  const [answer, setAnswer] = useState('');
+  const [isProcessing, setIsProcessing] = useState(false);
 
   async function handleAsk() {
+    setIsProcessing(true);
+
     const qaText = `[CLS] ${question} [SEP] ${text} [SEP]`;
 
-    const inferenceResult = await MobileModel.execute<QuestionAnsweringResult>(model, {
+    const {result} = await MobileModel.execute<QuestionAnsweringResult>(model, {
       text: qaText,
       modelInputLength: 360,
     });
 
-    // Log model inference result to Metro console
-    console.log(inferenceResult);
+    // No answer found if the answer is null
+    if (result.answer == null) {
+      setAnswer('No answer found');
+    } else {
+      setAnswer(result.answer);
+    }
+
+    setIsProcessing(false);
   }
 
   return (
@@ -43,7 +53,7 @@ export default function QuestionAnsweringDemo() {
       <TextInput style={[styles.item, styles.input]} placeholder="Text" placeholderTextColor="#CCC" multiline={true} value={text} onChangeText={setText} />
       <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" value={question} onChangeText={setQuestion} />
       <Button title="Ask" onPress={handleAsk} />
-      <Text style={styles.item}>Question Answering</Text>
+      <Text style={styles.item}>{isProcessing ? "Looking for the answer" : answer}</Text>
     </View>
   );
 }

@@ -1,12 +1,19 @@
-<h1 align="center">
+<h1>
   <a href="https://pytorch.org/live/">
-    PyTorch Live
+    <img src="./website/static/img/PyTorchLive_Logo.png" />
   </a>
 </h1>
 
-<p align="center">
-  <strong>Making AI easier to use, for everyone.</strong>
-</p>
+<h3>
+  Build your AI-powered mobile apps in minutes:
+  <a href="https://pytorch.org/live/docs/tutorials/get-started">Get Started</a>
+  <span> · </span>
+  <a href="https://pytorch.org/live/docs/tutorials/image-classification">Tutorials</a>
+  <span> · </span>
+  <a href="https://pytorch.org/live/docs/api/cli">API</a>
+</h3>
+
+<p>&nbsp;</p>
 
 [![Deploy Website](https://github.com/pytorch/live/actions/workflows/deploy-website.yml/badge.svg)](https://github.com/pytorch/live/actions/workflows/deploy-website.yml) [![Torchlive CLI](https://github.com/pytorch/live/actions/workflows/build-cli.yml/badge.svg)](https://github.com/pytorch/live/actions/workflows/build-cli.yml) [![Build Android Template App](https://github.com/pytorch/live/actions/workflows/build-template-android.yml/badge.svg)](https://github.com/pytorch/live/actions/workflows/build-template-android.yml) [![Build iOS Template App](https://github.com/pytorch/live/actions/workflows/build-template-ios.yml/badge.svg)](https://github.com/pytorch/live/actions/workflows/build-template-ios.yml)
 
@@ -28,17 +35,9 @@
   </a>
 </p>
 
-<h3 align="center">
-  <a href="https://pytorch.org/live/docs/tutorials/get-started">Get Started</a>
-  <span> · </span>
-  <a href="https://pytorch.org/live/docs/tutorials/image-classification">Tutorials</a>
-  <span> · </span>
-  <a href="https://pytorch.org/live/docs/api/cli">API</a>
-</h3>
-
 ----------------------
 
-PyTorch Live is a set of tools to build AI-powered experiences for mobile.
+[PyTorch Live](https://pytorch.org/live/) is a set of tools to build AI-powered experiences for mobile.
 
 This monorepo includes the PyTorch Live command line interface (i.e., `torchlive-cli`), a React Native package to run on-device inference with PyTorch Mobile, and a React Native template with examples ready to be deployed on mobile devices.
 

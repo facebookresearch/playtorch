@@ -61,7 +61,7 @@ export default function Home() {
       autoPlay={true}
       loop={true}
       controls={false}
-      poster="demo_catdog.png"
+      poster="demo_catdog.jpg"
     />
   );
   const heroContent = (
@@ -82,7 +82,7 @@ export default function Home() {
       autoPlay={true}
       loop={true}
       controls={false}
-      poster="demo_mnist.png"
+      poster="demo_mnist.jpg"
     />
   );
   const firstPropContent =
@@ -98,7 +98,7 @@ export default function Home() {
       autoPlay={true}
       loop={true}
       controls={false}
-      poster="demo_model.png"
+      poster="demo_model.jpg"
     />
   );
   const secondPropContent =

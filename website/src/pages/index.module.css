@@ -79,6 +79,7 @@ h1.title {
   width: 30vw;
   min-height: min(60vw, 600px);
   margin-left: 120px;
+  box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.4);
 }
 
 .odd .video {
@@ -135,6 +136,29 @@ h1.title {
 
 .buttonWrapper:hover .button {
   background-color: #ee4c2c;
+}
+
+.balloon {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  width: 0vh;
+  height: 0vh;
+  border-radius: 0vh;
+  opacity: 0.8;
+  background-image: radial-gradient(
+      ellipse 100% 20% at 100% 0%,
+      #ee4c2cff 0%,
+      #ee4c2c00 60%
+    ),
+    radial-gradient(ellipse 100% 60% at 70% 10%, #812ce5ff 0%, #812ce566 30%),
+    radial-gradient(
+      farthest-corner at 0% 70%,
+      #e93b43ff 0%,
+      #e93b43ff 30%,
+      #e93b4300 60%
+    ),
+    radial-gradient(farthest-corner at 100% 80%, #4a6bc7ff 0%, #4a6bc700 30%);
 }
 
 /* Tablet */

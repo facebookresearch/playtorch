@@ -7,7 +7,7 @@
  * @format
  */
 
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import clsx from 'clsx';
 import Layout from '@theme/Layout';
 import Link from '@docusaurus/Link';
@@ -53,6 +53,41 @@ function Row({
 
 export default function Home() {
   const {siteConfig} = useDocusaurusContext();
+  const [balloonStyle, setBalloonStyle] = useState({});
+
+  useEffect(() => {
+    function updateBalloon(evt) {
+      const rect = document.body.getBoundingClientRect();
+      const height = document.body.scrollHeight - rect.height;
+      const t = Math.abs(rect.top) / height;
+      const size = Math.sin(Math.PI * (0.5 - Math.abs(t - 0.5))) * 300;
+      setBalloonStyle({
+        width: `${size}vh`,
+        height: `${size}vh`,
+        top: `${50 - size / 2}vh`,
+        right: `${-size / 2}vh`,
+        borderRadius: `${size}vh`,
+        filter: `blur(${t < 0.25 ? (0.25 - t) * 4 * 30 : 0}px)`,
+        opacity: t > 0.5 ? (1 - (t - 0.5) * 2) * 0.8 : 0.8,
+      });
+    }
+
+    let ticking = false;
+    function scrollHandler(evt) {
+      if (!ticking) {
+        requestAnimationFrame(function () {
+          updateBalloon(evt);
+          ticking = false;
+        });
+        ticking = true;
+      }
+    }
+
+    document.addEventListener('scroll', scrollHandler, {passive: true});
+    return () => {
+      document.removeEventListener('scroll', scrollHandler, {passive: true});
+    };
+  }, [setBalloonStyle]);
 
   const heroVideo = (
     <DocVideo
@@ -139,6 +174,7 @@ export default function Home() {
 
   return (
     <Layout>
+      <div className={styles.balloon} style={balloonStyle}></div>
       <main>
         <div className="container">
           <Row

@@ -10,6 +10,7 @@ import {FbInternalOnly} from 'internaldocs-fb-helpers';
 import DocVideo from '@site/src/components/DocVideo';
 import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
 import WhereToRun from './fb/_where-to-run.mdx';
+import DevelopmentDependencies from './snippets/_development-dependencies.mdx';
 
 # Get Started Manually
 
@@ -27,9 +28,13 @@ If you ended up here, your operating system is either Windows or Linux, or the P
 
 ## Installation
 
-PyTorch Live is powered by [PyTorch Mobile](https://pytorch.org/mobile) and [React Native](https://reactnative.dev/). As a first step, let's follow their installation instructions to set up the development environment for Android and iOS.
+PyTorch Live is powered by [PyTorch Mobile](https://pytorch.org/mobile) and [React Native](https://reactnative.dev/). Both are active and flourishing open source projects and require the following dependencies:
 
-### Setting up the PyTorch
+<DevelopmentDependencies />
+
+As a first step, let's follow their installation instructions to set up the development environment for Android and iOS.
+
+### Set up the PyTorch
 
 PyTorch Live uses `python3` to export PyTorch models for the PyTorch Mobile runtime. The export is part of each PyTorch Live app project initialization (see later steps). Run the following command to check if python3 is installed:
 

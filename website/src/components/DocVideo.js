@@ -8,7 +8,7 @@
  */
 
 import styles from './DocVideo.module.css';
-import React, {useState} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import clsx from 'clsx';
 
 export default function DocVideo({
@@ -19,19 +19,32 @@ export default function DocVideo({
   style = {},
   loop,
   autoPlay,
+  muted = true,
+  defaultMuted = true,
+  playsInline = true,
   noMargin = false,
   poster,
 }) {
+  const videoRef = useRef(undefined);
+  useEffect(() => {
+    videoRef.current.muted = muted;
+    videoRef.current.defaultMuted = defaultMuted;
+    videoRef.current.playsInline = playsInline;
+  }, []);
+
   return (
     <video
+      ref={videoRef}
       className={clsx([styles.docVideo, noMargin ? styles.noMargin : ''])}
       style={style}
-      muted
       controls={controls}
       loop={loop}
       autoPlay={autoPlay}
       width={width}
       height={height}
+      muted={muted}
+      playsInline={playsInline}
+      defaultMuted={defaultMuted}
       poster={poster ? require(`@site/static/img/${poster}`).default : null}>
       <source
         src={require(`@site/static/video/${asset}.mp4`).default}

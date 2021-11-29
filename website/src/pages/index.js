@@ -149,6 +149,7 @@ export default function Home() {
       autoPlay={true}
       loop={true}
       controls={false}
+      poster="demo_ui.jpg"
     />
   );
   const thirdPropContent =
@@ -159,11 +160,12 @@ export default function Home() {
 
   const forthPropVideo = (
     <DocVideo
-      asset="demo_ui"
+      asset="demo_community"
       noMargin={true}
       autoPlay={true}
       loop={true}
       controls={false}
+      poster="demo_community.jpg"
     />
   );
   const forthPropContent =

@@ -151,8 +151,7 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           remarkPlugins: [[npm2yarn, {sync: true}], math],
           rehypePlugins: [katex],
-          editUrl:
-            'https://github.com/pytorch/live/edit/main/website/',
+          editUrl: 'https://github.com/pytorch/live/edit/main/website/',
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
@@ -198,4 +197,11 @@ module.exports = {
       crossorigin: 'anonymous',
     },
   ],
+  customFields: {
+    discordUrl: 'https://discord.gg/sQkXTqEt33',
+    githubUrl: 'https://github.com/pytorch/live/',
+    twitterTagUrl: 'https://twitter.com/search?q=%23pytorchlive',
+    stackoverflowTagUrl:
+      'https://stackoverflow.com/questions/tagged/pytorchlive',
+  },
 };

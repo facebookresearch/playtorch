@@ -11,6 +11,7 @@ import React from 'react';
 import clsx from 'clsx';
 import Layout from '@theme/Layout';
 import styles from './community.module.css';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 function Card({thumbnail, title, children}) {
   const imgUrl = thumbnail
@@ -36,6 +37,8 @@ function SocialIcon({name, color = 'white'}) {
 
 function Community() {
   const graphicUrl = require('@site/static/img/community_network.png').default;
+  const {siteConfig} = useDocusaurusContext();
+  const {customFields} = siteConfig;
 
   return (
     <Layout title="Community">
@@ -64,67 +67,40 @@ function Community() {
         </div>
       </div>
       <div className={styles.showcase}>
-        <div className={clsx(['container', 'margin-bottom--l'])}>
+        <div className={clsx(['container', 'margin-bottom--xl'])}>
           <div className="row">
-            <div className="col col--12">
-              <h2 className={styles.showcaseTitle}>Community Showcase</h2>
+            <div className="col col--8 col--offset-2">
+              <h2 className={styles.showcaseTitle}>Join our community</h2>
               <p className={styles.showcaseInfo}>
-                Share what you have made with us. Create a PR in GitHub or fill
-                out <a href="#">this form</a>. <br />
-                Here is a selection of PyTorch Live demos created by us and the
-                community.
+                PyTorch Live is in beta and we invite you to join us in our
+                social channels. <br />
+                Share what you have made, tell us what you need, and help us
+                improve PyTorch Live.
               </p>
             </div>
           </div>
 
           <div className="row">
             <div className="col col--4">
-              <Card title="Mario and Luigi">
-                Roman finetuned the MobileNetV3 model to identify Nintendo
-                characters.
+              <Card title="{Your demo}">
+                This tile is reserved for you! Share your demos to be included
+                in this page by submitting a{' '}
+                <a href={customFields.githubUrl}>pull request on GitHub.</a>
               </Card>
             </div>
-
             <div className="col col--4">
-              <Card title="Peach">
-                William finetuned the MobileNetV3 model to identify fruits
+              <Card thumbnail="social_card1.jpg" title="Join the conversation">
+                Share with #pytorchlive on{' '}
+                <a href={customFields.twitterTagUrl}>Twitter</a> and{' '}
+                <a href={customFields.stackoverflowTagUrl}>Stack Overflow</a>.
+                Join our <a href={customFields.discordUrl}>Discord</a> community
+                to chat.
               </Card>
             </div>
-
-            <div className="col col--4">
-              <Card title="Show us what you've made">
-                Submit your PyTorch Live demo to be included here. Send a{' '}
-                <a href="https://github.com/pytorch/live/" target="_blank">
-                  pull request on GitHub.
-                </a>
-              </Card>
-            </div>
-          </div>
-          <div className={clsx(['row', styles.tailRow])}>
-            <div className="col col--4 col--offset-2">
-              <Card
-                thumbnail="social_card1.jpg"
-                title="Join us in our social channels">
-                Engage in conversations and share what you’ve made. Add{' '}
-                <a
-                  href="https://twitter.com/search?q=%23pytorchlive"
-                  target="_blank">
-                  #pytorchlive
-                </a>{' '}
-                hashtag on Twitter, and join our <a href="#">Discord</a>{' '}
-                channels.
-              </Card>
-            </div>
-
             <div className="col col--4">
               <Card thumbnail="social_card2.jpg" title="Find us on Github">
                 File issues, send pull-requests, and check out the latest
-                features on{' '}
-                <a href="https://github.com/pytorch/live/" target="_blank">
-                  GitHub
-                </a>
-                . You can also submit a PR to request your demos to be included
-                in our showcase.
+                features on <a href={customFields.githubUrl}>GitHub</a>.
               </Card>
             </div>
           </div>

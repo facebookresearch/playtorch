@@ -30,7 +30,7 @@
 </p>
 
 <p>
-  <a href="https://github.com/facebook/react-native/blob/master/LICENSE">
+  <a href="https://github.com/pytorch/live/blob/main/LICENSE">
     <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="PyTorch Live is released under the MIT license." />
   </a>
 </p>
@@ -60,7 +60,7 @@ Follow the [Getting Started guide](https://pytorch.org/live/docs/tutorials/get-s
 
 ## 📖 Documentation
 
-The full documentation for React Native can be found on our [website](https://pytorch.org/live/).
+The full documentation for PyTorch Live can be found on our [website](https://pytorch.org/live/).
 
 ## 👏 How to Contribute
 The main purpose of this repository is to continue evolving PyTorch Live. We want to make contributing to this project as easy and transparent as possible, and we are grateful to the community for contributing bug fixes and improvements. Read below to learn how you can take part in improving PyTorch Live.

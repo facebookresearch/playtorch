@@ -18,7 +18,7 @@ export default function QuestionAnsweringDemo() {
     <View style={{marginTop: insets.top, marginBottom: insets.bottom}}>
       <TextInput placeholder="Text" />
       <TextInput placeholder="Question" />
-      <Button title="Ask" onPress={() => {}} />
+      <Button onPress={() => {}} title="Ask" />
       <Text>Question Answering</Text>
     </View>
   );

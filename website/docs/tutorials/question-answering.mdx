@@ -3,6 +3,8 @@ id: question-answering
 sidebar_position: 3
 ---
 
+import ExampleDiffCodeTabs from '@site/src/components/ExampleDiffCodeTabs';
+import QuestionAnsweringDemoExamples from '@site/src/components/examples/QuestionAnsweringDemoExamples';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
@@ -79,24 +81,7 @@ Keep the app open and running! Any code change will immediately be reflected aft
 
 Let's get started with the UI for the question answering. Go ahead and start by copying the following code into the file `src/demos/MyDemos.tsx`:
 
-```tsx title="./src/demos/MyDemos.tsx"
-import * as React from 'react';
-import {Button, Text, TextInput, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-export default function QuestionAnsweringDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-  return (
-    <View style={{marginTop: insets.top, marginBottom: insets.bottom}}>
-      <TextInput placeholder="Text" />
-      <TextInput placeholder="Question" />
-      <Button title="Ask" onPress={() => {}} />
-      <Text>Question Answering</Text>
-    </View>
-  );
-}
-```
+<QuestionAnsweringDemoExamples.V0CodeBlock title="src/demos/MyDemos.tsx" />
 
 The initial code creates a component rendering two text inputs, a button, and a text with `Question Answering`.
 
@@ -128,38 +113,10 @@ The `MyDemos.tsx` already contains code. Replace the code with the code below.
 
 Great! Let's, add some basic styling to the app UI. The styles will add a padding of `10` pixels for the container `View` component. It will also add padding and margin to the `TextInput` components, the ask `Button` and the output `Text`, so they aren't squeezed together.
 
-```tsx title="./src/demos/MyDemos.tsx"
-import * as React from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-export default function QuestionAnsweringDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-  return (
-    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
-      <TextInput style={[styles.item, styles.input]} multiline={true} placeholder="Text" placeholderTextColor="#CCC" />
-      <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" />
-      <Button title="Ask" onPress={() => {}} />
-      <Text style={styles.item}>Question Answering</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
-  item: {
-    margin: 10,
-    padding: 10,
-  },
-  input: {
-    borderWidth: 1,
-    color: '#000',
-  }
-});
-```
+<ExampleDiffCodeTabs>
+  <QuestionAnsweringDemoExamples.V1DiffBlock />
+  <QuestionAnsweringDemoExamples.V1CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 <Tabs
   defaultValue="android"
@@ -185,50 +142,10 @@ Next, add state to the text inputs, to keep track of the input content. React pr
 
 Add an event handler to the `Ask` button. The event handler `handleAsk` will be called when the button is pressed. For testing, let's log the `text` state and `question` state to the console (i.e., it will log what is typed into the text inputs).
 
-```tsx title="./src/demos/MyDemos.tsx"
-import * as React from 'react';
-import {useState} from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-export default function QuestionAnsweringDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-
-  const [text, setText] = useState('');
-  const [question, setQuestion] = useState('');
-
-  async function handleAsk() {
-    console.log({
-      text,
-      question,
-    });
-  }
-
-  return (
-    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
-      <TextInput style={[styles.item, styles.input]} placeholder="Text" placeholderTextColor="#CCC" multiline={true} value={text} onChangeText={setText} />
-      <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" value={question} onChangeText={setQuestion} />
-      <Button title="Ask" onPress={handleAsk} />
-      <Text style={styles.item}>Question Answering</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
-  item: {
-    margin: 10,
-    padding: 10,
-  },
-  input: {
-    borderWidth: 1,
-    color: '#000',
-  }
-});
-```
+<ExampleDiffCodeTabs>
+  <QuestionAnsweringDemoExamples.V2DiffBlock />
+  <QuestionAnsweringDemoExamples.V2CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 <Tabs
   defaultValue="android"
@@ -279,62 +196,10 @@ Don't forget the `await` keyword for the `MobileModel.execute` function call!
 
 Last, let's log the inference result to the console.
 
-```tsx title="./src/demos/MyDemos.tsx"
-import * as React from 'react';
-import {useState} from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
-import {MobileModel} from 'react-native-pytorch-core';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-const model = require('../../models/bert_qa.ptl');
-
-type QuestionAnsweringResult = {
-  answer: string;
-}
-
-export default function QuestionAnsweringDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-
-  const [text, setText] = useState('');
-  const [question, setQuestion] = useState('');
-
-  async function handleAsk() {
-    const qaText = `[CLS] ${question} [SEP] ${text} [SEP]`;
-
-    const inferenceResult = await MobileModel.execute<QuestionAnsweringResult>(model, {
-      text: qaText,
-      modelInputLength: 360,
-    });
-
-    // Log model inference result to Metro console
-    console.log(inferenceResult);
-  }
-
-  return (
-    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
-      <TextInput style={[styles.item, styles.input]} placeholder="Text" placeholderTextColor="#CCC" multiline={true} value={text} onChangeText={setText} />
-      <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" value={question} onChangeText={setQuestion} />
-      <Button title="Ask" onPress={handleAsk} />
-      <Text style={styles.item}>Question Answering</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
-  item: {
-    margin: 10,
-    padding: 10,
-  },
-  input: {
-    borderWidth: 1,
-    color: '#000',
-  }
-});
-```
+<ExampleDiffCodeTabs>
+  <QuestionAnsweringDemoExamples.V3DiffBlock />
+  <QuestionAnsweringDemoExamples.V3CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 ![](/img/tutorial/question-answering/metro-console-log-inference-result.png)
 
@@ -356,67 +221,10 @@ For more information on [React Hooks](https://reactjs.org/docs/hooks-intro.html)
 
 :::
 
-```tsx title="./src/demos/MyDemos.tsx"
-import * as React from 'react';
-import {useState} from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
-import {MobileModel} from 'react-native-pytorch-core';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-const model = require('../../models/bert_qa.ptl');
-
-type QuestionAnsweringResult = {
-  answer: string;
-}
-
-export default function QuestionAnsweringDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-
-  const [text, setText] = useState('');
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
-
-  async function handleAsk() {
-    const qaText = `[CLS] ${question} [SEP] ${text} [SEP]`;
-
-    const {result} = await MobileModel.execute<QuestionAnsweringResult>(model, {
-      text: qaText,
-      modelInputLength: 360,
-    });
-
-    // No answer found if the answer is null
-    if (result.answer == null) {
-      setAnswer('No answer found');
-    } else {
-      setAnswer(result.answer);
-    }
-  }
-
-  return (
-    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
-      <TextInput style={[styles.item, styles.input]} placeholder="Text" placeholderTextColor="#CCC" multiline={true} value={text} onChangeText={setText} />
-      <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" value={question} onChangeText={setQuestion} />
-      <Button title="Ask" onPress={handleAsk} />
-      <Text style={styles.item}>{answer}</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
-  item: {
-    margin: 10,
-    padding: 10,
-  },
-  input: {
-    borderWidth: 1,
-    color: '#000',
-  }
-});
-```
+<ExampleDiffCodeTabs>
+  <QuestionAnsweringDemoExamples.V4DiffBlock />
+  <QuestionAnsweringDemoExamples.V4CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 <Tabs
   defaultValue="android"
@@ -442,72 +250,10 @@ It looks like the model correctly answered the question!
 
 It can take a few milliseconds for the model to return the answer. Let's add a `isProcessing`  state which is `true` when the inference is running and `false` otherwise. The `isProcessing` is used to render "Looking for the answer" while the model inference is running and it will render the answer when it is done.
 
-```tsx title="./src/demos/MyDemos.tsx"
-import * as React from 'react';
-import {useState} from 'react';
-import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
-import {MobileModel} from 'react-native-pytorch-core';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-const model = require('../../models/bert_qa.ptl');
-
-type QuestionAnsweringResult = {
-  answer: string;
-}
-
-export default function QuestionAnsweringDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-
-  const [text, setText] = useState('');
-  const [question, setQuestion] = useState('');
-  const [answer, setAnswer] = useState('');
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  async function handleAsk() {
-    setIsProcessing(true);
-
-    const qaText = `[CLS] ${question} [SEP] ${text} [SEP]`;
-
-    const {result} = await MobileModel.execute<QuestionAnsweringResult>(model, {
-      text: qaText,
-      modelInputLength: 360,
-    });
-
-    // No answer found if the answer is null
-    if (result.answer == null) {
-      setAnswer('No answer found');
-    } else {
-      setAnswer(result.answer);
-    }
-
-    setIsProcessing(false);
-  }
-
-  return (
-    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
-      <TextInput style={[styles.item, styles.input]} placeholder="Text" placeholderTextColor="#CCC" multiline={true} value={text} onChangeText={setText} />
-      <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" value={question} onChangeText={setQuestion} />
-      <Button title="Ask" onPress={handleAsk} />
-      <Text style={styles.item}>{isProcessing ? "Looking for the answer" : answer}</Text>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    padding: 10,
-  },
-  item: {
-    margin: 10,
-    padding: 10,
-  },
-  input: {
-    borderWidth: 1,
-    color: '#000',
-  }
-});
-```
+<ExampleDiffCodeTabs>
+  <QuestionAnsweringDemoExamples.V5DiffBlock />
+  <QuestionAnsweringDemoExamples.V5CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 <Tabs
   defaultValue="android"

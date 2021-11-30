@@ -20,9 +20,9 @@
  
    return (
 @@ -56,7 +61,9 @@
-         onChangeText={setQuestion}
+         value={question}
        />
-       <Button title="Ask" onPress={handleAsk} />
+       <Button onPress={handleAsk} title="Ask" />
 -      <Text style={styles.item}>{answer}</Text>
 +      <Text style={styles.item}>
 +        {isProcessing ? 'Looking for the answer' : answer}

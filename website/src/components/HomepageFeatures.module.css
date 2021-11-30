@@ -28,6 +28,10 @@
   width: 150px;
 }
 
+.featureDocVideo {
+  margin: 0;
+}
+
 .featureButton {
   align-self: stretch;
   padding: 20px 0;
@@ -37,7 +41,6 @@
   font-weight: 500;
   font-size: 1.2rem;
   margin: 40px 0 0;
-
 }
 
 .featureButton:hover {

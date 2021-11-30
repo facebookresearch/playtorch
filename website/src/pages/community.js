@@ -21,7 +21,8 @@ function Card({thumbnail, title, children}) {
     <div className={styles.showCard}>
       <div
         className={styles.cardThumbnail}
-        style={{backgroundImage: `url(${imgUrl})`}}></div>
+        style={{backgroundImage: `url(${imgUrl})`}}
+      />
       <div className={styles.cardContent}>
         <h4 className={styles.cardTitle}>{title}</h4>
         <p>{children}</p>
@@ -61,7 +62,8 @@ function Community() {
             <div className="col col--6">
               <div
                 className={styles.graphic}
-                style={{backgroundImage: `url(${graphicUrl})`}}></div>
+                style={{backgroundImage: `url(${graphicUrl})`}}
+              />
             </div>
           </div>
         </div>

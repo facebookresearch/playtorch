@@ -1,0 +1,32 @@
+name: Tutorial Feedback
+description: Provide feedback for a tutorial
+labels: ["Tutorial Feedback"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to provide feedback!
+  - type: dropdown
+    id: tutorial
+    attributes:
+      label: Tutorial Select
+      description: Which tutorial are you providing feedback for?
+      options:
+        - Get Started
+        - Get Started Manually
+        - Add Package to Existing App
+        - Image Classification
+        - Question Answering
+        - MNIST Digit Classification
+        - Prepare Custom Model
+        - Server Model
+        - Connecting to a Server Model
+    validations:
+      required: true
+  - type: textarea
+    id: feedback
+    attributes:
+      label: Feedback
+      description: What feedback do you have for the tutorial?
+    validations:
+      required: true

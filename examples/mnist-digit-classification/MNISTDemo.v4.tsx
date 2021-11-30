@@ -143,7 +143,7 @@ export default function MNISTDemo() {
 
   useEffect(() => {
     draw();
-  }, [draw]); // update only when layout or context changes
+  }, [draw]);
 
   return (
     <View

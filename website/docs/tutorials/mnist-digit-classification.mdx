@@ -3,6 +3,8 @@ id: mnist-digit-classification
 sidebar_position: 7
 ---
 
+import ExampleDiffCodeTabs from '@site/src/components/ExampleDiffCodeTabs';
+import MNISTDemoExamples from '@site/src/components/examples/MNISTDemoExamples';
 import Tabs from '@theme/Tabs';
 import TabItem from '@theme/TabItem';
 
@@ -62,80 +64,7 @@ The aim of this tutorial is to help you become more familiar with PTL core compo
 
 Go ahead and start by copying the following code into the file `src/demos/MyDemos.tsx`:
 
-```tsx title="MyDemos.tsx"
-import React, {useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-export default function MNISTDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-  const [canvasSize, setCanvasSize] = useState<number>(0);
-  // `ctx` is drawing context to draw shapes
-  const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
-
-  return (
-    <View
-      style={styles.container}
-      onLayout={event => {
-        const {layout} = event.nativeEvent;
-        setCanvasSize(Math.min(layout?.width || 0, layout?.height || 0));
-      }}>
-      <View style={[styles.instruction, {marginTop: insets.top}]}>
-        <Text style={styles.label}>Write a number</Text>
-        <Text style={styles.label}>Let's test the MNIST model</Text>
-      </View>
-      <Canvas
-        style={{
-          height: canvasSize,
-          width: canvasSize,
-        }}
-        onContext2D={setCtx}
-      />
-      <View style={[styles.resultView]} pointerEvents="none">
-        <Text style={[styles.label, styles.secondary]}>
-          Highest confidence will go here
-        </Text>
-        <Text style={[styles.label, styles.secondary]}>
-          Second highest will go here
-        </Text>
-      </View>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-    width: '100%',
-    backgroundColor: '#180b3b',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  resultView: {
-    position: 'absolute',
-    bottom: 0,
-    alignSelf: 'flex-start',
-    flexDirection: 'column',
-    padding: 15,
-  },
-  instruction: {
-    position: 'absolute',
-    top: 0,
-    alignSelf: 'flex-start',
-    flexDirection: 'column',
-    padding: 15,
-  },
-  label: {
-    fontSize: 16,
-    color: '#ffffff',
-  },
-  secondary: {
-    color: '#ffffff99',
-  },
-});
-```
+<MNISTDemoExamples.V0CodeBlock title="src/demos/MyDemos.tsx" />
 
 Now you should see UI that looks exactly like the screenshot below.
 
@@ -178,17 +107,11 @@ In order to draw things on a canvas, we use what is called the canvas context, t
 Note that we haven't used the context to draw anything yet, so our canvas is essentially invisible.
 
 ```tsx
-.
-.
-.
+...
 export default function MNISTDemo() {
-.
-.
-.
+  ...
   const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
-.
-.
-.
+  ...
       <Canvas
         style={{
           height: canvasSize,
@@ -196,9 +119,7 @@ export default function MNISTDemo() {
         }}
         onContext2D={setCtx}
       />
-.
-.
-.
+...
 ```
 
 ### The `onLayout` Prop
@@ -211,16 +132,12 @@ This makes sure that our canvas is square and fits within the bounds of our scre
 
 
 ```tsx
-.
-.
-.
+...
 export default function MNISTDemo() {
   // Get safe area insets to account for notches, etc.
   const insets = useSafeAreaInsets();
   const [canvasSize, setCanvasSize] = useState<number>(0);
-.
-.
-.
+  ...
   return (
     <View
       style={styles.container}
@@ -228,9 +145,7 @@ export default function MNISTDemo() {
         const {layout} = event.nativeEvent;
         setCanvasSize(Math.min(layout?.width || 0, layout?.height || 0));
       }}>
-.
-.
-.
+...
 ```
 
 ### Results placeholders
@@ -238,9 +153,7 @@ export default function MNISTDemo() {
 Note that for now we just have placeholder text where we will put our model results. Later on, after we run the model, we will update the text there to display the results.
 
 ```tsx
-.
-.
-.
+...
   <View style={[styles.resultView]} pointerEvents="none">
     <Text style={[styles.label, styles.secondary]}>
       Highest confidence will go here
@@ -249,9 +162,7 @@ Note that for now we just have placeholder text where we will put our model resu
       Second highest will go here
     </Text>
   </View>
-.
-.
-.
+...
 ```
 
 ## Filling the Canvas
@@ -285,96 +196,10 @@ For more information on React Hooks, head over to the [React docs](https://react
 
 :::
 
-```tsx title="MyDemos.tsx"
-import React, {useCallback, useEffect, useState} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-const COLOR_CANVAS_BACKGROUND = '#4F25C6';
-
-export default function MNISTDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-  const [canvasSize, setCanvasSize] = useState<number>(0);
-  // `ctx` is drawing context to draw shapes
-  const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
-
-  const draw = useCallback(() => {
-    if (ctx != null) {
-      // fill background by drawing a rect
-      ctx.fillStyle = COLOR_CANVAS_BACKGROUND;
-      ctx.fillRect(0, 0, canvasSize, canvasSize);
-
-      ctx.invalidate();
-    }
-  }, [ctx, canvasSize]);
-
-  useEffect(() => {
-    draw();
-  }, [draw]);
-
-  return (
-    <View
-      style={styles.container}
-      onLayout={event => {
-        const {layout} = event.nativeEvent;
-        setCanvasSize(Math.min(layout?.width || 0, layout?.height || 0));
-      }}>
-      <View style={[styles.instruction, {marginTop: insets.top}]}>
-        <Text style={styles.label}>Write a number</Text>
-        <Text style={styles.label}>Let's test the MNIST model</Text>
-      </View>
-      <Canvas
-        style={{
-          height: canvasSize,
-          width: canvasSize,
-        }}
-        onContext2D={setCtx}
-      />
-      <View style={[styles.resultView]} pointerEvents="none">
-        <Text style={[styles.label, styles.secondary]}>
-          Highest confidence will go here
-        </Text>
-        <Text style={[styles.label, styles.secondary]}>
-          Second highest will go here
-        </Text>
-      </View>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    height: '100%',
-    width: '100%',
-    backgroundColor: '#180b3b',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  resultView: {
-    position: 'absolute',
-    bottom: 0,
-    alignSelf: 'flex-start',
-    flexDirection: 'column',
-    padding: 15,
-  },
-  instruction: {
-    position: 'absolute',
-    top: 0,
-    alignSelf: 'flex-start',
-    flexDirection: 'column',
-    padding: 15,
-  },
-  label: {
-    fontSize: 16,
-    color: '#ffffff',
-  },
-  secondary: {
-    color: '#ffffff99',
-  },
-});
-```
+<ExampleDiffCodeTabs>
+  <MNISTDemoExamples.V1DiffBlock />
+  <MNISTDemoExamples.V1CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 Once you run your app, the My Demos screen should now look like this.
 
@@ -448,137 +273,10 @@ Let's go over what we will change to make drawing possible:
 
 11. Set the `onTouchStart`, `onTouchMove`, and `onTouchEnd` props on our `<Canvas />` component to `handleStart`, `handleMove`, and `handleEnd` respectively.
 
-```tsx title="MyDemos.tsx"
-import React, {useCallback, useEffect, useState, useRef} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-const COLOR_CANVAS_BACKGROUND = '#4F25C6';
-const COLOR_TRAIL_STROKE = '#FFFFFF';
-
-type TrailPoint = {
-  x: number;
-  y: number;
-};
-
-export default function MNISTDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-  const [canvasSize, setCanvasSize] = useState<number>(0);
-
-  // `ctx` is drawing context to draw shapes
-  const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
-
-  const trailRef = useRef<TrailPoint[]>([]);
-  const [drawingDone, setDrawingDone] = useState(false);
-
-  const draw = useCallback(() => {
-    if (ctx != null) {
-      const trail = trailRef.current;
-      if (trail != null) {
-        // fill background by drawing a rect
-        ctx.fillStyle = COLOR_CANVAS_BACKGROUND;
-        ctx.fillRect(0, 0, canvasSize, canvasSize);
-
-        // Draw the trail
-
-        if (trail.length > 0) {
-          ctx.strokeStyle = COLOR_TRAIL_STROKE;
-          ctx.lineWidth = 25;
-          ctx.lineJoin = 'round';
-          ctx.lineCap = 'round';
-          ctx.miterLimit = 1;
-          ctx.beginPath();
-          ctx.moveTo(trail[0].x, trail[0].y);
-          for (let i = 1; i < trail.length; i++) {
-            ctx.lineTo(trail[i].x, trail[i].y);
-          }
-          ctx.stroke();
-        }
-
-        ctx.invalidate();
-      }
-    }
-  }, [ctx, canvasSize, trailRef]);
-
-  // handlers for touch events
-  const handleMove = useCallback(
-    async event => {
-      const position: TrailPoint = {
-        x: event.nativeEvent.locationX,
-        y: event.nativeEvent.locationY,
-      };
-      const trail = trailRef.current;
-      if (trail.length > 0) {
-        const lastPosition = trail[trail.length - 1];
-        const dx = position.x - lastPosition.x;
-        const dy = position.y - lastPosition.y;
-        // add a point to trail if distance from last point > 5
-        if (dx * dx + dy * dy > 25) {
-          trail.push(position);
-        }
-      } else {
-        trail.push(position);
-      }
-      draw();
-    },
-    [trailRef, draw],
-  );
-
-  const handleStart = useCallback(() => {
-    setDrawingDone(false);
-    trailRef.current = [];
-  }, [trailRef, setDrawingDone]);
-
-  const handleEnd = useCallback(() => {
-    setDrawingDone(true);
-  }, [setDrawingDone]);
-
-  useEffect(() => {
-    draw();
-  }, [draw]); // update only when layout or context changes
-
-  return (
-    <View
-      style={styles.container}
-      onLayout={event => {
-        const {layout} = event.nativeEvent;
-        setCanvasSize(Math.min(layout?.width || 0, layout?.height || 0));
-      }}>
-      <View style={[styles.instruction, {marginTop: insets.top}]}>
-        <Text style={styles.label}>Write a number</Text>
-        <Text style={styles.label}>
-          Let's see if the AI model will get it right
-        </Text>
-      </View>
-      <Canvas
-        style={{
-          height: canvasSize,
-          width: canvasSize,
-        }}
-        onContext2D={setCtx}
-        onTouchMove={handleMove}
-        onTouchStart={handleStart}
-        onTouchEnd={handleEnd}
-      />
-      {drawingDone && (
-        <View style={[styles.resultView]} pointerEvents="none">
-          <Text style={[styles.label, styles.secondary]}>
-            Highest confidence will go here
-          </Text>
-          <Text style={[styles.label, styles.secondary]}>
-            Second highest will go here
-          </Text>
-        </View>
-      )}
-    </View>
-  );
-}
-.
-.
-.
-```
+<ExampleDiffCodeTabs>
+  <MNISTDemoExamples.V2DiffBlock />
+  <MNISTDemoExamples.V2CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 Run this code and we should now be able to do some drawing like you can see in the video below.
 
@@ -616,58 +314,10 @@ To address this, we will make a few updates to our code, mainly in the `draw` fu
     3. After telling our canvas we are ready for a rerender with `ctx.invalidate()`, clear the `animationHandleRef` by setting its value to null.
     4. Add `animationHandleRef` to the `draw` function's callback dependencies list.
 
-```tsx title="MyDemos.tsx"
-.
-.
-.
-export default function MNISTDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-  const [canvasSize, setCanvasSize] = useState<number>(0);
-
-  // `ctx` is drawing context to draw shapes
-  const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
-
-  const trailRef = useRef<TrailPoint[]>([]);
-  const [drawingDone, setDrawingDone] = useState(false);
-  const animationHandleRef = useRef<number | null>(null);
-
-  const draw = useCallback(() => {
-    if (animationHandleRef.current != null) return;
-    if (ctx != null) {
-      animationHandleRef.current = requestAnimationFrame(() => {
-        const trail = trailRef.current;
-        if (trail != null) {
-          // fill background by drawing a rect
-          ctx.fillStyle = COLOR_CANVAS_BACKGROUND;
-          ctx.fillRect(0, 0, canvasSize, canvasSize);
-
-          // Draw the trail
-          ctx.strokeStyle = COLOR_TRAIL_STROKE;
-          ctx.lineWidth = 25;
-          ctx.lineJoin = 'round';
-          ctx.lineCap = 'round';
-          ctx.miterLimit = 1;
-
-          if (trail.length > 0) {
-            ctx.beginPath();
-            ctx.moveTo(trail[0].x, trail[0].y);
-            for (let i = 1; i < trail.length; i++) {
-              ctx.lineTo(trail[i].x, trail[i].y);
-            }
-          }
-          ctx.stroke();
-          // Need to include this at the end, for now.
-          ctx.invalidate();
-          animationHandleRef.current = null;
-        }
-      });
-    }
-  }, [animationHandleRef, ctx, canvasSize, trailRef]);
-.
-.
-.
-```
+<ExampleDiffCodeTabs>
+  <MNISTDemoExamples.V3DiffBlock />
+  <MNISTDemoExamples.V3CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 :::info
 
@@ -729,68 +379,10 @@ Let's summarize the changes we're making:
         4. return the sorted results.
     2. Returns an object containing the `processImage` function we just created.
 
-```tsx title="MyDemos.tsx"
-import React, {useCallback, useEffect, useState, useRef} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {
-  Canvas,
-  CanvasRenderingContext2D,
-  Image,
-  MobileModel,
-} from 'react-native-pytorch-core';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-
-const COLOR_CANVAS_BACKGROUND = '#4F25C6';
-const COLOR_TRAIL_STROKE = '#FFFFFF';
-
-type TrailPoint = {
-  x: number;
-  y: number;
-};
-
-// This is the custom model you have trained. See the tutorial for more on preparing a PyTorch model for mobile.
-const mnistModel = require('../../models/mnist.ptl');
-
-type MNISTResult = {
-  num: number;
-  score: number;
-};
-
-/**
- * The React hook provides MNIST model inference on an input image.
- */
-function useMNISTModel() {
-  const processImage = useCallback(async (image: Image) => {
-    // Runs model inference on input image
-    const {
-      result: {scores},
-    } = await MobileModel.execute<{scores: number[]}>(mnistModel, {
-      image,
-      crop_width: 1,
-      crop_height: 1,
-      scale_width: 28,
-      scale_height: 28,
-      colorBackground: COLOR_CANVAS_BACKGROUND,
-      colorForeground: COLOR_TRAIL_STROKE,
-    });
-
-    // Get the score of each number (index), and sort the array by the most likely first.
-    const sortedScore: MNISTResult[] = scores
-      .map((score, index) => ({score: score, num: index}))
-      .sort((a, b) => b.score - a.score);
-    return sortedScore;
-  }, []);
-
-  return {
-    processImage,
-  };
-}
-
-export default function MNISTDemo() {
-.
-.
-.
-```
+<ExampleDiffCodeTabs>
+  <MNISTDemoExamples.V4DiffBlock />
+  <MNISTDemoExamples.V4CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 An even shorter summary: it takes in an `Image` and gives back a list of sorted results.
 
@@ -812,69 +404,10 @@ The `ImageUtil` object allows us to take the `imageData` we pull from the canvas
 
 You'll also see that we call the `release` function on both our `imageData` and our `image` variables as soon as we are done using them. This is a vital step to make sure we don't run out of memory on images we no longer need.
 
-
-```tsx title="MyDemos.tsx"
-import React, {useCallback, useEffect, useState, useRef} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {
-  Canvas,
-  CanvasRenderingContext2D,
-  Image,
-  ImageUtil,
-  MobileModel,
-} from 'react-native-pytorch-core';
-import {useSafeAreaInsets} from 'react-native-safe-area-context';
-.
-.
-.
-
-/**
- * The React hook provides MNIST inference using the image data extracted from
- * a canvas.
- *
- * @param canvasSize The size of the square canvas
- */
-function useMNISTCanvasInference(canvasSize: number) {
-  const [result, setResult] = useState<MNISTResult[]>();
-  const {processImage} = useMNISTModel();
-  const classify = useCallback(
-    async (ctx: CanvasRenderingContext2D) => {
-      // Return immediately if canvas is size 0
-      if (canvasSize === 0) {
-        return null;
-      }
-
-      // Get image data center crop
-      const imageData = await ctx.getImageData(0, 0, canvasSize, canvasSize);
-
-      // Convert image data to image.
-      const image: Image = await ImageUtil.fromImageData(imageData);
-
-      // Release image data to free memory
-      imageData.release();
-
-      // Run MNIST inference on the image
-      const result = await processImage(image);
-
-      // Release image to free memory
-      image.release();
-
-      // Set result state to force re-render of component that uses this hook
-      setResult(result);
-    },
-    [canvasSize, processImage, setResult],
-  );
-  return {
-    result,
-    classify,
-  };
-}
-
-export default function MNISTDemo() {
-.
-.
-.
-```
+<ExampleDiffCodeTabs>
+  <MNISTDemoExamples.V5DiffBlock />
+  <MNISTDemoExamples.V5CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 With this second hook, we are ready to run our model with the user created drawings. Let's hook it up in the next section.
 
@@ -890,97 +423,10 @@ Let's cut to the summary:
 5. Add `classify` as a dependency to the `handleEnd` callback function.
 6. Change the text in the results section to reflect the numbers from the model output.
 
-```tsx title="MyDemos.tsx"
-.
-.
-.
-type NumberLabelSet = {
-  english: string;
-  asciiSymbol: string;
-};
-
-const numLabels: NumberLabelSet[] = [
-  {
-    english: 'zero',
-    asciiSymbol: '🄌',
-  },
-  {
-    english: 'one',
-    asciiSymbol: '➊',
-  },
-  {
-    english: 'two',
-    asciiSymbol: '➋',
-  },
-  {
-    english: 'three',
-    asciiSymbol: '➌',
-  },
-  {
-    english: 'four',
-    asciiSymbol: '➍',
-  },
-  {
-    english: 'five',
-    asciiSymbol: '➎',
-  },
-  {
-    english: 'six',
-    asciiSymbol: '➏',
-  },
-  {
-    english: 'seven',
-    asciiSymbol: '➐',
-  },
-  {
-    english: 'eight',
-    asciiSymbol: '➑',
-  },
-  {
-    english: 'nine',
-    asciiSymbol: '➒',
-  },
-];
-
-export default function MNISTDemo() {
-  // Get safe area insets to account for notches, etc.
-  const insets = useSafeAreaInsets();
-  const [canvasSize, setCanvasSize] = useState<number>(0);
-
-  // `ctx` is drawing context to draw shapes
-  const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
-
-  const {classify, result} = useMNISTCanvasInference(canvasSize);
-.
-.
-.
-  const handleEnd = useCallback(() => {
-    setDrawingDone(true);
-    if (ctx != null) classify(ctx);
-  }, [setDrawingDone, classify, ctx]);
-.
-.
-.
-      {drawingDone && (
-        <View style={[styles.resultView]} pointerEvents="none">
-          <Text style={[styles.label, styles.secondary]}>
-            {result &&
-              `${numLabels[result[0].num].asciiSymbol} it looks like ${
-                numLabels[result[0].num].english
-              }`}
-          </Text>
-          <Text style={[styles.label, styles.secondary]}>
-            {result &&
-              `${numLabels[result[1].num].asciiSymbol} or it might be ${
-                numLabels[result[1].num].english
-              }`}
-          </Text>
-        </View>
-      )}
-.
-.
-.
-```
+<ExampleDiffCodeTabs>
+  <MNISTDemoExamples.V6DiffBlock />
+  <MNISTDemoExamples.V6CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
 
 When you run the code, you should see it display results properly in the bottom left corner like the screen recording below.
 

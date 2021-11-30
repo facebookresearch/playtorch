@@ -1,57 +1,57 @@
 @@ -21,35 +21,40 @@
  
-    const trailRef = useRef<TrailPoint[]>([]);
-    const [drawingDone, setDrawingDone] = useState(false);
-+   const animationHandleRef = useRef<number | null>(null);
+   const trailRef = useRef<TrailPoint[]>([]);
+   const [drawingDone, setDrawingDone] = useState(false);
++  const animationHandleRef = useRef<number | null>(null);
  
-    const draw = useCallback(() => {
-+     if (animationHandleRef.current != null) return;
-      if (ctx != null) {
--       const trail = trailRef.current;
--       if (trail != null) {
--         // fill background by drawing a rect
--         ctx.fillStyle = COLOR_CANVAS_BACKGROUND;
--         ctx.fillRect(0, 0, canvasSize, canvasSize);
+   const draw = useCallback(() => {
++    if (animationHandleRef.current != null) return;
+     if (ctx != null) {
+-      const trail = trailRef.current;
+-      if (trail != null) {
+-        // fill background by drawing a rect
+-        ctx.fillStyle = COLOR_CANVAS_BACKGROUND;
+-        ctx.fillRect(0, 0, canvasSize, canvasSize);
 -
--         // Draw the trail
-+       animationHandleRef.current = requestAnimationFrame(() => {
-+         const trail = trailRef.current;
-+         if (trail != null) {
-+           // fill background by drawing a rect
-+           ctx.fillStyle = COLOR_CANVAS_BACKGROUND;
-+           ctx.fillRect(0, 0, canvasSize, canvasSize);
+-        // Draw the trail
++      animationHandleRef.current = requestAnimationFrame(() => {
++        const trail = trailRef.current;
++        if (trail != null) {
++          // fill background by drawing a rect
++          ctx.fillStyle = COLOR_CANVAS_BACKGROUND;
++          ctx.fillRect(0, 0, canvasSize, canvasSize);
  
--         if (trail.length > 0) {
-+           // Draw the trail
-            ctx.strokeStyle = COLOR_TRAIL_STROKE;
-            ctx.lineWidth = 25;
-            ctx.lineJoin = 'round';
-            ctx.lineCap = 'round';
-            ctx.miterLimit = 1;
--           ctx.beginPath();
--           ctx.moveTo(trail[0].x, trail[0].y);
--           for (let i = 1; i < trail.length; i++) {
--             ctx.lineTo(trail[i].x, trail[i].y);
+-        if (trail.length > 0) {
++          // Draw the trail
+           ctx.strokeStyle = COLOR_TRAIL_STROKE;
+           ctx.lineWidth = 25;
+           ctx.lineJoin = 'round';
+           ctx.lineCap = 'round';
+           ctx.miterLimit = 1;
+-          ctx.beginPath();
+-          ctx.moveTo(trail[0].x, trail[0].y);
+-          for (let i = 1; i < trail.length; i++) {
+-            ctx.lineTo(trail[i].x, trail[i].y);
 +
-+           if (trail.length > 0) {
-+             ctx.beginPath();
-+             ctx.moveTo(trail[0].x, trail[0].y);
-+             for (let i = 1; i < trail.length; i++) {
-+               ctx.lineTo(trail[i].x, trail[i].y);
-+             }
-            }
-            ctx.stroke();
-+           // Need to include this at the end, for now.
-+           ctx.invalidate();
-+           animationHandleRef.current = null;
-          }
++          if (trail.length > 0) {
++            ctx.beginPath();
++            ctx.moveTo(trail[0].x, trail[0].y);
++            for (let i = 1; i < trail.length; i++) {
++              ctx.lineTo(trail[i].x, trail[i].y);
++            }
+           }
+           ctx.stroke();
++          // Need to include this at the end, for now.
++          ctx.invalidate();
++          animationHandleRef.current = null;
+         }
 -
--         ctx.invalidate();
--       }
-+       });
-      }
--   }, [ctx, canvasSize, trailRef]);
-+   }, [animationHandleRef, ctx, canvasSize, trailRef]);
+-        ctx.invalidate();
+-      }
++      });
+     }
+-  }, [ctx, canvasSize, trailRef]);
++  }, [animationHandleRef, ctx, canvasSize, trailRef]);
  
-    // handlers for touch events
-    const handleMove = useCallback(
+   // handlers for touch events
+   const handleMove = useCallback(

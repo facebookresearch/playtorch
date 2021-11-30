@@ -19,12 +19,14 @@
    }
  
    return (
-@@ -39,7 +44,7 @@
-       <TextInput style={[styles.item, styles.input]} placeholder="Text" placeholderTextColor="#CCC" multiline={true} value={text} onChangeText={setText} />
-       <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" value={question} onChangeText={setQuestion} />
+@@ -56,7 +61,9 @@
+         onChangeText={setQuestion}
+       />
        <Button title="Ask" onPress={handleAsk} />
 -      <Text style={styles.item}>{answer}</Text>
-+      <Text style={styles.item}>{isProcessing ? "Looking for the answer" : answer}</Text>
++      <Text style={styles.item}>
++        {isProcessing ? 'Looking for the answer' : answer}
++      </Text>
      </View>
    );
  }

@@ -18,7 +18,7 @@ switch (process.platform) {
             && source ./venv/bin/activate 2> ./error.log \
             && pip install --upgrade pip 2> ./error.log \
             && pip install -r requirements.txt 2> ./error.log \
-            && python make_models.py 2> ./error.log',
+            && python -W ignore make_models.py 2> ./error.log',
     );
     break;
   case 'win32':

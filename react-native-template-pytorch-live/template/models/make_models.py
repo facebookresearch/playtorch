@@ -50,7 +50,9 @@ def export_image_segmentation_models():
 
     name = "detr_resnet50"
 
-    model = torch.hub.load("facebookresearch/detr", name, pretrained=True)
+    model = torch.hub.load(
+        "facebookresearch/detr", name, pretrained=True, verbose=False
+    )
     model.eval()
 
     example = torch.rand(1, 3, 800, 1066)

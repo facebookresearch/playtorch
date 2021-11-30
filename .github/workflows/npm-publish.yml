@@ -1,0 +1,81 @@
+name: NPM Publish
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish-npm-cli:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./torchlive-cli
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+      - name: Update package.json version to $GITHUB_REF_NAME
+        run: npm version $GITHUB_REF_NAME
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      - name: Test Build
+        run: yarn run build
+      - name: Unit Test
+        run: yarn run test
+      - name: Publish To NPM
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
+  publish-npm-core:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./react-native-pytorch-core
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+      - name: Update package.json version to $GITHUB_REF_NAME
+        run: npm version $GITHUB_REF_NAME
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      - name: Publish To NPM
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
+  publish-npm-template:
+    runs-on: ubuntu-latest
+    needs: publish-npm-core
+    defaults:
+      run:
+        working-directory: ./react-native-template-pytorch-live
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+      - name: Remove postinstall script from package.json
+        run: echo $(cat package.json  | jq 'del(.scripts.postinstall)') > package.json
+        working-directory: ./react-native-template-pytorch-live/template
+      - name: Install template dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: ./react-native-template-pytorch-live/template
+      - name: Add latest react-native-pytorch-core package to dependencies
+        run: yarn add react-native-pytorch-core@$GITHUB_REF_NAME
+        working-directory: ./react-native-template-pytorch-live/template
+      - name: Clean template directory
+        run: git clean -f -x .
+        working-directory: ./react-native-template-pytorch-live/template
+      - name: Update package.json version to $GITHUB_REF_NAME
+        run: npm version $GITHUB_REF_NAME
+      - name: Publish To NPM
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

@@ -8,7 +8,7 @@ const model = require('../../models/bert_qa.ptl');
 
 type QuestionAnsweringResult = {
   answer: string;
-}
+};
 
 export default function QuestionAnsweringDemo() {
   // Get safe area insets to account for notches, etc.
@@ -20,19 +20,39 @@ export default function QuestionAnsweringDemo() {
   async function handleAsk() {
     const qaText = `[CLS] ${question} [SEP] ${text} [SEP]`;
 
-    const inferenceResult = await MobileModel.execute<QuestionAnsweringResult>(model, {
-      text: qaText,
-      modelInputLength: 360,
-    });
+    const inferenceResult = await MobileModel.execute<QuestionAnsweringResult>(
+      model,
+      {
+        text: qaText,
+        modelInputLength: 360,
+      },
+    );
 
     // Log model inference result to Metro console
     console.log(inferenceResult);
   }
 
   return (
-    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
-      <TextInput style={[styles.item, styles.input]} placeholder="Text" placeholderTextColor="#CCC" multiline={true} value={text} onChangeText={setText} />
-      <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" value={question} onChangeText={setQuestion} />
+    <View
+      style={[
+        styles.container,
+        {marginTop: insets.top, marginBottom: insets.bottom},
+      ]}>
+      <TextInput
+        style={[styles.item, styles.input]}
+        placeholder="Text"
+        placeholderTextColor="#CCC"
+        multiline={true}
+        value={text}
+        onChangeText={setText}
+      />
+      <TextInput
+        style={[styles.item, styles.input]}
+        placeholder="Question"
+        placeholderTextColor="#CCC"
+        value={question}
+        onChangeText={setQuestion}
+      />
       <Button title="Ask" onPress={handleAsk} />
       <Text style={styles.item}>Question Answering</Text>
     </View>
@@ -50,5 +70,5 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     color: '#000',
-  }
+  },
 });

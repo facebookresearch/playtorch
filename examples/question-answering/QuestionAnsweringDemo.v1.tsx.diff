@@ -1,4 +1,4 @@
-@@ -1,16 +1,30 @@
+@@ -1,16 +1,43 @@
  import * as React from 'react';
 -import {Button, Text, TextInput, View} from 'react-native';
 +import {Button, StyleSheet, Text, TextInput, View} from 'react-native';
@@ -11,9 +11,22 @@
 -    <View style={{marginTop: insets.top, marginBottom: insets.bottom}}>
 -      <TextInput placeholder="Text" />
 -      <TextInput placeholder="Question" />
-+    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
-+      <TextInput style={[styles.item, styles.input]} multiline={true} placeholder="Text" placeholderTextColor="#CCC" />
-+      <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" />
++    <View
++      style={[
++        styles.container,
++        {marginTop: insets.top, marginBottom: insets.bottom},
++      ]}>
++      <TextInput
++        style={[styles.item, styles.input]}
++        multiline={true}
++        placeholder="Text"
++        placeholderTextColor="#CCC"
++      />
++      <TextInput
++        style={[styles.item, styles.input]}
++        placeholder="Question"
++        placeholderTextColor="#CCC"
++      />
        <Button title="Ask" onPress={() => {}} />
 -      <Text>Question Answering</Text>
 +      <Text style={styles.item}>Question Answering</Text>
@@ -32,5 +45,5 @@
 +  input: {
 +    borderWidth: 1,
 +    color: '#000',
-+  }
++  },
 +});

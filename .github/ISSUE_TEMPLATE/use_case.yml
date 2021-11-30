@@ -1,0 +1,39 @@
+name: Use Case
+description: Share your demos to be included on the PyTorch Live community page
+labels: ["Use Case"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for sharing your demo!
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Tell us more about the use case for this demo?
+    validations:
+      required: true
+  - type: textarea
+    id: images
+    attributes:
+      label: Images
+      description: Links to images of your demo (e.g., screenshots from mobile devices)
+    validations:
+      required: true
+  - type: input
+    id: website
+    attributes:
+      label: Website
+      description: Link to a website that showcases this work
+    validations:
+      required: true
+  - type: textarea
+    id: credit
+    attributes:
+      label: Credit (optional)
+      description: How do you want this work to be credited (e.g., name, Twitter handle, GitHub username)?
+  - type: input
+    id: source-code
+    attributes:
+      label: Source Code (optional)
+      description: Link to source code (e.g., GitHub repo)

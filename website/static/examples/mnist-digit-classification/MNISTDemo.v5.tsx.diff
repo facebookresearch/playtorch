@@ -55,12 +55,3 @@
  export default function MNISTDemo() {
    // Get safe area insets to account for notches, etc.
    const insets = useSafeAreaInsets();
-@@ -134,7 +177,7 @@
- 
-   useEffect(() => {
-     draw();
--  }, [draw]); // update only when layout or context changes
-+  }, [draw]);
- 
-   return (
-     <View

@@ -15,6 +15,7 @@ import {getEnv} from '../utils/SystemUtils';
 import {executeCommandForTask, runTasks} from '../utils/TaskUtils';
 import {isCommandInstalled} from '../utils/ToolingUtils';
 import {ListrGetRendererTaskOptions, ListrDefaultRenderer} from 'listr2';
+import fs from 'fs';
 import chalk from 'chalk';
 
 const NOBREAKSPACE_INTEDENTATION = '‎ ‎ ‎ ‎ ';
@@ -81,7 +82,9 @@ ${NOBREAKSPACE_INTEDENTATION}• Open ${this.name}/ios/${
     }.xcworkspace in Xcode or run "xed -b ios"
 ${NOBREAKSPACE_INTEDENTATION}• Hit the Run button
 ${NOBREAKSPACE_INTEDENTATION}`);
+    context.update(this.getPostInitMessage());
     context.task.title = this.getDescription();
+    // report any error reported by post-init script
   }
 
   async initProject(context: TaskContext): Promise<void> {
@@ -118,6 +121,55 @@ ${NOBREAKSPACE_INTEDENTATION}`);
         resolve();
       });
     });
+  }
+
+  getPostInitMessage(): string {
+    let errorMessage = this.getPostInitScriptError();
+    if (errorMessage !== null) {
+      return errorMessage;
+    }
+    return `Initialized ${this.getDescription()}
+    ${NOBREAKSPACE_INTEDENTATION}
+    ${chalk.green('Run instructions for Android')}:
+    ${NOBREAKSPACE_INTEDENTATION}• Have an Android emulator running (quickest way to get started), or a device connected.
+    ${NOBREAKSPACE_INTEDENTATION}• cd ${
+      this.name
+    } && npx torchlive-cli run-android
+    ${NOBREAKSPACE_INTEDENTATION}
+    ${chalk.blue('Run instructions for iOS')}:
+    ${NOBREAKSPACE_INTEDENTATION}• cd ${this.name} && npx torchlive-cli run-ios
+    ${NOBREAKSPACE_INTEDENTATION}${chalk.grey('- or -')}
+    ${NOBREAKSPACE_INTEDENTATION}• Open ${this.name}/ios/${
+      this.name
+    }.xcworkspace in Xcode or run "xed -b ios"
+    ${NOBREAKSPACE_INTEDENTATION}• Hit the Run button
+    ${NOBREAKSPACE_INTEDENTATION}`;
+  }
+
+  getPostInitScriptError(): string | null {
+    // check if the error.log exists
+    const errorLogPath = `${this.name}/models/error.log`;
+    const issuePageUrl = 'https://github.com/pytorch/live/issues';
+    try {
+      if (fs.existsSync(`${this.name}/models/error.log`)) {
+        const errorMessage = fs.readFileSync(errorLogPath).toString();
+        const prefix = `${chalk.yellowBright('Warning')} project "${
+          this.name
+        }" is created but we ran into the following issues at generating example models: \n${NOBREAKSPACE_INTEDENTATION}\n`;
+        const suffix = `\n${NOBREAKSPACE_INTEDENTATION}\nplease rerun
+${NOBREAKSPACE_INTEDENTATION}• "python make_models.py" in the ${this.name}/models/ directory, and\n
+${NOBREAKSPACE_INTEDENTATION}• "pod install" in the ${this.name}/ios/ directory \n
+if the issue persists, please report at ${issuePageUrl}.`;
+        return errorMessage ? prefix + errorMessage + suffix : null;
+      }
+    } catch (err) {
+      return `${chalk.redBright(
+        'Error',
+      )} The torchlive-cli init command ran into unexpected error at validating the models generated under ${
+        this.name
+      }/models/, please report the issue at ${issuePageUrl}.`;
+    }
+    return null;
   }
 }
 

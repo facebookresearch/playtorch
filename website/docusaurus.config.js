@@ -7,6 +7,7 @@
  * @format
  */
 
+const {fbContent} = require('internaldocs-fb-helpers');
 const katex = require('rehype-katex');
 const math = require('remark-math');
 const npm2yarn = require('@docusaurus/remark-plugin-npm2yarn');
@@ -151,7 +152,11 @@ module.exports = {
           sidebarPath: require.resolve('./sidebars.js'),
           remarkPlugins: [[npm2yarn, {sync: true}], math],
           rehypePlugins: [katex],
-          editUrl: 'https://github.com/pytorch/live/edit/main/website/',
+          editUrl: fbContent({
+            internal:
+              'https://www.internalfb.com/code/fbsource/xplat/pytorch/live/website',
+            external: 'https://github.com/pytorch/live/edit/main/website',
+          }),
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),

@@ -62,7 +62,7 @@
    const trailRef = useRef<TrailPoint[]>([]);
    const [drawingDone, setDrawingDone] = useState(false);
    const animationHandleRef = useRef<number | null>(null);
-@@ -173,11 +223,12 @@
+@@ -173,7 +223,8 @@
  
    const handleEnd = useCallback(() => {
      setDrawingDone(true);
@@ -72,11 +72,6 @@
  
    useEffect(() => {
      draw();
--  }, [draw]);
-+  }, [draw]); // update only when layout or context changes
- 
-   return (
-     <View
 @@ -205,10 +256,16 @@
        {drawingDone && (
          <View style={[styles.resultView]} pointerEvents="none">

@@ -18,9 +18,8 @@ import AstroBirdGame from './AstroBirdGame';
 export default function AstroBirdExample() {
   const [isTryAgainVisible, setIsTryAgainVisible] = useState<boolean>(false);
   const [layout, setLayout] = useState<LayoutRectangle | null>(null);
-  const [drawingContext, setDrawingContext] = useState<
-    CanvasRenderingContext2D
-  >();
+  const [drawingContext, setDrawingContext] =
+    useState<CanvasRenderingContext2D>();
 
   const astroBird = useMemo(() => {
     if (drawingContext != null && layout !== null) {
@@ -46,7 +45,7 @@ export default function AstroBirdExample() {
 
   useEffect(() => {
     astroBird?.start();
-    return function() {
+    return function () {
       astroBird?.stop();
       astroBird?.destroy();
     };

@@ -25,7 +25,7 @@
   "scripts": {
     "test": "jest",
     "typescript": "tsc --noEmit",
-    "lint": "eslint \"**/*.{js,ts,tsx}\"",
+    "lint": "prettier --write \"**/*.{js,ts,tsx}\" && eslint \"**/*.{js,ts,tsx}\" --fix",
     "prepare": "bob build",
     "release": "release-it",
     "example": "yarn --cwd example",
@@ -119,8 +119,8 @@
       "prettier/prettier": [
         "error",
         {
-          "bracketSameLine": true,
           "bracketSpacing": false,
+          "jsxBracketSameLine": true,
           "singleQuote": true,
           "trailingComma": "all",
           "arrowParens": "avoid"
@@ -135,8 +135,8 @@
     "lib/"
   ],
   "prettier": {
-    "bracketSameLine": true,
     "bracketSpacing": false,
+    "jsxBracketSameLine": true,
     "singleQuote": true,
     "trailingComma": "all",
     "arrowParens": "avoid"

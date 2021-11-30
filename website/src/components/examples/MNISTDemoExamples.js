@@ -14,7 +14,6 @@ import CodeBlock from '@theme/CodeBlock';
 
 function MNISTDemoExamples() {}
 
-
 import V0Contents from '!!raw-loader!/static/examples/mnist-digit-classification/MNISTDemo.v0.tsx';
 
 import V1Contents from '!!raw-loader!/static/examples/mnist-digit-classification/MNISTDemo.v1.tsx';
@@ -42,55 +41,107 @@ import V6Contents from '!!raw-loader!/static/examples/mnist-digit-classification
 import V6DiffContents from '!!raw-loader!/static/examples/mnist-digit-classification/MNISTDemo.v6.tsx.diff';
 
 MNISTDemoExamples.V0CodeBlock = function V0CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V0Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V0Contents}
+    </CodeBlock>
+  );
 };
 
 MNISTDemoExamples.V1CodeBlock = function V1CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V1Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V1Contents}
+    </CodeBlock>
+  );
 };
 
 MNISTDemoExamples.V1DiffBlock = function V1DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V1DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V1DiffContents}
+    </CodeBlock>
+  );
 };
 
 MNISTDemoExamples.V2CodeBlock = function V2CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V2Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V2Contents}
+    </CodeBlock>
+  );
 };
 
 MNISTDemoExamples.V2DiffBlock = function V2DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V2DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V2DiffContents}
+    </CodeBlock>
+  );
 };
 
 MNISTDemoExamples.V3CodeBlock = function V3CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V3Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V3Contents}
+    </CodeBlock>
+  );
 };
 
 MNISTDemoExamples.V3DiffBlock = function V3DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V3DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V3DiffContents}
+    </CodeBlock>
+  );
 };
 
 MNISTDemoExamples.V4CodeBlock = function V4CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V4Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V4Contents}
+    </CodeBlock>
+  );
 };
 
 MNISTDemoExamples.V4DiffBlock = function V4DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V4DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V4DiffContents}
+    </CodeBlock>
+  );
 };
 
 MNISTDemoExamples.V5CodeBlock = function V5CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V5Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V5Contents}
+    </CodeBlock>
+  );
 };
 
 MNISTDemoExamples.V5DiffBlock = function V5DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V5DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V5DiffContents}
+    </CodeBlock>
+  );
 };
 
 MNISTDemoExamples.V6CodeBlock = function V6CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V6Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V6Contents}
+    </CodeBlock>
+  );
 };
 
 MNISTDemoExamples.V6DiffBlock = function V6DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V6DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V6DiffContents}
+    </CodeBlock>
+  );
 };
 
 export default MNISTDemoExamples;

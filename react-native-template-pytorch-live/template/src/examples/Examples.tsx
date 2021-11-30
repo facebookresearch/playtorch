@@ -69,8 +69,7 @@ const EXAMPLE_SECTIONS: ExampleSection[] = [
       },
       {
         name: 'MNIST example',
-        info:
-          'An end-to-end example of implementing a custom model in a fun demo',
+        info: 'An end-to-end example of implementing a custom model in a fun demo',
         key: 'MNISTExample',
         component: MNISTExample,
         img: require('../../assets/images/thumbnail_MNIST.jpg'),

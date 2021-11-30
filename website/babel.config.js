@@ -18,7 +18,7 @@ module.exports = {
         [
           'babel-plugin-transform-remove-imports',
           {
-            test: '^(\@site|\.+)\/(.*\/)?fb\/',
+            test: '^(@site|.+)/(.*/)?fb/',
           },
         ],
       ],

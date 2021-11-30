@@ -9,4 +9,4 @@
 
 // The empty function allows to have noop function handlers and avoid
 // re-initializations of those handlers on every React component re-render.
-export default function() {}
+export default function () {}

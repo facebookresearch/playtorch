@@ -36,7 +36,7 @@ type MNISTResult = {
 /**
  * The React hook provides MNIST model inference on an input image.
  */
- function useMNISTModel() {
+function useMNISTModel() {
   const processImage = useCallback(async (image: Image) => {
     // Runs model inference on input image
     const {

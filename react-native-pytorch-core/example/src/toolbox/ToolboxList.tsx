@@ -45,8 +45,7 @@ export default function ToolboxList({tools, onSelect}: Props) {
           onPress={() => {
             setActiveTool(item);
             onSelect(item);
-          }}
-        >
+          }}>
           <View style={styles.listItem}>
             <View style={[styles.listItemThumbnail, apiTest && styles.apiTest]}>
               {item.icon}

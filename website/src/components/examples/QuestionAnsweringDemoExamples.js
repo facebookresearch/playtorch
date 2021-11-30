@@ -14,7 +14,6 @@ import CodeBlock from '@theme/CodeBlock';
 
 function QuestionAnsweringDemoExamples() {}
 
-
 import V0Contents from '!!raw-loader!/static/examples/question-answering/QuestionAnsweringDemo.v0.tsx';
 
 import V1Contents from '!!raw-loader!/static/examples/question-answering/QuestionAnsweringDemo.v1.tsx';
@@ -38,47 +37,91 @@ import V5Contents from '!!raw-loader!/static/examples/question-answering/Questio
 import V5DiffContents from '!!raw-loader!/static/examples/question-answering/QuestionAnsweringDemo.v5.tsx.diff';
 
 QuestionAnsweringDemoExamples.V0CodeBlock = function V0CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V0Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V0Contents}
+    </CodeBlock>
+  );
 };
 
 QuestionAnsweringDemoExamples.V1CodeBlock = function V1CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V1Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V1Contents}
+    </CodeBlock>
+  );
 };
 
 QuestionAnsweringDemoExamples.V1DiffBlock = function V1DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V1DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V1DiffContents}
+    </CodeBlock>
+  );
 };
 
 QuestionAnsweringDemoExamples.V2CodeBlock = function V2CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V2Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V2Contents}
+    </CodeBlock>
+  );
 };
 
 QuestionAnsweringDemoExamples.V2DiffBlock = function V2DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V2DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V2DiffContents}
+    </CodeBlock>
+  );
 };
 
 QuestionAnsweringDemoExamples.V3CodeBlock = function V3CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V3Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V3Contents}
+    </CodeBlock>
+  );
 };
 
 QuestionAnsweringDemoExamples.V3DiffBlock = function V3DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V3DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V3DiffContents}
+    </CodeBlock>
+  );
 };
 
 QuestionAnsweringDemoExamples.V4CodeBlock = function V4CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V4Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V4Contents}
+    </CodeBlock>
+  );
 };
 
 QuestionAnsweringDemoExamples.V4DiffBlock = function V4DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V4DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V4DiffContents}
+    </CodeBlock>
+  );
 };
 
 QuestionAnsweringDemoExamples.V5CodeBlock = function V5CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V5Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V5Contents}
+    </CodeBlock>
+  );
 };
 
 QuestionAnsweringDemoExamples.V5DiffBlock = function V5DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V5DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V5DiffContents}
+    </CodeBlock>
+  );
 };
 
 export default QuestionAnsweringDemoExamples;

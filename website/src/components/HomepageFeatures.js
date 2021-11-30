@@ -8,8 +8,8 @@
  */
 
 import React from 'react';
-import clsx from 'clsx';
 import Link from '@docusaurus/Link';
+import clsx from 'clsx';
 import styles from './HomepageFeatures.module.css';
 import DocVideo from '../components/DocVideo';
 
@@ -52,7 +52,7 @@ function Feature({title, description, video, to}) {
         <div className={styles.featureVideo}>
           <DocVideo
             asset={video}
-            style={{margin: 0}}
+            className={styles.featureDocVideo}
             autoPlay={true}
             loop={true}
             controls={false}

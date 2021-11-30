@@ -17,7 +17,6 @@
 const child_process = require('child_process');
 const fs = require('fs');
 const path = require('path');
-const process = require('process');
 
 const EXAMPLE_SRC_ROOT = '../examples';
 const EXAMPLE_DEST_ROOT = 'static/examples';

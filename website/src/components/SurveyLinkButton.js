@@ -9,12 +9,13 @@ import React from 'react';
 import styles from './SurveyLinkButton.module.css';
 
 export default function SurveyLinkButton({docTitle}) {
-  const surveyUrl = `https://docs.google.com/forms/d/e/1FAIpQLScsB21xJWM_VANad5GcVkQqKB_BptS77axbunzs7ZkwoE5JUw/viewform?usp=pp_url&entry.1880917601=${docTitle.replace(/\s/g, '+')}`
+  const surveyUrl = `https://docs.google.com/forms/d/e/1FAIpQLScsB21xJWM_VANad5GcVkQqKB_BptS77axbunzs7ZkwoE5JUw/viewform?usp=pp_url&entry.1880917601=${docTitle.replace(
+    /\s/g,
+    '+',
+  )}`;
   return (
     <a href={surveyUrl} target="_blank">
-      <div className={styles.surveyLinkBox}>
-        Share what we can improve!
-      </div>
+      <div className={styles.surveyLinkBox}>Share what we can improve!</div>
     </a>
   );
 }

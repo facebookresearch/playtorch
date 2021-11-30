@@ -8,7 +8,7 @@
  */
 
 import styles from './DocVideo.module.css';
-import React, {useState, useRef, useEffect} from 'react';
+import React, {useRef, useEffect} from 'react';
 import clsx from 'clsx';
 
 export default function DocVideo({
@@ -30,7 +30,7 @@ export default function DocVideo({
     videoRef.current.muted = muted;
     videoRef.current.defaultMuted = defaultMuted;
     videoRef.current.playsInline = playsInline;
-  }, []);
+  }, [defaultMuted, muted, playsInline]);
 
   return (
     <video

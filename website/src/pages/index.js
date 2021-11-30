@@ -10,13 +10,8 @@
 import React, {useState, useEffect} from 'react';
 import clsx from 'clsx';
 import Layout from '@theme/Layout';
-import Link from '@docusaurus/Link';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
-import {FbInternalOnly} from 'internaldocs-fb-helpers';
 import styles from './index.module.css';
-import HomepageFeatures from '../components/HomepageFeatures';
 import DocVideo from '../components/DocVideo';
-import {InternalCTAButton} from '../fb/FBInternalComponents';
 
 function Row({
   content,
@@ -52,7 +47,6 @@ function Row({
 }
 
 export default function Home() {
-  const {siteConfig} = useDocusaurusContext();
   const [balloonStyle, setBalloonStyle] = useState({});
 
   useEffect(() => {
@@ -176,7 +170,7 @@ export default function Home() {
 
   return (
     <Layout>
-      <div className={styles.balloon} style={balloonStyle}></div>
+      <div className={styles.balloon} style={balloonStyle} />
       <main>
         <div className="container">
           <Row

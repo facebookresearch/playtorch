@@ -13,7 +13,8 @@
     "write-translations": "docusaurus write-translations",
     "write-heading-ids": "docusaurus write-heading-ids",
     "install:pytorch-core-deps": "(cd ../react-native-pytorch-core && yarn install)",
-    "codegen-examples": "node scripts/codegen-examples.js"
+    "codegen-examples": "node scripts/codegen-examples.js",
+    "lint": "eslint . --ext .ts,.tsx"
   },
   "dependencies": {
     "@docusaurus/core": "2.0.0-beta.0",
@@ -24,6 +25,7 @@
     "babel-plugin-transform-remove-imports": "^1.7.0",
     "clsx": "^1.1.1",
     "docusaurus-plugin-internaldocs-fb": "^0.8.5",
+    "eslint": "^8.3.0",
     "file-loader": "^6.2.0",
     "raw-loader": "^4.0.2",
     "react": "^17.0.1",
@@ -31,6 +33,18 @@
     "rehype-katex": "^5.0.0",
     "remark-math": "3",
     "url-loader": "^4.1.1"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.4.0",
+    "@typescript-eslint/parser": "^5.4.0",
+    "docusaurus-plugin-typedoc": "^0.14.1",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-react": "^7.27.1",
+    "eslint-plugin-react-hooks": "^4.3.0",
+    "typedoc": "^0.20.36",
+    "typedoc-plugin-markdown": "^3.9.0",
+    "typedoc-plugin-param-names": "^2.0.0",
+    "typescript": "4.2.4"
   },
   "browserslist": {
     "production": [
@@ -43,12 +57,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    "docusaurus-plugin-typedoc": "^0.14.1",
-    "typedoc": "^0.20.36",
-    "typedoc-plugin-markdown": "^3.9.0",
-    "typedoc-plugin-param-names": "^2.0.0",
-    "typescript": "4.2.4"
   }
 }

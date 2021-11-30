@@ -1,0 +1,47 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/eslint-recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "semi": "off",
+    "@typescript-eslint/ban-ts-comment": 1,
+    "@typescript-eslint/semi": [
+      "error"
+    ],
+    "@typescript-eslint/naming-convention": [
+      "warn",
+      {
+        "selector": "function",
+        // Allow PascalCase for react functional components
+        "format": [
+          "PascalCase",
+          "camelCase"
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    // Override rules for examples
+    {
+      "files": [
+        "static/examples/**/*.tsx"
+      ],
+      "rules": {
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-var-requires": "off",
+        "react/no-unescaped-entities": "off"
+      }
+    }
+  ]
+}

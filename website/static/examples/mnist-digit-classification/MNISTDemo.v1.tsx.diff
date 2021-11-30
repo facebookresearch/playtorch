@@ -1,33 +1,33 @@
 @@ -1,8 +1,10 @@
-- import React, {useState} from 'react';
-+ import React, {useCallback, useEffect, useState} from 'react';
-  import {StyleSheet, Text, View} from 'react-native';
-  import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
-  import {useSafeAreaInsets} from 'react-native-safe-area-context';
+-import React, {useState} from 'react';
++import React, {useCallback, useEffect, useState} from 'react';
+ import {StyleSheet, Text, View} from 'react-native';
+ import {Canvas, CanvasRenderingContext2D} from 'react-native-pytorch-core';
+ import {useSafeAreaInsets} from 'react-native-safe-area-context';
  
-+ const COLOR_CANVAS_BACKGROUND = '#4F25C6';
++const COLOR_CANVAS_BACKGROUND = '#4F25C6';
 +
-  export default function MNISTDemo() {
-    // Get safe area insets to account for notches, etc.
-    const insets = useSafeAreaInsets();
+ export default function MNISTDemo() {
+   // Get safe area insets to account for notches, etc.
+   const insets = useSafeAreaInsets();
 @@ -10,6 +12,20 @@
-    // `ctx` is drawing context to draw shapes
-    const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
+   // `ctx` is drawing context to draw shapes
+   const [ctx, setCtx] = useState<CanvasRenderingContext2D>();
  
-+   const draw = useCallback(() => {
-+     if (ctx != null) {
-+       // fill background by drawing a rect
-+       ctx.fillStyle = COLOR_CANVAS_BACKGROUND;
-+       ctx.fillRect(0, 0, canvasSize, canvasSize);
++  const draw = useCallback(() => {
++    if (ctx != null) {
++      // fill background by drawing a rect
++      ctx.fillStyle = COLOR_CANVAS_BACKGROUND;
++      ctx.fillRect(0, 0, canvasSize, canvasSize);
 +
-+       ctx.invalidate();
-+     }
-+   }, [ctx, canvasSize]);
++      ctx.invalidate();
++    }
++  }, [ctx, canvasSize]);
 +
-+   useEffect(() => {
-+     draw();
-+   }, [draw]);
++  useEffect(() => {
++    draw();
++  }, [draw]);
 +
-    return (
-      <View
-        style={styles.container}
+   return (
+     <View
+       style={styles.container}

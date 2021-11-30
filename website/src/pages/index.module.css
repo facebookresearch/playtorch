@@ -162,7 +162,7 @@ h1.title {
 }
 
 /* Tablet */
-@media only screen and (max-width: 1024px) {
+@media only screen and (max-width: 1024px) and (min-device-width: 813px) {
   .message,
   .buttonWrapper {
     margin-left: 50px;

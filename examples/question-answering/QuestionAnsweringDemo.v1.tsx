@@ -21,17 +21,17 @@ export default function QuestionAnsweringDemo() {
         {marginTop: insets.top, marginBottom: insets.bottom},
       ]}>
       <TextInput
-        style={[styles.item, styles.input]}
         multiline={true}
         placeholder="Text"
         placeholderTextColor="#CCC"
+        style={[styles.item, styles.input]}
       />
       <TextInput
-        style={[styles.item, styles.input]}
         placeholder="Question"
         placeholderTextColor="#CCC"
+        style={[styles.item, styles.input]}
       />
-      <Button title="Ask" onPress={() => {}} />
+      <Button onPress={() => {}} title="Ask" />
       <Text style={styles.item}>Question Answering</Text>
     </View>
   );

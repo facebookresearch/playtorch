@@ -46,21 +46,21 @@ export default function QuestionAnsweringDemo() {
         {marginTop: insets.top, marginBottom: insets.bottom},
       ]}>
       <TextInput
-        style={[styles.item, styles.input]}
+        multiline={true}
+        onChangeText={setText}
         placeholder="Text"
         placeholderTextColor="#CCC"
-        multiline={true}
+        style={[styles.item, styles.input]}
         value={text}
-        onChangeText={setText}
       />
       <TextInput
-        style={[styles.item, styles.input]}
+        onChangeText={setQuestion}
         placeholder="Question"
         placeholderTextColor="#CCC"
+        style={[styles.item, styles.input]}
         value={question}
-        onChangeText={setQuestion}
       />
-      <Button title="Ask" onPress={handleAsk} />
+      <Button onPress={handleAsk} title="Ask" />
       <Text style={styles.item}>
         {isProcessing ? 'Looking for the answer' : answer}
       </Text>

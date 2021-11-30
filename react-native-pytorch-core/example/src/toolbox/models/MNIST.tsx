@@ -282,8 +282,7 @@ export default function MNIST() {
       onLayout={event => {
         const {layout} = event.nativeEvent;
         setCanvasSize(Math.min(layout?.width || 0, layout?.height || 0));
-      }}
-    >
+      }}>
       <View style={styles.instruction}>
         <Text style={styles.label}>Write a number</Text>
         <Text style={styles.label}>

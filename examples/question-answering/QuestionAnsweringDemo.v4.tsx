@@ -17,7 +17,7 @@ const model = require('../../models/bert_qa.ptl');
 
 type QuestionAnsweringResult = {
   answer: string;
-}
+};
 
 export default function QuestionAnsweringDemo() {
   // Get safe area insets to account for notches, etc.
@@ -44,9 +44,26 @@ export default function QuestionAnsweringDemo() {
   }
 
   return (
-    <View style={[styles.container, {marginTop: insets.top, marginBottom: insets.bottom}]}>
-      <TextInput style={[styles.item, styles.input]} placeholder="Text" placeholderTextColor="#CCC" multiline={true} value={text} onChangeText={setText} />
-      <TextInput style={[styles.item, styles.input]} placeholder="Question" placeholderTextColor="#CCC" value={question} onChangeText={setQuestion} />
+    <View
+      style={[
+        styles.container,
+        {marginTop: insets.top, marginBottom: insets.bottom},
+      ]}>
+      <TextInput
+        style={[styles.item, styles.input]}
+        placeholder="Text"
+        placeholderTextColor="#CCC"
+        multiline={true}
+        value={text}
+        onChangeText={setText}
+      />
+      <TextInput
+        style={[styles.item, styles.input]}
+        placeholder="Question"
+        placeholderTextColor="#CCC"
+        value={question}
+        onChangeText={setQuestion}
+      />
       <Button title="Ask" onPress={handleAsk} />
       <Text style={styles.item}>{answer}</Text>
     </View>
@@ -64,5 +81,5 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     color: '#000',
-  }
+  },
 });

@@ -22,7 +22,7 @@ function useLayoutEffectAsync(
       }
       await asyncFunction();
     })();
-    return function() {
+    return function () {
       isMounted = false;
     };
   }, deps);

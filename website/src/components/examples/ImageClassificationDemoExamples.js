@@ -14,7 +14,6 @@ import CodeBlock from '@theme/CodeBlock';
 
 function ImageClassificationDemoExamples() {}
 
-
 import V0Contents from '!!raw-loader!/static/examples/image-classification/ImageClassificationDemo.v0.tsx';
 
 import V1Contents from '!!raw-loader!/static/examples/image-classification/ImageClassificationDemo.v1.tsx';
@@ -50,71 +49,139 @@ import V8Contents from '!!raw-loader!/static/examples/image-classification/Image
 import V8DiffContents from '!!raw-loader!/static/examples/image-classification/ImageClassificationDemo.v8.tsx.diff';
 
 ImageClassificationDemoExamples.V0CodeBlock = function V0CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V0Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V0Contents}
+    </CodeBlock>
+  );
 };
 
 ImageClassificationDemoExamples.V1CodeBlock = function V1CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V1Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V1Contents}
+    </CodeBlock>
+  );
 };
 
 ImageClassificationDemoExamples.V1DiffBlock = function V1DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V1DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V1DiffContents}
+    </CodeBlock>
+  );
 };
 
 ImageClassificationDemoExamples.V2CodeBlock = function V2CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V2Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V2Contents}
+    </CodeBlock>
+  );
 };
 
 ImageClassificationDemoExamples.V2DiffBlock = function V2DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V2DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V2DiffContents}
+    </CodeBlock>
+  );
 };
 
 ImageClassificationDemoExamples.V3CodeBlock = function V3CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V3Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V3Contents}
+    </CodeBlock>
+  );
 };
 
 ImageClassificationDemoExamples.V3DiffBlock = function V3DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V3DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V3DiffContents}
+    </CodeBlock>
+  );
 };
 
 ImageClassificationDemoExamples.V4CodeBlock = function V4CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V4Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V4Contents}
+    </CodeBlock>
+  );
 };
 
 ImageClassificationDemoExamples.V4DiffBlock = function V4DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V4DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V4DiffContents}
+    </CodeBlock>
+  );
 };
 
 ImageClassificationDemoExamples.V5CodeBlock = function V5CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V5Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V5Contents}
+    </CodeBlock>
+  );
 };
 
 ImageClassificationDemoExamples.V5DiffBlock = function V5DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V5DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V5DiffContents}
+    </CodeBlock>
+  );
 };
 
 ImageClassificationDemoExamples.V6CodeBlock = function V6CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V6Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V6Contents}
+    </CodeBlock>
+  );
 };
 
 ImageClassificationDemoExamples.V6DiffBlock = function V6DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V6DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V6DiffContents}
+    </CodeBlock>
+  );
 };
 
 ImageClassificationDemoExamples.V7CodeBlock = function V7CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V7Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V7Contents}
+    </CodeBlock>
+  );
 };
 
 ImageClassificationDemoExamples.V7DiffBlock = function V7DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V7DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V7DiffContents}
+    </CodeBlock>
+  );
 };
 
 ImageClassificationDemoExamples.V8CodeBlock = function V8CodeBlock(props) {
-  return <CodeBlock {...props} className="language-tsx">{V8Contents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-tsx">
+      {V8Contents}
+    </CodeBlock>
+  );
 };
 
 ImageClassificationDemoExamples.V8DiffBlock = function V8DiffBlock(props) {
-  return <CodeBlock {...props} className="language-diff">{V8DiffContents}</CodeBlock>
+  return (
+    <CodeBlock {...props} className="language-diff">
+      {V8DiffContents}
+    </CodeBlock>
+  );
 };
 
 export default ImageClassificationDemoExamples;

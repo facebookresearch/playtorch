@@ -23,7 +23,7 @@ const FeatureList = [
     ),
     description: 'Get started now',
     to: '/docs/tutorials/get-started',
-    video: 'demo_mnist'
+    video: 'demo_mnist',
   },
   {
     title: (
@@ -31,7 +31,7 @@ const FeatureList = [
     ),
     description: 'View our tutorials',
     to: '/docs/tutorials/image-classification',
-    video: 'demo_ui'
+    video: 'demo_ui',
   },
   {
     title: (
@@ -39,7 +39,7 @@ const FeatureList = [
     ),
     description: 'Check out our API',
     to: '/docs/api/core',
-    video: 'demo_model'
+    video: 'demo_model',
   },
 ];
 
@@ -50,7 +50,13 @@ function Feature({title, description, video, to}) {
         <p className={styles.featureText}>{title}</p>
 
         <div className={styles.featureVideo}>
-          <DocVideo asset={video} style={{margin: 0}} autoPlay={true} loop={true} controls={false} />
+          <DocVideo
+            asset={video}
+            style={{margin: 0}}
+            autoPlay={true}
+            loop={true}
+            controls={false}
+          />
         </div>
 
         <Link className={styles.featureButton} to={to}>
@@ -70,7 +76,6 @@ export default function HomepageFeatures() {
             <Feature key={idx} {...props} />
           ))}
         </div>
-
       </div>
     </section>
   );

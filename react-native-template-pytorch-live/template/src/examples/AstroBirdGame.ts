@@ -7,7 +7,7 @@
  * @format
  */
 
- import {
+import {
   CanvasRenderingContext2D,
   Image,
   ImageUtil,

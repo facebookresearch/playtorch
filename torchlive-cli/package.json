@@ -1,6 +1,6 @@
 {
   "name": "torchlive-cli",
-  "version": "0.0.1",
+  "version": "0.0.0",
   "description": "PyTorch Live CLI",
   "main": "index.js",
   "license": "MIT",

@@ -17,7 +17,7 @@ module.exports = {
   title:
     'Easy to use set of tools to create on-device ML demos on Android and iOS. Unlock the vast potential of AI innovations.',
   url: 'https://pytorch.org/live',
-  baseUrl: '/',
+  baseUrl: '/live/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',

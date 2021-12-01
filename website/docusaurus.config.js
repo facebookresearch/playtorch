@@ -205,6 +205,8 @@ module.exports = {
   customFields: {
     discordUrl: 'https://discord.gg/sQkXTqEt33',
     githubUrl: 'https://github.com/pytorch/live/',
+    githubShowcaseUrl:
+      'https://github.com/pytorch/live/issues/new?assignees=&labels=Use%20Case&template=use_case.yml',
     twitterTagUrl: 'https://twitter.com/search?q=%23pytorchlive',
     stackoverflowTagUrl:
       'https://stackoverflow.com/questions/tagged/pytorchlive',

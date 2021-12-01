@@ -86,8 +86,9 @@ function Community() {
             <div className="col col--4">
               <Card title="{Your demo}">
                 This tile is reserved for you! Share your demos to be included
-                in this page by submitting a{' '}
-                <a href={customFields.githubUrl}>pull request on GitHub.</a>
+                in this page by{' '}
+                <a href={customFields.githubShowcaseUrl}>submitting an issue</a>{' '}
+                on Github.
               </Card>
             </div>
             <div className="col col--4">

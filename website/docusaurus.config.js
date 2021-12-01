@@ -16,13 +16,13 @@ const npm2yarn = require('@docusaurus/remark-plugin-npm2yarn');
 module.exports = {
   title:
     'Easy to use set of tools to create on-device ML demos on Android and iOS. Unlock the vast potential of AI innovations.',
-  url: 'https://facebookexperimental.github.io',
+  url: 'https://pytorch.org/live',
   baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
-  organizationName: 'facebookexperimental',
-  projectName: 'pytorch-live',
+  organizationName: 'pytorch',
+  projectName: 'live',
   themeConfig: {
     colorMode: {
       defaultMode: 'light',

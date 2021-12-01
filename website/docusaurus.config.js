@@ -15,7 +15,7 @@ const npm2yarn = require('@docusaurus/remark-plugin-npm2yarn');
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
   title:
-    'Share, discover and use machine learning models. Unlock the vast potential of AI innovations.',
+    'Easy to use set of tools to create on-device ML demos on Android and iOS. Unlock the vast potential of AI innovations.',
   url: 'https://facebookexperimental.github.io',
   baseUrl: '/',
   onBrokenLinks: 'throw',

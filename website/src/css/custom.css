@@ -91,28 +91,6 @@
   radial-gradient(ellipse 100% 60% at 70% 10%,#812CE5ff 0%, #812CE566 100%),
   radial-gradient(farthest-corner at 0% 70%,#E93B43ff 0%, #E93B43ff 30%, #E93B4300 100%),
   radial-gradient(farthest-corner at 100% 80%,#4A6BC7ff 0%, #4A6BC700 100%);
-
-  background-size: 125% 125%;
-
-  -webkit-animation: Animation 15s ease infinite;
-  -moz-animation: Animation 15s ease infinite;
-  animation: Animation 15s ease infinite;
-}
-
-@-webkit-keyframes Animation {
-  0%{background-position:10% 0%}
-  50%{background-position:90% 100%}
-  100%{background-position:10% 0%}
-}
-@-moz-keyframes Animation {
-  0%{background-position:10% 0%}
-  50%{background-position:90% 100%}
-  100%{background-position:10% 0%}
-}
-@keyframes Animation {
-  0%{background-position:10% 0%}
-  50%{background-position:90% 100%}
-  100%{background-position:10% 0%}
 }
 
 .main-wrapper.docs-wrapper {

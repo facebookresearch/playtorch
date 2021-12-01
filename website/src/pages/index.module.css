@@ -186,7 +186,7 @@ h1.title {
 }
 
 /* Mobile */
-@media only screen and (min-device-width: 375px) and (max-device-width: 812px) {
+@media only screen and (max-device-width: 812px) {
   .contentRow {
     flex-direction: column-reverse;
   }
@@ -217,7 +217,7 @@ h1.title {
   }
 
   h1.title {
-    font-size: 12vw;
+    font-size: 11vw;
   }
 
   .firstRow {

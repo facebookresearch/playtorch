@@ -124,10 +124,6 @@ ${NOBREAKSPACE_INTEDENTATION}`);
   }
 
   getPostInitMessage(): string {
-    let errorMessage = this.getPostInitScriptError();
-    if (errorMessage !== null) {
-      return errorMessage;
-    }
     return `Initialized ${this.getDescription()}
     ${NOBREAKSPACE_INTEDENTATION}
     ${chalk.green('Run instructions for Android')}:

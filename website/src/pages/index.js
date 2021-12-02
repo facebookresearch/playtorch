@@ -195,7 +195,7 @@ export default function Home() {
             video={secondPropVideo}
             button={secondPropButton}
             odd={false}
-            link="docs/tutorials/prepare-custom-model"
+            link="docs/api/core"
           />
 
           <Row

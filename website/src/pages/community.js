@@ -87,23 +87,28 @@ function Community() {
               <Card title="{Your demo}">
                 This tile is reserved for you! Share your demos to be included
                 in this page by{' '}
-                <a href={customFields.githubShowcaseUrl}>submitting an issue</a>{' '}
+                <a href="https://github.com/pytorch/live/issues/new?assignees=&labels=Use%20Case&template=use_case.yml">
+                  submitting an issue
+                </a>{' '}
                 on Github.
               </Card>
             </div>
             <div className="col col--4">
               <Card thumbnail="social_card1.jpg" title="Join the conversation">
                 Share with #pytorchlive on{' '}
-                <a href={customFields.twitterTagUrl}>Twitter</a> and{' '}
-                <a href={customFields.stackoverflowTagUrl}>Stack Overflow</a>.
-                Join our <a href={customFields.discordUrl}>Discord</a> community
-                to chat.
+                <a href="https://twitter.com/pytorchlive">Twitter</a> and{' '}
+                <a href="https://stackoverflow.com/questions/tagged/pytorchlive">
+                  Stack Overflow
+                </a>
+                . Join our <a href="https://discord.gg/sQkXTqEt33">Discord</a>{' '}
+                community to chat.
               </Card>
             </div>
             <div className="col col--4">
               <Card thumbnail="social_card2.jpg" title="Find us on Github">
                 File issues, send pull-requests, and check out the latest
-                features on <a href={customFields.githubUrl}>GitHub</a>.
+                features on{' '}
+                <a href="https://github.com/pytorch/live/">GitHub</a>.
               </Card>
             </div>
           </div>

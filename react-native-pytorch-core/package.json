@@ -44,7 +44,7 @@
   "bugs": {
     "url": "https://github.com/pytorch/live/issues"
   },
-  "homepage": "https://facebookexperimental.github.io/pytorch-live",
+  "homepage": "https://pytorch.org/live",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

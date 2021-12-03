@@ -4,6 +4,20 @@
 
 We are constantly looking for ways to improve PyTorch Live. If you have questions or feedback, please [file an issue on GitHub](https://github.com/pytorch/live/issues).
 
+## Metro
+
+### Q: How to fix `Error: error:0308010C:digital envelope routines::unsupported`?
+
+A: Metro can fail with Node.js version 17 (see screenshot for error). A fix for this issue is to use any of the LTS (long-term support) version of Node.js including 12, 14, and 16.
+
+![](/img/faq/node17-ossl-error.png "Screenshot of Node.js 17 OSSL error")
+
+:::note
+
+You can find more details on the issue in the Node.js GitHub repository reported in issue [#40455](https://github.com/nodejs/node/issues/40455).
+
+:::
+
 ## Android
 
 ### Q: What to do when the device shows the error `unable to load script from assets index.android.bundle`?

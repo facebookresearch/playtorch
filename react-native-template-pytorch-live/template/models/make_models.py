@@ -7,6 +7,7 @@ import tempfile
 import urllib
 import zipfile
 from pathlib import Path
+import platform
 
 import torch
 import torchvision
@@ -17,6 +18,8 @@ print(f"torch version {torch.__version__}")
 
 MODEL_EXTENSION = "ptl"
 
+if platform.processor() == 'arm' or platform.processor() == 'i386':
+    torch.backends.quantized.engine = 'qnnpack'
 
 def bundle_live_spec_and_export_model(name: str, model):
     optimized_model = optimize_for_mobile(model)

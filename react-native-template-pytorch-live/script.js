@@ -9,17 +9,29 @@
  */
 
 const execSync = require('child_process').execSync;
+const process = require('process');
+
+const makeModels = () => {
+  execSync('source ./venv/bin/activate && \
+              python3 -m pip install --upgrade pip && \
+              python3 -m pip install -r requirements.txt --no-cache-dir && \
+              python3 -W ignore make_models.py');
+}
+
+process.chdir('./models');
 
 switch (process.platform) {
   case 'darwin':
+    execSync('brew install python@3.9');
+    execSync('/usr/local/opt/python@3.9/bin/python3 -m venv ./venv');
+    makeModels();
+    break;
   case 'linux':
-    execSync(
-      'cd ./models && python3 -m venv ./venv 2> ./error.log \
-            && source ./venv/bin/activate 2> ./error.log \
-            && pip install --upgrade pip 2> ./error.log \
-            && pip install -r requirements.txt 2> ./error.log \
-            && python -W ignore make_models.py 2> ./error.log',
-    );
+    execSync('pip install virtualenv');
+    // TODO: Test with Linux
+    execSync('sudo apt-get install python3.9')
+    execSync('virtualenv --python=/usr/bin/python3.9 venv');
+    makeModels();
     break;
   case 'win32':
     // TODO: Implement

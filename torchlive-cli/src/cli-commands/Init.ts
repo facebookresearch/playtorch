@@ -124,6 +124,10 @@ ${NOBREAKSPACE_INTEDENTATION}`);
   }
 
   getPostInitMessage(): string {
+    let errorMessage = this.getPostInitScriptError();
+    if (errorMessage !== null) {
+      return errorMessage;
+    }
     return `Initialized ${this.getDescription()}
     ${NOBREAKSPACE_INTEDENTATION}
     ${chalk.green('Run instructions for Android')}:
@@ -149,7 +153,7 @@ ${NOBREAKSPACE_INTEDENTATION}`);
     try {
       if (fs.existsSync(`${this.name}/models/error.log`)) {
         const errorMessage = fs.readFileSync(errorLogPath).toString();
-        const prefix = `${chalk.yellowBright('Warning')} project "${
+        const prefix = `${chalk.redBright('Error')} project "${
           this.name
         }" is created but we ran into the following issues at generating example models: \n${NOBREAKSPACE_INTEDENTATION}\n`;
         const suffix = `\n${NOBREAKSPACE_INTEDENTATION}\nplease rerun

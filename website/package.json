@@ -17,9 +17,9 @@
     "write-translations": "docusaurus write-translations"
   },
   "dependencies": {
-    "@docusaurus/core": "2.0.0-beta.0",
-    "@docusaurus/preset-classic": "2.0.0-beta.0",
-    "@docusaurus/remark-plugin-npm2yarn": "^2.0.0-beta.0",
+    "@docusaurus/core": "2.0.0-beta.1",
+    "@docusaurus/preset-classic": "2.0.0-beta.1",
+    "@docusaurus/remark-plugin-npm2yarn": "^2.0.0-beta.1",
     "@mdx-js/react": "^1.6.21",
     "@svgr/webpack": "^5.5.0",
     "babel-plugin-transform-remove-imports": "^1.7.0",

@@ -16,7 +16,7 @@ const npm2yarn = require('@docusaurus/remark-plugin-npm2yarn');
 module.exports = {
   title:
     'Easy to use set of tools to create on-device ML demos on Android and iOS. Unlock the vast potential of AI innovations.',
-  url: 'https://pytorch.org/live',
+  url: 'https://pytorch.org',
   baseUrl: '/live/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',

@@ -23,6 +23,7 @@ module.exports = {
   favicon: 'img/favicon.ico',
   organizationName: 'pytorch',
   projectName: 'live',
+  trailingSlash: true,
   themeConfig: {
     colorMode: {
       defaultMode: 'light',

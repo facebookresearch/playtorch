@@ -34,6 +34,10 @@ const EXAMPLE_SPECS = [
     name: 'QuestionAnsweringDemo',
     pathTemplate: idx => `question-answering/QuestionAnsweringDemo.v${idx}.tsx`,
   },
+  {
+    name: 'TextClassificationDemo',
+    pathTemplate: idx => `text-classification/TextClassificationDemo.v${idx}.tsx`,
+  },
 ];
 
 // This class generates a JS component wrapping the diffs and code for a set of examples.
@@ -128,10 +132,10 @@ function importExamples() {
     );
     if (fs.existsSync(destDir)) {
       console.log(`  Removing directory ${destDir}`);
-      fs.rmSync(destDir, {recursive: true});
+      fs.rmSync(destDir, { recursive: true });
     }
     console.log(`  Making directory ${destDir}`);
-    fs.mkdirSync(destDir, {recursive: true});
+    fs.mkdirSync(destDir, { recursive: true });
 
     // Copy each example from 0..N, trimming the header comment out and
     // generating in-between diffs along the way, from 0->1, 1->2, etc.
@@ -148,9 +152,9 @@ function importExamples() {
       }
 
       console.log(`  Writing trimmed ${destPath}`);
-      const exampleContents = fs.readFileSync(sourcePath, {encoding: 'utf8'});
+      const exampleContents = fs.readFileSync(sourcePath, { encoding: 'utf8' });
       const trimmedExampleContents = trimExampleFileHeader(exampleContents);
-      fs.writeFileSync(destPath, trimmedExampleContents, {encoding: 'utf8'});
+      fs.writeFileSync(destPath, trimmedExampleContents, { encoding: 'utf8' });
       moduleBuilder.addCodeBlock(i, destPath);
 
       if (i > 0) {
@@ -159,10 +163,10 @@ function importExamples() {
         const diffResult = child_process.spawnSync(
           'diff',
           ['--unified', prevPath, destPath],
-          {encoding: 'utf8'},
+          { encoding: 'utf8' },
         );
         const trimmedDiffContents = trimDiffHeader(diffResult.stdout);
-        fs.writeFileSync(diffPath, trimmedDiffContents, {encoding: 'utf8'});
+        fs.writeFileSync(diffPath, trimmedDiffContents, { encoding: 'utf8' });
         moduleBuilder.addDiffBlock(i, diffPath);
       }
     }
@@ -174,11 +178,11 @@ function importExamples() {
 
     if (!fs.existsSync(moduleDir)) {
       console.log(`  Making directory ${moduleDir}`);
-      fs.mkdirSync(moduleDir, {recursive: true});
+      fs.mkdirSync(moduleDir, { recursive: true });
     }
 
     console.log(`  Writing React components to ${modulePath}`);
-    fs.writeFileSync(modulePath, moduleContents, {encoding: 'utf8'});
+    fs.writeFileSync(modulePath, moduleContents, { encoding: 'utf8' });
   }
 }
 

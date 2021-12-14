@@ -1,0 +1,98 @@
+name: NPM Publish Nightly
+
+on:
+  workflow_dispatch:
+  # The schedule will be enabled once the manual
+  # workflow dispatch works
+  # schedule:
+  #   # Every day at 12
+  #   - cron:  '0 12 * * *'
+
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    steps:
+      - id: calculate
+        name: Set env
+        run: |
+          export NIGHTLY_VERSION=$(echo "0.0.0-$(date +%m%d%Y-%H%M)-${GITHUB_SHA::9}")
+          echo "::set-output name=nightly_version::${NIGHTLY_VERSION}"
+    outputs:
+      nightly_version: ${{ steps.calculate.outputs.nightly_version }}
+
+  publish-npm-cli:
+    runs-on: ubuntu-latest
+    needs: [version]
+    defaults:
+      run:
+        working-directory: ./torchlive-cli
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+      - name: Update package.json version to "${{ needs.version.outputs.nightly_version }}"
+        run: npm version ${{ needs.version.outputs.nightly_version }}
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      - name: Test Build
+        run: yarn run build
+      - name: Unit Test
+        run: yarn run test
+      - name: Publish To NPM
+        run: npm publish --tag nightly
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-npm-core:
+    runs-on: ubuntu-latest
+    needs: [version]
+    defaults:
+      run:
+        working-directory: ./react-native-pytorch-core
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+      - name: Update package.json version to "${{ needs.version.outputs.nightly_version }}"
+        run: npm version ${{ needs.version.outputs.nightly_version }}
+      - name: Install Dependencies
+        run: yarn install --frozen-lockfile
+      - name: Publish To NPM
+        run: npm publish --tag nightly
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+  publish-npm-template:
+    runs-on: ubuntu-latest
+    needs: [version, publish-npm-core]
+    defaults:
+      run:
+        working-directory: ./react-native-template-pytorch-live
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+      - name: Remove postinstall script from package.json
+        run: echo $(cat package.json  | jq 'del(.scripts.postinstall)') > package.json
+        working-directory: ./react-native-template-pytorch-live/template
+      - name: Install template dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: ./react-native-template-pytorch-live/template
+      - name: Add latest react-native-pytorch-core package to dependencies
+        run: yarn add react-native-pytorch-core@${{ needs.version.outputs.nightly_version }}
+        working-directory: ./react-native-template-pytorch-live/template
+      - name: Clean template directory
+        run: git clean -f -x .
+        working-directory: ./react-native-template-pytorch-live/template
+      - name: Update package.json version to "${{ needs.version.outputs.nightly_version }}"
+        run: npm version ${{ needs.version.outputs.nightly_version }}
+      - name: Publish To NPM
+        run: npm publish --tag nightly
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

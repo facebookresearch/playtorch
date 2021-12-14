@@ -2,11 +2,9 @@ name: NPM Publish Nightly
 
 on:
   workflow_dispatch:
-  # The schedule will be enabled once the manual
-  # workflow dispatch works
-  # schedule:
-  #   # Every day at 12
-  #   - cron:  '0 12 * * *'
+  schedule:
+    # Every day at 12
+    - cron:  '0 12 * * *'
 
 jobs:
   version:

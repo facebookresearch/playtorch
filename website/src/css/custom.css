@@ -203,6 +203,18 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   margin: 0;
 }
 
+.menu__list-item:not(:first-child) {
+  margin: 0;
+}
+
+.menu__list-item > .menu__list {
+  margin-top: 0;
+}
+
+.menu__list-item:not(:last-child) > .menu__list {
+  border-bottom: none;
+}
+
 .menu__link {
   border-top: 1px solid var(--ifm-color-gray-200);
 }

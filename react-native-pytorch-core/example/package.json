@@ -6,7 +6,11 @@
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "start": "react-native start"
+    "start": "react-native start",
+    "e2e:android:build": "detox build -c android",
+    "e2e:android:test": "detox test -c android",
+    "e2e:ios:build": "detox build -c ios",
+    "e2e:ios:test": "detox test -c ios"
   },
   "dependencies": {
     "@react-navigation/native": "^5.9.4",
@@ -21,9 +25,13 @@
   "devDependencies": {
     "@babel/core": "^7.12.10",
     "@babel/runtime": "^7.12.5",
+    "@types/jest": "^27.0.3",
     "@types/react-native-vector-icons": "^6.4.7",
     "babel-plugin-module-resolver": "^4.0.0",
-    "metro-react-native-babel-preset": "^0.64.0"
+    "detox": "^19.3.0",
+    "jest": "^27.4.5",
+    "metro-react-native-babel-preset": "^0.64.0",
+    "ts-jest": "^27.1.2"
   },
   "resolutions": {
     "@types/react": "^17"

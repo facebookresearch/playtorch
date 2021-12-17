@@ -106,7 +106,7 @@ public class IValuePackerInstrumentedTest {
     final PackerContext packerContext = packer.newContext();
 
     final IValue result = packer.pack(params, packerContext);
-    final ReadableMap map = packer.unpack(result, packerContext);
+    final ReadableMap map = packer.unpack(result, new JavaOnlyMap(), packerContext);
     final ReadableArray image1Array = map.getArray("image1");
     final ReadableArray imageInfoArray = map.getArray("image_info");
     final ReadableArray shouldRunTrackArray = map.getArray("should_run_track");
@@ -148,7 +148,7 @@ public class IValuePackerInstrumentedTest {
     final IIValuePacker packer = MobileModelModule.getPacker(spec);
     final PackerContext packerContext = packer.newContext();
 
-    final ReadableMap map = packer.unpack(ivalue, packerContext);
+    final ReadableMap map = packer.unpack(ivalue, new JavaOnlyMap(), packerContext);
     final int unpack_n = map.getInt("n");
     final double[] unpack_bboxes = doubleArrayFromReadableArray(map.getArray("bboxes"));
     final double[] unpack_scores = doubleArrayFromReadableArray(map.getArray("scores"));
@@ -209,7 +209,8 @@ public class IValuePackerInstrumentedTest {
     map.put("start_logits", IValue.from(Tensor.fromBlob(startLogits, new long[] {1, n})));
     map.put("end_logits", IValue.from(Tensor.fromBlob(endLogits, new long[] {1, n})));
     packerContext.store("token_ids", tokenIds);
-    final ReadableMap output = packer.unpack(IValue.dictStringKeyFrom(map), packerContext);
+    final ReadableMap output =
+        packer.unpack(IValue.dictStringKeyFrom(map), new JavaOnlyMap(), packerContext);
     final String answer = output.getString("bert_answer");
     Assert.assertEquals(
         "[CLS] who was jim henson ? [SEP] jim henson was a puppeteer [SEP]", answer);
@@ -238,7 +239,10 @@ public class IValuePackerInstrumentedTest {
 
     PackerContext packerContext = packer.newContext();
     final ReadableMap map =
-        packer.unpack(IValue.from(Tensor.fromBlob(data, new long[] {1, 8})), packerContext);
+        packer.unpack(
+            IValue.from(Tensor.fromBlob(data, new long[] {1, 8})),
+            new JavaOnlyMap(),
+            packerContext);
 
     Assert.assertEquals("Umka is a white fluffy pillow.", map.getString("text"));
   }
@@ -290,7 +294,10 @@ public class IValuePackerInstrumentedTest {
     final long[] data = new long[] {37280, 4914, 318, 257, 2330, 39145, 28774, 13};
     PackerContext packerContext = packer.newContext();
     final ReadableMap map =
-        packer.unpack(IValue.from(Tensor.fromBlob(data, new long[] {1, 8})), packerContext);
+        packer.unpack(
+            IValue.from(Tensor.fromBlob(data, new long[] {1, 8})),
+            new JavaOnlyMap(),
+            packerContext);
 
     Assert.assertEquals("Umka is a white fluffy pillow.", map.getString("text"));
   }

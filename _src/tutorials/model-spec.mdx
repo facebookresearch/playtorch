@@ -1,0 +1,252 @@
+---
+id: model-spec
+sidebar_position: 5
+title: Model Specification
+---
+
+import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
+
+<div className="tutorial-page">
+
+Model specification specifies the structure of model input and output, allowing the use of prebuilt transformations.
+
+It is stored as [extra_file of the model](https://pytorch.org/docs/stable/generated/torch.jit.load.html#torch.jit.load) 'model/live.spec.json'.
+
+Example of model with specification preparation:
+
+```py title=make_model.py
+from pathlib import Path
+
+import torch
+import torchvision
+from torch.utils.mobile_optimizer import optimize_for_mobile
+
+model = torchvision.models.mobilenet_v3_small(pretrained=True)
+model.eval()
+script_model = torch.jit.script(model)
+script_model_opt = optimize_for_mobile(script_model)
+spec = Path("live.spec.json").read_text()
+extra_files = {}
+extra_files["model/live.spec.json"] = spec
+script_model_opt._save_for_lite_interpreter("model_with_spec.ptl", _extra_files=extra_files)
+```
+
+'model/live.spec.json' is a valid JSON file.
+Which contains `pack` and `unpack` objects and may contain other root objects that will be used by both pack (input preprocessing) and unpack (model output post processing) functionality.
+
+The JavaScript side calls the model to forward specifying a plain javascript object that contains `$key` members of predefined types (Image, double, integer, string).
+
+'model/live.spec.json' contains `"$key"` stubs that will be replaced with the values from the specified javascript object.
+
+Example:
+```json title=model/live.spec.json
+{
+ "pack": {
+   "type": "tuple",
+   "items": [
+     {
+       "type": "tensor_from_image",
+       "image": "image",
+       "transforms": [
+         {
+           "type": "image_to_image",
+           "name": "center_crop",
+           "width": "$cropWidth",
+           "height": "$cropHeight"
+         },
+         {
+           "type": "image_to_image",
+           "name": "scale",
+           "width": "$scaleWidth",
+           "height": "$scaleHeight"
+         },
+         {
+           "type": "image_to_tensor",
+           "name": "rgb_norm",
+           "mean": [0.0, 0.0, 0.0],
+           "std": [1.0, 1.0, 1.0]
+         }
+       ]
+     },
+     {
+       "type": "tensor",
+       "dtype": "float",
+       "sizes": [1, 3],
+       "items": [
+         "$scaleWidth",
+         "$scaleHeight",
+         "$scale"
+       ]
+     },
+     {
+       "type": "tensor",
+       "dtype": "float",
+       "sizes": [
+         1
+       ],
+       "items": [
+         "$should_run_track"
+       ]
+     },
+     {
+       "type": "tensor",
+       "dtype": "float",
+       "sizes": ["$rois_n", 4],
+       "items": "$rois"
+     }
+   ]
+ },
+ "unpack": {
+   "type": "tensor",
+   "dtype": "float",
+   "key": "scores"
+ }
+}
+```
+Respective JavaScript for this spec:
+```js
+const {
+  result: {scores: scores},
+  inferenceTime: time,
+} = await MobileModel.execute(modelInfo.model, {
+  image: image,
+  cropWidth: 448,
+  cropHeight: 448,
+  scaleWidth: 224,
+  scaleHeight: 224,
+  scale: 1.0,
+  rois_n: 3,
+  rois: [0, 0, 20, 20, 10, 10, 50, 50, 30, 30, 60, 60],
+  should_run_track: 0.0
+});
+```
+
+
+## Pack, Input preprocessing
+
+Specified by `pack` object. Which represents the structure of the model input (which is torchscript (python) object that may contain PyTorch Tensors and plain python types (scalars, arrays, lists). Every object in `pack` has a `type` field, other fields are specific to that `type`.
+
+### Types
+- `tuple`
+   - `items`: array of the tuple items
+- `scalar_bool`
+   - `value`: true or false
+- `scalar_long`
+   - `value`: long value
+- `scalar_double`
+   - `value`: double value
+- `tensor`
+   - `dtype`: data type of the tensor "float" or "long"
+   - `items`: array of tensor data of specified dtype
+- `tensor_from_image`
+   - `image`: js image object
+   - `transforms`: array of chained transformations on the input image, the type `ImageTransform`:
+- `tensor_from_string`
+   - `tokenizer`:
+       - `bert`:
+           Prepares tensor dtype=long of token ids using bert vocabulary from  `.vocabulary_bert` of spec json.
+       - `gpt2`:
+           Prepares tensor dtype=long of token ids using bert vocabulary from  `.vocabulary_gpt2` of spec json.
+
+
+### Type `ImageTransform`:
+- type: "image_to_image" or "image_to_tensor"
+- name: the name of transformation
+- additional parameters specific to the particular type and name
+
+`image_to_image` type:
+   - `name`: `center_crop`
+       Crops from the center part of the image with specified width and height.
+       parameters:
+       - `width`: width of the result cropped image
+       - `height`: width of the result cropped image
+   - `name`: `scale`
+       Scales input image to specified width and height.
+       parameters:
+       - `width`: width of the result scaled image
+       - `height`: height of the result scaled image
+
+`image_to_tensor` type:
+   - name: `rgb_norm`
+       The output is NCHW tensor from input image, normalized by specified mean and std.
+       parameters:
+       - `mean`: array of 3 float numbers with values of mean for normalization
+       - `std`: array of 3 float numbers with values of std for normalization
+
+## Unpack, Output post processing.
+
+The result of post processing is a plain javascript object (will call it output_jsmap further).
+
+`unpack` object is the recursive structure of objects of predefined `type`s.
+
+unpack type:
+   - `tuple`
+       - `items`: tuple items to unpack
+   - `list`
+       - `items`: list items to unpack
+   - `dict_string_key`
+       - `items`: tuple items to unpack
+   - `tensor`
+       - `key`: key of the array of specified data type that contains tensor items in NCHW format.
+       - `dtype`: data of the tensor "float" or "long"
+   - `scalar_long`:
+       - `key`: key of the long value in output_jsmap
+   - `scalar_float`:
+       - `key`: key of the double value in output_jsmap
+   - `scalar_bool`:
+       - `key`: key of the bool value in output_jsmap
+   - `string`:
+       - `key`: key of the string in output_jsmap
+   - `tensor_to_string`:
+       - `key`: key of the result string in output_jsmap
+       - `decoder`:
+           `gpt2`:
+               Expects tensor of long data type containing tokenIds. Decodes tokenIds using vocabulary in `.vocabulary_gpt2` in the spec.
+   - `bert_decode_qa_answer`:
+       - `key`: key of the result string in output_jsmap
+
+
+
+`.vocabulary_gpt2` expected json object containing `\"key\"=id`
+
+`.vocabulary_bert` expected string containing bert tokens separated with `\n`
+
+## Examples
+
+```json title=bert_qa.json
+{
+  "vocabulary_bert": "[PAD]\n[unused0]\n[unused1]\n[unused2]\n[unused3]\n[unused4]\n[unused5]\n...",
+  "pack": {
+    "type": "tensor_from_string",
+    "tokenizer": "bert",
+    "string": "$string",
+    "model_input_length": "$model_input_length"
+  },
+  "unpack": {
+    "type": "bert_decode_qa_answer",
+    "key": "bert_answer"
+  }
+}
+```
+
+```json title=gpt2.json
+{
+  "vocabulary_gpt2": { "!": 0, "\"": 1, "#": 2, "$": 3, "%": 4, "&": 5, ... ,"<|endoftext|>": 50256},
+  "pack": {
+    "type": "tensor_from_string",
+    "tokenizer": "gpt2",
+    "string": "$string"
+  },
+  "unpack": {
+    "type": "tensor_to_string",
+    "decoder": "gpt2",
+    "key": "text"
+  }
+}
+```
+
+## Give us feedback
+
+<SurveyLinkButton docTitle="Model Specification" />
+
+</div>

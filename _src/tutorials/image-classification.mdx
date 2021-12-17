@@ -1,0 +1,380 @@
+---
+id: image-classification
+sidebar_position: 2
+title: Image Classification
+---
+
+import ExampleDiffCodeTabs from '@site/src/components/ExampleDiffCodeTabs';
+import ImageClassificationDemoExamples from '@site/src/components/examples/ImageClassificationDemoExamples';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
+
+<div className="tutorial-page">
+
+### In this tutorial, you will build an app that can take pictures and classify objects in each image using an on-device image classification model.
+
+If you haven't installed the PyTorch Live CLI yet, please [follow this tutorial](./get-started.mdx) to get started.
+
+## Initialize New Project
+
+Let's start by initializing a new project `ImageClassificationTutorial` with the PyTorch Live CLI.
+
+```shell
+npx torchlive-cli init ImageClassificationTutorial
+```
+
+:::note
+
+The project init can take a few minutes depending on your internet connection and your computer.
+
+:::
+
+After completion, navigate to the `ImageClassificationTutorial` directory created by the `init` command.
+
+```shell
+cd ImageClassificationTutorial
+```
+
+### Run the project in the Android emulator or iOS Simulator
+
+The `run-android` and `run-ios` commands from the PyTorch Live CLI allow you to run the image classification project in the Android emulator or iOS Simulator.
+
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios-sim'},
+  ]}>
+  <TabItem value="android">
+
+  ```shell
+  npx torchlive-cli run-android
+  ```
+
+  The app will deploy and run on your physical Android device if it is connected to your computer via USB, and it is in developer mode. There are more details on that in the [Get Started tutorial](./get-started.mdx).
+
+  ![](/img/tutorial/image-classification/android/first-run.png "Screenshot of app after fresh init with CLI")
+
+  </TabItem>
+  <TabItem value="ios-sim">
+
+  ```shell
+  npx torchlive-cli run-ios
+  ```
+
+  ![](/img/tutorial/image-classification/ios/first-run.png "Screenshot of app after fresh init with CLI")
+
+  </TabItem>
+</Tabs>
+
+:::tip
+
+Keep the app open and running! Any code change will immediately be reflected after saving.
+
+:::
+
+## Image Classification Demo
+
+Let's get started with the UI for the image classification. Go ahead and start by copying the following code into the file `src/demos/MyDemos.tsx`:
+
+:::note
+
+The `MyDemos.tsx` already contains code. Replace the code with the code below.
+
+:::
+
+<ImageClassificationDemoExamples.V0CodeBlock title="src/demos/MyDemos.tsx" />
+
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios-sim'},
+  ]}>
+  <TabItem value="android">
+
+  ![](/img/tutorial/image-classification/android/image-classification-text.png "Screenshot of initial code with text component")
+
+  </TabItem>
+  <TabItem value="ios-sim">
+
+  ![](/img/tutorial/image-classification/ios/image-classification-text.png "Screenshot of initial code with text component")
+
+  </TabItem>
+</Tabs>
+
+:::tip
+
+The app starts with the "Examples" tab open. In order to see the changes you just made to the `MyDemos.tsx`, tap on the "My Demos" tab bar item at the bottom of the screen.
+
+:::
+
+### Style the component
+
+Great! Let's add some basic styling to the app UI. The styles will change the `View` component background to `#ffffff`, spans container view to maximum available width and height, centers components horizontally, and adds a padding of `20` pixels. The `Text` component will have a margin at the bottom to provide spacing between the text label and the `Camera` component that will be added in the next steps.
+
+<ExampleDiffCodeTabs>
+  <ImageClassificationDemoExamples.V1DiffBlock />
+  <ImageClassificationDemoExamples.V1CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
+
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios-sim'},
+  ]}>
+  <TabItem value="android">
+
+  ![](/img/tutorial/image-classification/android/simple-styles.png "Screenshot after applying simple component styles")
+
+  </TabItem>
+  <TabItem value="ios-sim">
+
+  ![](/img/tutorial/image-classification/ios/simple-styles.png "Screenshot after applying simple component styles")
+
+  </TabItem>
+</Tabs>
+
+### Add camera component
+
+Next, let's add a `Camera` component to take pictures that can be used later for the ML model inference to classify what object is in the picture. The camera will also get a basic style to fill the remaining space in the container.
+
+<ExampleDiffCodeTabs>
+  <ImageClassificationDemoExamples.V2DiffBlock />
+  <ImageClassificationDemoExamples.V2CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
+
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios-sim'},
+    {label: 'iOS', value: 'ios'},
+  ]}>
+  <TabItem value="android">
+
+  ![](/img/tutorial/image-classification/android/camera.png "Screenshot with camera component")
+
+  </TabItem>
+  <TabItem value="ios-sim">
+
+  In order to get the camera to work on iOS, you'll have to run the app on a physical iOS device. For more details, please check out the [Running On Device docs on the React Native website](https://reactnative.dev/docs/running-on-device).
+
+  ![](/img/tutorial/image-classification/ios/camera-sim.png "Screenshot showing camera not available on iOS Simulator")
+
+  </TabItem>
+  <TabItem value="ios">
+
+  In order to get the camera to work on iOS, you'll have to run the app on a physical iOS device. For more details, please check out the [Running On Device docs on the React Native website](https://reactnative.dev/docs/running-on-device).
+
+  Open the ImageClassificationTutorial Xcode workspace to run the project on a physical iOS device.
+
+  ```shell
+  open ios/ImageClassificationTutorial.xcworkspace
+  ```
+
+  Run app on physical device.
+
+  ![](/img/tutorial/image-classification/ios/camera.png "Screenshot with camera component")
+
+  </TabItem>
+</Tabs>
+
+### Add capture callback to camera
+
+To receive an image whenever the camera capture button is pressed, we add an async `handleImage` function and set it for the `onCapture` property of the `Camera` component. This `handleImage` function will be called with an image from the camera when the capture button is pressed.
+
+As a first step, let's log image to the console.
+
+:::caution
+
+The `image.release()` function call is important to release the memory allocated for the image object. This is a vital step to make sure we don't run out of memory on images we no longer need.
+
+:::
+
+<ExampleDiffCodeTabs>
+  <ImageClassificationDemoExamples.V3DiffBlock />
+  <ImageClassificationDemoExamples.V3CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
+
+Click on camera capture button and check logged output in terminal. It will log a JavaScript representation of the image to the console every time you click the capture button.
+
+![](/img/tutorial/image-classification/metro-console-log.png)
+
+### Run model inference
+
+Fantastic! Now let's use the image and run inference on a captured image.
+
+We'll require the MobileNet V3 (small) model and add the `ImageClassificationResult` type for type-safety. Then, we call the `execute` function on the `MobileModel` object with the model as first argument and an object with the image as second argument.
+
+Don't forget the `await` keyword for the `MobileModel.execute` function call!
+
+Last, let's log the inference result to the console.
+
+<ExampleDiffCodeTabs>
+  <ImageClassificationDemoExamples.V4DiffBlock />
+  <ImageClassificationDemoExamples.V4CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
+
+![](/img/tutorial/image-classification/metro-console-log-inference-result.png)
+
+The logged inference result is a JavaScript object containing the inference result including the `maxIdx` (argmax result) mapping to the top class detected in the image, a confidence value for this class to be correct, and inference metrics (i.e., inference time, pack time, unpack time, and total time).
+
+### Get top image class
+
+Ok! So, we have an `maxIdx` number as inference result (i.e., `673`). It's not sensible to show a `maxIdx` to the user, so let's get label for the top class. For this, we need to import the image classes for this model, which is the `MobileNetV3Classes` JSON file containing an array of 1000 class labels. The `maxIdx` maps to a label representing the top class.
+
+Here, we require the JSON file into the `ImageClasses` variable and use `ImageClasses` to retrieve the label for the top class using the `maxIdx` returned from the inference.
+
+Let's see what the `maxIdx` `673` resolves into by logging the `topClass` label to the console!
+
+<ExampleDiffCodeTabs>
+  <ImageClassificationDemoExamples.V5DiffBlock />
+  <ImageClassificationDemoExamples.V5CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
+
+![](/img/tutorial/image-classification/metro-resolved-top-class.png)
+
+It looks like the model classified the image as `mouse, computer mouse`. The next section will reveal if this is correct!
+
+### Show top image class
+
+Instead of having the end-user looking at a console log, we will render the top image class in the app. We'll add a state for the `objectClass` using a React Hook, and when a class is detected, we'll set the top class as object class using the `setObjectClass` function.
+
+The user interface will automatically re-render whenever the `setObjectClass` function is called with a new value, so you don't have to worry about calling anything else besides this function. On re-render, the `objectClass` variable will have this new value, so we can use it to render it on the screen.
+
+:::note
+
+The `React.useState` is a React Hook. Hooks allow React function components, like our `ImageClassificationTutorial` function component, to remember things.
+
+For more information on [React Hooks](https://reactjs.org/docs/hooks-intro.html), head over to the React docs where you can read or watch explanations.
+
+:::
+
+<ExampleDiffCodeTabs>
+  <ImageClassificationDemoExamples.V6DiffBlock />
+  <ImageClassificationDemoExamples.V6CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
+
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS', value: 'ios'},
+  ]}>
+  <TabItem value="android">
+
+  ![](/img/tutorial/image-classification/android/captured-object.png "Screenshot for showing the label of the captured object")
+
+  </TabItem>
+  <TabItem value="ios">
+
+  ![](/img/tutorial/image-classification/ios/captured-object.png "Screenshot for showing the label of the captured object")
+
+  </TabItem>
+</Tabs>
+
+It looks like the model correctly classified the object in the image as a `mouse, computer mouse`!
+
+### Confidence threshold
+
+Nice! The model will return a top class for what it thinks is in the image. However, it's not always 100% confident about each classification, and therefore returns a `confidence` value as part of the result. To see what the `metrics` looks like, have a look at the step where we logged the `inferenceResult` to the console!
+
+Let's use this confidence value as a threshold, and only show top classes where the model has a confidence higher than `0.3` (the confidence range is [0, 1]).
+
+<ExampleDiffCodeTabs>
+  <ImageClassificationDemoExamples.V7DiffBlock />
+  <ImageClassificationDemoExamples.V7CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
+
+### Frame-by-Frame image processing
+
+As a bonus, you can change the `onCapture` property to the `onFrame` property to do a frame-by-frame image classification, so you don't have to repeatedly press the capture button, and you can roam the phone around your place to see what the model can detect correctly.
+
+:::note
+
+Known problem: If the images aren't immediately processed frame by frame, flip the camera twice.
+
+:::
+
+<ExampleDiffCodeTabs>
+  <ImageClassificationDemoExamples.V8DiffBlock />
+  <ImageClassificationDemoExamples.V8CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
+
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS', value: 'ios'},
+  ]}>
+  <TabItem value="android">
+
+  ![](/img/tutorial/image-classification/android/frame-by-frame.gif "Screenshot for showing the label of the captured object")
+
+  </TabItem>
+  <TabItem value="ios">
+
+  ![](/img/tutorial/image-classification/ios/frame-by-frame.gif "Screenshot for showing the label of the captured object")
+
+  </TabItem>
+</Tabs>
+
+Congratulations! You finished your first PyTorch Live tutorial.
+
+## Next steps
+
+PyTorch Live comes with three image classification models that are ready to use. In the example code provided in this tutorial, we use `mobilenet_v3_small.ptl` for inference, but feel free to try out the others by replacing the `model` with code from the tabbed viewer below.
+
+<Tabs
+  defaultValue="mobilenet-v3-small"
+  values={[
+    {label: 'MobileNet v3 Small', value: 'mobilenet-v3-small'},
+    {label: 'MobileNet v3 Large', value: 'mobilenet-v3-large'},
+    {label: 'ResNet-18', value: 'resnet18'},
+  ]}
+>
+  <TabItem value="mobilenet-v3-small">
+
+  ```tsx
+  const model = require('../../models/mobilenet_v3_small.ptl');
+  ```
+
+  </TabItem>
+  <TabItem value="mobilenet-v3-large">
+
+  ```tsx
+  const model = require('../../models/mobilenet_v3_large.ptl');
+  ```
+
+  </TabItem>
+  <TabItem value="resnet18">
+
+  ```tsx
+  const model = require('../../models/resnet18.ptl');
+  ```
+
+  </TabItem>
+</Tabs>
+
+### Challenge
+
+Rank the models from slowest to fastest!
+
+:::tip
+
+Log the `metrics` from the inference result to the console or render it on the screen!
+
+:::
+
+## Use custom image classification model
+
+You can follow the [Prepare Custom Model](./prepare-custom-model.mdx) tutorial to prepare your own classification model that you can plug into the demo code provided here.
+
+## Give us feedback
+
+<SurveyLinkButton docTitle="Image Classification" />
+
+</div>

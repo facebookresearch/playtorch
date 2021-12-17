@@ -1,0 +1,204 @@
+---
+id: get-started
+sidebar_position: 1
+title: Get Started
+---
+
+import {FbInternalOnly} from 'internaldocs-fb-helpers';
+import AppleM1Note from './snippets/_apple-m1-note.mdx';
+import BrewIssues from './fb/_brew-issues.mdx';
+import ChangedNPMRegistry from './fb/_changed-npm-registry.mdx';
+import DocVideo from '@site/src/components/DocVideo';
+import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
+import WhereToRun from './fb/_where-to-run.mdx';
+
+<div className="tutorial-page">
+
+### In this tutorial, we will install the tools, set up the build environment, create your first PyTorch Live project and see it running in an emulator or your phone.
+
+PyTorch Live's command line tool `torchlive-cli` will automate most of the setup process. Here's a sneak peek of the PyTorch Live app when the setup is complete:
+
+<DocVideo asset="demo" poster="poster_demo.jpg" />
+
+Let's get started!
+
+<FbInternalOnly>
+
+<WhereToRun />
+
+</FbInternalOnly>
+
+## Prerequisites
+
+* **Our beta release only supports MacOS**. Windows and Linux supports are coming soon. However, you can [follow the manual installation instructions to get started on Windows and Linux](./get-started-manually.mdx).
+* **Node.js**: If you don't have it already, you can download Node.js LTS [from its website](https://nodejs.org/) or install via [Homebrew](https://formulae.brew.sh/formula/node) (ie, `brew install node`).
+  * Note that [Node.js version 17 can cause issues](./faq.mdx#q-how-to-fix-error-error0308010cdigital-envelope-routinesunsupported), so it is recommended to use any of the LTS versions 12, 14, or 16.
+* **Xcode**: If you want to run the app on an iOS simulator or a physical iOS device, you need to install Xcode from the Apple App Store on your macOS device. PyTorch Live currently supports Xcode version 12.5 or later.
+
+## Installation
+
+Setting up the build environment can be tedious and difficult. PyTorch Live provides a setup routine to install the required dependencies automatically for you. It will try to install the following libraries and tools:
+
+* [Homebrew](https://brew.sh/)
+* [OpenJDK](https://formulae.brew.sh/formula/openjdk@8)
+* [Yarn](https://classic.yarnpkg.com/)
+* [Watchman](https://facebook.github.io/watchman/)
+* [Android Command Line Tools](https://developer.android.com/studio)
+  * Android SDK
+  * Android SDK Manager
+  * Android Virtual Device Manager
+  * Android Emulator
+* [CocoaPods](https://cocoapods.org/)
+
+<AppleM1Note />
+
+Here's what you will see during the automatic setup process:
+
+<DocVideo asset="install" poster="poster_install.jpg" />
+
+:::note
+
+Check out the [manual installation process](./get-started-manually.mdx) if your operating system is Windows or Linux or if the PyTorch Live command line tool `torchlive-cli` fails for you!
+
+:::
+
+Now let's run this **setup-dev** command and get the build environment ready for development:
+
+```shell
+❯ npx torchlive-cli setup-dev
+```
+
+<FbInternalOnly>
+
+<ChangedNPMRegistry />
+
+</FbInternalOnly>
+
+:::note
+
+You will need administrator access (using `sudo`) to run this command.  It may take 20 minutes to complete, depending on your laptop configurations.
+
+You only need to run this **once** to install the dependencies. No need to run this again to start a new project.
+
+:::
+
+### Check installations
+
+If everything goes well, the terminal will looks similar to the following output. If you run into any issues, please check the [FAQ](./faq.mdx).
+
+```shell title="Expected output"
+❯ npx torchlive-cli setup-dev
+  _                 _     _ _
+ | |_ ___  _ __ ___| |__ | (_)_   _____
+ | __/ _ \| '__/ __| '_ \| | \ \ / / _ \
+ | || (_) | | | (__| | | | | |\ V /  __/
+  \__\___/|_|  \___|_| |_|_|_| \_/ \___|
+
+torchlive version 0.0.2-alpha.5
+Password:
+↓ Homebrew (3.1.7) [SKIPPED]
+✔ OpenJDK (1.8.0)
+✔ Watchman (4.9.0)
+↓ Node (16.1.0) [SKIPPED]
+✔ Yarn (1.22.10)
+✔ Android SDK
+✔ Android SDK Manager
+✔ Android Emulator
+✔ Android Emulator Skin
+```
+
+### Check Python version
+
+Currently, `python3` is required to bootstrap PyTorch Mobile models used in the example app. In macOS Catalina and Big Sur, `python3` is pre-installed. Run the following command to check if python3 is installed:
+
+
+```shell
+❯ python3 --version
+Python 3.9.4
+```
+
+:::note
+
+The version installed on your machine might be slightly different, but should at least be version `3.7` or above.
+
+:::
+
+
+If `python3` is not installed, you can install it via Homebrew on macOS:
+
+```shell
+brew install python3
+```
+
+## Create a New Project
+
+Now that we have set up the build environment, let's create a new PyTorch Live project and see it running in an emulator or on your device. It's as simple as running two commands using the `torchlive-cli` tool.
+
+### Initialize Your Project
+
+For PyTorch Live beta, we provide a bootstrap React Native app, packed with AI demos and practical examples. Use the `npx torchlive-cli init` command to initialize your first PyTorch Live project.
+
+```shell
+npx torchlive-cli init MyFirstProject
+```
+<FbInternalOnly>
+
+<BrewIssues />
+
+</FbInternalOnly>
+
+Behind the scene, the tool created a new React Native project and configured the build tools for mobile development. It also added a couple on-device AI models as well as examples to run them.
+
+This is what you should see after the project is initialized:
+
+```shell title="Expected output"
+❯ npx torchlive-cli init MyFirstProject
+  _                 _     _ _
+ | |_ ___  _ __ ___| |__ | (_)_   _____
+ | __/ _ \| '__/ __| '_ \| | \ \ / / _ \
+ | || (_) | | | (__| | | | | |\ V /  __/
+  \__\___/|_|  \___|_| |_|_|_| \_/ \___|
+
+torchlive version 0.0.2-alpha.5
+✔ project MyFirstProject
+
+```
+
+
+
+### Run Your Project
+
+We are almost there. Now let's navigate to the newly created PyTorch Live project folder:
+
+```shell
+cd MyFirstProject
+```
+
+And run the PyTorch Live project on Android:
+
+```shell
+npx torchlive-cli run-android
+```
+
+By default, the PyTorch Live app will run in an emulator. You can also run it on your own phone which may improve performance. To see it on your phone, plug it into your computer and enable Android's developer mode.
+
+:::note
+On Android 4.1 and lower, the Developer options screen is available by default. On Android 4.2 and higher, you must enable this screen. To enable developer options, go to **Settings > Developer options** and tap the **Build Number** option 7 times.
+
+More details are on the Android [configure on-device developer options](https://developer.android.com/studio/debug/dev-options).
+:::
+
+
+### Welcome to PyTorch Live
+
+Start by trying out the various **Examples** in the app. When you are ready to experiment, take a look at the **Toolbox** demos and follow along with a tutorial: [recognizing objects in photographs](./image-classification.mdx) or [answering questions about some text](./question-answering.mdx).
+
+PyTorch Live is in beta. Your feedback will help us improve tremendously. Please file issues and share ideas on GitHub.
+
+Show us what you've made with PyTorch Live by tagging #pytorchlive in your social media posts too.
+
+## Give us feedback
+
+<SurveyLinkButton docTitle="Get Started" />
+
+</div>

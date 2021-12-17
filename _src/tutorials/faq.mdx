@@ -1,0 +1,54 @@
+---
+id: faq
+title: Frequently Asked Questions
+---
+
+<div className="tutorial-page">
+
+We are constantly looking for ways to improve PyTorch Live. If you have questions or feedback, please [file an issue on GitHub](https://github.com/pytorch/live/issues).
+
+## Metro
+
+### Q: How to fix `Error: error:0308010C:digital envelope routines::unsupported`?
+
+A: Metro can fail with Node.js version 17 (see screenshot for error). A fix for this issue is to use any of the LTS (long-term support) version of Node.js including 12, 14, and 16.
+
+![](/img/faq/node17-ossl-error.png "Screenshot of Node.js 17 OSSL error")
+
+:::note
+
+You can find more details on the issue in the Node.js GitHub repository reported in issue [#40455](https://github.com/nodejs/node/issues/40455).
+
+:::
+
+## Android
+
+### Q: What to do when the device shows the error `unable to load script from assets index.android.bundle`?
+
+A: If You are running your application on physical device and getting this error, try running the `adb reverse` command:
+
+```
+adb reverse tcp:8081 tcp:8081
+```
+
+The `adb reverse` allows loading the JavaScript bundle from the Metro bundler when in development mode using a physical device.
+
+:::tip
+
+Android Debug Bridge (adb) is a versatile command-line tool that lets you communicate with a device. The adb command facilitates a variety of device actions, such as installing and debugging apps, and it provides access to a Unix shell that you can use to run a variety of commands on a device.
+
+Source: https://developer.android.com/studio/command-line/adb
+
+:::
+
+## Mobile Models
+
+### Q: Is it possible to secure a model that will be downloaded into PyTorch Live?
+
+A: PyTorch does not provide security at the model-level. Most mobile platforms such as iOS and Android cannot guarantee secure transmission and storage of ML models as hardware-level security is unavailable to the apps.
+
+If security of ML model is desired then you may get close by turning off debugging and backup in the app manifest for Android. If you do this then the data stored in your local app data directory cannot be extracted without rooting the device.
+
+Another possibility is to encrypt the model and store the encrypted model in the underlying platform-provided secure location. This will likely increase latency and may impact other metrics that your app may care about. You may want to consider securing the ML model using any mechanism that you use for securing other valuable assets in use by the app.
+
+</div>

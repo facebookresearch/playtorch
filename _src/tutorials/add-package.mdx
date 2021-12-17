@@ -1,0 +1,123 @@
+---
+id: add-package
+sidebar_position: 3
+title: Add Package to Existing App
+---
+
+import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
+
+<div className="tutorial-page">
+
+### In this tutorial, you will learn how to add the PyTorch Live core package to an existing React Native project.
+
+If you have an existing React Native project and you want to add ML capabilities, you can add the `react-native-pytorch-core` package. This package includes all code needed to run ML inference, the `Canvas`, `Camera`, and the `ImageUtils`.
+
+## Installation
+
+```shell
+yarn add react-native-pytorch-core
+```
+
+On iOS you are done, but Android requires the following additional steps for the `react-native-pytorch-core` package to work.
+
+### Additional Assets for Metro
+
+If the PyTorch Mobile models are part of the React Native bundle, the Metro configuration needs to be changed to resolve the `ptl` files.
+
+:::note
+
+This is only required if models are loaded from the bundle using `require('./path/to/model.ptl')`. It is not required if models are loaded from the local file system or via a URL.
+
+:::
+
+```javascript title="metro.config.js"
+// get defaults assetExts array
+const defaultAssetExts = require('metro-config/src/defaults/defaults')
+  .assetExts;
+
+module.exports = {
+  // ...
+
+  resolver: {
+    assetExts: [...defaultAssetExts, 'ptl'],
+  },
+
+  // ...
+};
+
+```
+
+### Additional steps on Android
+
+For the `react-native-pytorch-core` React Native package to work on Android, it requires three changes to the `gradle.properties` and the two `build.gradle` files to increase JVM memory, add Sonatype repository, and packaging options with pick first rule.
+
+#### Increase JVM Memory
+
+Increase the memory for the JVM to avoid OutOfMemory exceptions during the packaging process.
+
+```shell title="./android/gradle.properties"
+org.gradle.jvmargs=-Xmx4g
+```
+
+Without the increased memory, the packaging process might fail with the following error:
+
+```
+* What went wrong:
+Execution failed for task ':app:packageDebug'.
+> A failure occurred while executing com.android.build.gradle.tasks.PackageAndroidArtifact$IncrementalSplitterRunnable
+   > java.lang.OutOfMemoryError (no error message)
+```
+
+#### Sonatype Repository
+
+The PyTorch Mobile for Android dependencies are in the Sonatype repository. Add the repository url to the `allprojects > repositories`.
+
+```shell title="./android/build.gradle"
+allprojects {
+    repositories {
+        // ...
+
+        maven {
+          url("https://oss.sonatype.org/content/repositories/snapshots")
+        }
+
+        // ...
+    }
+}
+```
+
+#### Packaging Options
+
+Add `pickFirst` rule to `packagingOptions`. This is required because both React Native and PyTorch Mobile for Android use `fbjni`. This rule will pick the first shared object (dynamic) library.
+
+:::note
+
+The comment for the `packagingOptions` shows the error that will show if `pickFirst` is not set.
+
+:::
+
+```shell title="./android/app/build.gradle"
+android {
+    // ...
+
+    /**
+     * Without the packaging options, it will result in the following build error:
+     *
+     * * What went wrong:
+     * Execution failed for task ':app:mergeDebugNativeLibs'.
+     * > A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
+     *    > More than one file was found with OS independent path 'lib/x86/libfbjni.so'
+     */
+    packagingOptions {
+        pickFirst '**/*.so'
+    }
+
+    // ...
+}
+```
+
+## Give us feedback
+
+<SurveyLinkButton docTitle="Add Package to Existing App" />
+
+</div>

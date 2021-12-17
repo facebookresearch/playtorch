@@ -1,0 +1,202 @@
+---
+id: get-started-manually
+sidebar_position: 2
+title: Get Started Manually
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+import {FbInternalOnly} from 'internaldocs-fb-helpers';
+import AppleM1Note from './snippets/_apple-m1-note.mdx';
+import DevelopmentDependencies from './snippets/_development-dependencies.mdx';
+import DocVideo from '@site/src/components/DocVideo';
+import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
+import WhereToRun from './fb/_where-to-run.mdx';
+
+<div className="tutorial-page">
+
+### In this tutorial, you will manually set up the build environment, create your first PyTorch Live project, and run it in an emulator or on your phone.
+
+If you ended up here, your operating system is either Windows or Linux, or the PyTorch Live command line tool `torchlive-cli` failed for you. No worries, we have prepared manual steps for you to get started with PyTorch Live!
+
+<FbInternalOnly>
+
+<WhereToRun />
+
+</FbInternalOnly>
+
+## Installation
+
+PyTorch Live is powered by [PyTorch Mobile](https://pytorch.org/mobile) and [React Native](https://reactnative.dev/). Both are active and flourishing open source projects and require the following dependencies:
+
+<DevelopmentDependencies />
+
+<AppleM1Note />
+
+As a first step, let's follow their installation instructions to set up the development environment for Android and iOS.
+
+### Set up the PyTorch
+
+PyTorch Live uses `python3` to export PyTorch models for the PyTorch Mobile runtime. The export is part of each PyTorch Live app project initialization (see later steps). Run the following command to check if python3 is installed:
+
+
+```shell
+❯ python3 --version
+Python 3.9.4
+```
+
+:::note
+
+The version installed on your machine might be slightly different, but should at least be version `3.7` or above.
+
+:::
+
+
+If `python3` is not installed, you can download Python from the [python.org website](https://python.org), or install it via Chocolatey (Windows), apt (Linux), or Homebrew (macOS).
+
+<Tabs
+  defaultValue="chocolatey"
+  values={[
+    {label: 'Chocolatey', value: 'chocolatey'},
+    {label: 'Apt', value: 'apt'},
+    {label: 'Homebrew', value: 'homebrew'},
+  ]}>
+  <TabItem value="chocolatey">
+
+  ```shell
+  choco install python3
+  ```
+
+  </TabItem>
+  <TabItem value="apt">
+
+  ```shell
+  apt install python3
+  ```
+
+  </TabItem>
+  <TabItem value="homebrew">
+
+  ```shell
+  brew install python3
+  ```
+
+  </TabItem>
+</Tabs>
+
+### Set up the React Native development environment
+
+The React Native website has a very detailed step by step guide to install React Native on macOS, Windows, and Linux and for each of the two target OS Android and iOS.
+
+Follow their installation instructions on: https://reactnative.dev/docs/environment-setup
+
+## Create a New Project
+
+Now that we have set up the build environment, let's create a new PyTorch Live project and run it in an emulator or on your device.
+
+### Initialize Your Project
+
+For PyTorch Live beta, we provide a React Native app template, packed with AI demos and practical examples. Use the `npx react-native init` command to initialize your first PyTorch Live project.
+
+```shell
+npx react-native init MyFirstProject --template react-native-template-pytorch-live
+```
+
+Behind the scenes, the tool created a new React Native project and configured the build tools for mobile development. The project contains on-device AI models and interactive examples that use them.
+
+This is what you should see after the project is initialized:
+
+```shell title="Expected output"
+❯ npx react-native init MyFirstProject --template react-native-template-pytorch-live
+npx: installed 637 in 16.171s
+
+               ######                ######
+             ###     ####        ####     ###
+            ##          ###    ###          ##
+            ##             ####             ##
+            ##             ####             ##
+            ##           ##    ##           ##
+            ##         ###      ###         ##
+             ##  ########################  ##
+          ######    ###            ###    ######
+      ###     ##    ##              ##    ##     ###
+   ###         ## ###      ####      ### ##         ###
+  ##           ####      ########      ####           ##
+ ##             ###     ##########     ###             ##
+  ##           ####      ########      ####           ##
+   ###         ## ###      ####      ### ##         ###
+      ###     ##    ##              ##    ##     ###
+          ######    ###            ###    ######
+             ##  ########################  ##
+            ##         ###      ###         ##
+            ##           ##    ##           ##
+            ##             ####             ##
+            ##             ####             ##
+            ##          ###    ###          ##
+             ###     ####        ####     ###
+               ######                ######
+
+
+                  Welcome to React Native!
+                 Learn once, write anywhere
+
+✔ Downloading template
+✔ Copying template
+✔ Processing template
+✔ Executing post init script
+✔ Installing CocoaPods dependencies (this may take a few minutes)
+
+
+  Run instructions for Android:
+    • Have an Android emulator running (quickest way to get started), or a device connected.
+    • cd "/Users/raedle/Projects/MyFirstProject" && npx react-native run-android
+
+  Run instructions for iOS:
+    • cd "/Users/raedle/Projects/MyFirstProject" && npx react-native run-ios
+    - or -
+    • Open MyFirstProject/ios/MyFirstProject.xcworkspace in Xcode or run "xed -b ios"
+    • Hit the Run button
+
+  Run instructions for macOS:
+    • See https://aka.ms/ReactNativeGuideMacOS for the latest up-to-date instructions.
+```
+
+### Run Your Project
+
+We are almost there. Now let's navigate to the newly created PyTorch Live project folder:
+
+```shell
+cd MyFirstProject
+```
+
+And run the PyTorch Live project on Android:
+
+```shell
+npx react-native run-android
+```
+
+By default, the PyTorch Live app will run in an emulator. You can also run it on your own phone which may improve performance. To run it on your phone, connect your phone to your computer and enable Android's developer mode.
+
+:::note
+On Android 4.1 and lower, the Developer options screen is available by default. On Android 4.2 and higher, you must enable this screen. To enable developer options, go to **Settings > Developer options** and tap the **Build Number** option 7 times.
+
+More details are on the Android [configure on-device developer options](https://developer.android.com/studio/debug/dev-options).
+:::
+
+
+### Welcome to PyTorch Live
+
+Start by trying out the various **Examples** in the app. When you are ready to experiment, take a look at the **Toolbox** demos and follow along with a tutorial: [recognizing objects in photographs](./image-classification.mdx) or [answering questions about some text](./question-answering.mdx).
+
+<DocVideo asset="demo" />
+
+PyTorch Live is in beta. Your feedback will help us improve tremendously. Please file issues and share ideas on GitHub.
+
+Show us what you've made with PyTorch Live by tagging #pytorchlive in your social media posts.
+
+## Give us feedback
+
+<SurveyLinkButton docTitle="Get Started Manually" />
+
+</div>

@@ -1,0 +1,279 @@
+---
+id: question-answering
+sidebar_position: 3
+title: Question Answering
+---
+
+import ExampleDiffCodeTabs from '@site/src/components/ExampleDiffCodeTabs';
+import QuestionAnsweringDemoExamples from '@site/src/components/examples/QuestionAnsweringDemoExamples';
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
+
+<div className="tutorial-page">
+
+### In this tutorial, you will integrate an on-device NLP (Natural Language Processing) model that can answer questions about a short paragraph of text.
+
+If you haven't installed the PyTorch Live CLI yet, please [follow this tutorial](./get-started.mdx) to get started.
+
+If you get lost at any point in this tutorial, completed examples of each step can be found [here](https://github.com/pytorch/live/tree/main/examples/question-answering/).
+
+## Initialize New Project
+
+Let's start by initializing a new project `QuestionAnsweringTutorial` with the PyTorch Live CLI.
+
+```shell
+npx torchlive-cli init QuestionAnsweringTutorial
+```
+
+:::note
+
+The project init can take a few minutes depending on your internet connection and your computer.
+
+:::
+
+After completion, navigate to the `QuestionAnsweringTutorial` directory created by the `init` command.
+
+```shell
+cd QuestionAnsweringTutorial
+```
+
+### Run the project in the Android emulator or iOS Simulator
+
+The `run-android` and `run-ios` commands from the PyTorch Live CLI allow you to run the question answering project in the Android emulator or iOS Simulator.
+
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios-sim'},
+  ]}>
+  <TabItem value="android">
+
+  ```shell
+  npx torchlive-cli run-android
+  ```
+
+  The app will deploy and run on your physical Android device if it is connected to your computer via USB, and it is in developer mode. There are more details on that in the [Get Started tutorial](./get-started.mdx).
+
+  ![](/img/tutorial/question-answering/android/first-run.png "Screenshot of app after fresh init with CLI")
+
+  </TabItem>
+  <TabItem value="ios-sim">
+
+  ```shell
+  npx torchlive-cli run-ios
+  ```
+
+  ![](/img/tutorial/question-answering/ios/first-run.png "Screenshot of app after fresh init with CLI")
+
+  </TabItem>
+</Tabs>
+
+:::tip
+
+Keep the app open and running! Any code change will immediately be reflected after saving.
+
+:::
+
+## Question Answering Demo
+
+Let's get started with the UI for the question answering. Go ahead and start by copying the following code into the file `src/demos/MyDemos.tsx`:
+
+:::note
+
+The `MyDemos.tsx` already contains code. Replace the code with the code below.
+
+:::
+
+<QuestionAnsweringDemoExamples.V0CodeBlock title="src/demos/MyDemos.tsx" />
+
+The initial code creates a component rendering two text inputs, a button, and a text with `Question Answering`.
+
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios-sim'},
+  ]}>
+  <TabItem value="android">
+
+  ![](/img/tutorial/question-answering/android/initial-ui.png "Screenshot of initial user interface")
+
+  </TabItem>
+  <TabItem value="ios-sim">
+
+  ![](/img/tutorial/question-answering/ios/initial-ui.png "Screenshot of initial user interface")
+
+  </TabItem>
+</Tabs>
+
+### Style the component
+
+Great! Let's, add some basic styling to the app UI. The styles will add a padding of `10` pixels for the container `View` component. It will also add padding and margin to the `TextInput` components, the ask `Button` and the output `Text`, so they aren't squeezed together.
+
+<ExampleDiffCodeTabs>
+  <QuestionAnsweringDemoExamples.V1DiffBlock />
+  <QuestionAnsweringDemoExamples.V1CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
+
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios-sim'},
+  ]}>
+  <TabItem value="android">
+
+  ![](/img/tutorial/question-answering/android/simple-styles.png "Screenshot after applying simple component styles")
+
+  </TabItem>
+  <TabItem value="ios-sim">
+
+  ![](/img/tutorial/question-answering/ios/simple-styles.png "Screenshot after applying simple component styles")
+
+  </TabItem>
+</Tabs>
+
+### Add state and event handler
+
+Next, add state to the text inputs, to keep track of the input content. React provides the `useState` hook to save component state. A `useState` hook returns an array with two items (or tuple). The first item (index `0`) is the current state and the second item (index `1`) is the set state function to update the state. In this change, it uses two `useState` hooks, one for the `text` state and one for the `question` state.
+
+Add an event handler to the `Ask` button. The event handler `handleAsk` will be called when the button is pressed. For testing, let's log the `text` state and `question` state to the console (i.e., it will log what is typed into the text inputs).
+
+<ExampleDiffCodeTabs>
+  <QuestionAnsweringDemoExamples.V2DiffBlock />
+  <QuestionAnsweringDemoExamples.V2CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
+
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios-sim'},
+  ]}>
+  <TabItem value="android">
+
+  ![](/img/tutorial/question-answering/android/event-handler-and-more-style.png "Screenshot event handler and more styling")
+
+  </TabItem>
+  <TabItem value="ios-sim">
+
+  ![](/img/tutorial/question-answering/ios/event-handler-and-more-style.png "Screenshot event handler and more styling")
+
+  </TabItem>
+</Tabs>
+
+Type into both text inputs, click the `Ask` button, and check logged output in terminal.
+
+![](/img/tutorial/question-answering/metro-console-log.png)
+
+### Run model inference
+
+Fantastic! Now let's use the text and question and run inference on a question answering model.
+
+We'll require the Distilbert SQuAD model (i.e., `bert_qa.ptl`) and add the `QuestionAnsweringResult` type for type-safety. Then, we call the `execute` function on the `MobileModel` object with the model as first argument and an object with the `text` and `question` and the `modelInputLength` second argument.
+
+:::info
+
+The `text` and `question` states are concatenated into a sequence including two special tokens `[CLS]` and `[SEP]`. This sequence format is how the model was trained and is expected as input. The first
+token of every sequence is always a special classification token (i.e., `[CLS]`). Sentence pairs are packed together into a single sequence put between a special separator token (i.e., `[SEP]`). A sequence ends with a `[SEP]` token.
+
+The `modelInputLength` defines the max token size. Simply speaking, an ML model works with numbers (i.e., tensors), so the sequence has to be converted into numbers. This is handled by PyTorch Live transparently. The `bert_qa.ptl` model uses a subword-based tokenizer to split words into smaller subwords that are mapped to numbers using a dictionary. For example, the word "hello" is first tokenized into the two tokens "hell" and "##o", and then both tokens are looked up in a pre-defined vocabulary that maps tokens to numbers. In consequence the word, "hello" is based on two tokens.
+
+Note that `360` is the maximum token size for the `text` and `question` (and the three special tokens). It may be faster to reduce the `modelInputLength` to less than `360` if it is known that the use case works with short sequences.
+
+:::
+
+:::note
+
+It will use the `bert_qa.ptl` model that is already prepared for PyTorch Live. You can follow the [Prepare Custom Model](./prepare-custom-model.mdx) tutorial to prepare your own NLP model and use this model instead for question answering.
+
+:::
+
+Don't forget the `await` keyword for the `MobileModel.execute` function call!
+
+Last, let's log the inference result to the console.
+
+<ExampleDiffCodeTabs>
+  <QuestionAnsweringDemoExamples.V3DiffBlock />
+  <QuestionAnsweringDemoExamples.V3CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
+
+![](/img/tutorial/question-answering/metro-console-log-inference-result.png)
+
+The logged inference result is a JavaScript object containing the inference result including the `answer` and inference metrics (i.e., inference time, pack time, unpack time, and total time).
+
+Can you guess what the `text` was for the returned `answer`?
+
+### Show the answer
+
+Ok! So, we have an `answer`. Instead of having the end-user looking at a console log, we will render the answer in the app. We'll add a state for the `answer` using a React Hook, and when an answer is returned, we'll set it using the `setAnswer` function.
+
+The user interface will automatically re-render whenever the `setAnswer` function is called with a new value, so you don't have to worry about calling anything else besides this function. On re-render, the `answer` variable will have this new value, so we can use it to render it on the screen.
+
+:::note
+
+The `React.useState` is a React Hook. Hooks allow React function components, like our `QuestionAnsweringDemo` function component, to remember things.
+
+For more information on [React Hooks](https://reactjs.org/docs/hooks-intro.html), head over to the React docs where you can read or watch explanations.
+
+:::
+
+<ExampleDiffCodeTabs>
+  <QuestionAnsweringDemoExamples.V4DiffBlock />
+  <QuestionAnsweringDemoExamples.V4CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
+
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS (Simulator)', value: 'ios-sim'},
+  ]}>
+  <TabItem value="android">
+
+  ![](/img/tutorial/question-answering/android/inference-example.png "Screenshot of question answering inference result")
+
+  </TabItem>
+  <TabItem value="ios-sim">
+
+  ![](/img/tutorial/question-answering/ios/inference-example.png "Screenshot of question answering inference result")
+
+  </TabItem>
+</Tabs>
+
+It looks like the model correctly answered the question!
+
+### Add user feedback
+
+It can take a few milliseconds for the model to return the answer. Let's add a `isProcessing`  state which is `true` when the inference is running and `false` otherwise. The `isProcessing` is used to render "Looking for the answer" while the model inference is running and it will render the answer when it is done.
+
+<ExampleDiffCodeTabs>
+  <QuestionAnsweringDemoExamples.V5DiffBlock />
+  <QuestionAnsweringDemoExamples.V5CodeBlock title="src/demos/MyDemos.tsx" />
+</ExampleDiffCodeTabs>
+
+<Tabs
+  defaultValue="android"
+  values={[
+    {label: 'Android', value: 'android'},
+    {label: 'iOS', value: 'ios'},
+  ]}>
+  <TabItem value="android">
+
+  ![](/img/tutorial/question-answering/android/user-feedback.gif "Screenshot for showing question answering with user feedback")
+
+  </TabItem>
+  <TabItem value="ios">
+
+  ![](/img/tutorial/question-answering/ios/user-feedback.gif "Screenshot for showing question answering with user feedback")
+
+  </TabItem>
+</Tabs>
+
+## Give us feedback
+
+<SurveyLinkButton docTitle="Question Answering" />
+
+</div>

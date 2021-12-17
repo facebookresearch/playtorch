@@ -86,6 +86,7 @@ import com.android.build.OutputFile
 
 project.ext.react = [
     enableHermes: true,  // clean and rebuild if changing
+    entryFile: "index.tsx",
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"

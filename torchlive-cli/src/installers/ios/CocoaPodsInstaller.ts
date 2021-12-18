@@ -18,6 +18,7 @@ import {isMacOS} from '../../utils/SystemUtils';
 import {TaskContext} from '../../task/Task';
 import pod from '../../commands/ios/Pod';
 import {sudo} from '../../utils/SudoUtils';
+import {executeCommandForTask} from '../../utils/TaskUtils';
 
 export default class CocoaPodsInstaller implements ICommandInstallerTask {
   isValid(): boolean {
@@ -44,6 +45,24 @@ export default class CocoaPodsInstaller implements ICommandInstallerTask {
   }
 
   async run(context: TaskContext): Promise<void> {
+    const source = await context.task.prompt<string>([
+      {
+        type: 'Select',
+        name: 'source',
+        message:
+          "CocoaPods (https://cocoapods.org/) is not installed. It's necessary for iOS project to run correctly. Do you want to install it?",
+        choices: ['Yes, with gem (may require sudo)', 'Yes,‎ with‎ Homebrew'],
+      },
+    ]);
+
+    if (source === 'Yes, with gem (may require sudo)') {
+      return await this.installWithGem(context);
+    } else {
+      return await this.installWithHomebrew(context);
+    }
+  }
+
+  private async installWithGem(context: TaskContext): Promise<void> {
     context.update('CocoaPods requires sudo priviliges to install');
 
     // Elevate privileges to have sudo access, which is required to install
@@ -53,7 +72,7 @@ export default class CocoaPodsInstaller implements ICommandInstallerTask {
       'CocoaPods install requires `sudo` access\n\nPassword:',
     );
 
-    return new Promise(async (resolve, reject) => {
+    return new Promise<void>(async (resolve, reject) => {
       context.update(`Installing ${this.getDescription()}`);
 
       const bash = exec('sudo gem install cocoapods', async error => {
@@ -73,5 +92,12 @@ export default class CocoaPodsInstaller implements ICommandInstallerTask {
         context.update(String(data).trim());
       });
     });
+  }
+
+  private async installWithHomebrew(context: TaskContext): Promise<void> {
+    return await executeCommandForTask(context, 'brew', [
+      'install',
+      'cocoapods',
+    ]);
   }
 }

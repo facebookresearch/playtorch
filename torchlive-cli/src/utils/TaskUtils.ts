@@ -27,7 +27,10 @@ import {getEnv} from './SystemUtils';
 const Logger = getLogger('TaskUtils');
 const NOBREAKSPACE = '‎ ';
 
-export async function runTasks(tasks: ITask[]): Promise<void> {
+export async function runTasks(
+  tasks: ITask[],
+  taskContext: ListrContext = {},
+): Promise<void> {
   const validTasks = tasks.filter(task => task.isValid());
 
   const taskList = new Listr(
@@ -92,7 +95,7 @@ export async function runTasks(tasks: ITask[]): Promise<void> {
   );
 
   try {
-    await taskList.run();
+    await taskList.run(taskContext);
   } catch (error) {
     const message = `
 🚨 💥 🚨 💥 🚨

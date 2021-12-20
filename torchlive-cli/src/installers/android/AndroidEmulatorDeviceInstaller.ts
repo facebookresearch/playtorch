@@ -135,12 +135,16 @@ export default class AndroidEmulatorDeviceInstaller
   }
 
   async getUserConsentUpdate(context: TaskContext): Promise<boolean> {
-    const userConfirm = await context.task.prompt<boolean>({
-      type: 'confirm',
-      message: `The PyTorch Live Android emulator is either missing or out-of-date.
+    // Ask for user consent if accept all option is false or unset.
+    if (!context.ctx.yes) {
+      const userConfirm = await context.task.prompt<boolean>({
+        type: 'confirm',
+        message: `The PyTorch Live Android emulator is either missing or out-of-date.
 
 Would you like to create or update the PyTorch Live Android emulator?`,
-    });
-    return userConfirm;
+      });
+      return userConfirm;
+    }
+    return true;
   }
 }

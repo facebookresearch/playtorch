@@ -21,7 +21,11 @@ import YarnInstaller from '../installers/YarnInstaller';
 import {print as printHeader} from '../utils/header';
 import {runTasks} from '../utils/TaskUtils';
 
-const setUpDev = async (): Promise<void> => {
+type SetupDevOptions = {
+  yes: boolean;
+};
+
+const setUpDev = async (options: SetupDevOptions): Promise<void> => {
   printHeader();
 
   const tasks: Array<IInstallerTask> = [
@@ -36,11 +40,12 @@ const setUpDev = async (): Promise<void> => {
     new CocoaPodsInstaller(),
   ];
 
-  await runTasks(tasks);
+  await runTasks(tasks, options);
 };
 
 export function makeSetUpDevCommand() {
   return new Command('setup-dev')
     .description('set up development dependencies')
+    .option('-y, --yes', 'Accept all questions')
     .action(setUpDev);
 }

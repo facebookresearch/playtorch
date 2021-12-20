@@ -71,11 +71,14 @@ export default class AndroidSDKManagerInstaller
       {encoding: 'utf-8'},
     );
 
-    await getUserConsentOnInstallerOrQuit(
-      this,
-      context,
-      'https://developer.android.com/studio/terms.',
-    );
+    // Ask for user consent if accept all option is false or unset.
+    if (!context.ctx.yes) {
+      await getUserConsentOnInstallerOrQuit(
+        this,
+        context,
+        'https://developer.android.com/studio/terms.',
+      );
+    }
 
     const licensesCmd = `yes | ${cltPath} --licenses`;
     execCommand(context, licensesCmd);

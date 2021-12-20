@@ -14,7 +14,7 @@ import {
   getInstallerErrorMitigationMessage,
 } from './IInstaller';
 import {isCommandInstalled} from '../utils/ToolingUtils';
-import {isMacOS} from '../utils/SystemUtils';
+import {getEnv, isMacOS} from '../utils/SystemUtils';
 import {TaskContext} from '../task/Task';
 import yarn from '../commands/Yarn';
 
@@ -32,7 +32,7 @@ export default class YarnInstaller implements ICommandInstallerTask {
   }
 
   isInstalled(): boolean {
-    return isCommandInstalled('yarn');
+    return isCommandInstalled('yarn', getEnv());
   }
 
   mitigateOnError(): string {

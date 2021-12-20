@@ -45,21 +45,36 @@ export default class CocoaPodsInstaller implements ICommandInstallerTask {
   }
 
   async run(context: TaskContext): Promise<void> {
-    const source = await context.task.prompt<string>([
-      {
-        type: 'Select',
-        name: 'source',
-        message:
-          "CocoaPods (https://cocoapods.org/) is not installed. It's necessary for iOS project to run correctly. Do you want to install it?",
-        choices: ['Yes, with gem (may require sudo)', 'Yes,‎ with‎ Homebrew'],
-      },
-    ]);
+    let {cocoapodsInstaller} = context.ctx;
+    if (cocoapodsInstaller == null) {
+      cocoapodsInstaller = await context.task.prompt<string>([
+        {
+          type: 'Select',
+          name: 'source',
+          message:
+            "CocoaPods (https://cocoapods.org/) is not installed. It's necessary for iOS project to run correctly. Do you want to install it?",
+          choices: [
+            {
+              name: 'gem',
+              message: 'Yes, with gem (may require sudo)',
+            },
+            {
+              name: 'homebrew',
+              message: 'Yes,‎ with‎ Homebrew',
+            },
+          ],
+        },
+      ]);
+    }
 
-    if (source === 'Yes, with gem (may require sudo)') {
+    if (cocoapodsInstaller === 'gem') {
       return await this.installWithGem(context);
-    } else {
+    } else if (cocoapodsInstaller === 'homebrew') {
       return await this.installWithHomebrew(context);
     }
+    throw new Error(
+      `${cocoapodsInstaller} is not a valid option to install CocoaPods`,
+    );
   }
 
   private async installWithGem(context: TaskContext): Promise<void> {

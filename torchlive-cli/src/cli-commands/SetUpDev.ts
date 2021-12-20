@@ -23,6 +23,7 @@ import {runTasks} from '../utils/TaskUtils';
 
 type SetupDevOptions = {
   yes: boolean;
+  cocoapodsInstaller: string | undefined;
 };
 
 const setUpDev = async (options: SetupDevOptions): Promise<void> => {
@@ -47,5 +48,9 @@ export function makeSetUpDevCommand() {
   return new Command('setup-dev')
     .description('set up development dependencies')
     .option('-y, --yes', 'Accept all questions')
+    .option(
+      '--cocoapods-installer [installer]',
+      'CocoaPods Package Installer (gem or homebrew)',
+    )
     .action(setUpDev);
 }

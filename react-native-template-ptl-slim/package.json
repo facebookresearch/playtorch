@@ -1,0 +1,8 @@
+{
+  "name": "react-native-template-ptl-slim",
+  "version": "0.0.0",
+  "description": "A minimal React Native template for PyTorch Live",
+  "repository": "",
+  "author": "Facebook",
+  "license": "MIT"
+}

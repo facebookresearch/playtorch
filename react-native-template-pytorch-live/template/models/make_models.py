@@ -24,7 +24,7 @@ if platform.processor() == "arm" or platform.processor() == "i386":
 
 def bundle_live_spec_and_export_model(name: str, model):
     optimized_model = optimize_for_mobile(model)
-    spec = Path(f"{name}.{MODEL_EXTENSION}.live.spec.json").read_text()
+    spec = Path(f"{name}.{MODEL_EXTENSION}.live.spec.json").read_text(encoding="UTF-8")
     extra_files = {}
     extra_files["model/live.spec.json"] = spec
     optimized_model._save_for_lite_interpreter(

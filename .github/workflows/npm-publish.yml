@@ -2,7 +2,7 @@ name: NPM Publish
 
 on:
   release:
-    types: [created]
+    types: [published]
 
 jobs:
   publish-npm-cli:
@@ -24,8 +24,14 @@ jobs:
         run: yarn run build
       - name: Unit Test
         run: yarn run test
-      - name: Publish To NPM
+      - name: Publish To NPM latest
+        if: github.event.release.prerelease == false
         run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - name: Publish To NPM next
+        if: github.event.release.prerelease == true
+        run: npm publish --tag next
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
@@ -44,8 +50,14 @@ jobs:
         run: npm version $GITHUB_REF_NAME
       - name: Install Dependencies
         run: yarn install --frozen-lockfile
-      - name: Publish To NPM
+      - name: Publish To NPM latest
+        if: github.event.release.prerelease == false
         run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - name: Publish To NPM next
+        if: github.event.release.prerelease == true
+        run: npm publish --tag next
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
 
@@ -75,7 +87,13 @@ jobs:
         working-directory: ./react-native-template-pytorch-live/template
       - name: Update package.json version to $GITHUB_REF_NAME
         run: npm version $GITHUB_REF_NAME
-      - name: Publish To NPM
+      - name: Publish To NPM latest
+        if: github.event.release.prerelease == false
         run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - name: Publish To NPM next
+        if: github.event.release.prerelease == true
+        run: npm publish --tag next
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}

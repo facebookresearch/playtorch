@@ -11,32 +11,37 @@
 const {spawnSync} = require('child_process');
 const fs = require('fs');
 
-switch (process.platform) {
-  case 'darwin':
-  case 'linux':
-    try {
-      const result = spawnSync(
+try {
+  let makeModelsScript;
+  switch (process.platform) {
+    case 'darwin':
+    case 'linux':
+      makeModelsScript =
         'python3 -m venv ./venv 2> ./error.log \
             && source ./venv/bin/activate 2> ./error.log \
             && pip install --upgrade pip 2> ./error.log \
             && pip install -r requirements.txt 2> ./error.log \
-            && python -W ignore make_models.py 2> ./error.log',
-        {
-          shell: true,
-          cwd: './models/',
-        },
-      );
+            && python -W ignore make_models.py 2> ./error.log';
+      break;
+    case 'win32':
+      makeModelsScript =
+        'python3 -m venv venv 2> error.log \
+            && .\\venv\\Scripts\\activate 2> error.log \
+            && pip install -r requirements.txt 2> error.log \
+            && python -W ignore make_models.py 2> error.log';
+      break;
+  }
 
-      // Delete error log file if process returned with exit code 0, which
-      // means the models were created successfully.
-      if (result.status === 0) {
-        fs.unlinkSync('./models/error.log');
-      }
-    } catch (error) {
-      fs.writeFileSync('./models/error.log', error.toString());
-    }
-    break;
-  case 'win32':
-    // TODO: Implement
-    break;
+  const result = spawnSync(makeModelsScript, {
+    shell: true,
+    cwd: './models/',
+  });
+
+  // Delete error log file if process returned with exit code 0, which
+  // means the models were created successfully.
+  if (result.status === 0) {
+    fs.unlinkSync('./models/error.log');
+  }
+} catch (error) {
+  fs.writeFileSync('./models/error.log', error.toString());
 }

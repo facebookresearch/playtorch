@@ -47,6 +47,6 @@ jobs:
       - name: Test Build
         run: yarn run build
       - name: Setup Dev
-        run: yarn run start setup-dev
+        run: yarn run start setup-dev --yes --cocoapods-installer=homebrew
       - name: Doctor
         run: yarn run start doctor

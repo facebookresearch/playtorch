@@ -65,8 +65,8 @@ export default class AndroidEmulatorDeviceInstaller
       return;
     }
     const cltPath = this.getCommandLineToolPath();
+    const abi = this.getAbi();
     context.update(`Setting up ${this.getDescription()}`);
-    const abi = os.cpus()[0].model === 'Apple M1' ? 'arm64-v8a' : 'x86_64';
     const cmd = `echo "no" | ${cltPath} create avd --name "${AndroidVirtualDeviceName}" --device "pixel" --force --abi google_apis/${abi} --package "system-images;android-29;google_apis;${abi}"`;
     await execCommand(context, cmd);
 

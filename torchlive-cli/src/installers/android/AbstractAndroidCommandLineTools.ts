@@ -9,6 +9,7 @@
 
 import path from 'path';
 import {getSDKPath} from '../../android/AndroidSDK';
+import os from 'os';
 
 export default abstract class AbstractAndroidCommandLineTools {
   private commandLineTool: string;
@@ -23,5 +24,9 @@ export default abstract class AbstractAndroidCommandLineTools {
       throw new Error('no Android SDK found');
     }
     return path.join(sdkPath, this.commandLineTool);
+  }
+
+  getAbi(): string {
+    return os.cpus()[0].model === 'Apple M1' ? 'arm64-v8a' : 'x86_64';
   }
 }

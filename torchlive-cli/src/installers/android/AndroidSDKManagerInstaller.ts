@@ -38,6 +38,7 @@ export default class AndroidSDKManagerInstaller
 
   isInstalled(): boolean {
     const sdkPath = getSDKPath();
+    const abi = this.getAbi();
     return (
       sdkPath != null &&
       fs.existsSync(path.join(sdkPath, 'tools')) &&
@@ -46,7 +47,7 @@ export default class AndroidSDKManagerInstaller
       isPackageInstalled('emulator') &&
       isPackageInstalled('platform-tools') &&
       isPackageInstalled('platforms;android-29') &&
-      isPackageInstalled('system-images;android-29;google_apis;x86_64')
+      isPackageInstalled(`system-images;android-29;google_apis;${abi}`)
     );
   }
 
@@ -60,6 +61,7 @@ export default class AndroidSDKManagerInstaller
   async run(context: TaskContext): Promise<void> {
     const sdkPath = getSDKPath();
     const cltPath = this.getCommandLineToolPath();
+    const abi = this.getAbi();
 
     context.update('Setting up ~/.android/repositories.cfg');
 
@@ -98,11 +100,11 @@ export default class AndroidSDKManagerInstaller
       'platforms;android-29',
     ]);
 
-    context.update('Installing system-images;android-29;google_apis;x86_64');
+    context.update(`Installing system-images;android-29;google_apis;${abi}`);
 
     await spawnCommand(context, cltPath, [
       `--sdk_root=${sdkPath}`,
-      'system-images;android-29;google_apis;x86_64',
+      `system-images;android-29;google_apis;${abi}`,
     ]);
   }
 }

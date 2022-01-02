@@ -66,7 +66,8 @@ export default class AndroidEmulatorDeviceInstaller
     }
     const cltPath = this.getCommandLineToolPath();
     context.update(`Setting up ${this.getDescription()}`);
-    const cmd = `echo "no" | ${cltPath} create avd --name "${AndroidVirtualDeviceName}" --device "pixel" --force --abi google_apis/x86_64 --package "system-images;android-29;google_apis;x86_64"`;
+    const abi = os.cpus()[0].model === 'Apple M1' ? 'arm64-v8a' : 'x86_64';
+    const cmd = `echo "no" | ${cltPath} create avd --name "${AndroidVirtualDeviceName}" --device "pixel" --force --abi google_apis/${abi} --package "system-images;android-29;google_apis;${abi}"`;
     await execCommand(context, cmd);
 
     const configPath = this._getConfigPath();
@@ -75,7 +76,7 @@ export default class AndroidEmulatorDeviceInstaller
     config = Object.assign(config, {
       'torchlive.cli.version': cliPkgInfo.version,
       'PlayStore.enabled': false,
-      'abi.type': 'x86_64',
+      'abi.type': abi,
       'avd.ini.encoding': 'UTF-8',
       'disk.dataPartition.size': '16G',
       'fastboot.chosenSnapshotFile': '',
@@ -88,7 +89,7 @@ export default class AndroidEmulatorDeviceInstaller
       'hw.battery': 'yes',
       'hw.camera.back': 'webcam0',
       'hw.camera.front': 'webcam0',
-      'hw.cpu.arch': 'x86_64',
+      'hw.cpu.arch': abi,
       'hw.dPad': 'no',
       'hw.device.hash2': 'MD5:6b5943207fe196d842659d2e43022e20',
       'hw.device.manufacturer': 'Google',

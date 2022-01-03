@@ -89,7 +89,7 @@ export default class AndroidEmulatorDeviceInstaller
       'hw.battery': 'yes',
       'hw.camera.back': 'webcam0',
       'hw.camera.front': 'webcam0',
-      'hw.cpu.arch': abi,
+      'hw.cpu.arch': abi === 'arm64-v8a' ? 'arm64' : 'x86_64',
       'hw.dPad': 'no',
       'hw.device.hash2': 'MD5:6b5943207fe196d842659d2e43022e20',
       'hw.device.manufacturer': 'Google',

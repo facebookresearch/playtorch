@@ -11,6 +11,7 @@ import chalk from 'chalk';
 import {Command} from 'commander';
 import execa from 'execa';
 import semver from 'semver';
+import os from 'os';
 import {getInstalledPackages, Package} from '../android/AndroidSDK';
 import avdManager from '../commands/android/AVDManager';
 import emulator from '../commands/android/Emulator';
@@ -144,6 +145,7 @@ function runHealthCheck(healthCheck: IHealthCheck, ind: number = 2): void {
 
 const runDoctor = async (): Promise<void> => {
   printHeader();
+  const abi = os.cpus()[0].model === 'Apple M1' ? 'arm64-v8a' : 'x86_64';
 
   const healthChecks: IHealthCheck[] = [
     new HealthCheck('Homebrew', homebrew, {
@@ -185,7 +187,7 @@ const runDoctor = async (): Promise<void> => {
           path: 'platforms;android-29',
         },
         {
-          path: 'system-images;android-29;google_apis;x86_64',
+          path: `system-images;android-29;google_apis;${abi}`,
         },
       ],
       parseInstalledPackages(): Package[] {

@@ -68,3 +68,6 @@ example/models/venv
 # detox e2e test
 example/artifacts/
 example/ios/detox-build/
+
+# JSI and C++
+android/.cxx

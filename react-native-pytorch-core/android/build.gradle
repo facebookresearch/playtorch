@@ -5,11 +5,17 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+import groovy.json.JsonSlurper
+import org.apache.tools.ant.filters.ReplaceTokens
+
 buildscript {
   if (project == rootProject) {
     repositories {
       google()
       jcenter()
+      maven {
+        url "https://plugins.gradle.org/m2/"
+      }
     }
     dependencies {
       classpath "com.android.tools.build:gradle:3.5.3"
@@ -34,6 +40,14 @@ android {
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     packagingOptions {
       pickFirst '**/*.so'
+      // exclude 'META-INF/MANIFEST.MF'
+    }
+    externalNativeBuild {
+      cmake {
+        cppFlags "-fexceptions", "-frtti", "-std=c++1y", "-DONANDROID"
+        abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
+        arguments '-DANDROID_STL=c++_shared', "-DNODE_MODULES_DIR=${rootDir}/../node_modules"
+      }
     }
   }
 
@@ -48,6 +62,21 @@ android {
   compileOptions {
     sourceCompatibility JavaVersion.VERSION_1_8
     targetCompatibility JavaVersion.VERSION_1_8
+  }
+  externalNativeBuild {
+    cmake {
+      path "CMakeLists.txt"
+    }
+  }
+
+  packagingOptions {
+    excludes = ["**/libc++_shared.so","**/libreactnativeutilsjni.so",'META-INF/MANIFEST.MF']
+  }
+
+  configurations {
+    extractHeaders
+    extractJNI
+    extractForNativeBuild
   }
 }
 
@@ -73,6 +102,21 @@ dependencies {
 
   //noinspection GradleDynamicVersion
   api "com.facebook.react:react-native:+"  // From node_modules
+
+  //noinspection GradleDynamicVersion
+  extractHeaders("com.facebook.fbjni:fbjni:+:headers")
+  //noinspection GradleDynamicVersion
+  extractJNI("com.facebook.fbjni:fbjni:+")
+
+  def rnAAR = fileTree("${rootDir}/../node_modules/react-native/android").matching({ it.include "**/**/*.aar" }).singleFile
+  def inputFile = new File(rootDir, '../node_modules/react-native/package.json')
+  def json = new JsonSlurper().parseText(inputFile.text)
+  def reactNativeVersion = json.version as String
+  def (major, minor, patch) = reactNativeVersion.tokenize('.')
+  extractJNI(files(rnAAR))
+
+  extractForNativeBuild('org.pytorch:pytorch_android_lite:1.10.0')
+
   implementation "androidx.appcompat:appcompat:1.2.0"
   implementation "com.android.support.constraint:constraint-layout:2.0.4"
   implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
@@ -96,4 +140,57 @@ dependencies {
   implementation "androidx.camera:camera-view:1.0.0-alpha25"
 
   implementation "androidx.constraintlayout:constraintlayout:2.0.4"
+}
+
+// fbjni
+// https://github.com/facebookincubator/fbjni/blob/master/docs/android_setup.md
+
+task extractAARHeaders {
+  doLast {
+    configurations.extractHeaders.files.each {
+      def file = it.absoluteFile
+      copy {
+        from zipTree(file)
+        into "$buildDir/$file.name"
+        include "**/*.h"
+      }
+    }
+  }
+}
+
+task extractJNIFiles {
+  doLast {
+    configurations.extractJNI.files.each {
+      def file = it.absoluteFile
+
+      copy {
+        from zipTree(file)
+        into "$buildDir/$file.name"
+        include "jni/**/*"
+      }
+    }
+  }
+}
+
+task extractAARForNativeBuild {
+    doLast {
+        configurations.extractForNativeBuild.files.each {
+            def file = it.absoluteFile
+            copy {
+                from zipTree(file)
+                into "$buildDir/$file.name"
+                include "headers/**"
+                include "jni/**"
+            }
+        }
+    }
+}
+
+
+tasks.whenTaskAdded { task ->
+  if (task.name.contains('externalNativeBuild')) {
+    task.dependsOn(extractAARHeaders)
+    task.dependsOn(extractJNIFiles)
+    task.dependsOn(extractAARForNativeBuild)
+  }
 }

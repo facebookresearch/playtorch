@@ -49,6 +49,7 @@ import Wav2Vec2 from './models/Wav2Vec2';
 import FastNeuralStyle from './models/FastNeuralStyle';
 import MobileNetV3 from './models/MobileNetV3';
 import CameraTakePicture from './apiTest/camera/CameraTakePicture';
+import JSIPlayground from './JSIPlayground';
 
 export type Tool = {
   icon?: React.ReactNode;
@@ -73,6 +74,13 @@ const tools: ToolSection = [
         subtitle: 'A playground to experiment with the PyTorch Core API',
         apiTest: false,
         component: Playground,
+      },
+      {
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
+        title: 'JSI Playground',
+        subtitle: 'A JSI playground to experiment with the PyTorch Core API',
+        apiTest: false,
+        component: JSIPlayground,
       },
       {
         icon: <Icon name="clipboard-text" size={32} color="white" />,

@@ -20,6 +20,7 @@ import {
   getInstallerErrorMitigationMessage,
 } from '../IInstaller';
 import cliPkgInfo from '../../../package.json';
+import {getAndroidEmulatorABI} from '../../android/AndroidSDK';
 
 export default class AndroidEmulatorDeviceInstaller
   extends AbstractAndroidCommandLineTools
@@ -65,7 +66,7 @@ export default class AndroidEmulatorDeviceInstaller
       return;
     }
     const cltPath = this.getCommandLineToolPath();
-    const abi = this.getAbi();
+    const abi = getAndroidEmulatorABI();
     context.update(`Setting up ${this.getDescription()}`);
     const cmd = `echo "no" | ${cltPath} create avd --name "${AndroidVirtualDeviceName}" --device "pixel" --force --abi google_apis/${abi} --package "system-images;android-29;google_apis;${abi}"`;
     await execCommand(context, cmd);

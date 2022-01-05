@@ -164,3 +164,7 @@ export function isPackageInstalled(filePath: string): boolean {
   const packages = getInstalledPackages();
   return packages.findIndex(pkg => pkg.path === filePath) > -1;
 }
+
+export function getAndroidEmulatorABI(): string {
+  return os.cpus()[0].model.startsWith('Apple M') ? 'arm64-v8a' : 'x86_64';
+}

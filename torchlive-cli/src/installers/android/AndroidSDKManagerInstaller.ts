@@ -19,6 +19,7 @@ import {
   getUserConsentOnInstallerOrQuit,
 } from '../IInstaller';
 import AbstractAndroidCommandLineTools from './AbstractAndroidCommandLineTools';
+import {getAndroidEmulatorABI} from '../../android/AndroidSDK';
 
 export default class AndroidSDKManagerInstaller
   extends AbstractAndroidCommandLineTools
@@ -38,7 +39,7 @@ export default class AndroidSDKManagerInstaller
 
   isInstalled(): boolean {
     const sdkPath = getSDKPath();
-    const abi = this.getAbi();
+    const abi = getAndroidEmulatorABI();
     return (
       sdkPath != null &&
       fs.existsSync(path.join(sdkPath, 'tools')) &&
@@ -61,7 +62,7 @@ export default class AndroidSDKManagerInstaller
   async run(context: TaskContext): Promise<void> {
     const sdkPath = getSDKPath();
     const cltPath = this.getCommandLineToolPath();
-    const abi = this.getAbi();
+    const abi = getAndroidEmulatorABI();
 
     context.update('Setting up ~/.android/repositories.cfg');
 

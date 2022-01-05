@@ -3,6 +3,6 @@
   "version": "0.0.0",
   "description": "A minimal React Native template for PyTorch Live",
   "repository": "",
-  "author": "Facebook",
+  "author": "Meta Platforms, Inc.",
   "license": "MIT"
 }

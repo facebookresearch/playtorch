@@ -20,4 +20,4 @@ custom_edit_url: null
 
 #### Defined in
 
-[audio/AudioModule.ts:14](https://github.com/pytorch/live/blob/2282cd5/react-native-pytorch-core/src/audio/AudioModule.ts#L14)
+[audio/AudioModule.ts:14](https://github.com/pytorch/live/blob/a753957/react-native-pytorch-core/src/audio/AudioModule.ts#L14)

@@ -140,6 +140,12 @@ module.exports = {
       // Please do not remove the credits, help to publicize Docusaurus :)
       copyright: `Copyright © ${new Date().getFullYear()} Facebook, Inc. Built with Docusaurus.`,
     },
+    algolia: {
+      appId: 'A90B6S14WY',
+      apiKey: '5227766858b1a76cee0a6e1e82db00db',
+      indexName: 'pytorch-live',
+      contextualSearch: true,
+    },
     googleAnalytics: {
       trackingID: 'UA-117752657-2',
       anonymizeIP: true,

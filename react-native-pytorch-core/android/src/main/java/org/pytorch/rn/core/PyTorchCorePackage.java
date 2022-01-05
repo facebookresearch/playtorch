@@ -20,6 +20,7 @@ import org.pytorch.rn.core.canvas.CanvasRenderingContext2DModule;
 import org.pytorch.rn.core.canvas.CanvasViewManager;
 import org.pytorch.rn.core.canvas.ImageDataModule;
 import org.pytorch.rn.core.image.ImageModule;
+import org.pytorch.rn.core.jsi.PyTorchCoreJSIModule;
 import org.pytorch.rn.core.ml.MobileModelModule;
 
 public class PyTorchCorePackage implements ReactPackage {
@@ -31,7 +32,8 @@ public class PyTorchCorePackage implements ReactPackage {
         new ImageModule(reactContext),
         new ImageDataModule(reactContext),
         new CanvasRenderingContext2DModule(reactContext),
-        new AudioModule(reactContext));
+        new AudioModule(reactContext),
+        new PyTorchCoreJSIModule(reactContext));
   }
 
   @Override

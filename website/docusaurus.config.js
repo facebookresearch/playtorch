@@ -146,10 +146,6 @@ module.exports = {
       indexName: 'pytorch-live',
       contextualSearch: true,
     },
-    googleAnalytics: {
-      trackingID: 'UA-117752657-2',
-      anonymizeIP: true,
-    },
   },
   presets: [
     [
@@ -167,6 +163,9 @@ module.exports = {
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
+        },
+        googleAnalytics: {
+          trackingID: 'UA-117752657-2',
         },
       },
     ],

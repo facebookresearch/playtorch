@@ -111,7 +111,13 @@ The `MyDemos.tsx` already contains code. Replace the code with the code below.
 
 ### Style the component
 
-Great! Let's, add some basic styling to the app UI. The styles will add a padding of `10` pixels for the container `View` component. It will also add padding and margin to the `TextInput` components, the ask `Button` and the output `Text`, so they aren't squeezed together.
+Great! Let's, add some basic styling to the app UI. The styles will add a padding of `10` pixels for the container `View` component. It will also add padding and margin to the `TextInput` components, the ask `Button` and the output `Text`, so they aren't squeezed together. Lastly, the styles add a max height to the `TextInput` components to keep them in the screen size.
+
+:::note
+
+Note that we also set a max length of 360 on the first `TextInput`. The model we will be using only works with 360 characters at a time to be performant on a wide variety of mobile devices.
+
+:::
 
 <ExampleDiffCodeTabs>
   <QuestionAnsweringDemoExamples.V1DiffBlock />
@@ -173,16 +179,12 @@ Type into both text inputs, click the `Ask` button, and check logged output in t
 
 Fantastic! Now let's use the text and question and run inference on a question answering model.
 
-We'll require the Distilbert SQuAD model (i.e., `bert_qa.ptl`) and add the `QuestionAnsweringResult` type for type-safety. Then, we call the `execute` function on the `MobileModel` object with the model as first argument and an object with the `text` and `question` and the `modelInputLength` second argument.
+We'll require the Distilbert SQuAD model (i.e., `bert_qa.ptl`) and add the `QuestionAnsweringResult` type for type-safety. Then, we call the `execute` function on the `MobileModel` object with the model as the first argument and an object with the `text` and `question` as the second argument.
 
 :::info
 
 The `text` and `question` states are concatenated into a sequence including two special tokens `[CLS]` and `[SEP]`. This sequence format is how the model was trained and is expected as input. The first
 token of every sequence is always a special classification token (i.e., `[CLS]`). Sentence pairs are packed together into a single sequence put between a special separator token (i.e., `[SEP]`). A sequence ends with a `[SEP]` token.
-
-The `modelInputLength` defines the max token size. Simply speaking, an ML model works with numbers (i.e., tensors), so the sequence has to be converted into numbers. This is handled by PyTorch Live transparently. The `bert_qa.ptl` model uses a subword-based tokenizer to split words into smaller subwords that are mapped to numbers using a dictionary. For example, the word "hello" is first tokenized into the two tokens "hell" and "##o", and then both tokens are looked up in a pre-defined vocabulary that maps tokens to numbers. In consequence the word, "hello" is based on two tokens.
-
-Note that `360` is the maximum token size for the `text` and `question` (and the three special tokens). It may be faster to reduce the `modelInputLength` to less than `360` if it is known that the use case works with short sequences.
 
 :::
 

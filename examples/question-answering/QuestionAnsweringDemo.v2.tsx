@@ -38,6 +38,7 @@ export default function QuestionAnsweringDemo() {
         placeholder="Text"
         placeholderTextColor="#CCC"
         style={[styles.item, styles.input]}
+        maxLength={360}
         value={text}
       />
       <TextInput
@@ -64,5 +65,6 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     color: '#000',
+    maxHeight: 250,
   },
 });

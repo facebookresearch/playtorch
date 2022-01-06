@@ -18,10 +18,21 @@ describe('Example', () => {
     await device.reloadReactNative();
   });
 
-  it('built success', async () => {
+  it('built successfully', async () => {
     await waitFor(element(by.text('Playground')))
       .toBeVisible()
       .withTimeout(5000);
     await expect(element(by.text('Astro Bird'))).toBeVisible();
+  });
+
+  it('configured JSI successfully', async () => {
+    await waitFor(element(by.text('JSI Playground')))
+      .toBeVisible()
+      .withTimeout(5000);
+
+    await element(by.text('JSI Playground')).tap();
+    await expect(element(by.id('testButton'))).toBeVisible();
+    await element(by.id('testButton')).tap();
+    await expect(element(by.text('JSI configured'))).toBeVisible();
   });
 });

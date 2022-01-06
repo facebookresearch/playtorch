@@ -28,7 +28,7 @@ function argmax(array: number[]): number {
 export default function JSIPlayground() {
   const [jsResult, setJsResult] = React.useState(0);
   const [cxxResult, setCxxResult] = React.useState(0);
-  const [jsElapse, setjsElapse] = React.useState(0);
+  const [jsElapse, setJsElapse] = React.useState(0);
   const [cxxElapse, setcxxElapse] = React.useState(0);
   const testFunc = async () => {
     console.log('------------');
@@ -46,7 +46,7 @@ export default function JSIPlayground() {
     let result = argmax(data);
     let delta = performance.now() - startTime;
     setJsResult(result);
-    setjsElapse(delta);
+    setJsElapse(delta);
     console.log('argmax (js)', result);
     console.log('elapsed time (js)', delta, 'ms');
 
@@ -61,7 +61,10 @@ export default function JSIPlayground() {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity onPress={testFunc} style={styles.button}>
+      <TouchableOpacity
+        onPress={testFunc}
+        style={styles.button}
+        testID="testButton">
         <Text style={styles.buttonTxt}>Test Func</Text>
       </TouchableOpacity>
       <Text>Platform: {Platform.OS}</Text>
@@ -70,6 +73,13 @@ export default function JSIPlayground() {
       </Text>
       <Text>
         C++ returns {cxxResult} in {cxxElapse} ms.
+      </Text>
+      <Text>
+        {jsResult === 0 && jsElapse === 0
+          ? 'click to test!'
+          : jsResult === cxxResult
+          ? 'JSI configured'
+          : 'Something wrong'}
       </Text>
     </View>
   );

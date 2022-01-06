@@ -32,7 +32,6 @@ export default function QuestionAnsweringDemo() {
 
     const {result} = await MobileModel.execute<QuestionAnsweringResult>(model, {
       text: qaText,
-      modelInputLength: 360,
     });
 
     // No answer found if the answer is null
@@ -55,6 +54,7 @@ export default function QuestionAnsweringDemo() {
         placeholder="Text"
         placeholderTextColor="#CCC"
         style={[styles.item, styles.input]}
+        maxLength={360}
         value={text}
       />
       <TextInput
@@ -81,5 +81,6 @@ const styles = StyleSheet.create({
   input: {
     borderWidth: 1,
     color: '#000',
+    maxHeight: 250,
   },
 });

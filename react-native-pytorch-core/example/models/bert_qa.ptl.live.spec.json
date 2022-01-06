@@ -4,7 +4,7 @@
     "type": "tensor_from_string",
     "tokenizer": "bert",
     "string": "$text",
-    "model_input_length": "$modelInputLength"
+    "model_input_length": 360
   },
   "unpack": {
     "type": "bert_decode_qa_answer",

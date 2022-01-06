@@ -12,8 +12,6 @@ import type {ModelResultMetrics} from 'react-native-pytorch-core';
 import {useCallback, useState} from 'react';
 import {MobileModel, ModelInfo} from 'react-native-pytorch-core';
 
-const MODEL_INPUT_LENGTH = 360;
-
 type NLPQAResult = {
   answer: string;
 };
@@ -34,7 +32,6 @@ export default function useNLPQAModelInference(modelInfo: ModelInfo) {
         metrics: m,
       } = await MobileModel.execute<NLPQAResult>(modelInfo.model, {
         text: inputText,
-        modelInputLength: MODEL_INPUT_LENGTH,
       });
 
       if (ans != null) {

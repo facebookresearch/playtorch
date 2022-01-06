@@ -40,7 +40,6 @@ android {
     testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     packagingOptions {
       pickFirst '**/*.so'
-      // exclude 'META-INF/MANIFEST.MF'
     }
     externalNativeBuild {
       cmake {
@@ -69,6 +68,11 @@ android {
     }
   }
 
+  // Exclude META-INF/MANIFEST.MF otherwise the Detox build will fail with
+  // message "More than one file was found with OS independent path 'META-INF/MANIFEST.MF'."
+  // A potential solution would be upgrading the Gradle version as mentioned
+  // in the following Stack Overflow comment:
+  // https://stackoverflow.com/questions/58745742/error-duplicate-entry-meta-inf-manifest-mf
   packagingOptions {
     excludes = ["**/libc++_shared.so","**/libreactnativeutilsjni.so",'META-INF/MANIFEST.MF']
   }

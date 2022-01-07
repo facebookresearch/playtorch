@@ -142,6 +142,14 @@ const getImageAssetSource = (
  */
 export const ImageUtil = {
   /**
+   * The `fromJSRef` function loads an [[Image]] by wrapping a Native JS Object Reference ID.
+   * @param imageRef The Native JS Object Reference ID of the image. You usually get those from image to image models.
+   * @returns an [[Image]].
+  **/
+  fromJSRef(jsRef: NativeJSRef): Image {
+    return wrapRef(jsRef);
+  },
+  /**
    * The `fromBundle` function loads an [[Image]] that is bundled with the
    * React Native app bundle. The function param is a `require` with a relative
    * path (the path is relative to the file that contains the
@@ -149,7 +157,7 @@ export const ImageUtil = {
    * [[ImageUtils.fromBundle]] function is an `async` function and needs to be
    * `await`ed to access the loaded image.
    *
-   * @param imagePath The model path (i.e., a `require`).
+   * @param imagePath The image path (i.e., a `require`).
    * @returns A promise resolving into an [[Image]].
    */
   async fromBundle(imagePath: ImageRequireSource): Promise<Image> {

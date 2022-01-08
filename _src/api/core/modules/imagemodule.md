@@ -28,13 +28,14 @@ be drawn on a canvas.
 | `fromBundle` | (`imagePath`: `number`) => `Promise`<[Image](../interfaces/imagemodule.image.md)\> |
 | `fromFile` | (`path`: `string`) => `Promise`<[Image](../interfaces/imagemodule.image.md)\> |
 | `fromImageData` | (`imageData`: [ImageData](../interfaces/canvasview.imagedata.md)) => `Promise`<[Image](../interfaces/imagemodule.image.md)\> |
+| `fromJSRef` | (`imageRef`: [NativeJSRef](../interfaces/nativejsref.nativejsref-1.md)) => [Image](../interfaces/imagemodule.image.md) |
 | `fromURL` | (`url`: `string`) => `Promise`<[Image](../interfaces/imagemodule.image.md)\> |
 | `release` | (`image`: [Image](../interfaces/imagemodule.image.md)) => `Promise`<void\> |
 | `toFile` | (`image`: [Image](../interfaces/imagemodule.image.md)) => `Promise`<string\> |
 
 #### Defined in
 
-[ImageModule.ts:143](https://github.com/pytorch/live/blob/5cb729f/react-native-pytorch-core/src/ImageModule.ts#L143)
+[ImageModule.ts:143](https://github.com/pytorch/live/blob/33c6ac7/react-native-pytorch-core/src/ImageModule.ts#L143)
 
 ## Functions
 
@@ -54,4 +55,4 @@ be drawn on a canvas.
 
 #### Defined in
 
-[ImageModule.ts:98](https://github.com/pytorch/live/blob/5cb729f/react-native-pytorch-core/src/ImageModule.ts#L98)
+[ImageModule.ts:98](https://github.com/pytorch/live/blob/33c6ac7/react-native-pytorch-core/src/ImageModule.ts#L98)

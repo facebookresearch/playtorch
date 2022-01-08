@@ -149,7 +149,7 @@ export const ImageUtil = {
    * [[ImageUtils.fromBundle]] function is an `async` function and needs to be
    * `await`ed to access the loaded image.
    *
-   * @param imagePath The model path (i.e., a `require`).
+   * @param imagePath The image path (i.e., a `require`).
    * @returns A promise resolving into an [[Image]].
    */
   async fromBundle(imagePath: ImageRequireSource): Promise<Image> {
@@ -190,6 +190,30 @@ export const ImageUtil = {
     const imageDataRef: NativeJSRef = {ID: imageData.ID};
     const ref: NativeJSRef = await ImageModule.fromImageData(imageDataRef);
     return wrapRef(ref);
+  },
+
+  /**
+   * The `fromJSRef` function returns an [[Image]] by wrapping a [[NativeJSRef]]
+   * object.
+   *
+   * Example of a [[NativeJSRef]] for a non-serializable object like an image:
+   *
+   * ```javascript
+   * {ID:"5AD79901-C651-4994-9C99-23B23216B8F4"}
+   * ```
+   *
+   * ```typescript
+   * const {result: {image: imageRef}} = MobileModel.execute<ImageToImageResult>(model, {image});
+   * const wrappedImage: Image = await ImageUtil.fromJSRef(imageRef);
+   * // do something with wrappedImage
+   * wrappedImage.release();
+   * ```
+   *
+   * @param imageRef The Native JS Object Reference ID of the image. You usually get those from image to image models.
+   * @returns an [[Image]].
+   **/
+  fromJSRef(imageRef: NativeJSRef): Image {
+    return wrapRef(imageRef);
   },
 
   /**

@@ -65,3 +65,7 @@ yalc.lock
 # PyTorch mobile models
 models/*.ptl
 models/*.pt
+
+# detox e2e test
+artifacts/
+ios/detox-build/

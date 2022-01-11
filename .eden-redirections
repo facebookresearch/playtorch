@@ -1,2 +1,3 @@
 [redirections]
 "react-native-pytorch-core/example/ios/detox-build"="bind"
+"react-native-template-pytorch-live/template/ios/detox-build"="bind"

@@ -7,6 +7,8 @@
  * @format
  */
 
+import {by, device, element, expect, waitFor} from 'detox';
+
 describe('Example', () => {
   beforeAll(async () => {
     await device.launchApp();
@@ -16,7 +18,10 @@ describe('Example', () => {
     await device.reloadReactNative();
   });
 
-  it('Should have examples tab in bottom nav bar', async () => {
+  it('builds successfully with bottom bar rendered', async () => {
+    await waitFor(element(by.text('Examples')))
+      .toBeVisible()
+      .withTimeout(5000);
     await expect(element(by.text('Examples'))).toBeVisible();
   });
 });

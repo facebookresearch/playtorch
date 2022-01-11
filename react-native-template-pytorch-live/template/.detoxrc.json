@@ -1,10 +1,17 @@
 {
   "testRunner": "jest",
   "runnerConfig": "e2e/config.json",
+  "skipLegacyWorkersInjection": true,
   "apps": {
-    "ios": {
+    "ios.debug": {
       "type": "ios.app",
-      "binaryPath": "SPECIFY_PATH_TO_YOUR_APP_BINARY"
+      "binaryPath": "ios/detox-build/Build/Products/Debug-iphonesimulator/PyTorchLiveExample.app",
+      "build": "xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -UseModernBuildSystem=YES -workspace ios/PyTorchLiveExample.xcworkspace -scheme PyTorchLiveExample -sdk iphonesimulator -configuration Debug -derivedDataPath ios/detox-build -quiet"
+    },
+    "ios.release": {
+      "type": "ios.app",
+      "binaryPath": "ios/detox-build/Build/Products/Debug-iphonesimulator/PyTorchLiveExample.app",
+      "build": "xcodebuild CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ -UseModernBuildSystem=YES -workspace ios/PyTorchLiveExample.xcworkspace -scheme PyTorchLiveExample -sdk iphonesimulator -configuration Release -derivedDataPath ios/detox-build -quiet"
     },
     "android.debug": {
       "type": "android.apk",
@@ -32,9 +39,13 @@
     }
   },
   "configurations": {
-    "ios": {
+    "ios.sim.debug": {
       "device": "simulator",
-      "app": "ios"
+      "app": "ios.debug"
+    },
+    "ios.sim.release": {
+      "device": "simulator",
+      "app": "ios.release"
     },
     "android.emu.debug": {
       "device": "emulator",

@@ -12,7 +12,6 @@ import android.os.SystemClock;
 import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.experimental.UseExperimental;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -94,7 +93,6 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  @UseExperimental(markerClass = androidx.camera.core.ExperimentalGetImage.class)
   public void execute(final String modelUri, final ReadableMap params, final Promise promise) {
     executorService.execute(
         () -> {

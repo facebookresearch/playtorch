@@ -5,7 +5,7 @@
 </h1>
 
 <h3>
-  Build your AI-powered mobile apps in minutes:
+  Build your AI powered mobile prototypes in minutes:
   <a href="https://pytorch.org/live/docs/tutorials/get-started">Get Started</a>
   <span> · </span>
   <a href="https://pytorch.org/live/docs/tutorials/image-classification">Tutorials</a>

@@ -99,7 +99,7 @@ export default function Home() {
         <h1 className={styles.title}>PyTorch&nbsp;&nbsp;Live</h1>
         <div className={styles.beta}>BETA</div>
       </div>
-      <div>Build your AI-powered mobile apps in minutes</div>
+      <div>Build your AI powered mobile prototypes in minutes</div>
     </div>
   );
   const heroButton = <div className={styles.button}>Get Started</div>;

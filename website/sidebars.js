@@ -18,6 +18,8 @@
  Create as many sidebars as you want.
  */
 
+const fbContent = require('internaldocs-fb-helpers').fbContent;
+
 module.exports = {
   docs: [
     {
@@ -47,6 +49,15 @@ module.exports = {
       collapsed: false,
       items: ['tutorials/server-model', 'tutorials/connecting-to-a-server'],
     },
+    fbContent({
+      internal: {
+        type: 'category',
+        label: '[Meta Only]',
+        collapsed: true,
+        items: ['fb/wikis/creating-a-release'],
+      },
+      external: {},
+    }),
     'tutorials/faq',
   ],
   api: [

@@ -5,12 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "PyTorchCoreJSI.h"
 #import <React/RCTBridge+Private.h>
 #import <React/RCTUtils.h>
 #import <jsi/jsi.h>
-#import "cpp/torchlive.h"
 #import <sys/utsname.h>
+
+#import "PyTorchCoreJSI.h"
+#import "cpp/torchlive.h"
 
 @implementation PyTorchCoreJSI
 
@@ -30,13 +31,10 @@ RCT_EXPORT_MODULE()
 }
 
 - (void)install {
-
     RCTCxxBridge *cxxBridge = (RCTCxxBridge *)self.bridge;
-
     if (cxxBridge.runtime) {
-        torchlive::core::install(*(facebook::jsi::Runtime *)cxxBridge.runtime);
+        torchlive::install(*(facebook::jsi::Runtime *)cxxBridge.runtime);
     }
 }
-
 
 @end

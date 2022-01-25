@@ -20,6 +20,7 @@ add_library(
         SHARED
         ../cpp/torchlive/torch/TorchHostObject.cpp
         ../cpp/torchlive/torch/TensorHostObject.cpp
+        ../cpp/torchlive/torch/jit/JITHostObject.cpp
         ../cpp/torchlive.cpp
         src/main/cpp/cpp-adapter.cpp
 )

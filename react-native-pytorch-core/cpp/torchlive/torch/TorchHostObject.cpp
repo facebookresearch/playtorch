@@ -13,6 +13,7 @@
 
 #include "TensorHostObject.h"
 #include "TorchHostObject.h"
+#include "jit/JITHostObject.h"
 
 // Namespace alias for torch to avoid namespace conflicts with torchlive::torch
 namespace torch_ = torch;
@@ -33,7 +34,11 @@ jsi::Value TorchHostObject::get(
     const jsi::PropNameID& propName) {
   auto name = propName.utf8(runtime);
 
-  if (name == "rand") {
+  if (name == "jit") {
+    auto jitHostObject =
+        std::make_shared<torchlive::torch::jit::JITHostObject>();
+    return jsi::Object::createFromHostObject(runtime, jitHostObject);
+  } else if (name == "rand") {
     auto rand = [this](
                     jsi::Runtime& runtime,
                     const jsi::Value& thisValue,

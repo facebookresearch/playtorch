@@ -16,11 +16,9 @@ class Runtime;
 } // namespace facebook
 
 namespace torchlive {
-namespace core {
 
 using namespace facebook;
 
-void install(jsi::Runtime& jsiRuntime);
+void install(jsi::Runtime& runtime);
 
-} // namespace core
 } // namespace torchlive

@@ -5,20 +5,19 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "torchlive.h"
 #include <jsi/jsi.h>
-#include "TorchHostObject.h"
+
+#include "torchlive.h"
+#include "torchlive/torch/TorchHostObject.h"
 
 namespace torchlive {
-namespace core {
 
 using namespace facebook;
 
-void install(jsi::Runtime& jsiRuntime) {
-  auto torchObject = std::make_shared<TorchHostObject>();
-  auto torch = jsi::Object::createFromHostObject(jsiRuntime, torchObject);
-  jsiRuntime.global().setProperty(jsiRuntime, "torch", std::move(torch));
+void install(jsi::Runtime& runtime) {
+  auto torchObject = std::make_shared<torchlive::torch::TorchHostObject>();
+  auto torch = jsi::Object::createFromHostObject(runtime, torchObject);
+  runtime.global().setProperty(runtime, "torch", std::move(torch));
 }
 
-} // namespace core
 } // namespace torchlive

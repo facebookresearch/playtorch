@@ -9,28 +9,19 @@
 
 #include <jsi/jsi.h>
 
-#include <ATen/NativeFunctions.h>
-#include <torch/script.h>
-#include <string>
-#include <vector>
-
 namespace torchlive {
-namespace core {
+namespace torch {
 
 using namespace facebook;
 
-class JSI_EXPORT TensorHostObject : public jsi::HostObject {
+class JSI_EXPORT TorchHostObject : public jsi::HostObject {
  public:
-  explicit TensorHostObject(torch::Tensor t);
-  ~TensorHostObject();
+  explicit TorchHostObject() {}
 
  public:
   jsi::Value get(jsi::Runtime&, const jsi::PropNameID& name) override;
   std::vector<jsi::PropNameID> getPropertyNames(jsi::Runtime& rt) override;
-
- public:
-  torch::Tensor tensor;
 };
 
-} // namespace core
+} // namespace torch
 } // namespace torchlive

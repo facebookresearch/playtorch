@@ -7,6 +7,7 @@
 
 #include <jni.h>
 #include <jsi/jsi.h>
+
 #include "torchlive.h"
 
 using namespace facebook;
@@ -18,8 +19,7 @@ Java_org_pytorch_rn_core_jsi_PyTorchCoreJSIModule_nativeInstall(
     jobject thiz,
     jlong jsi) {
   auto runtime = reinterpret_cast<jsi::Runtime*>(jsi);
-
   if (runtime) {
-    torchlive::core::install(*runtime);
+    torchlive::install(*runtime);
   }
 }

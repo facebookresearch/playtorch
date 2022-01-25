@@ -14,8 +14,11 @@
 #include "TensorHostObject.h"
 #include "TorchHostObject.h"
 
+// Namespace alias for torch to avoid namespace conflicts with torchlive::torch
+namespace torch_ = torch;
+
 namespace torchlive {
-namespace core {
+namespace torch {
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(
     jsi::Runtime& rt) {
@@ -35,11 +38,11 @@ jsi::Value TorchHostObject::get(
                     jsi::Runtime& runtime,
                     const jsi::Value& thisValue,
                     const jsi::Value* arguments,
-                    size_t) -> jsi::Value {
+                    size_t count) -> jsi::Value {
       int x = arguments[0].getNumber();
-      torch::Tensor tensor = torch::rand({x});
+      auto tensor = torch_::rand({x});
       auto tensorHostObject =
-          std::make_shared<torchlive::core::TensorHostObject>(tensor);
+          std::make_shared<torchlive::torch::TensorHostObject>(tensor);
       return jsi::Object::createFromHostObject(runtime, tensorHostObject);
     };
     return jsi::Function::createFromHostFunction(
@@ -49,7 +52,7 @@ jsi::Value TorchHostObject::get(
                       jsi::Runtime& runtime,
                       const jsi::Value& thisValue,
                       const jsi::Value* arguments,
-                      size_t) -> jsi::Value {
+                      size_t count) -> jsi::Value {
       auto object = arguments[0].asObject(runtime);
       if (!object.isHostObject(runtime)) {
         throw std::runtime_error("first argument must be a tensor");
@@ -57,10 +60,10 @@ jsi::Value TorchHostObject::get(
 
       auto hostObject = object.getHostObject(runtime);
       auto tensorHostObject =
-          dynamic_cast<torchlive::core::TensorHostObject*>(hostObject.get());
+          dynamic_cast<torchlive::torch::TensorHostObject*>(hostObject.get());
       if (tensorHostObject != nullptr) {
         auto tensor = tensorHostObject->tensor;
-        auto max = torch::argmax(tensor);
+        auto max = torch_::argmax(tensor);
         return jsi::Value(max.item<int>());
       } else {
         // It's a different kind of HostObject, which is not supported.
@@ -74,5 +77,5 @@ jsi::Value TorchHostObject::get(
   return jsi::Value::undefined();
 }
 
-} // namespace core
+} // namespace torch
 } // namespace torchlive

@@ -18,8 +18,8 @@ set (RN_SO_DIR ${NODE_MODULES_DIR}/react-native/ReactAndroid/src/main/jni/first-
 add_library(
         ${PACKAGE_NAME}
         SHARED
-        ../cpp/TorchHostObject.cpp
-        ../cpp/TensorHostObject.cpp
+        ../cpp/torchlive/torch/TorchHostObject.cpp
+        ../cpp/torchlive/torch/TensorHostObject.cpp
         ../cpp/torchlive.cpp
         src/main/cpp/cpp-adapter.cpp
 )

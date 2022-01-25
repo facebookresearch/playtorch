@@ -9,8 +9,10 @@
 
 namespace facebook {
 namespace jsi {
+
 class Runtime;
-}
+
+} // namespace jsi
 } // namespace facebook
 
 namespace torchlive {

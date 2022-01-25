@@ -5,15 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#ifdef ANDROID
-#include <android/log.h>
-#endif
-#include <string>
-#include <vector>
-#include "TensorHostObject.h"
+#include <jsi/jsi.h>
 
 #include <ATen/NativeFunctions.h>
 #include <torch/script.h>
+#include <string>
+#include <vector>
+
+#include "TensorHostObject.h"
 
 namespace torchlive {
 namespace core {

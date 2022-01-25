@@ -7,7 +7,7 @@
 
 #pragma once
 
-#import <jsi/jsi.h>
+#include <jsi/jsi.h>
 
 namespace torchlive {
 namespace core {

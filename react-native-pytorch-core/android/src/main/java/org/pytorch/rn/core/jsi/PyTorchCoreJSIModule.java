@@ -17,6 +17,8 @@ import com.facebook.react.module.annotations.ReactModule;
 @ReactModule(name = PyTorchCoreJSIModule.NAME)
 public class PyTorchCoreJSIModule extends ReactContextBaseJavaModule {
 
+  public static final String TAG = "PTLJSIModule";
+
   public static final String NAME = "PyTorchCoreJSI";
 
   static {
@@ -24,7 +26,7 @@ public class PyTorchCoreJSIModule extends ReactContextBaseJavaModule {
       // Used to load the 'native-lib' library on application startup.
       System.loadLibrary("torchlive");
     } catch (Exception e) {
-      Log.e(NAME, e.getMessage());
+      Log.e(TAG, e.getMessage());
     }
   }
 
@@ -45,7 +47,7 @@ public class PyTorchCoreJSIModule extends ReactContextBaseJavaModule {
     if (reactContext.get() != 0) {
       this.nativeInstall(reactContext.get());
     } else {
-      Log.e(NAME, "JSI Runtime is not available in debug mode");
+      Log.e(TAG, "JSI Runtime is not available in debug mode");
     }
   }
 }

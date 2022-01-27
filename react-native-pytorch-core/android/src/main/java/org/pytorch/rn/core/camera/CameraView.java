@@ -49,6 +49,8 @@ import org.pytorch.rn.core.javascript.JSContext;
 
 public class CameraView extends ConstraintLayout {
 
+  public static final String TAG = "PTLCameraView";
+
   public static final String REACT_CLASS = "PyTorchCameraView";
 
   private final String[] REQUIRED_PERMISSIONS = new String[] {Manifest.permission.CAMERA};
@@ -178,7 +180,7 @@ public class CameraView extends ConstraintLayout {
           } catch (ExecutionException | InterruptedException e) {
             // No errors need to be handled for this Future.
             // This should never be reached.
-            Log.e(REACT_CLASS, e.getMessage());
+            Log.e(TAG, e.getMessage());
           }
         },
         ContextCompat.getMainExecutor(mReactContext));
@@ -202,7 +204,7 @@ public class CameraView extends ConstraintLayout {
             @Override
             public void onError(@NonNull ImageCaptureException exception) {
               super.onError(exception);
-              Log.e(REACT_CLASS, exception.getLocalizedMessage(), exception);
+              Log.e(TAG, exception.getLocalizedMessage(), exception);
             }
           });
     }
@@ -331,7 +333,7 @@ public class CameraView extends ConstraintLayout {
             parent.layout(0, 0, parent.getMeasuredWidth(), parent.getMeasuredHeight());
 
             Log.d(
-                REACT_CLASS,
+                TAG,
                 String.format(
                     "Measured width=%s, height=%s",
                     parent.getMeasuredWidth(), parent.getMeasuredHeight()));

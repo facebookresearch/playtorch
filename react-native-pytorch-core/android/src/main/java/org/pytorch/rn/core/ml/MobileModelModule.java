@@ -45,6 +45,8 @@ import org.pytorch.rn.core.utils.FileUtils;
 @ReactModule(name = "PyTorchCoreMobileModelModule")
 public class MobileModelModule extends ReactContextBaseJavaModule {
 
+  public static final String TAG = "PTLMobileModelModule";
+
   public static final String NAME = "PyTorchCoreMobileModelModule";
 
   private ReactApplicationContext mReactContext;
@@ -68,7 +70,7 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
     executorService.execute(
         () -> {
           try {
-            Log.d(NAME, "Preload model: " + modelUri);
+            Log.d(TAG, "Preload model: " + modelUri);
             fetchCacheAndLoadModel(modelUri);
             promise.resolve(null);
           } catch (JSONException
@@ -128,7 +130,7 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
 
             promise.resolve(inferenceResult);
           } catch (Exception e) {
-            Log.e(NAME, "Error on model fetch and forward:", e);
+            Log.e(TAG, "Error on model fetch and forward:", e);
             promise.reject(e);
           }
         });
@@ -160,7 +162,7 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
   private ModuleHolder fetchCacheAndLoadModel(final String modelUri)
       throws JSONException, ClassNotFoundException, NoSuchMethodException, InstantiationException,
           IllegalAccessException, InvocationTargetException, IOException {
-    Log.d(NAME, "Load model: " + modelUri);
+    Log.d(TAG, "Load model: " + modelUri);
 
     Uri uri = Uri.parse(modelUri);
 
@@ -190,7 +192,7 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
       FileUtils.downloadUriToFile(modelUri, targetFile);
     }
 
-    Log.d(NAME, "Absolute local model path: " + targetFile.getAbsolutePath());
+    Log.d(TAG, "Absolute local model path: " + targetFile.getAbsolutePath());
 
     // Try to fetch live.spec.json from model file
     Map<String, String> extraFiles = new HashMap<>();

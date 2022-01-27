@@ -35,7 +35,7 @@ class BaseIValuePacker {
     func pack(params: NSDictionary, modelSpec: JSON) throws -> IValue? {
         let modelSpecification: JSON
         do {
-            modelSpecification = try applyParams(modelSpec: modelSpec, params: params)
+            modelSpecification = try BaseIValuePacker.applyParams(modelSpec: modelSpec, params: params)
         } catch {
             throw error
         }
@@ -161,28 +161,21 @@ class BaseIValuePacker {
         return tensor
     }
 
-    private func applyParams(modelSpec: JSON, params: NSDictionary) throws -> JSON {
-        guard var specSrc = modelSpec.rawString() else {
+    private static func applyParams(modelSpec: JSON, params: NSDictionary) throws -> JSON {
+        guard var tmpSrcSpec = modelSpec.rawString() else {
             throw BaseIValuePackerError.JSONToStringError
         }
-
-        for (key, value) in params {
-            if let key = key as? String, let value = value as? String ?? (value as? NSNumber)?.stringValue {
-                specSrc = specSrc.replacingOccurrences(of: "$\(key)", with: value)
-            } else {
-                if let key = key as? String {
-                    if key != "image" && key != "audio" {
-                        throw BaseIValuePackerError.invalidParam
-                    }
-                } else {
-                    throw BaseIValuePackerError.invalidParam
-                }
+        for (key, value) in params where key is String {
+            guard let value = value as? String else {
+                let stringifiedObject = String(describing: value)
+                tmpSrcSpec = tmpSrcSpec.replacingOccurrences(of: "$\(key)", with: stringifiedObject)
+                continue
             }
+            tmpSrcSpec = tmpSrcSpec.replacingOccurrences(of: "$\(key)", with: value)
         }
 
         do {
-            let spec = try JSON(data: Data(specSrc.utf8))
-            return spec
+            return try JSON(data: Data(tmpSrcSpec.utf8))
         } catch {
             throw BaseIValuePackerError.stringToJSONError
         }

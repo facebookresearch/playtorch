@@ -11,22 +11,23 @@ import SwiftyJSON
 class BaseIValuePacker {
 
     enum BaseIValuePackerError: Error {
-        case ImageUnwrapError
-        case InvalidImageToImageName
-        case InvalidImageToTensorName
-        case InvalidTransformType
-        case InvalidPackType
-        case InvalidUnpackType
-        case InvalidParam
-        case MissingKeyParam
-        case InvalidDType
+        case imageUnwrapError
+        case invalidImageToImageName
+        case invalidImageToTensorName
+        case invalidTransformType
+        case invalidPackType
+        case invalidUnpackType
+        case invalidParam
+        case missingKeyParam
+        case invalidDType
         case JSONToStringError
-        case StringToJSONError
-        case PackStringError
-        case DecodeBertError
-        case DecodeObjectsError
-        case AudioUnwrapError
-        case DecodeStringError
+        case stringToJSONError
+        case packStringError
+        case decodeBertError
+        case decodeObjectsError
+        case audioUnwrapError
+        case decodeStringError
+        case encodeImageError
     }
 
     var packerContext = [String: Any]()
@@ -40,7 +41,7 @@ class BaseIValuePacker {
         }
 
         guard let type = modelSpec["pack"]["type"].string else {
-            throw BaseIValuePackerError.InvalidPackType
+            throw BaseIValuePackerError.invalidPackType
         }
         switch type {
         case "tensor_from_image":
@@ -50,7 +51,7 @@ class BaseIValuePacker {
         case "tensor_from_audio":
             return try packAudio(modelSpec: modelSpecification, params: params)
         default:
-            throw BaseIValuePackerError.InvalidTransformType
+            throw BaseIValuePackerError.invalidTransformType
         }
     }
 
@@ -58,7 +59,7 @@ class BaseIValuePacker {
         let unpack = modelSpec["unpack"]
 
         guard let type = unpack["type"].string else {
-            throw BaseIValuePackerError.InvalidUnpackType
+            throw BaseIValuePackerError.invalidUnpackType
         }
 
         var map: [String: Any] = [String: Any]()
@@ -76,24 +77,25 @@ class BaseIValuePacker {
         case "string":
             try decodeTensorToString(ivalue: ivalue, unpack: unpack, map: &map)
         default:
-            throw BaseIValuePackerError.InvalidUnpackType
+            throw BaseIValuePackerError.invalidUnpackType
         }
         return map
     }
 
     private func packImage(modelSpec: JSON, params: NSDictionary) throws -> IValue? {
         do {
-            if let imageId = (params["image"] as? NSDictionary)?["ID"] as? String, let image = try ImageModule.unwrapImage(imageId).getBitmap() {
+            if let imageId = (params["image"] as? NSDictionary)?["ID"] as? String,
+               let image = try ImageModule.unwrapImage(imageId).getBitmap() {
                 let transforms: JSON = modelSpec["pack"]["transforms"]
                 guard let tensor = try doImageTransforms(transforms: transforms.arrayValue, image: image) else {
-                  throw BaseIValuePackerError.ImageUnwrapError
+                  throw BaseIValuePackerError.imageUnwrapError
                 }
                 return IValue.fromTensor(tensor)
             } else {
-                throw BaseIValuePackerError.ImageUnwrapError
+                throw BaseIValuePackerError.imageUnwrapError
             }
         } catch {
-            throw BaseIValuePackerError.ImageUnwrapError
+            throw BaseIValuePackerError.imageUnwrapError
         }
     }
 
@@ -102,27 +104,29 @@ class BaseIValuePacker {
             if let audioId = (params["audio"] as? NSDictionary)?["ID"] as? String {
                 let audio = try AudioModule.unwrapAudio(audioId)
 
-                let MAX_VALUE = 32767
-                var floatArray : [Float] = []
-                for n in audio.getData() {
-                    floatArray.append(Float(n) / Float(MAX_VALUE))
+                let MAXVALUE = 32767
+                var floatArray: [Float] = []
+                for dat in audio.getData() {
+                    floatArray.append(Float(dat) / Float(MAXVALUE))
                 }
 
-                guard let tensor = Tensor.fromBlob(data: &floatArray, shape: [1, NSNumber(value: 16000*5)], dtype: .float) else {
-                    throw BaseIValuePackerError.AudioUnwrapError
+                guard let tensor = Tensor.fromBlob(data: &floatArray,
+                                                   shape: [1, NSNumber(value: 16000*5)],
+                                                   dtype: .float) else {
+                    throw BaseIValuePackerError.audioUnwrapError
                 }
                 return IValue.fromTensor(tensor)
             } else {
-                throw BaseIValuePackerError.AudioUnwrapError
+                throw BaseIValuePackerError.audioUnwrapError
             }
         } catch {
-            throw BaseIValuePackerError.AudioUnwrapError
+            throw BaseIValuePackerError.audioUnwrapError
         }
     }
 
-    private func doImageTransforms(transforms: Array<JSON>, image: CGImage) throws -> Tensor? {
+    private func doImageTransforms(transforms: [JSON], image: CGImage) throws -> Tensor? {
         var newImage = image
-        var tensor: Tensor? = nil
+        var tensor: Tensor?
         for transform in transforms {
             let type = transform["type"].string
             let name = transform["name"].string
@@ -136,22 +140,22 @@ class BaseIValuePacker {
                 case "scale":
                     transformer = try ScaleTransform.parse(transform: transform)
                 default:
-                    throw BaseIValuePackerError.InvalidImageToImageName
+                    throw BaseIValuePackerError.invalidImageToImageName
                 }
                 newImage = try transformer.transform(bitmap: newImage)
             case "image_to_tensor":
                 var transformer: IImageToTensorTransform
-                switch name{
+                switch name {
                 case "rgb_norm":
                     transformer = try RGBNormTransform.parse(transform: transform)
                 case "greyscale_norm":
                     transformer = try GreyScaleNormTransform.parse(transform: transform)
                 default:
-                    throw BaseIValuePackerError.InvalidImageToTensorName
+                    throw BaseIValuePackerError.invalidImageToTensorName
                 }
                 tensor = transformer.transform(bitmap: newImage)
             default:
-                throw BaseIValuePackerError.InvalidTransformType
+                throw BaseIValuePackerError.invalidTransformType
             }
         }
         return tensor
@@ -168,10 +172,10 @@ class BaseIValuePacker {
             } else {
                 if let key = key as? String {
                     if key != "image" && key != "audio" {
-                        throw BaseIValuePackerError.InvalidParam
+                        throw BaseIValuePackerError.invalidParam
                     }
                 } else {
-                    throw BaseIValuePackerError.InvalidParam
+                    throw BaseIValuePackerError.invalidParam
                 }
             }
         }
@@ -180,14 +184,14 @@ class BaseIValuePacker {
             let spec = try JSON(data: Data(specSrc.utf8))
             return spec
         } catch {
-            throw BaseIValuePackerError.StringToJSONError
+            throw BaseIValuePackerError.stringToJSONError
         }
     }
 
-    private func unpackTensor(ivalue: IValue, unpack: JSON, map: inout [String: Any]) throws -> Void {
+    private func unpackTensor(ivalue: IValue, unpack: JSON, map: inout [String: Any]) throws {
         let dtype = unpack["dtype"].string
         guard let key = unpack["key"].string else {
-            throw BaseIValuePackerError.MissingKeyParam
+            throw BaseIValuePackerError.missingKeyParam
         }
         switch dtype {
         case "float":
@@ -195,7 +199,7 @@ class BaseIValuePacker {
             let array = tensor?.getDataAsArray() ?? []
             map[key] = array
         default:
-            throw BaseIValuePackerError.InvalidDType
+            throw BaseIValuePackerError.invalidDType
         }
     }
 
@@ -206,32 +210,34 @@ class BaseIValuePacker {
 
         switch dtype {
         case .float:
-            var max = -MAXFLOAT;
-            var ret = -1;
-            for (i, item) in array.enumerated() {
-                let num = item as! Float32
-                if (num > max) {
-                  ret = i;
-                  max = num;
+            var max = -MAXFLOAT
+            var ret = -1
+            for (idx, item) in array.enumerated() {
+                guard let num = item as? Float32 else {
+                    continue
+                }
+                if num > max {
+                  ret = idx
+                  max = num
                 }
             }
-            return ret;
+            return ret
         default:
             return 0
         }
     }
 
-    private func unpackArgmax(ivalue: IValue, unpack: JSON, map: inout [String: Any]) throws -> Void {
+    private func unpackArgmax(ivalue: IValue, unpack: JSON, map: inout [String: Any]) throws {
         let dtype = unpack["dtype"].string
         guard let key = unpack["key"].string else {
-            throw BaseIValuePackerError.MissingKeyParam
+            throw BaseIValuePackerError.missingKeyParam
         }
         let valueKey = unpack["valueKey"].string
         switch dtype {
         case "float":
             let tensor = ivalue.toTensor()
             guard let array = tensor?.getDataAsArray() else {
-                throw BaseIValuePackerError.InvalidParam
+                throw BaseIValuePackerError.invalidParam
             }
             let maxIdx = argmax(array: array, dtype: tensor?.dtype)
             map[key] = maxIdx
@@ -240,65 +246,67 @@ class BaseIValuePacker {
                 map[valueKey!] = softmaxData[maxIdx]
             }
         default:
-            throw BaseIValuePackerError.InvalidDType
+            throw BaseIValuePackerError.invalidDType
         }
     }
 
-    private func unpackTensorToImage(ivalue: IValue, unpack: JSON, map: inout [String: Any]) throws -> Void {
+    private func unpackTensorToImage(ivalue: IValue, unpack: JSON, map: inout [String: Any]) throws {
         guard let key = unpack["key"].string else {
-            throw BaseIValuePackerError.MissingKeyParam
+            throw BaseIValuePackerError.missingKeyParam
         }
 
         guard let tensor = ivalue.toTensor() else {
-            throw BaseIValuePackerError.InvalidUnpackType
+            throw BaseIValuePackerError.invalidUnpackType
         }
-        guard let cgImage = tensorToBitmap(tensor: tensor) else {
-            throw BaseIValuePackerError.InvalidUnpackType
+        guard let cgImage = try tensorToBitmap(tensor: tensor) else {
+            throw BaseIValuePackerError.invalidUnpackType
         }
         let image = Image(image: cgImage)
         let ref = JSContext.wrapObject(object: image).getJSRef()
         map[key] = ref
     }
 
-    private func tensorToBitmap(tensor: Tensor) -> CGImage? {
-        let data = tensor.getDataAsArray() as! [Float32]
+    private func tensorToBitmap(tensor: Tensor) throws -> CGImage? {
+        guard let data = tensor.getDataAsArray() as? [Float32] else {
+            throw BaseIValuePackerError.encodeImageError
+        }
         let shape = tensor.shape
 
-        let w = shape[3].intValue
-        let h = shape[2].intValue
+        let width = shape[3].intValue
+        let height = shape[2].intValue
 
         // Determine the min/max value of data
         var max: Float32 = 0
         var min: Float32 = Float32.greatestFiniteMagnitude
-        for f in data {
-            if (f > max) {
-              max = f
+        for val in data {
+            if val > max {
+              max = val
             }
-            if (f < min) {
-              min = f
+            if val < min {
+              min = val
             }
         }
 
         let delta = (max - min)
-        var rgba: [UInt8] = [UInt8](repeating: 0, count: 4 * w * h)
-        for i in 0..<(w * h) {
-            rgba[4 * i] = (UInt8) ((data[i] - min) / delta * 255);
-            rgba[4 * i + 1] = (UInt8) ((data[w * h + i] - min) / delta * 255);
-            rgba[4 * i + 2] = (UInt8) ((data[w * h * 2 + i] - min) / delta * 255);
-            rgba[4 * i + 3] = 255
+        var rgba: [UInt8] = [UInt8](repeating: 0, count: 4 * width * height)
+        for idx in 0..<(width * height) {
+            rgba[4 * idx] = (UInt8) ((data[idx] - min) / delta * 255)
+            rgba[4 * idx + 1] = (UInt8) ((data[width * height + idx] - min) / delta * 255)
+            rgba[4 * idx + 2] = (UInt8) ((data[width * height * 2 + idx] - min) / delta * 255)
+            rgba[4 * idx + 3] = 255
         }
 
         let dataForProvider: Data = Data(rgba)
         let bytesPerPixel = 4
         let bitsPerPixel = 32
-        let bytesPerRow = bytesPerPixel * w
+        let bytesPerRow = bytesPerPixel * width
         let bitsPerComponent = 8
         let bitmapInfo = CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedLast.rawValue)
         let provider: CGDataProvider! = CGDataProvider(data: dataForProvider as CFData)
 
         let cgImage = CGImage(
-            width: w,
-            height: h,
+            width: width,
+            height: height,
             bitsPerComponent: bitsPerComponent,
             bitsPerPixel: bitsPerPixel,
             bytesPerRow: bytesPerRow,
@@ -318,49 +326,52 @@ class BaseIValuePacker {
         switch tokenizer {
         case "bert":
             guard let vocabulary = modelSpec["vocabulary_bert"].string else {
-                throw BaseIValuePackerError.PackStringError
+                throw BaseIValuePackerError.packStringError
             }
             let bertTokenizer = try BertTokenizer(vocabulary: vocabulary)
-            var tokenIds = try bertTokenizer.tokenize(content: pack["string"].stringValue, modelInputLength: pack["model_input_length"].intValue)
+            var tokenIds = try bertTokenizer.tokenize(content: pack["string"].stringValue,
+                                                      modelInputLength: pack["model_input_length"].intValue)
             packerContext["bert_tokenizer"] = bertTokenizer
             packerContext["token_ids"] = tokenIds
-            guard let tensor = Tensor.fromBlob(data: &tokenIds, shape: [1, NSNumber(value: tokenIds.count)], dtype: .long) else {
-                throw BaseIValuePackerError.PackStringError
+            guard let tensor = Tensor.fromBlob(data: &tokenIds,
+                                               shape: [1, NSNumber(value: tokenIds.count)],
+                                               dtype: .long) else {
+                throw BaseIValuePackerError.packStringError
             }
             return IValue.fromTensor(tensor)
         default:
-            throw BaseIValuePackerError.PackStringError
+            throw BaseIValuePackerError.packStringError
         }
     }
 
-    private func decodeTensorToString(ivalue: IValue, unpack: JSON, map: inout [String: Any]) throws -> Void {
+    private func decodeTensorToString(ivalue: IValue, unpack: JSON, map: inout [String: Any]) throws {
         guard let key = unpack["key"].string else {
-            throw BaseIValuePackerError.MissingKeyParam
+            throw BaseIValuePackerError.missingKeyParam
         }
 
         guard let answer = ivalue.toString() else {
-            throw BaseIValuePackerError.DecodeStringError
+            throw BaseIValuePackerError.decodeStringError
         }
         map[key] = answer
     }
 
-    private func decodeBertQAAnswer(ivalue: IValue, unpack: JSON, map: inout [String: Any]) throws -> Void {
+    private func decodeBertQAAnswer(ivalue: IValue, unpack: JSON, map: inout [String: Any]) throws {
         guard let key = unpack["key"].string else {
-            throw BaseIValuePackerError.MissingKeyParam
+            throw BaseIValuePackerError.missingKeyParam
         }
 
         guard let bertTokenizer = packerContext["bert_tokenizer"] as? BertTokenizer,
               let tokenIds = packerContext["token_ids"] as? [Int] else {
-            throw BaseIValuePackerError.DecodeBertError
+            throw BaseIValuePackerError.decodeBertError
         }
 
         guard let dict = ivalue.toDictStringKey() as [String: IValue]? else {
-            throw BaseIValuePackerError.DecodeBertError
+            throw BaseIValuePackerError.decodeBertError
         }
 
         guard let startLogitTensor = dict["start_logits"]?.toTensor(),
               let endLogitTensor = dict["end_logits"]?.toTensor() else {
-            throw BaseIValuePackerError.DecodeBertError
+            throw BaseIValuePackerError.decodeBertError
         }
 
         let startLogits = startLogitTensor.getDataAsArrayBert()
@@ -379,38 +390,37 @@ class BaseIValuePacker {
         }
 
         if startIdx > endIdx {
-            throw BaseIValuePackerError.DecodeBertError
+            throw BaseIValuePackerError.decodeBertError
         }
 
         let tokenIdRange = Array(tokenIds[startIdx...endIdx])
         do {
             let text = try bertTokenizer.decode(tokenIds: tokenIdRange)
             map[key] = text
-        }
-        catch {
-            throw BaseIValuePackerError.DecodeBertError
+        } catch {
+            throw BaseIValuePackerError.decodeBertError
         }
     }
 
-    private func decodeObjects(ivalue: IValue, unpack: JSON, params: NSDictionary, map: inout [String: Any]) throws -> Void {
+    private func decodeObjects(ivalue: IValue, unpack: JSON, params: NSDictionary, map: inout [String: Any]) throws {
         guard let key = unpack["key"].string else {
-            throw BaseIValuePackerError.MissingKeyParam
+            throw BaseIValuePackerError.missingKeyParam
         }
 
         guard let dict = ivalue.toDictStringKey() as [String: IValue]? else {
-            throw BaseIValuePackerError.DecodeObjectsError
+            throw BaseIValuePackerError.decodeObjectsError
         }
 
         guard let predLogitsTensor = dict["pred_logits"]?.toTensor(),
               let predBoxesTensor = dict["pred_boxes"]?.toTensor(),
               let probabilityThreshold = params["probabilityThreshold"] as? Double,
               let classes = unpack["classes"].array else {
-            throw BaseIValuePackerError.DecodeObjectsError
+            throw BaseIValuePackerError.decodeObjectsError
         }
 
         guard let confidencesTensor = predLogitsTensor.getDataAsArray(),
               let locationsTensor = predBoxesTensor.getDataAsArray() else {
-            throw BaseIValuePackerError.DecodeObjectsError
+            throw BaseIValuePackerError.decodeObjectsError
         }
 
         let confidencesShape = predLogitsTensor.shape
@@ -419,26 +429,26 @@ class BaseIValuePacker {
 
         var result = [Any]()
 
-        for i in 0..<confidencesShape[1].intValue {
-            let scores = softmax(data: confidencesTensor, from: i * numClasses, to: (i + 1) * numClasses)
+        for cIdx in 0..<confidencesShape[1].intValue {
+            let scores = softmax(data: confidencesTensor,
+                                 fromIndex: cIdx * numClasses,
+                                 toIndex: (cIdx + 1) * numClasses)
 
             var maxProb = scores[0]
             var maxIndex = -1
-            for j in 0..<scores.count {
-                if scores[j] > maxProb {
-                    maxProb = scores[j]
-                    maxIndex = j
-                }
+            for sIdx in 0..<scores.count where scores[sIdx] > maxProb {
+                maxProb = scores[sIdx]
+                maxIndex = sIdx
             }
 
             if maxProb <= probabilityThreshold || maxIndex >= classes.count {
                 continue
             }
 
-            var match = [String : Any]()
+            var match = [String: Any]()
             match["objectClass"] = classes[maxIndex].stringValue
 
-            let locationsFrom = i * locationsShape[2].intValue
+            let locationsFrom = cIdx * locationsShape[2].intValue
             var bounds = [Double]()
             bounds.append(locationsTensor[locationsFrom].doubleValue)
             bounds.append(locationsTensor[locationsFrom + 1].doubleValue)
@@ -453,24 +463,23 @@ class BaseIValuePacker {
     }
 
     func softmax(data: [NSNumber]) -> [Double] {
-        return softmax(data: data, from: 0, to: data.count)
+        return softmax(data: data, fromIndex: 0, toIndex: data.count)
     }
 
-    func softmax(data: [NSNumber], from: Int, to: Int) -> [Double] {
-        var softmax = [Double](repeating: 0.0, count: (to - from))
+    func softmax(data: [NSNumber], fromIndex: Int, toIndex: Int) -> [Double] {
+        var softmax = [Double](repeating: 0.0, count: (toIndex - fromIndex))
         var expSum = 0.0
 
-        for i in from..<to {
-            let expValue = exp(data[i].doubleValue)
-            softmax[i - from] = expValue
+        for val in fromIndex..<toIndex {
+            let expValue = exp(data[val].doubleValue)
+            softmax[val - fromIndex] = expValue
             expSum += expValue
         }
 
-        for i in 0..<softmax.count {
-            softmax[i] /= expSum
+        for val in 0..<softmax.count {
+            softmax[val] /= expSum
         }
 
         return softmax
     }
-
 }

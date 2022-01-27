@@ -15,12 +15,19 @@ namespace torch {
 using namespace facebook;
 
 class JSI_EXPORT TorchHostObject : public jsi::HostObject {
+  jsi::Function rand;
+  jsi::Function argmax;
+
  public:
-  explicit TorchHostObject() {}
+  TorchHostObject(jsi::Runtime& runtime);
 
  public:
   jsi::Value get(jsi::Runtime&, const jsi::PropNameID& name) override;
   std::vector<jsi::PropNameID> getPropertyNames(jsi::Runtime& rt) override;
+
+ private:
+  static jsi::Function createRand(jsi::Runtime& runtime);
+  static jsi::Function createArgmax(jsi::Runtime& runtime);
 };
 
 } // namespace torch

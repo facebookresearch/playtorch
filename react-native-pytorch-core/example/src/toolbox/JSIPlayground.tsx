@@ -34,16 +34,19 @@ export default function JSIPlayground() {
     console.log('------------');
     console.log(Platform.OS);
     console.log(torch);
-    const size = 1500000;
+    const size = [3, 3, 3];
     const tensor = torch.rand(size);
-    const data = tensor.data;
+    const tensorStr = tensor.toString();
+    console.log(tensorStr);
+    const data = new Float32Array(tensor.data);
+    console.log(data);
 
     if (data.length < 20) {
       console.log('tensor data', tensor.data);
     }
 
     let startTime = performance.now();
-    let result = argmax(data);
+    let result = argmax(Array.from(data));
     let delta = performance.now() - startTime;
     setJsResult(result);
     setJsElapse(delta);

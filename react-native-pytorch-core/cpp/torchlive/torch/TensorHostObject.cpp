@@ -40,7 +40,21 @@ jsi::Value TensorHostObject::get(
   auto name = propNameId.utf8(runtime);
 
   if (name == "data") {
-    throw jsi::JSError(runtime, "Tensor.data not implemented");
+    auto tensor = this->tensor;
+    int byteLength = tensor.nbytes();
+
+    jsi::ArrayBuffer buffer = runtime.global()
+                                  .getPropertyAsFunction(runtime, "ArrayBuffer")
+                                  .callAsConstructor(runtime, byteLength)
+                                  .asObject(runtime)
+                                  .getArrayBuffer(runtime);
+
+    std::memcpy(
+        buffer.data(runtime),
+        tensor.data_ptr(), // we don't specify the dtype here but let it figure
+                           // out itself.
+        byteLength);
+    return buffer;
   } else if (name == "toString") {
     auto toStringFunc = [this](
                             jsi::Runtime& runtime,

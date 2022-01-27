@@ -14,7 +14,10 @@ import org.pytorch.MemoryFormat;
 import org.pytorch.Tensor;
 import org.pytorch.torchvision.TensorImageUtils;
 
-class RgbNormTransform implements IImageToTensorTransform {
+public class RgbNormTransform implements IImageToTensorTransform {
+
+  private static final String MEAN_KEY = "mean";
+  private static final String STD_KEY = "std";
 
   private final float[] mean;
   private final float[] std;
@@ -26,8 +29,8 @@ class RgbNormTransform implements IImageToTensorTransform {
 
   public static RgbNormTransform parse(JSONObject jobject) throws JSONException {
     return new RgbNormTransform(
-        BaseIValuePacker.readFloatArray(jobject, "mean"),
-        BaseIValuePacker.readFloatArray(jobject, "std"));
+        BaseIValuePacker.readFloatArray(jobject, MEAN_KEY),
+        BaseIValuePacker.readFloatArray(jobject, STD_KEY));
   }
 
   @Override

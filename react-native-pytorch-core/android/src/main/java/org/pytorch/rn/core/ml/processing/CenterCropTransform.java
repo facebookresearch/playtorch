@@ -11,7 +11,10 @@ import android.graphics.Bitmap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class CenterCropTransform implements IImageTransform {
+public class CenterCropTransform implements IImageTransform {
+
+  private static final String WIDTH_KEY = "width";
+  private static final String HEIGHT_KEY = "height";
 
   private final float outWidth;
   private final float outHeight;
@@ -21,15 +24,15 @@ class CenterCropTransform implements IImageTransform {
     this.outHeight = outHeight;
   }
 
-  protected static CenterCropTransform parse(JSONObject jobject) throws JSONException {
+  public static CenterCropTransform parse(JSONObject jobject) throws JSONException {
     // If no width or height is defined, it will fallback to a default crop
     // ratio, which means it will center crop to the min dimension of the input
     // image.
-    if (!jobject.has(BaseIValuePacker.JSON_WIDTH) || !jobject.has(BaseIValuePacker.JSON_HEIGHT)) {
+    if (!jobject.has(WIDTH_KEY) || !jobject.has(HEIGHT_KEY)) {
       return new CenterCropTransform(-1, -1);
     }
-    int width = jobject.getInt(BaseIValuePacker.JSON_WIDTH);
-    int height = jobject.getInt(BaseIValuePacker.JSON_HEIGHT);
+    int width = jobject.getInt(WIDTH_KEY);
+    int height = jobject.getInt(HEIGHT_KEY);
     return new CenterCropTransform(width, height);
   }
 

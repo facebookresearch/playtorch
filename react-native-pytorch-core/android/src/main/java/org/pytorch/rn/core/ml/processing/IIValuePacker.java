@@ -17,6 +17,4 @@ public interface IIValuePacker {
       throws Exception;
 
   PackerContext newContext();
-
-  void doRegister();
 }

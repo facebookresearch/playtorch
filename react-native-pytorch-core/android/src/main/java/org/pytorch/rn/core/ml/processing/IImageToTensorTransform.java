@@ -10,6 +10,6 @@ package org.pytorch.rn.core.ml.processing;
 import android.graphics.Bitmap;
 import org.pytorch.Tensor;
 
-interface IImageToTensorTransform {
+public interface IImageToTensorTransform {
   Tensor transform(Bitmap bitmap);
 }

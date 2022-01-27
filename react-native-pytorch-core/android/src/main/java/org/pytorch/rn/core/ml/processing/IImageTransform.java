@@ -9,6 +9,6 @@ package org.pytorch.rn.core.ml.processing;
 
 import android.graphics.Bitmap;
 
-interface IImageTransform {
+public interface IImageTransform {
   Bitmap transform(Bitmap bitmap);
 }

@@ -18,6 +18,9 @@ import org.pytorch.Tensor;
 
 public class GreyScaleNormTransform implements IImageToTensorTransform {
 
+  private static final String MEAN_KEY = "mean";
+  private static final String STD_KEY = "std";
+
   private final @ColorInt int colorBackground;
   private final @ColorInt int colorForeground;
   private final float mean;
@@ -70,7 +73,7 @@ public class GreyScaleNormTransform implements IImageToTensorTransform {
     return new GreyScaleNormTransform(
         Color.parseColor(jobject.getString("colorBackground")),
         Color.parseColor(jobject.getString("colorForeground")),
-        (float) jobject.getDouble(BaseIValuePacker.JSON_MEAN),
-        (float) jobject.getDouble(BaseIValuePacker.JSON_STD));
+        (float) jobject.getDouble(MEAN_KEY),
+        (float) jobject.getDouble(STD_KEY));
   }
 }

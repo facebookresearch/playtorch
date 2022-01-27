@@ -11,7 +11,10 @@ import android.graphics.Bitmap;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-class ScaleTransform implements IImageTransform {
+public class ScaleTransform implements IImageTransform {
+
+  private static final String WIDTH_KEY = "width";
+  private static final String HEIGHT_KEY = "height";
 
   private final int width;
   private final int height;
@@ -22,15 +25,11 @@ class ScaleTransform implements IImageTransform {
   }
 
   public static ScaleTransform parse(JSONObject jobject) throws JSONException {
-    if (!jobject.has(BaseIValuePacker.JSON_WIDTH) || !jobject.has(BaseIValuePacker.JSON_HEIGHT)) {
+    if (!jobject.has(WIDTH_KEY) || !jobject.has(HEIGHT_KEY)) {
       throw new JSONException(
-          BaseIValuePacker.JSON_WIDTH
-              + " and "
-              + BaseIValuePacker.JSON_HEIGHT
-              + " property are required for scale transform");
+          WIDTH_KEY + " and " + HEIGHT_KEY + " property are required for scale transform");
     }
-    return new ScaleTransform(
-        jobject.getInt(BaseIValuePacker.JSON_WIDTH), jobject.getInt(BaseIValuePacker.JSON_HEIGHT));
+    return new ScaleTransform(jobject.getInt(WIDTH_KEY), jobject.getInt(HEIGHT_KEY));
   }
 
   @Override

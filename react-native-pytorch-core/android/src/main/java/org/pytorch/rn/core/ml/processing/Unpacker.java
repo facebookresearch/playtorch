@@ -17,7 +17,7 @@ public interface Unpacker {
   void unpack(
       final IValue ivalue,
       final JSONObject jobject,
-      final WritableMap map,
+      final WritableMap result,
       final PackerContext packerContext)
       throws JSONException, IOException;
 }

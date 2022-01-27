@@ -17,6 +17,11 @@ import org.pytorch.torchvision.TensorImageUtils;
 
 public class CameraImageCenterCropScaleRgbNormTransform {
 
+  private static final String WIDTH_KEY = "width";
+  private static final String HEIGHT_KEY = "height";
+  private static final String MEAN_KEY = "mean";
+  private static final String STD_KEY = "std";
+
   private final int mWidth;
   private final int mHeight;
   private final float[] mMean;
@@ -33,10 +38,10 @@ public class CameraImageCenterCropScaleRgbNormTransform {
   public static CameraImageCenterCropScaleRgbNormTransform parse(JSONObject jobject)
       throws JSONException {
     return new CameraImageCenterCropScaleRgbNormTransform(
-        jobject.getInt(BaseIValuePacker.JSON_WIDTH),
-        jobject.getInt(BaseIValuePacker.JSON_HEIGHT),
-        BaseIValuePacker.readFloatArray(jobject, BaseIValuePacker.JSON_MEAN),
-        BaseIValuePacker.readFloatArray(jobject, BaseIValuePacker.JSON_STD));
+        jobject.getInt(WIDTH_KEY),
+        jobject.getInt(HEIGHT_KEY),
+        BaseIValuePacker.readFloatArray(jobject, MEAN_KEY),
+        BaseIValuePacker.readFloatArray(jobject, STD_KEY));
   }
 
   public Tensor transform(Image image, int rotationDegrees) {

@@ -40,12 +40,32 @@ import org.junit.runner.RunWith;
 import org.pytorch.rn.core.audio.Audio;
 import org.pytorch.rn.core.image.Image;
 import org.pytorch.rn.core.javascript.JSContext;
-import org.pytorch.rn.core.ml.MobileModelModule;
 import org.pytorch.rn.core.ml.processing.BaseIValuePacker;
 import org.pytorch.rn.core.ml.processing.GPT2Tokenizer;
 import org.pytorch.rn.core.ml.processing.IIValuePacker;
 import org.pytorch.rn.core.ml.processing.PackerContext;
 import org.pytorch.rn.core.ml.processing.PackerRegistry;
+import org.pytorch.rn.core.ml.processing.packer.ScalarBoolPacker;
+import org.pytorch.rn.core.ml.processing.packer.ScalarDoublePacker;
+import org.pytorch.rn.core.ml.processing.packer.ScalarLongPacker;
+import org.pytorch.rn.core.ml.processing.packer.TensorFromAudioPacker;
+import org.pytorch.rn.core.ml.processing.packer.TensorFromImagePacker;
+import org.pytorch.rn.core.ml.processing.packer.TensorFromStringPacker;
+import org.pytorch.rn.core.ml.processing.packer.TensorPacker;
+import org.pytorch.rn.core.ml.processing.packer.TuplePacker;
+import org.pytorch.rn.core.ml.processing.unpacker.ArgmaxUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.BertDecodeQAAnswerUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.BoundingBoxesUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.DictStringKeyUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.ListUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.ScalarBoolUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.ScalarFloatUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.ScalarLongUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.StringUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.TensorToImageUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.TensorToStringUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.TensorUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.TupleUnpacker;
 
 @RunWith(AndroidJUnit4.class)
 @SmallTest
@@ -56,6 +76,31 @@ public class IValuePackerInstrumentedTest {
   static {
     Context ctx = InstrumentationRegistry.getTargetContext();
     SoLoader.init(ctx, false);
+
+    // Pack
+    PackerRegistry.register("tuple", new TuplePacker());
+    PackerRegistry.register("scalar_bool", new ScalarBoolPacker());
+    PackerRegistry.register("scalar_long", new ScalarLongPacker());
+    PackerRegistry.register("scalar_double", new ScalarDoublePacker());
+    PackerRegistry.register("tensor", new TensorPacker());
+    PackerRegistry.register("tensor_from_image", new TensorFromImagePacker());
+    PackerRegistry.register("tensor_from_string", new TensorFromStringPacker());
+    PackerRegistry.register("tensor_from_audio", new TensorFromAudioPacker());
+
+    // Unpack
+    PackerRegistry.register("tuple", new TupleUnpacker());
+    PackerRegistry.register("list", new ListUnpacker());
+    PackerRegistry.register("dict_string_key", new DictStringKeyUnpacker());
+    PackerRegistry.register("tensor", new TensorUnpacker());
+    PackerRegistry.register("scalar_long", new ScalarLongUnpacker());
+    PackerRegistry.register("scalar_float", new ScalarFloatUnpacker());
+    PackerRegistry.register("scalar_bool", new ScalarBoolUnpacker());
+    PackerRegistry.register("argmax", new ArgmaxUnpacker());
+    PackerRegistry.register("string", new StringUnpacker());
+    PackerRegistry.register("tensor_to_image", new TensorToImageUnpacker());
+    PackerRegistry.register("bounding_boxes", new BoundingBoxesUnpacker());
+    PackerRegistry.register("tensor_to_string", new TensorToStringUnpacker());
+    PackerRegistry.register("bert_decode_qa_answer", new BertDecodeQAAnswerUnpacker());
   }
 
   public String readAsset(String name) throws IOException {
@@ -102,7 +147,7 @@ public class IValuePackerInstrumentedTest {
     params.putMap("image1", ref.getJSRef());
 
     final String spec = readAsset("body_tracking_spec.json");
-    final IIValuePacker packer = MobileModelModule.getPacker(spec);
+    final IIValuePacker packer = new BaseIValuePacker(spec);
     final PackerContext packerContext = packer.newContext();
 
     final IValue result = packer.pack(params, packerContext);
@@ -145,7 +190,7 @@ public class IValuePackerInstrumentedTest {
             IValue.from(n), IValue.from(bboxes), IValue.from(scores), IValue.from(indices));
 
     final String spec = readAsset("body_tracking_spec2.json");
-    final IIValuePacker packer = MobileModelModule.getPacker(spec);
+    final IIValuePacker packer = new BaseIValuePacker(spec);
     final PackerContext packerContext = packer.newContext();
 
     final ReadableMap map = packer.unpack(ivalue, new JavaOnlyMap(), packerContext);
@@ -173,7 +218,7 @@ public class IValuePackerInstrumentedTest {
   @Test
   public void bertTest() throws Exception {
     final String spec = readAsset("bert_qa_spec.json");
-    final IIValuePacker packer = MobileModelModule.getPacker(spec);
+    final IIValuePacker packer = new BaseIValuePacker(spec);
 
     final JavaOnlyMap params = new JavaOnlyMap();
     final String testText = "[CLS] Who was Jim Henson ? [SEP] Jim Henson was a puppeteer [SEP]";
@@ -219,7 +264,7 @@ public class IValuePackerInstrumentedTest {
   @Test
   public void gpt2PackTest() throws Exception {
     final String spec = readAsset("gpt2_spec.json");
-    final IIValuePacker packer = MobileModelModule.getPacker(spec);
+    final IIValuePacker packer = new BaseIValuePacker(spec);
 
     final JavaOnlyMap params = new JavaOnlyMap();
     params.putString("string", "Umka is a white fluffy pillow.");
@@ -234,7 +279,7 @@ public class IValuePackerInstrumentedTest {
   @Test
   public void gpt2UnpackTest() throws Exception {
     final String spec = readAsset("gpt2_spec.json");
-    final IIValuePacker packer = MobileModelModule.getPacker(spec);
+    final IIValuePacker packer = new BaseIValuePacker(spec);
     final long[] data = new long[] {37280, 4914, 318, 257, 2330, 39145, 28774, 13};
 
     PackerContext packerContext = packer.newContext();
@@ -251,55 +296,34 @@ public class IValuePackerInstrumentedTest {
 
     public TestCustomPacker(@Nullable String specSrc) throws JSONException {
       super(specSrc);
-      // Init additional resources
-    }
 
-    @Override
-    protected void register(final PackerRegistry registry) {
-      super.register(registry);
       // Register additional packers/unpackers
-      registry
-          .register(
-              "tensor_from_string_custom",
-              (jobject, params, packerContext) -> {
-                final long[] tokenIds =
-                    getGPT2Tokenizer(packerContext).tokenize(jobject.getString("string"));
-                return IValue.from(Tensor.fromBlob(tokenIds, new long[] {1, tokenIds.length}));
-              })
-          .register(
-              "tensor_to_string_custom",
-              (ivalue, jobject, map, packerContext) -> {
-                final long[] tokenIds = ivalue.toTensor().getDataAsLongArray();
-                map.putString(
-                    jobject.getString("key"), getGPT2Tokenizer(packerContext).decode(tokenIds));
-              });
+      PackerRegistry.register(
+          "tensor_from_string_custom",
+          (jobject, params, packerContext) -> {
+            final long[] tokenIds =
+                getGPT2Tokenizer(packerContext).tokenize(jobject.getString("string"));
+            return IValue.from(Tensor.fromBlob(tokenIds, new long[] {1, tokenIds.length}));
+          });
+      PackerRegistry.register(
+          "tensor_to_string_custom",
+          (ivalue, jobject, map, packerContext) -> {
+            final long[] tokenIds = ivalue.toTensor().getDataAsLongArray();
+            map.putString(
+                jobject.getString("key"), getGPT2Tokenizer(packerContext).decode(tokenIds));
+          });
     }
 
     private GPT2Tokenizer getGPT2Tokenizer(PackerContext packerContext)
         throws JSONException, UnsupportedEncodingException {
-      GPT2Tokenizer gpt2Tokenizer = (GPT2Tokenizer) registry.get("gpt2_tokenizer_custom");
+      GPT2Tokenizer gpt2Tokenizer = (GPT2Tokenizer) packerContext.get("gpt2_tokenizer_custom");
       if (gpt2Tokenizer == null) {
         gpt2Tokenizer =
             new GPT2Tokenizer(packerContext.specSrcJson.getJSONObject("vocabulary_gpt2_custom"));
-        registry.store("gpt2_tokenizer_custom", gpt2Tokenizer);
+        packerContext.store("gpt2_tokenizer_custom", gpt2Tokenizer);
       }
       return gpt2Tokenizer;
     }
-  }
-
-  @Test
-  public void gpt2CustomUnpackTest() throws Exception {
-    final String spec = readAsset("gpt2_spec_custompacker.json");
-    final IIValuePacker packer = MobileModelModule.getPacker(spec);
-    final long[] data = new long[] {37280, 4914, 318, 257, 2330, 39145, 28774, 13};
-    PackerContext packerContext = packer.newContext();
-    final ReadableMap map =
-        packer.unpack(
-            IValue.from(Tensor.fromBlob(data, new long[] {1, 8})),
-            new JavaOnlyMap(),
-            packerContext);
-
-    Assert.assertEquals("Umka is a white fluffy pillow.", map.getString("text"));
   }
 
   private static String colorHexString(@ColorInt int color) {
@@ -309,7 +333,7 @@ public class IValuePackerInstrumentedTest {
   @Test
   public void testAudio() throws Exception {
     final String spec = readAsset("speech_recognition.json");
-    final IIValuePacker packer = MobileModelModule.getPacker(spec);
+    final IIValuePacker packer = new BaseIValuePacker(spec);
     final JavaOnlyMap params = new JavaOnlyMap();
     final int sec = 3;
     final short[] sdata = new short[16000 * sec];
@@ -331,7 +355,7 @@ public class IValuePackerInstrumentedTest {
   @Test
   public void mnist() throws Exception {
     final String spec = readAsset("mnist.json");
-    final IIValuePacker packer = MobileModelModule.getPacker(spec);
+    final IIValuePacker packer = new BaseIValuePacker(spec);
     final JavaOnlyMap params = new JavaOnlyMap();
     Bitmap bitmap = Bitmap.createBitmap(224, 224, Bitmap.Config.ARGB_8888);
 

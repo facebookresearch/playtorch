@@ -25,14 +25,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import org.json.JSONException;
-import org.json.JSONObject;
 import org.pytorch.Device;
 import org.pytorch.IValue;
 import org.pytorch.LiteModuleLoader;
@@ -40,10 +38,59 @@ import org.pytorch.Module;
 import org.pytorch.rn.core.ml.processing.BaseIValuePacker;
 import org.pytorch.rn.core.ml.processing.IIValuePacker;
 import org.pytorch.rn.core.ml.processing.PackerContext;
+import org.pytorch.rn.core.ml.processing.PackerRegistry;
+import org.pytorch.rn.core.ml.processing.packer.ScalarBoolPacker;
+import org.pytorch.rn.core.ml.processing.packer.ScalarDoublePacker;
+import org.pytorch.rn.core.ml.processing.packer.ScalarLongPacker;
+import org.pytorch.rn.core.ml.processing.packer.TensorFromAudioPacker;
+import org.pytorch.rn.core.ml.processing.packer.TensorFromImagePacker;
+import org.pytorch.rn.core.ml.processing.packer.TensorFromStringPacker;
+import org.pytorch.rn.core.ml.processing.packer.TensorPacker;
+import org.pytorch.rn.core.ml.processing.packer.TuplePacker;
+import org.pytorch.rn.core.ml.processing.unpacker.ArgmaxUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.BertDecodeQAAnswerUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.BoundingBoxesUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.DictStringKeyUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.ListUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.ScalarBoolUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.ScalarFloatUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.ScalarLongUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.StringUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.TensorToImageUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.TensorToStringUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.TensorUnpacker;
+import org.pytorch.rn.core.ml.processing.unpacker.TupleUnpacker;
 import org.pytorch.rn.core.utils.FileUtils;
 
 @ReactModule(name = "PyTorchCoreMobileModelModule")
 public class MobileModelModule extends ReactContextBaseJavaModule {
+
+  static {
+    // Pack
+    PackerRegistry.register("tuple", new TuplePacker());
+    PackerRegistry.register("scalar_bool", new ScalarBoolPacker());
+    PackerRegistry.register("scalar_long", new ScalarLongPacker());
+    PackerRegistry.register("scalar_double", new ScalarDoublePacker());
+    PackerRegistry.register("tensor", new TensorPacker());
+    PackerRegistry.register("tensor_from_image", new TensorFromImagePacker());
+    PackerRegistry.register("tensor_from_string", new TensorFromStringPacker());
+    PackerRegistry.register("tensor_from_audio", new TensorFromAudioPacker());
+
+    // Unpack
+    PackerRegistry.register("tuple", new TupleUnpacker());
+    PackerRegistry.register("list", new ListUnpacker());
+    PackerRegistry.register("dict_string_key", new DictStringKeyUnpacker());
+    PackerRegistry.register("tensor", new TensorUnpacker());
+    PackerRegistry.register("scalar_long", new ScalarLongUnpacker());
+    PackerRegistry.register("scalar_float", new ScalarFloatUnpacker());
+    PackerRegistry.register("scalar_bool", new ScalarBoolUnpacker());
+    PackerRegistry.register("argmax", new ArgmaxUnpacker());
+    PackerRegistry.register("string", new StringUnpacker());
+    PackerRegistry.register("tensor_to_image", new TensorToImageUnpacker());
+    PackerRegistry.register("bounding_boxes", new BoundingBoxesUnpacker());
+    PackerRegistry.register("tensor_to_string", new TensorToStringUnpacker());
+    PackerRegistry.register("bert_decode_qa_answer", new BertDecodeQAAnswerUnpacker());
+  }
 
   public static final String TAG = "PTLMobileModelModule";
 
@@ -226,30 +273,6 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
     return moduleHolder;
   }
 
-  static IIValuePacker newPacker(final String customPackerClass, final String spec)
-      throws ClassNotFoundException, NoSuchMethodException, IllegalAccessException,
-          InvocationTargetException, InstantiationException {
-    final Class clazz = Class.forName(customPackerClass);
-    final Constructor<?> ctor = clazz.getConstructor(String.class);
-    return (IIValuePacker) ctor.newInstance(spec);
-  }
-
-  public static IIValuePacker getPacker(@Nullable String spec)
-      throws JSONException, ClassNotFoundException, NoSuchMethodException,
-          InvocationTargetException, InstantiationException, IllegalAccessException {
-    if (spec == null) {
-      return null;
-    }
-
-    final JSONObject specJson = new JSONObject(spec);
-    final IIValuePacker packer =
-        specJson.has(BaseIValuePacker.JSON_CUSTOM_PACKER_CLASS)
-            ? newPacker(specJson.getString(BaseIValuePacker.JSON_CUSTOM_PACKER_CLASS), spec)
-            : new BaseIValuePacker(spec);
-    packer.doRegister();
-    return packer;
-  }
-
   /**
    * Struct to hold the mobile model and the spec to pack/unpack high-level data-types from PyTorch
    * Live React Native.
@@ -260,11 +283,9 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
     Module module;
     IIValuePacker packer;
 
-    protected ModuleHolder(Module module, @Nullable String spec)
-        throws JSONException, ClassNotFoundException, NoSuchMethodException,
-            InvocationTargetException, InstantiationException, IllegalAccessException {
+    protected ModuleHolder(Module module, @Nullable String spec) throws JSONException {
       this.module = module;
-      this.packer = getPacker(spec);
+      this.packer = new BaseIValuePacker(spec);
     }
   }
 }

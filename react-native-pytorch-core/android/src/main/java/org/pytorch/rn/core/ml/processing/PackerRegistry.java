@@ -15,34 +15,30 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.pytorch.IValue;
 
-public class PackerRegistry implements Packer, Unpacker {
+public class PackerRegistry {
 
-  private final HashMap<String, Packer> mPackerMap = new HashMap<>();
-  private final HashMap<String, Unpacker> mUnpackerMap = new HashMap<>();
-  private final HashMap<String, Object> mObjectCache = new HashMap<>();
+  private static final HashMap<String, Packer> mPackerMap = new HashMap<>();
+  private static final HashMap<String, Unpacker> mUnpackerMap = new HashMap<>();
 
-  PackerRegistry() {}
+  private PackerRegistry() {}
 
-  public synchronized PackerRegistry register(final String type, final Packer packer) {
+  public static synchronized void register(final String type, final Packer packer) {
     if (mPackerMap.containsKey(type)) {
       throw new IllegalStateException("Packer for type '" + type + "' is already registered");
     }
 
     mPackerMap.put(type, packer);
-    return this;
   }
 
-  public synchronized PackerRegistry register(final String type, final Unpacker unpacker) {
+  public static synchronized void register(final String type, final Unpacker unpacker) {
     if (mUnpackerMap.containsKey(type)) {
       throw new IllegalStateException("Unpacker for type '" + type + "' is already registered");
     }
 
     mUnpackerMap.put(type, unpacker);
-    return this;
   }
 
-  @Override
-  public IValue pack(
+  public static IValue pack(
       final JSONObject jobject, final ReadableMap params, final PackerContext packerContext)
       throws JSONException, IOException {
     final String type = jobject.getString("type");
@@ -53,8 +49,7 @@ public class PackerRegistry implements Packer, Unpacker {
     return p.pack(jobject, params, packerContext);
   }
 
-  @Override
-  public void unpack(
+  public static void unpack(
       final IValue ivalue,
       final JSONObject jobject,
       final WritableMap map,
@@ -66,13 +61,5 @@ public class PackerRegistry implements Packer, Unpacker {
       throw new IllegalStateException("Unknown type for unpacker: '" + type + "'");
     }
     u.unpack(ivalue, jobject, map, packerContext);
-  }
-
-  public void store(String key, Object value) {
-    this.mObjectCache.put(key, value);
-  }
-
-  public Object get(String key) {
-    return this.mObjectCache.get(key);
   }
 }

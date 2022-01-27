@@ -27,8 +27,6 @@
 		387E704D26E16F43003BB6F5 /* IImageTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702D26E16F43003BB6F5 /* IImageTransform.swift */; };
 		387E704E26E16F43003BB6F5 /* CenterCropTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702E26E16F43003BB6F5 /* CenterCropTransform.swift */; };
 		387E704F26E16F43003BB6F5 /* IImageToTensorTransform.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E702F26E16F43003BB6F5 /* IImageToTensorTransform.swift */; };
-		387E705026E16F43003BB6F5 /* TorchModule.mm in Sources */ = {isa = PBXBuildFile; fileRef = 387E703026E16F43003BB6F5 /* TorchModule.mm */; };
-		387E705126E16F43003BB6F5 /* TensorWrapper.mm in Sources */ = {isa = PBXBuildFile; fileRef = 387E703326E16F43003BB6F5 /* TensorWrapper.mm */; };
 		387E705226E16F43003BB6F5 /* MobileModelModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 387E703426E16F43003BB6F5 /* MobileModelModule.m */; };
 		387E705326E16F43003BB6F5 /* MobileModelModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E703526E16F43003BB6F5 /* MobileModelModule.swift */; };
 		387E705426E16F43003BB6F5 /* BitmapImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E703726E16F43003BB6F5 /* BitmapImage.swift */; };
@@ -78,10 +76,6 @@
 		387E702D26E16F43003BB6F5 /* IImageTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IImageTransform.swift; sourceTree = "<group>"; };
 		387E702E26E16F43003BB6F5 /* CenterCropTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CenterCropTransform.swift; sourceTree = "<group>"; };
 		387E702F26E16F43003BB6F5 /* IImageToTensorTransform.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IImageToTensorTransform.swift; sourceTree = "<group>"; };
-		387E703026E16F43003BB6F5 /* TorchModule.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TorchModule.mm; sourceTree = "<group>"; };
-		387E703126E16F43003BB6F5 /* TorchModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TorchModule.h; sourceTree = "<group>"; };
-		387E703226E16F43003BB6F5 /* TensorWrapper.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TensorWrapper.h; sourceTree = "<group>"; };
-		387E703326E16F43003BB6F5 /* TensorWrapper.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = TensorWrapper.mm; sourceTree = "<group>"; };
 		387E703426E16F43003BB6F5 /* MobileModelModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MobileModelModule.m; sourceTree = "<group>"; };
 		387E703526E16F43003BB6F5 /* MobileModelModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MobileModelModule.swift; sourceTree = "<group>"; };
 		387E703726E16F43003BB6F5 /* BitmapImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BitmapImage.swift; sourceTree = "<group>"; };
@@ -161,10 +155,6 @@
 				387E703426E16F43003BB6F5 /* MobileModelModule.m */,
 				387E703526E16F43003BB6F5 /* MobileModelModule.swift */,
 				387E702926E16F43003BB6F5 /* Processing */,
-				387E703226E16F43003BB6F5 /* TensorWrapper.h */,
-				387E703326E16F43003BB6F5 /* TensorWrapper.mm */,
-				387E703126E16F43003BB6F5 /* TorchModule.h */,
-				387E703026E16F43003BB6F5 /* TorchModule.mm */,
 			);
 			path = ML;
 			sourceTree = "<group>";
@@ -271,7 +261,6 @@
 			files = (
 				387E704526E16F43003BB6F5 /* CameraManager.m in Sources */,
 				387E704726E16F43003BB6F5 /* CameraManager.swift in Sources */,
-				387E705026E16F43003BB6F5 /* TorchModule.mm in Sources */,
 				387E704F26E16F43003BB6F5 /* IImageToTensorTransform.swift in Sources */,
 				387E705226E16F43003BB6F5 /* MobileModelModule.m in Sources */,
 				387E704B26E16F43003BB6F5 /* RGBNormTransform.swift in Sources */,
@@ -303,7 +292,6 @@
 				387E704326E16F43003BB6F5 /* CGContextExtension.swift in Sources */,
 				387E705726E16F43003BB6F5 /* ImageModule.swift in Sources */,
 				387E705426E16F43003BB6F5 /* BitmapImage.swift in Sources */,
-				387E705126E16F43003BB6F5 /* TensorWrapper.mm in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

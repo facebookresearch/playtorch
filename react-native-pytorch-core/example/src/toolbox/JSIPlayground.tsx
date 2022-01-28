@@ -60,6 +60,9 @@ export default function JSIPlayground() {
     setcxxElapse(delta);
     console.log('argmax (c++)', result);
     console.log('elapsed time (c++)', delta, 'ms');
+    console.log(tensor);
+    console.log(tensor.size());
+    console.log(tensor.shape);
   };
 
   return (

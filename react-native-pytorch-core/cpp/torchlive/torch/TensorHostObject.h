@@ -23,16 +23,21 @@ namespace torch {
 using namespace facebook;
 
 class JSI_EXPORT TensorHostObject : public jsi::HostObject {
- public:
-  explicit TensorHostObject(torch_::Tensor t);
-  ~TensorHostObject();
+  jsi::Function size;
+  jsi::Function toString;
 
  public:
+  explicit TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t);
+  ~TensorHostObject();
+
   jsi::Value get(jsi::Runtime&, const jsi::PropNameID& name) override;
   std::vector<jsi::PropNameID> getPropertyNames(jsi::Runtime& rt) override;
 
- public:
   torch_::Tensor tensor;
+
+ private:
+  jsi::Function createSize(jsi::Runtime& runtime);
+  jsi::Function createToString(jsi::Runtime& runtime);
 };
 
 } // namespace torch

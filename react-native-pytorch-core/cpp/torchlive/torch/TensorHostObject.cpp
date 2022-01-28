@@ -22,7 +22,8 @@ namespace torch {
 
 using namespace facebook;
 
-TensorHostObject::TensorHostObject(torch_::Tensor t) : tensor(t) {}
+TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
+    : tensor(t), toString(createToString(runtime)), size(createSize(runtime)) {}
 
 TensorHostObject::~TensorHostObject() {}
 
@@ -31,6 +32,8 @@ std::vector<jsi::PropNameID> TensorHostObject::getPropertyNames(
   std::vector<jsi::PropNameID> result;
   result.push_back(jsi::PropNameID::forUtf8(runtime, std::string("data")));
   result.push_back(jsi::PropNameID::forUtf8(runtime, std::string("toString")));
+  result.push_back(jsi::PropNameID::forUtf8(runtime, std::string("size")));
+  result.push_back(jsi::PropNameID::forUtf8(runtime, std::string("shape")));
   return result;
 }
 
@@ -55,28 +58,51 @@ jsi::Value TensorHostObject::get(
                            // out itself.
         byteLength);
     return buffer;
+  } else if (name == "shape") {
+    return this->size.call(runtime);
   } else if (name == "toString") {
-    auto toStringFunc = [this](
-                            jsi::Runtime& runtime,
-                            const jsi::Value& thisValue,
-                            const jsi::Value* arguments,
-                            size_t count) -> jsi::Value {
-      auto tensor = this->tensor;
-      std::ostringstream stream;
-      stream << tensor;
-      std::string tensor_string = stream.str();
-      auto val = jsi::String::createFromUtf8(runtime, tensor_string);
-      return jsi::Value(std::move(val));
-    };
-    return jsi::Function::createFromHostFunction(
-        runtime,
-        jsi::PropNameID::forUtf8(runtime, "toString"),
-        0,
-        toStringFunc);
+    return jsi::Value(runtime, toString);
+  } else if (name == "size") {
+    return jsi::Value(runtime, size);
   }
 
   return jsi::Value::undefined();
 }
 
+jsi::Function TensorHostObject::createToString(jsi::Runtime& runtime) {
+  auto toStringFunc = [this](
+                          jsi::Runtime& runtime,
+                          const jsi::Value& thisValue,
+                          const jsi::Value* arguments,
+                          size_t count) -> jsi::Value {
+    auto tensor = this->tensor;
+    std::ostringstream stream;
+    stream << tensor;
+    std::string tensor_string = stream.str();
+    auto val = jsi::String::createFromUtf8(runtime, tensor_string);
+    return jsi::Value(std::move(val));
+  };
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, "toString"), 0, toStringFunc);
+}
+
+jsi::Function TensorHostObject::createSize(jsi::Runtime& runtime) {
+  auto sizeFunc = [this](
+                      jsi::Runtime& runtime,
+                      const jsi::Value& thisValue,
+                      const jsi::Value* arguments,
+                      size_t count) -> jsi::Value {
+    auto tensor = this->tensor;
+    torch_::IntArrayRef dims = tensor.sizes();
+    jsi::Array jsShape = jsi::Array(runtime, dims.size());
+    for (int i = 0; i < dims.size(); i++) {
+      jsShape.setValueAtIndex(runtime, i, jsi::Value((int)dims[i]));
+    }
+
+    return jsShape;
+  };
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, "size"), 0, sizeFunc);
+}
 } // namespace torch
 } // namespace torchlive

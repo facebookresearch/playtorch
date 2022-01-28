@@ -65,7 +65,7 @@ jsi::Function TorchHostObject::createRand(jsi::Runtime& runtime) {
     }
     auto tensor = torch_::rand(c10::ArrayRef<int64_t>(dims));
     auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(tensor);
+        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
     return jsi::Object::createFromHostObject(runtime, tensorHostObject);
   };
 

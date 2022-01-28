@@ -11,10 +11,9 @@ import SwiftyJSON
 class CenterCropTransform: IImageTransform {
 
     enum CenterCropTransformError: Error {
-        case IllegalState
-        case ParseDimension
-        case UnwrappingOptional
-        case NoDimensProvided
+        case illegalState
+        case parseDimension
+        case unwrappingOptional
     }
 
     private let outWidth: Float
@@ -39,7 +38,7 @@ class CenterCropTransform: IImageTransform {
         guard let width = Float(widthString),
               let height = Float(heightString)
         else {
-            throw CenterCropTransformError.ParseDimension
+            throw CenterCropTransformError.parseDimension
         }
 
         return CenterCropTransform(outWidth: width, outHeight: height)
@@ -53,16 +52,16 @@ class CenterCropTransform: IImageTransform {
         let cropRatio = outWidth/outHeight
         var cropWidth: Float
         var cropHeight: Float
-        if(cropRatio > ratio) { //landscape
+        if cropRatio > ratio { // landscape
             cropWidth = width
             cropHeight = cropWidth / cropRatio
-        } else { //portrait
+        } else { // portrait
             cropHeight = height
             cropWidth = cropHeight * cropRatio
         }
 
-        if(cropWidth > width || cropHeight > height) {
-            throw CenterCropTransformError.IllegalState
+        if cropWidth > width || cropHeight > height {
+            throw CenterCropTransformError.illegalState
         }
 
         let offsetX = (width - cropWidth) / 2
@@ -71,7 +70,7 @@ class CenterCropTransform: IImageTransform {
         if let croppedBitmap = bitmap.cropping(to: CGRect(x: Int(offsetX), y: Int(offsetY), width: Int(cropWidth), height: Int(cropHeight))) {
             return croppedBitmap
         } else {
-            throw CenterCropTransformError.UnwrappingOptional
+            throw CenterCropTransformError.unwrappingOptional
         }
     }
 }

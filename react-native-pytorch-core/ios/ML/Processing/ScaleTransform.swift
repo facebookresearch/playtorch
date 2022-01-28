@@ -14,8 +14,8 @@ class ScaleTransform: IImageTransform {
     private let height: Float
 
     enum ScaleTranformError: Error {
-        case NoDimensProvided
-        case ErrorScalingImage
+        case noDimensProvided
+        case scalingImage
     }
 
     init(width: Float, height: Float) {
@@ -25,7 +25,7 @@ class ScaleTransform: IImageTransform {
 
     public static func parse(transform: JSON) throws -> ScaleTransform {
         if !transform["width"].exists() || !transform["height"].exists() {
-            throw ScaleTranformError.NoDimensProvided
+            throw ScaleTranformError.noDimensProvided
         }
 
         let widthString = transform["width"].stringValue
@@ -49,7 +49,7 @@ class ScaleTransform: IImageTransform {
         if let cgImage = image.cgImage {
             return cgImage
         } else {
-            throw ScaleTranformError.ErrorScalingImage
+            throw ScaleTranformError.scalingImage
         }
     }
 }

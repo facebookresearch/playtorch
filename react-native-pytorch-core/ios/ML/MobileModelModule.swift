@@ -12,33 +12,41 @@ import SwiftyJSON
 public class MobileModelModule: NSObject {
 
     enum MobileModelModuleError: Error {
-        case DownloadError
-        case ModuleCreationError
-        case ImageUnwrapError
+        case downloadError
+        case moduleCreationError
+        case imageUnwrapError
     }
 
     private var mModulesAndSpecs: [String: ModuleHolder] = [:]
 
     @objc(execute:params:resolver:rejecter:)
-    public func execute(_ modelPath: NSString, params: NSDictionary, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+    public func execute(_ modelPath: NSString,
+                        params: NSDictionary,
+                        resolver resolve: @escaping RCTPromiseResolveBlock,
+                        rejecter reject: @escaping RCTPromiseRejectBlock) {
         let modelKey = getKey(path: modelPath as String)
         if let moduleHolder = mModulesAndSpecs[modelKey] {
-            let packer = BaseIValuePacker()
-            guard let modelSpec = moduleHolder.modelSpec else {
-                reject(RCTErrorUnspecified, "Could not find model spec", nil)
+            guard let packer = moduleHolder.packer else {
+                reject(RCTErrorUnspecified, "Could not find model packer", nil)
                 return
             }
+            let packerContext: PackerContext = packer.newContext()
             let startPack = clock()
             do {
-                if let ivalue =  try packer.pack(params: params, modelSpec: modelSpec) {
+                if let ivalue =  try packer.pack(params: params, packerContext: packerContext) {
                     let packTime = (Double(clock() - startPack) / 1000).rounded()
                     let startInference = clock()
                     if let ivalue = moduleHolder.module?.forward([ivalue]) {
                         let inferenceTime = (Double(clock() - startInference) / 1000).rounded()
                         let startUnpack = clock()
-                        let result = try packer.unpack(ivalue: ivalue, params: params, modelSpec: modelSpec)
+                        let result = try packer.unpack(ivalue: ivalue, params: params, packerContext: packerContext)
                         let unpackTime = (Double(clock() - startUnpack) / 1000).rounded()
-                        let metrics = ["totalTime": packTime + inferenceTime + unpackTime, "packTime": packTime, "inferenceTime": inferenceTime, "unpackTime": unpackTime]
+                        let metrics = [
+                            "totalTime": packTime + inferenceTime + unpackTime,
+                            "packTime": packTime,
+                            "inferenceTime": inferenceTime,
+                            "unpackTime": unpackTime
+                        ]
                         resolve(["result": result, "metrics": metrics])
                     }
                 } else {
@@ -48,7 +56,7 @@ public class MobileModelModule: NSObject {
                 reject(RCTErrorUnspecified, "\(error)", error)
             }
         } else {
-            let completionHandler: (String?) -> Void  = { error in
+            let completionHandler: (String?) -> Void = { error in
                 if let error = error {
                     reject(RCTErrorUnspecified, error, nil)
                 } else {
@@ -60,7 +68,9 @@ public class MobileModelModule: NSObject {
     }
 
     @objc(preload:resolver:rejecter:)
-    public func preload(_ modelUri: NSString, resolver resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+    public func preload(_ modelUri: NSString,
+                        resolver resolve: @escaping RCTPromiseResolveBlock,
+                        rejecter reject: @escaping RCTPromiseRejectBlock) {
         let completionHandler: (String?) -> Void  = { error in
             if let error = error {
                 reject(RCTErrorUnspecified, error, nil)
@@ -72,7 +82,8 @@ public class MobileModelModule: NSObject {
     }
 
     @objc(unload:rejecter:)
-    public func unload(_ resolve: @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
+    public func unload(_ resolve: @escaping RCTPromiseResolveBlock,
+                       rejecter reject: @escaping RCTPromiseRejectBlock) {
         mModulesAndSpecs.removeAll()
         resolve(nil)
     }
@@ -83,11 +94,10 @@ public class MobileModelModule: NSObject {
             // Load model from local file system if the scheme is file or if it
             // doesn't have a scheme (i.e., `nil`), which means it is likely a
             // local file if URI.
-            if (modelUrl.scheme == nil || modelUrl.scheme == "file") {
+            if modelUrl.scheme == nil || modelUrl.scheme == "file" {
                 self.loadModelFromURL(modelUri: modelUri, url: modelUrl, completionHandler: completionHandler)
-            }
-            else {
-            let modelTask = URLSession.shared.downloadTask(with: modelUrl) { urlOrNil, responseOrNil, errorOrNil in
+            } else {
+            let modelTask = URLSession.shared.downloadTask(with: modelUrl) { urlOrNil, _, _ in
                 guard let tempURL = urlOrNil else { completionHandler("Error downloading file"); return }
                 self.loadModelFromURL(modelUri: modelUri, url: tempURL, completionHandler: completionHandler)
             }
@@ -98,7 +108,7 @@ public class MobileModelModule: NSObject {
         }
     }
 
-    func loadModelFromURL(modelUri: String, url: URL, completionHandler: @escaping (String?) -> Void) -> Void {
+    func loadModelFromURL(modelUri: String, url: URL, completionHandler: @escaping (String?) -> Void) {
         let modelKey = getKey(path: modelUri)
 
         // Try to fetch live.spec.json from model file
@@ -109,44 +119,51 @@ public class MobileModelModule: NSObject {
         // TorchModule.load method will set an empty string if the model file is not bundled inside the
         // model file.
         if let module = Module.load(url.path, extraFiles: extraFiles) {
-            self.mModulesAndSpecs[modelKey] = ModuleHolder()
-            self.mModulesAndSpecs[modelKey]?.setModule(module: module)
-
             let modelSpec = extraFiles["model/live.spec.json"] as? String ?? ""
-            if (!modelSpec.isEmpty) {
+            if !modelSpec.isEmpty {
                 do {
-                    let data = Data(modelSpec.utf8)
-                    let modelSpec = try JSON(data: data)
-                    self.mModulesAndSpecs[modelKey]?.setSpec(modelSpec: modelSpec)
+                    try self.mModulesAndSpecs[modelKey] = ModuleHolder(module: module, srcSpec: modelSpec)
                     completionHandler(nil)
-                }
-                catch {
+                } catch {
                     completionHandler("Could not fetch json file: \(error)")
                 }
             } else {
-                self.fetchModelSpec(modelUri: modelUri, completionHandler: completionHandler)
+
+                let otherCompletionHandler: (String) -> Void = { spec in
+                    do {
+                        try self.mModulesAndSpecs[modelKey] = ModuleHolder(module: module, srcSpec: spec)
+                        completionHandler(nil)
+                    } catch {
+                        completionHandler("could not fetch json file: \(error)")
+                    }
+                }
+
+                self.fetchModelSpec(modelUri: modelUri,
+                                    completionHandler: otherCompletionHandler,
+                                    errorHandler: completionHandler)
             }
         } else {
             completionHandler("Could not convert downloaded file into Torch Module")
         }
     }
 
-    func fetchModelSpec(modelUri: String, completionHandler: @escaping (String?) -> Void) {
-        let modelKey = getKey(path: modelUri)
+    func fetchModelSpec(modelUri: String,
+                        completionHandler: @escaping (String) -> Void,
+                        errorHandler: @escaping (String?) -> Void) {
         guard var modelUrl = URL(string: modelUri) else { completionHandler("Could not load live spec"); return }
         let newLastComponent = modelUrl.lastPathComponent + ".live.spec.json"
         modelUrl.deleteLastPathComponent()
         modelUrl.appendPathComponent(newLastComponent)
-        let specTask = URLSession.shared.downloadTask(with: modelUrl) { urlOrNil, responseOrNil, errorOrNil in
-            guard let tempURL = urlOrNil else { completionHandler("Could not load live spec"); return }
+        let specTask = URLSession.shared.downloadTask(with: modelUrl) { urlOrNil, _, _ in
+            guard let tempURL = urlOrNil else {
+                completionHandler("Could not load live spec")
+                return
+            }
             do {
                 let jsonString = try String(contentsOfFile: tempURL.path)
-                let data = Data(jsonString.utf8)
-                let decodedModelSpec = try JSON(data: data)
-                self.mModulesAndSpecs[modelKey]?.setSpec(modelSpec: decodedModelSpec)
-                completionHandler(nil) //argument represents error, completionHandler(nil) represents success and will resolve promise
+                completionHandler(jsonString)
             } catch {
-                completionHandler("could not fetch json file: \(error)")
+                errorHandler("could not fetch json file: \(error)")
             }
         }
         specTask.resume()
@@ -154,14 +171,11 @@ public class MobileModelModule: NSObject {
 
     public class ModuleHolder {
         var module: Module?
-        var modelSpec: JSON?
+        var packer: IIValuePacker?
 
-        func setModule(module: Module) {
+        init(module: Module, srcSpec: String) throws {
             self.module = module
-        }
-
-        func setSpec(modelSpec: JSON) {
-            self.modelSpec = modelSpec
+            self.packer = try BaseIValuePacker(srcSpec: srcSpec)
         }
     }
 

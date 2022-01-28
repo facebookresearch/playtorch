@@ -40,6 +40,20 @@
 		38C0DDB226E59E88003007B6 /* Image.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C0DDB126E59E88003007B6 /* Image.swift */; };
 		38C0DDB426E59EDD003007B6 /* ImageUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C0DDB326E59EDD003007B6 /* ImageUtils.swift */; };
 		38C1F3CC26E5A2B9004BD31B /* ImageDataImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38C1F3CB26E5A2B9004BD31B /* ImageDataImage.swift */; };
+		38DEE617278AB4DE000EBF1F /* TensorFromStringPacker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DEE616278AB4DE000EBF1F /* TensorFromStringPacker.swift */; };
+		38DEE619278AB4EF000EBF1F /* TensorFromAudioPacker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DEE618278AB4EF000EBF1F /* TensorFromAudioPacker.swift */; };
+		38DEE61B278AB77D000EBF1F /* TensorUnpacker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DEE61A278AB77D000EBF1F /* TensorUnpacker.swift */; };
+		38DEE61D278AB793000EBF1F /* TensorToImageUnpacker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DEE61C278AB793000EBF1F /* TensorToImageUnpacker.swift */; };
+		38DEE61F278AB7A9000EBF1F /* BertDecodeQAAnswerUnpacker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DEE61E278AB7A9000EBF1F /* BertDecodeQAAnswerUnpacker.swift */; };
+		38DEE621278AB7B5000EBF1F /* BoundingBoxesUnpacker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DEE620278AB7B5000EBF1F /* BoundingBoxesUnpacker.swift */; };
+		38DEE623278AB7DB000EBF1F /* StringUnpacker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DEE622278AB7DB000EBF1F /* StringUnpacker.swift */; };
+		38DF6AE9278A8A1E00608E8E /* PackerRegistry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DF6AE8278A8A1E00608E8E /* PackerRegistry.swift */; };
+		38DF6AEB278A8A4700608E8E /* Packer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DF6AEA278A8A4700608E8E /* Packer.swift */; };
+		38DF6AED278A8A5C00608E8E /* PackerContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DF6AEC278A8A5C00608E8E /* PackerContext.swift */; };
+		38DF6AEF278A8A6C00608E8E /* Unpacker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DF6AEE278A8A6C00608E8E /* Unpacker.swift */; };
+		38DF6AF1278A8A7D00608E8E /* IValuePacker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DF6AF0278A8A7D00608E8E /* IValuePacker.swift */; };
+		38DF6AF5278AB2F400608E8E /* TensorFromImagePacker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DF6AF4278AB2F400608E8E /* TensorFromImagePacker.swift */; };
+		38DF6AF7278AB30A00608E8E /* ArgmaxUnpacker.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38DF6AF6278AB30A00608E8E /* ArgmaxUnpacker.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -90,6 +104,20 @@
 		38C0DDB126E59E88003007B6 /* Image.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Image.swift; sourceTree = "<group>"; };
 		38C0DDB326E59EDD003007B6 /* ImageUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageUtils.swift; sourceTree = "<group>"; };
 		38C1F3CB26E5A2B9004BD31B /* ImageDataImage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageDataImage.swift; sourceTree = "<group>"; };
+		38DEE616278AB4DE000EBF1F /* TensorFromStringPacker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TensorFromStringPacker.swift; sourceTree = "<group>"; };
+		38DEE618278AB4EF000EBF1F /* TensorFromAudioPacker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TensorFromAudioPacker.swift; sourceTree = "<group>"; };
+		38DEE61A278AB77D000EBF1F /* TensorUnpacker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TensorUnpacker.swift; sourceTree = "<group>"; };
+		38DEE61C278AB793000EBF1F /* TensorToImageUnpacker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TensorToImageUnpacker.swift; sourceTree = "<group>"; };
+		38DEE61E278AB7A9000EBF1F /* BertDecodeQAAnswerUnpacker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BertDecodeQAAnswerUnpacker.swift; sourceTree = "<group>"; };
+		38DEE620278AB7B5000EBF1F /* BoundingBoxesUnpacker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoundingBoxesUnpacker.swift; sourceTree = "<group>"; };
+		38DEE622278AB7DB000EBF1F /* StringUnpacker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StringUnpacker.swift; sourceTree = "<group>"; };
+		38DF6AE8278A8A1E00608E8E /* PackerRegistry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackerRegistry.swift; sourceTree = "<group>"; };
+		38DF6AEA278A8A4700608E8E /* Packer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Packer.swift; sourceTree = "<group>"; };
+		38DF6AEC278A8A5C00608E8E /* PackerContext.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackerContext.swift; sourceTree = "<group>"; };
+		38DF6AEE278A8A6C00608E8E /* Unpacker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Unpacker.swift; sourceTree = "<group>"; };
+		38DF6AF0278A8A7D00608E8E /* IValuePacker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IValuePacker.swift; sourceTree = "<group>"; };
+		38DF6AF4278AB2F400608E8E /* TensorFromImagePacker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TensorFromImagePacker.swift; sourceTree = "<group>"; };
+		38DF6AF6278AB30A00608E8E /* ArgmaxUnpacker.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArgmaxUnpacker.swift; sourceTree = "<group>"; };
 		F4FF95D5245B92E700C19C63 /* PyTorchCore-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "PyTorchCore-Bridging-Header.h"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -162,13 +190,20 @@
 		387E702926E16F43003BB6F5 /* Processing */ = {
 			isa = PBXGroup;
 			children = (
+				38DF6AF3278AB2D400608E8E /* Unpacker */,
+				38DF6AF2278AB2C400608E8E /* Packer */,
 				387E702C26E16F43003BB6F5 /* BaseIValuePacker.swift */,
 				387E702E26E16F43003BB6F5 /* CenterCropTransform.swift */,
+				3881238626E3F8F60042E773 /* GreyScaleNormTransform.swift */,
 				387E702F26E16F43003BB6F5 /* IImageToTensorTransform.swift */,
 				387E702D26E16F43003BB6F5 /* IImageTransform.swift */,
+				38DF6AF0278A8A7D00608E8E /* IValuePacker.swift */,
+				38DF6AEA278A8A4700608E8E /* Packer.swift */,
+				38DF6AEC278A8A5C00608E8E /* PackerContext.swift */,
+				38DF6AE8278A8A1E00608E8E /* PackerRegistry.swift */,
 				387E702B26E16F43003BB6F5 /* RGBNormTransform.swift */,
 				387E702A26E16F43003BB6F5 /* ScaleTransform.swift */,
-				3881238626E3F8F60042E773 /* GreyScaleNormTransform.swift */,
+				38DF6AEE278A8A6C00608E8E /* Unpacker.swift */,
 			);
 			path = Processing;
 			sourceTree = "<group>";
@@ -187,6 +222,29 @@
 				387E703826E16F43003BB6F5 /* Macros.m */,
 			);
 			path = Image;
+			sourceTree = "<group>";
+		};
+		38DF6AF2278AB2C400608E8E /* Packer */ = {
+			isa = PBXGroup;
+			children = (
+				38DEE618278AB4EF000EBF1F /* TensorFromAudioPacker.swift */,
+				38DF6AF4278AB2F400608E8E /* TensorFromImagePacker.swift */,
+				38DEE616278AB4DE000EBF1F /* TensorFromStringPacker.swift */,
+			);
+			path = Packer;
+			sourceTree = "<group>";
+		};
+		38DF6AF3278AB2D400608E8E /* Unpacker */ = {
+			isa = PBXGroup;
+			children = (
+				38DF6AF6278AB30A00608E8E /* ArgmaxUnpacker.swift */,
+				38DEE61A278AB77D000EBF1F /* TensorUnpacker.swift */,
+				38DEE61C278AB793000EBF1F /* TensorToImageUnpacker.swift */,
+				38DEE61E278AB7A9000EBF1F /* BertDecodeQAAnswerUnpacker.swift */,
+				38DEE620278AB7B5000EBF1F /* BoundingBoxesUnpacker.swift */,
+				38DEE622278AB7DB000EBF1F /* StringUnpacker.swift */,
+			);
+			path = Unpacker;
 			sourceTree = "<group>";
 		};
 		58B511D21A9E6C8500147676 = {
@@ -263,6 +321,7 @@
 				387E704726E16F43003BB6F5 /* CameraManager.swift in Sources */,
 				387E704F26E16F43003BB6F5 /* IImageToTensorTransform.swift in Sources */,
 				387E705226E16F43003BB6F5 /* MobileModelModule.m in Sources */,
+				38DEE61B278AB77D000EBF1F /* TensorUnpacker.swift in Sources */,
 				387E704B26E16F43003BB6F5 /* RGBNormTransform.swift in Sources */,
 				387E704A26E16F43003BB6F5 /* ScaleTransform.swift in Sources */,
 				387E704226E16F43003BB6F5 /* ShapeLayer.swift in Sources */,
@@ -270,19 +329,29 @@
 				387E704826E16F43003BB6F5 /* JSContext.swift in Sources */,
 				387E705526E16F43003BB6F5 /* Macros.m in Sources */,
 				38C0DDB426E59EDD003007B6 /* ImageUtils.swift in Sources */,
+				38DF6AF1278A8A7D00608E8E /* IValuePacker.swift in Sources */,
 				387E704626E16F43003BB6F5 /* CameraView.swift in Sources */,
+				38DEE619278AB4EF000EBF1F /* TensorFromAudioPacker.swift in Sources */,
 				387E704026E16F43003BB6F5 /* LayerData.swift in Sources */,
 				38C1F3CC26E5A2B9004BD31B /* ImageDataImage.swift in Sources */,
 				38C0DDB026E59E40003007B6 /* IImage.swift in Sources */,
 				387E703C26E16F43003BB6F5 /* CanvasManager.swift in Sources */,
 				3881238726E3F8F60042E773 /* GreyScaleNormTransform.swift in Sources */,
+				38DEE617278AB4DE000EBF1F /* TensorFromStringPacker.swift in Sources */,
+				38DF6AED278A8A5C00608E8E /* PackerContext.swift in Sources */,
 				3896F5B326E17F7900A03229 /* ImageDataModule.m in Sources */,
+				38DEE623278AB7DB000EBF1F /* StringUnpacker.swift in Sources */,
 				387E703F26E16F43003BB6F5 /* CanvasManager.m in Sources */,
+				38DEE61F278AB7A9000EBF1F /* BertDecodeQAAnswerUnpacker.swift in Sources */,
+				38DF6AF5278AB2F400608E8E /* TensorFromImagePacker.swift in Sources */,
 				387E703E26E16F43003BB6F5 /* CanvasRenderingContext2D.swift in Sources */,
 				387E705326E16F43003BB6F5 /* MobileModelModule.swift in Sources */,
 				387E704C26E16F43003BB6F5 /* BaseIValuePacker.swift in Sources */,
+				38DF6AEB278A8A4700608E8E /* Packer.swift in Sources */,
 				38C0DDB226E59E88003007B6 /* Image.swift in Sources */,
+				38DEE621278AB7B5000EBF1F /* BoundingBoxesUnpacker.swift in Sources */,
 				387E704426E16F43003BB6F5 /* CaptureButton.swift in Sources */,
+				38DF6AE9278A8A1E00608E8E /* PackerRegistry.swift in Sources */,
 				387E704D26E16F43003BB6F5 /* IImageTransform.swift in Sources */,
 				387E704126E16F43003BB6F5 /* CanvasRenderingContext2DModule.m in Sources */,
 				3896F5B126E17F2700A03229 /* ImageDataModule.swift in Sources */,
@@ -290,8 +359,11 @@
 				387E704E26E16F43003BB6F5 /* CenterCropTransform.swift in Sources */,
 				387E703D26E16F43003BB6F5 /* DrawingCanvasView.swift in Sources */,
 				387E704326E16F43003BB6F5 /* CGContextExtension.swift in Sources */,
+				38DEE61D278AB793000EBF1F /* TensorToImageUnpacker.swift in Sources */,
 				387E705726E16F43003BB6F5 /* ImageModule.swift in Sources */,
+				38DF6AEF278A8A6C00608E8E /* Unpacker.swift in Sources */,
 				387E705426E16F43003BB6F5 /* BitmapImage.swift in Sources */,
+				38DF6AF7278AB30A00608E8E /* ArgmaxUnpacker.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

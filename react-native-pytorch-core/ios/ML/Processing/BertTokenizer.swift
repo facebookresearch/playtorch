@@ -10,13 +10,13 @@ import Foundation
 class BertTokenizer {
 
     enum BertTokenizerError: Error {
-        case IllegalBertVocabulary
-        case QuestionTooLong
-        case TokenizeError
-        case DecodeError
+        case illegalBertVocabulary
+        case questionTooLong
+        case tokenizeError
+        case decodeError
     }
 
-    private let EXTRA_ID_NUM = 3
+    private let EXTRAIDNUM = 3
     private let CLS = "[CLS]"
     private let SEP = "[SEP]"
     private let PAD = "[PAD]"
@@ -36,7 +36,7 @@ class BertTokenizer {
         guard let pad = token2id[PAD],
               let cls = token2id[CLS],
               let sep = token2id[SEP] else {
-            throw BertTokenizerError.TokenizeError
+            throw BertTokenizerError.tokenizeError
         }
 
         let strs = content.replacingOccurrences(of: CLS, with: SEP).components(separatedBy: SEP)
@@ -44,18 +44,18 @@ class BertTokenizer {
         let text = strs[2].trimmingCharacters(in: .whitespaces)
         let tokenIdsQuestion = wordPieceTokenizer(question)
         if tokenIdsQuestion.count >= modelInputLength {
-            throw BertTokenizerError.QuestionTooLong
+            throw BertTokenizerError.questionTooLong
         }
         let tokenIdsText = wordPieceTokenizer(text)
         var tokenIds = Array(repeating: pad, count: modelInputLength)
         tokenIds[0] = cls
-        for (i, tokenid) in tokenIdsQuestion.enumerated() {
-            tokenIds[i+1] = tokenid
+        for (idx, tokenid) in tokenIdsQuestion.enumerated() {
+            tokenIds[idx+1] = tokenid
         }
         tokenIds[tokenIdsQuestion.count + 1] = sep
-        let maxTextLength = min(tokenIdsText.count, modelInputLength - tokenIdsQuestion.count - EXTRA_ID_NUM)
-        for i in 0..<maxTextLength {
-            tokenIds[tokenIdsQuestion.count + i + 2] = tokenIdsText[i]
+        let maxTextLength = min(tokenIdsText.count, modelInputLength - tokenIdsQuestion.count - EXTRAIDNUM)
+        for idx in 0..<maxTextLength {
+            tokenIds[tokenIdsQuestion.count + idx + 2] = tokenIdsText[idx]
         }
         tokenIds[tokenIdsQuestion.count + maxTextLength + 2] = sep
 
@@ -64,16 +64,20 @@ class BertTokenizer {
 
     func decode(tokenIds: [Int]) throws -> String {
         var result = ""
-        for (n, tid) in tokenIds.enumerated() {
+        for (nIdx, tid) in tokenIds.enumerated() {
             guard let token = id2token[tid] else {
-                throw BertTokenizerError.DecodeError
+                throw BertTokenizerError.decodeError
             }
             result += token
-            if n != tokenIds.count - 1 {
+            if nIdx != tokenIds.count - 1 {
                 result += " "
             }
         }
-        result = result.replacingOccurrences(of: " ##", with: "").replacingOccurrences(of: #" (?=\p{P})"#, with: "", options: .regularExpression
+        result = result.replacingOccurrences(of: " ##",
+                                             with: "")
+                                             .replacingOccurrences(of: #" (?=\p{P})"#,
+                                                                   with: "",
+                                                                   options: .regularExpression
         )
         return result
     }
@@ -83,33 +87,30 @@ class BertTokenizer {
         let pattern = #"(\w+|\S)"#
             let regex = try? NSRegularExpression(pattern: pattern, options: [])
             let nsrange = NSRange(questionOrText.startIndex..<questionOrText.endIndex, in: questionOrText)
-            regex!.enumerateMatches(in: questionOrText, options: [], range: nsrange) { (match, _, stop) in
+            regex!.enumerateMatches(in: questionOrText, options: [], range: nsrange) { (match, _, _) in
                 guard let match = match else { return }
-                let range = match.range(at:1)
+                let range = match.range(at: 1)
                 if let swiftRange = Range(range, in: questionOrText) {
                     let token = questionOrText[swiftRange].lowercased()
                     if let _ = token2id[token] {
                         tokenIds.append(token2id[token]!)
-                    }
-                    else {
-                        for i in 0 ..< token.count {
-                            let str = String(token.prefix(token.count - i - 1))
+                    } else {
+                        for tIdx in 0 ..< token.count {
+                            let str = String(token.prefix(token.count - tIdx - 1))
                             if let tid = token2id[str] {
                                 tokenIds.append(tid)
-                                var subToken = String(token.suffix(i + 1))
-                                var j = 0
-                                while j < subToken.count {
-                                    if let subTid = token2id["##" + subToken.prefix(subToken.count - j)] {
+                                var subToken = String(token.suffix(tIdx + 1))
+                                var cur = 0
+                                while cur < subToken.count {
+                                    if let subTid = token2id["##" + subToken.prefix(subToken.count - cur)] {
                                         tokenIds.append(subTid)
-                                        subToken = String(subToken.suffix(j))
-                                        j = subToken.count - j
-                                    }
-                                    else if (j == subToken.count - 1) {
+                                        subToken = String(subToken.suffix(cur))
+                                        cur = subToken.count - cur
+                                    } else if cur == subToken.count - 1 {
                                         tokenIds.append(token2id["##" + subToken]!)
                                         break
-                                    }
-                                    else {
-                                        j += 1
+                                    } else {
+                                        cur += 1
                                     }
                                 }
                                 break

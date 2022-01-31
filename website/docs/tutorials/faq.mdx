@@ -7,6 +7,14 @@ title: Frequently Asked Questions
 
 We are constantly looking for ways to improve PyTorch Live. If you have questions or feedback, please [file an issue on GitHub](https://github.com/pytorch/live/issues).
 
+## General Setup
+
+### Q: How to fix `Error: error: SDK "iphoneos" cannot be located`?
+
+A: This type of error can result if you don't have Xcode installed locally. If you have installed Xcode, please make sure to open the app and accept the Xcode license.
+If you have completed this before, please check the Developer Directory path by running `xcode-select -p`. Please change it to the location where Xcode is installed by running <br />
+`sudo xcode-select -s /Applications/<Xcode.app>/Contents/Developer`.
+
 ## Metro
 
 ### Q: How to fix `Error: error:0308010C:digital envelope routines::unsupported`?

@@ -8,12 +8,15 @@
     "start": "react-native start",
     "start-reset-cache": "react-native start --reset-cache",
     "test": "jest",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx"
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
+    "publish-core-package": "yalc publish ../../react-native-pytorch-core",
+    "push-core-package": "yalc push ../../react-native-pytorch-core",
+    "postinstall": "yarn publish-core-package && yalc add react-native-pytorch-core",
+    "before-commit": "yarn remove react-native-pytorch-core"
   },
   "dependencies": {
     "react": "17.0.1",
-    "react-native": "^0.64.2",
-    "react-native-pytorch-core": "0.1.2"
+    "react-native": "^0.64.2"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",

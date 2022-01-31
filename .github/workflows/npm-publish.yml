@@ -73,8 +73,8 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - name: Remove postinstall script from package.json
-        run: echo $(cat package.json  | jq 'del(.scripts.postinstall)') > package.json
+      - name: Remove extra scripts from package.json
+        run: echo $(cat package.json  | jq 'del(.scripts.postinstall, .scripts.publish-core-package, .scripts.push-core-package, .scripts.before-commit)') > package.json
         working-directory: ./react-native-template-pytorch-live/template
       - name: Install template dependencies
         run: yarn install --frozen-lockfile
@@ -85,6 +85,43 @@ jobs:
       - name: Clean template directory
         run: git clean -f -x .
         working-directory: ./react-native-template-pytorch-live/template
+      - name: Update package.json version to $GITHUB_REF_NAME
+        run: npm version $GITHUB_REF_NAME
+      - name: Publish To NPM latest
+        if: github.event.release.prerelease == false
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+      - name: Publish To NPM next
+        if: github.event.release.prerelease == true
+        run: npm publish --tag next
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+
+  publish-npm-slim-template:
+    runs-on: ubuntu-latest
+    needs: publish-npm-core
+    defaults:
+      run:
+        working-directory: ./react-native-template-ptl
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: 14
+          registry-url: https://registry.npmjs.org/
+      - name: Remove extra scripts from package.json
+        run: echo $(cat package.json  | jq 'del(.scripts.postinstall, .scripts.publish-core-package, .scripts.push-core-package, .scripts.before-commit)') > package.json
+        working-directory: ./react-native-template-ptl/template
+      - name: Install template dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: ./react-native-template-ptl/template
+      - name: Add latest react-native-pytorch-core package to dependencies
+        run: yarn add react-native-pytorch-core@$GITHUB_REF_NAME
+        working-directory: ./react-native-template-ptl/template
+      - name: Clean template directory
+        run: git clean -f -x .
+        working-directory: ./react-native-template-ptl/template
       - name: Update package.json version to $GITHUB_REF_NAME
         run: npm version $GITHUB_REF_NAME
       - name: Publish To NPM latest

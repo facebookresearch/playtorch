@@ -49,6 +49,14 @@ Source: https://developer.android.com/studio/command-line/adb
 
 :::
 
+### Q: What to do when we encounter an error which says `Could not find tools.jar. Please check that <some_path> contains a valid JDK installation.` when installing the app?
+
+A: Please follow the [React Native environment setup instructions](https://reactnative.dev/docs/environment-setup), which has detailed step-by-step instructions for how to set up a React Native development environment.
+If the error persists, set the `JAVA_HOME` enviromnent variable to the local JDK installation path. On macOS, you can set the `JAVA_HOME` variable by running
+```
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/<jdk_folder>/Contents/Home
+```
+
 ## Mobile Models
 
 ### Q: Is it possible to secure a model that will be downloaded into PyTorch Live?

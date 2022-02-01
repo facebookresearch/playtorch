@@ -19,7 +19,7 @@ Camera facing the opposite direction as the device's screen.
 
 #### Defined in
 
-[CameraView.tsx:45](https://github.com/pytorch/live/blob/d2993b7/react-native-pytorch-core/src/CameraView.tsx#L45)
+[CameraView.tsx:45](https://github.com/pytorch/live/blob/a04e341/react-native-pytorch-core/src/CameraView.tsx#L45)
 
 ___
 
@@ -31,4 +31,4 @@ Camera facing the same direction as the device's screen.
 
 #### Defined in
 
-[CameraView.tsx:50](https://github.com/pytorch/live/blob/d2993b7/react-native-pytorch-core/src/CameraView.tsx#L50)
+[CameraView.tsx:50](https://github.com/pytorch/live/blob/a04e341/react-native-pytorch-core/src/CameraView.tsx#L50)

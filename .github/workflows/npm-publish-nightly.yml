@@ -78,7 +78,7 @@ jobs:
           node-version: 14
           registry-url: https://registry.npmjs.org/
       - name: Remove extra scripts from package.json
-        run: echo $(cat package.json  | jq 'del(.scripts.postinstall, .scripts.publish-core-package, .scripts.push-core-package, .scripts.before-commit)') > package.json
+        run: echo $(cat package.json | jq 'del(.scripts.postinstall, .scripts."publish-core-package", .scripts."push-core-package", .scripts."before-commit")') > package.json
         working-directory: ./react-native-template-pytorch-live/template
       - name: Install template dependencies
         run: yarn install --frozen-lockfile
@@ -109,7 +109,7 @@ jobs:
           node-version: 14
           registry-url: https://registry.npmjs.org/
       - name: Remove extra scripts from package.json
-        run: echo $(cat package.json  | jq 'del(.scripts.postinstall, .scripts.publish-core-package, .scripts.push-core-package, .scripts.before-commit)') > package.json
+        run: echo $(cat package.json | jq 'del(.scripts.postinstall, .scripts."publish-core-package", .scripts."push-core-package", .scripts."before-commit")') > package.json
         working-directory: ./react-native-template-ptl/template
       - name: Install template dependencies
         run: yarn install --frozen-lockfile

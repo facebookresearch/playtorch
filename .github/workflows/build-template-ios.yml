@@ -10,6 +10,7 @@ on:
       - 'react-native-pytorch-core/example/ios/**'
       - 'react-native-template-pytorch-live/template/ios/**'
       - 'react-native-pytorch-core/example/ios/**'
+      - 'react-native-pytorch-core/package.json'
       - 'react-native-pytorch-core/yarn.lock'
       - 'react-native-template-pytorch-live/template/yarn.lock'
 
@@ -21,6 +22,7 @@ on:
       - 'react-native-pytorch-core/example/ios/**'
       - 'react-native-template-pytorch-live/template/ios/**'
       - 'react-native-pytorch-core/example/ios/**'
+      - 'react-native-pytorch-core/package.json'
       - 'react-native-pytorch-core/yarn.lock'
       - 'react-native-template-pytorch-live/template/yarn.lock'
 

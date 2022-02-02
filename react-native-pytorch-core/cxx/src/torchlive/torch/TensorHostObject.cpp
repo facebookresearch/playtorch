@@ -23,7 +23,7 @@ namespace torch {
 using namespace facebook;
 
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
-    : tensor(t), toString(createToString(runtime)), size(createSize(runtime)) {}
+    : size(createSize(runtime)), toString(createToString(runtime)), tensor(t) {}
 
 TensorHostObject::~TensorHostObject() {}
 

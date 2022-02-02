@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - '.github/workflows/build-android.yml'
+      - '.github/workflows/build-template-android.yml'
       - 'react-native-pytorch-core/android/**'
       - 'react-native-template-pytorch-live/template/android/**'
       - 'react-native-pytorch-core/package.json'
@@ -12,7 +12,7 @@ on:
       - 'react-native-template-pytorch-live/template/yarn.lock'
   pull_request:
     paths:
-      - '.github/workflows/build-android.yml'
+      - '.github/workflows/build-template-android.yml'
       - 'react-native-pytorch-core/android/**'
       - 'react-native-template-pytorch-live/template/android/**'
       - 'react-native-pytorch-core/package.json'

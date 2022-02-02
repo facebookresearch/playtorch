@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - '.github/workflows/build-ios.yml'
+      - '.github/workflows/build-template-ios.yml'
       - 'react-native-pytorch-core/*.podspec'
       - 'react-native-pytorch-core/ios/**'
       - 'react-native-pytorch-core/example/ios/**'
@@ -16,7 +16,7 @@ on:
 
   pull_request:
     paths:
-      - '.github/workflows/build-ios.yml'
+      - '.github/workflows/build-template-ios.yml'
       - 'react-native-pytorch-core/*.podspec'
       - 'react-native-pytorch-core/ios/**'
       - 'react-native-pytorch-core/example/ios/**'

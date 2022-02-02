@@ -18,10 +18,10 @@ set (RN_SO_DIR ${NODE_MODULES_DIR}/react-native/ReactAndroid/src/main/jni/first-
 add_library(
         ${PACKAGE_NAME}
         SHARED
-        ../cpp/torchlive/torch/TorchHostObject.cpp
-        ../cpp/torchlive/torch/TensorHostObject.cpp
-        ../cpp/torchlive/torch/jit/JITHostObject.cpp
-        ../cpp/torchlive.cpp
+        ../cxx/src/torchlive/torch/TorchHostObject.cpp
+        ../cxx/src/torchlive/torch/TensorHostObject.cpp
+        ../cxx/src/torchlive/torch/jit/JITHostObject.cpp
+        ../cxx/src/torchlive.cpp
         src/main/cpp/cpp-adapter.cpp
 )
 
@@ -42,7 +42,7 @@ target_include_directories(
         "${NODE_MODULES_DIR}/react-native/ReactCommon/callinvoker"
         "${NODE_MODULES_DIR}/react-native/ReactCommon/jsi"
         "${PYTORCH_INCLUDE_DIRS}"
-        "../cpp"
+        "../cxx/src"
         "src/main/cpp"
 )
 

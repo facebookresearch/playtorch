@@ -11,7 +11,10 @@
 #import <sys/utsname.h>
 
 #import "PyTorchCoreJSI.h"
-#import "cpp/torchlive.h"
+
+namespace torchlive {
+void install(facebook::jsi::Runtime &runtime);
+}
 
 @implementation PyTorchCoreJSI
 

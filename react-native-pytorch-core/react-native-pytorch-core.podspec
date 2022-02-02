@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.platforms    = { :ios => "12.0" }
   s.source       = { :git => "https://github.com/pytorch/live.git", :tag => "#{s.version}" }
 
-  s.source_files = "ios/**/*.{h,m,mm,swift}", "cpp/**/*.{h,cpp}"
+  s.source_files = "ios/**/*.{h,m,mm,swift}", "cxx/src/**/*.{h,cpp}"
   s.private_header_files = ['ios/**/Internal/*.h']
 
   s.swift_version = "5.0"
@@ -31,7 +31,7 @@ Pod::Spec.new do |s|
     "HEADER_SEARCH_PATHS" => '$(inherited) "$(PODS_TARGET_SRCROOT)/ReactCommon" "$(PODS_TARGET_SRCROOT)" "$(PODS_ROOT)/Headers/Private/React-Core" "$(PODS_ROOT)/Headers/Public/React-hermes" "$(PODS_ROOT)/Headers/Public/hermes-engine" "${PODS_ROOT}/LibTorch-Lite/install/include"'
   }
   s.preserve_paths = [
-    "cpp/**/*.h",
+    "cxx/**/*.h",
     "ios/**/*.h"
   ]
 

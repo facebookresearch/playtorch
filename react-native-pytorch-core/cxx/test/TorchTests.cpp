@@ -59,4 +59,11 @@ TEST_F(TorchliveRuntimeTest, TensorShapeAlternativeTest) {
   EXPECT_TRUE(eval("torch.rand([5]).shape[0] === 5").getBool());
 }
 
+TEST_F(TorchliveRuntimeTest, TensorDtypeTest) {
+  EXPECT_EQ(eval("torch.rand([5]).dtype").asString(*rt).utf8(*rt), "float32");
+  EXPECT_EQ(
+      eval("torch.rand([5], {dtype:'float64'}).dtype").asString(*rt).utf8(*rt),
+      "float64");
+}
+
 } // namespace

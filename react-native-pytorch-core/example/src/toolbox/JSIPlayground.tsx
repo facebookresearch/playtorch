@@ -35,7 +35,7 @@ export default function JSIPlayground() {
     console.log(Platform.OS);
     console.log(torch);
     const size = [3, 3, 3];
-    const tensor = torch.rand(size);
+    const tensor = torch.rand(size, {dtype: torch.float64});
     const tensorStr = tensor.toString();
     console.log(tensorStr);
     const data = tensor.data;
@@ -63,6 +63,7 @@ export default function JSIPlayground() {
     console.log(tensor);
     console.log(tensor.size());
     console.log(tensor.shape);
+    console.log(tensor.dtype);
   };
 
   return (

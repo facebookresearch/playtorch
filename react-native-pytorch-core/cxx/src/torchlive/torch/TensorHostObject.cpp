@@ -12,6 +12,7 @@
 #include <string>
 #include <vector>
 
+#include "../constants.h"
 #include "TensorHostObject.h"
 
 // Namespace alias for torch to avoid namespace conflicts with torchlive::torch
@@ -31,9 +32,10 @@ std::vector<jsi::PropNameID> TensorHostObject::getPropertyNames(
     jsi::Runtime& runtime) {
   std::vector<jsi::PropNameID> result;
   result.push_back(jsi::PropNameID::forUtf8(runtime, std::string("data")));
-  result.push_back(jsi::PropNameID::forUtf8(runtime, std::string("toString")));
-  result.push_back(jsi::PropNameID::forUtf8(runtime, std::string("size")));
+  result.push_back(jsi::PropNameID::forUtf8(runtime, std::string("dtype")));
   result.push_back(jsi::PropNameID::forUtf8(runtime, std::string("shape")));
+  result.push_back(jsi::PropNameID::forUtf8(runtime, std::string("size")));
+  result.push_back(jsi::PropNameID::forUtf8(runtime, std::string("toString")));
   return result;
 }
 
@@ -78,12 +80,17 @@ jsi::Value TensorHostObject::get(
         .getPropertyAsFunction(runtime, typedArrayName.c_str())
         .callAsConstructor(runtime, buffer)
         .asObject(runtime);
+  } else if (name == "dtype") {
+    return jsi::String::createFromUtf8(
+        runtime,
+        constants::getStringFromDtype(
+            caffe2::typeMetaToScalarType(this->tensor.dtype())));
   } else if (name == "shape") {
     return this->size.call(runtime);
-  } else if (name == "toString") {
-    return jsi::Value(runtime, toString);
   } else if (name == "size") {
     return jsi::Value(runtime, size);
+  } else if (name == "toString") {
+    return jsi::Value(runtime, toString);
   }
 
   return jsi::Value::undefined();

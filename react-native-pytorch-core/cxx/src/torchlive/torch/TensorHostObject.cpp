@@ -52,12 +52,32 @@ jsi::Value TensorHostObject::get(
                                   .asObject(runtime)
                                   .getArrayBuffer(runtime);
 
-    std::memcpy(
-        buffer.data(runtime),
-        tensor.data_ptr(), // we don't specify the dtype here but let it figure
-                           // out itself.
-        byteLength);
-    return buffer;
+    std::memcpy(buffer.data(runtime), tensor.data_ptr(), byteLength);
+
+    auto type = tensor.dtype();
+    std::string typedArrayName;
+    if (type == torch_::kUInt8) {
+      typedArrayName = "Uint8Array";
+    } else if (type == torch_::kInt8) {
+      typedArrayName = "Int8Array";
+    } else if (type == torch_::kInt16) {
+      typedArrayName = "Int16Array";
+    } else if (type == torch_::kInt32) {
+      typedArrayName = "Int32Array";
+    } else if (type == torch_::kInt64) {
+      typedArrayName = "BigInt64Array";
+    } else if (type == torch_::kFloat32) {
+      typedArrayName = "Float32Array";
+    } else if (type == torch_::kFloat64) {
+      typedArrayName = "Float64Array";
+    } else {
+      throw jsi::JSError(runtime, "tensor data dtype is not supported");
+    }
+
+    return runtime.global()
+        .getPropertyAsFunction(runtime, typedArrayName.c_str())
+        .callAsConstructor(runtime, buffer)
+        .asObject(runtime);
   } else if (name == "shape") {
     return this->size.call(runtime);
   } else if (name == "toString") {

@@ -38,7 +38,7 @@ export default function JSIPlayground() {
     const tensor = torch.rand(size);
     const tensorStr = tensor.toString();
     console.log(tensorStr);
-    const data = new Float32Array(tensor.data);
+    const data = tensor.data;
     console.log(data);
 
     if (data.length < 20) {

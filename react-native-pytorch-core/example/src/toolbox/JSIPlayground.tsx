@@ -64,6 +64,13 @@ export default function JSIPlayground() {
     console.log(tensor.size());
     console.log(tensor.shape);
     console.log(tensor.dtype);
+
+    let testTensor = torch.empty([1, 2]);
+    console.log(testTensor);
+    testTensor = torch.empty(1, 2);
+    console.log(testTensor);
+    testTensor = torch.empty([1, 2], {dtype: 'float64'});
+    console.log(testTensor);
   };
 
   return (

@@ -17,6 +17,7 @@ using namespace facebook;
 class JSI_EXPORT TorchHostObject : public jsi::HostObject {
   jsi::Function rand;
   jsi::Function argmax;
+  jsi::Function empty;
 
  public:
   TorchHostObject(jsi::Runtime& runtime);
@@ -28,6 +29,7 @@ class JSI_EXPORT TorchHostObject : public jsi::HostObject {
  private:
   static jsi::Function createRand(jsi::Runtime& runtime);
   static jsi::Function createArgmax(jsi::Runtime& runtime);
+  static jsi::Function createEmpty(jsi::Runtime& runtime);
 };
 
 } // namespace torch

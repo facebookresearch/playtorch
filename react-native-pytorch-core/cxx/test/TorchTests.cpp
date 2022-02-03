@@ -66,4 +66,38 @@ TEST_F(TorchliveRuntimeTest, TensorDtypeTest) {
       "float64");
 }
 
+TEST_F(TorchliveRuntimeTest, TorchEmptyTest) {
+  // Valid inputs
+  EXPECT_TRUE(eval("torch.empty([1,2]).shape[0] === 1").getBool());
+  EXPECT_TRUE(eval("torch.empty([1,2]).shape[1] === 2").getBool());
+  EXPECT_TRUE(eval("torch.empty(1,2).shape[0] === 1").getBool());
+  EXPECT_TRUE(eval("torch.empty(1,2).shape[1] === 2").getBool());
+  EXPECT_EQ(
+      eval("torch.empty([1,2], {dtype:'float64'}).dtype")
+          .asString(*rt)
+          .utf8(*rt),
+      "float64");
+  EXPECT_EQ(
+      eval("torch.empty(1,2, {dtype:'float64'}).dtype").asString(*rt).utf8(*rt),
+      "float64");
+
+  // Invalid inputs
+  EXPECT_THROW(
+      eval("torch.empty(1,2,true, {dtype:'float64'}).dtype")
+          .asString(*rt)
+          .utf8(*rt),
+      facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("torch.empty(1,2,[1], {dtype:'float64'}).dtype")
+          .asString(*rt)
+          .utf8(*rt),
+      facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("torch.empty({dtype:'float64'}, 1).dtype").asString(*rt).utf8(*rt),
+      facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("torch.empty({dtype:'float64'}).dtype").asString(*rt).utf8(*rt),
+      facebook::jsi::JSError);
+}
+
 } // namespace

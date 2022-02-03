@@ -35,10 +35,10 @@ export default function JSIPlayground() {
     console.log(Platform.OS);
     console.log(torch);
     const size = [3, 3, 3];
-    const tensor = torch.rand(size, {dtype: torch.float64});
+    let tensor = torch.rand(size, {dtype: torch.float64});
     const tensorStr = tensor.toString();
     console.log(tensorStr);
-    const data = tensor.data;
+    let data = new Float32Array(tensor.data);
     console.log(data);
 
     if (data.length < 20) {
@@ -71,6 +71,20 @@ export default function JSIPlayground() {
     console.log(testTensor);
     testTensor = torch.empty([1, 2], {dtype: 'float64'});
     console.log(testTensor);
+
+    console.log('---Test torch.arange---');
+    tensor = torch.arange(5);
+    console.log(tensor);
+    data = new Float32Array(tensor.data);
+    console.log(data);
+    tensor = torch.arange(1, 4);
+    console.log(tensor);
+    data = new Float32Array(tensor.data);
+    console.log(data);
+    tensor = torch.arange(1, 2.5, 0.5);
+    console.log(tensor);
+    data = new Float32Array(tensor.data);
+    console.log(data);
   };
 
   return (

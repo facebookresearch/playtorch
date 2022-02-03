@@ -24,6 +24,7 @@ namespace torchlive {
 namespace torch {
 
 // TorchHostObject Method Name
+static const std::string ARANGE = "arange";
 static const std::string ARGMAX = "argmax";
 static const std::string EMPTY = "empty";
 static const std::string RAND = "rand";
@@ -52,7 +53,8 @@ static const std::vector<std::string> PROPERTIES = {
 const std::vector<std::string> METHODS = {ARGMAX, EMPTY, RAND};
 
 TorchHostObject::TorchHostObject(jsi::Runtime& runtime)
-    : argmax(createArgmax(runtime)),
+    : arange(createArange(runtime)),
+      argmax(createArgmax(runtime)),
       empty(createEmpty(runtime)),
       rand(createRand(runtime)) {}
 
@@ -74,8 +76,12 @@ jsi::Value TorchHostObject::get(
     const jsi::PropNameID& propName) {
   auto name = propName.utf8(runtime);
 
-  if (name == ARGMAX) {
+  if (name == ARANGE) {
+    return jsi::Value(runtime, arange);
+  } else if (name == ARGMAX) {
     return jsi::Value(runtime, argmax);
+  } else if (name == EMPTY) {
+    return jsi::Value(runtime, empty);
   } else if (name == constants::FLOAT32 || name == constants::FLOAT32) {
     return jsi::String::createFromAscii(runtime, constants::FLOAT32);
   } else if (name == constants::FLOAT64 || name == constants::DOUBLE) {
@@ -96,11 +102,32 @@ jsi::Value TorchHostObject::get(
     return jsi::Value(runtime, rand);
   } else if (name == constants::UINT8) {
     return jsi::String::createFromAscii(runtime, constants::UINT8);
-  } else if (name == EMPTY) {
-    return jsi::Value(runtime, empty);
   }
 
   return jsi::Value::undefined();
+}
+
+jsi::Function TorchHostObject::createArange(jsi::Runtime& runtime) {
+  auto arangeImpl = [](jsi::Runtime& runtime,
+                       const jsi::Value& thisValue,
+                       const jsi::Value* arguments,
+                       size_t count) {
+    if (count == 0) {
+      throw jsi::JSError(runtime, "This function requires at least 1 argument");
+    }
+
+    auto end = (count > 1) ? arguments[1].asNumber() : arguments[0].asNumber();
+    auto start = (count > 1) ? arguments[0].asNumber() : 0;
+    auto step = (count > 2) ? arguments[2].asNumber() : 1;
+
+    auto tensor = torch_::arange(start, end, step);
+
+    auto tensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
+    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+  };
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, ARANGE), 1, arangeImpl);
 }
 
 jsi::Function TorchHostObject::createRand(jsi::Runtime& runtime) {

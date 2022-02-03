@@ -111,4 +111,24 @@ TEST_F(TorchliveRuntimeTest, TensorDataTest) {
 TEST_F(TorchliveRuntimeTest, TensorToStringTest) {
   EXPECT_TRUE(eval("typeof torch.rand([5]).toString() === 'string'").getBool());
 }
+
+TEST_F(TorchliveRuntimeTest, TorchArangeTest) {
+  EXPECT_EQ(eval("torch.arange(4).shape[0]").getNumber(), 4);
+  EXPECT_EQ(eval("torch.arange(4).data[0]").getNumber(), 0);
+  EXPECT_EQ(eval("torch.arange(4).data[1]").getNumber(), 1);
+  EXPECT_EQ(eval("torch.arange(4).data[2]").getNumber(), 2);
+  EXPECT_EQ(eval("torch.arange(4).data[3]").getNumber(), 3);
+
+  EXPECT_EQ(eval("torch.arange(2, 5).shape[0]").getNumber(), 3);
+  EXPECT_EQ(eval("torch.arange(2, 5).data[0]").getNumber(), 2);
+  EXPECT_EQ(eval("torch.arange(2, 5).data[1]").getNumber(), 3);
+  EXPECT_EQ(eval("torch.arange(2, 5).data[2]").getNumber(), 4);
+
+  EXPECT_EQ(eval("torch.arange(1, 3.5, 0.5).shape[0]").getNumber(), 5);
+  EXPECT_EQ(eval("torch.arange(1, 3.5, 0.5).data[0]").getNumber(), 1.0);
+  EXPECT_EQ(eval("torch.arange(1, 3.5, 0.5).data[1]").getNumber(), 1.5);
+  EXPECT_EQ(eval("torch.arange(1, 3.5, 0.5).data[2]").getNumber(), 2.0);
+  EXPECT_EQ(eval("torch.arange(1, 3.5, 0.5).data[3]").getNumber(), 2.5);
+  EXPECT_EQ(eval("torch.arange(1, 3.5, 0.5).data[4]").getNumber(), 3.0);
+}
 } // namespace

@@ -24,15 +24,15 @@ namespace torchlive {
 namespace torch {
 
 // TorchHostObject Method Name
-const std::string ARGMAX = "argmax";
-const std::string EMPTY = "empty";
-const std::string RAND = "rand";
+static const std::string ARGMAX = "argmax";
+static const std::string EMPTY = "empty";
+static const std::string RAND = "rand";
 
 // TorchHostObject Property Names
-const std::string JIT = "jit";
+static const std::string JIT = "jit";
 
 // TorchHostObject Properties
-const std::vector<std::string> PROPERTIES = {
+static const std::vector<std::string> PROPERTIES = {
     constants::FLOAT32,
     constants::FLOAT64,
     constants::FLOAT64,
@@ -52,9 +52,9 @@ const std::vector<std::string> PROPERTIES = {
 const std::vector<std::string> METHODS = {ARGMAX, EMPTY, RAND};
 
 TorchHostObject::TorchHostObject(jsi::Runtime& runtime)
-    : rand(createRand(runtime)),
-      argmax(createArgmax(runtime)),
-      empty(createEmpty(runtime)) {}
+    : argmax(createArgmax(runtime)),
+      empty(createEmpty(runtime)),
+      rand(createRand(runtime)) {}
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(
     jsi::Runtime& rt) {

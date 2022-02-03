@@ -21,21 +21,39 @@ namespace torch_ = torch;
 namespace torchlive {
 namespace torch {
 
+// TensorHostObject Method Names
+static const std::string SIZE = "size";
+static const std::string TOSTRING = "toString";
+
+// TensorHostObject Property Names
+static const std::string DATA = "data";
+static const std::string DTYPE = "dtype";
+static const std::string SHAPE = "shape";
+
+// TensorHostObject Properties
+static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
+
+// TensorHostObject Methods
+static const std::vector<std::string> METHODS = {SIZE, TOSTRING};
+
 using namespace facebook;
 
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
-    : size(createSize(runtime)), toString(createToString(runtime)), tensor(t) {}
+    : size_(createSize(runtime)),
+      toString_(createToString(runtime)),
+      tensor(t) {}
 
 TensorHostObject::~TensorHostObject() {}
 
 std::vector<jsi::PropNameID> TensorHostObject::getPropertyNames(
     jsi::Runtime& runtime) {
   std::vector<jsi::PropNameID> result;
-  result.push_back(jsi::PropNameID::forUtf8(runtime, std::string("data")));
-  result.push_back(jsi::PropNameID::forUtf8(runtime, std::string("dtype")));
-  result.push_back(jsi::PropNameID::forUtf8(runtime, std::string("shape")));
-  result.push_back(jsi::PropNameID::forUtf8(runtime, std::string("size")));
-  result.push_back(jsi::PropNameID::forUtf8(runtime, std::string("toString")));
+  for (std::string property : PROPERTIES) {
+    result.push_back(jsi::PropNameID::forUtf8(runtime, property));
+  }
+  for (std::string method : METHODS) {
+    result.push_back(jsi::PropNameID::forUtf8(runtime, method));
+  }
   return result;
 }
 
@@ -44,7 +62,7 @@ jsi::Value TensorHostObject::get(
     const jsi::PropNameID& propNameId) {
   auto name = propNameId.utf8(runtime);
 
-  if (name == "data") {
+  if (name == DATA) {
     auto tensor = this->tensor;
     int byteLength = tensor.nbytes();
 
@@ -80,17 +98,17 @@ jsi::Value TensorHostObject::get(
         .getPropertyAsFunction(runtime, typedArrayName.c_str())
         .callAsConstructor(runtime, buffer)
         .asObject(runtime);
-  } else if (name == "dtype") {
+  } else if (name == DTYPE) {
     return jsi::String::createFromUtf8(
         runtime,
         constants::getStringFromDtype(
             caffe2::typeMetaToScalarType(this->tensor.dtype())));
-  } else if (name == "shape") {
-    return this->size.call(runtime);
-  } else if (name == "size") {
-    return jsi::Value(runtime, size);
-  } else if (name == "toString") {
-    return jsi::Value(runtime, toString);
+  } else if (name == SHAPE) {
+    return this->size_.call(runtime);
+  } else if (name == SIZE) {
+    return jsi::Value(runtime, size_);
+  } else if (name == TOSTRING) {
+    return jsi::Value(runtime, toString_);
   }
 
   return jsi::Value::undefined();
@@ -110,7 +128,7 @@ jsi::Function TensorHostObject::createToString(jsi::Runtime& runtime) {
     return jsi::Value(std::move(val));
   };
   return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, "toString"), 0, toStringFunc);
+      runtime, jsi::PropNameID::forUtf8(runtime, TOSTRING), 0, toStringFunc);
 }
 
 jsi::Function TensorHostObject::createSize(jsi::Runtime& runtime) {
@@ -129,7 +147,7 @@ jsi::Function TensorHostObject::createSize(jsi::Runtime& runtime) {
     return jsShape;
   };
   return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, "size"), 0, sizeFunc);
+      runtime, jsi::PropNameID::forUtf8(runtime, SIZE), 0, sizeFunc);
 }
 } // namespace torch
 } // namespace torchlive

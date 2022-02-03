@@ -55,8 +55,8 @@ TEST_F(TorchliveRuntimeTest, TensorShapeTest) {
   EXPECT_EQ(eval("torch.rand([5]).shape[0]").getNumber(), 5);
 }
 
-TEST_F(TorchliveRuntimeTest, TensorShapeAlternativeTest) {
-  EXPECT_TRUE(eval("torch.rand([5]).shape[0] === 5").getBool());
+TEST_F(TorchliveRuntimeTest, TensorSizeTest) {
+  EXPECT_TRUE(eval("torch.rand([5]).size()[0] === 5").getBool());
 }
 
 TEST_F(TorchliveRuntimeTest, TensorDtypeTest) {
@@ -100,4 +100,15 @@ TEST_F(TorchliveRuntimeTest, TorchEmptyTest) {
       facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveRuntimeTest, TensorDataTest) {
+  EXPECT_TRUE(eval("torch.rand([5]).data instanceof Float32Array").getBool());
+  EXPECT_TRUE(
+      eval(
+          "torch.rand([5], {dtype: torch.double}).data instanceof Float64Array")
+          .getBool());
+}
+
+TEST_F(TorchliveRuntimeTest, TensorToStringTest) {
+  EXPECT_TRUE(eval("typeof torch.rand([5]).toString() === 'string'").getBool());
+}
 } // namespace

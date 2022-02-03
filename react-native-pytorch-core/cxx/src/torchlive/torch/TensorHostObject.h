@@ -23,8 +23,8 @@ namespace torch {
 using namespace facebook;
 
 class JSI_EXPORT TensorHostObject : public jsi::HostObject {
-  jsi::Function size;
-  jsi::Function toString;
+  jsi::Function size_;
+  jsi::Function toString_;
 
  public:
   explicit TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t);

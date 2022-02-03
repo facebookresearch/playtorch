@@ -53,10 +53,10 @@ static const std::vector<std::string> PROPERTIES = {
 const std::vector<std::string> METHODS = {ARGMAX, EMPTY, RAND};
 
 TorchHostObject::TorchHostObject(jsi::Runtime& runtime)
-    : arange(createArange(runtime)),
-      argmax(createArgmax(runtime)),
-      empty(createEmpty(runtime)),
-      rand(createRand(runtime)) {}
+    : arange_(createArange(runtime)),
+      argmax_(createArgmax(runtime)),
+      empty_(createEmpty(runtime)),
+      rand_(createRand(runtime)) {}
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(
     jsi::Runtime& rt) {
@@ -77,11 +77,11 @@ jsi::Value TorchHostObject::get(
   auto name = propName.utf8(runtime);
 
   if (name == ARANGE) {
-    return jsi::Value(runtime, arange);
+    return jsi::Value(runtime, arange_);
   } else if (name == ARGMAX) {
-    return jsi::Value(runtime, argmax);
+    return jsi::Value(runtime, argmax_);
   } else if (name == EMPTY) {
-    return jsi::Value(runtime, empty);
+    return jsi::Value(runtime, empty_);
   } else if (name == constants::FLOAT32 || name == constants::FLOAT32) {
     return jsi::String::createFromAscii(runtime, constants::FLOAT32);
   } else if (name == constants::FLOAT64 || name == constants::DOUBLE) {
@@ -99,7 +99,7 @@ jsi::Value TorchHostObject::get(
         std::make_shared<torchlive::torch::jit::JITHostObject>();
     return jsi::Object::createFromHostObject(runtime, jitHostObject);
   } else if (name == RAND) {
-    return jsi::Value(runtime, rand);
+    return jsi::Value(runtime, rand_);
   } else if (name == constants::UINT8) {
     return jsi::String::createFromAscii(runtime, constants::UINT8);
   }

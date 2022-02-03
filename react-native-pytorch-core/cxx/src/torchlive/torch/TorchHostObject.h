@@ -15,10 +15,10 @@ namespace torch {
 using namespace facebook;
 
 class JSI_EXPORT TorchHostObject : public jsi::HostObject {
-  jsi::Function arange;
-  jsi::Function argmax;
-  jsi::Function empty;
-  jsi::Function rand;
+  jsi::Function arange_;
+  jsi::Function argmax_;
+  jsi::Function empty_;
+  jsi::Function rand_;
 
  public:
   TorchHostObject(jsi::Runtime& runtime);

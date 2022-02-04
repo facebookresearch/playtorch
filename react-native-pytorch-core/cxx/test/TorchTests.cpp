@@ -86,21 +86,15 @@ TEST_F(TorchliveRuntimeTest, TorchEmptyTest) {
 
   // Invalid inputs
   EXPECT_THROW(
-      eval("torch.empty(1,2,true, {dtype:'float64'}).dtype")
-          .asString(*rt)
-          .utf8(*rt),
+      eval("torch.empty(1,2,true, {dtype:'float64'}).dtype"),
       facebook::jsi::JSError);
   EXPECT_THROW(
-      eval("torch.empty(1,2,[1], {dtype:'float64'}).dtype")
-          .asString(*rt)
-          .utf8(*rt),
+      eval("torch.empty(1,2,[1], {dtype:'float64'}).dtype"),
       facebook::jsi::JSError);
   EXPECT_THROW(
-      eval("torch.empty({dtype:'float64'}, 1).dtype").asString(*rt).utf8(*rt),
-      facebook::jsi::JSError);
+      eval("torch.empty({dtype:'float64'}, 1).dtype"), facebook::jsi::JSError);
   EXPECT_THROW(
-      eval("torch.empty({dtype:'float64'}).dtype").asString(*rt).utf8(*rt),
-      facebook::jsi::JSError);
+      eval("torch.empty({dtype:'float64'}).dtype"), facebook::jsi::JSError);
 }
 
 TEST_F(TorchliveRuntimeTest, TensorDataTest) {
@@ -161,5 +155,22 @@ TEST_F(TorchliveRuntimeTest, TorchRandintTest) {
   EXPECT_THROW(eval("torch.randint(1)"), facebook::jsi::JSError);
   EXPECT_THROW(eval("torch.randint(3, 7)"), facebook::jsi::JSError);
   EXPECT_THROW(eval("torch.randint([1], [3])"), facebook::jsi::JSError);
+}
+
+TEST_F(TorchliveRuntimeTest, TensorSqueezeTest) {
+  EXPECT_TRUE(eval("torch.rand([1,2,1,3,1]).shape.length === 5").getBool());
+  EXPECT_TRUE(
+      eval("torch.rand([1,2,1,3,1]).squeeze().shape.length === 2").getBool());
+  EXPECT_TRUE(
+      eval("torch.rand([1,2,1,3,1]).squeeze().shape[0] === 2").getBool());
+  EXPECT_TRUE(
+      eval("torch.rand([1,2,1,3,1]).squeeze(2).shape.length === 4").getBool());
+  // if the spcified dim is not size 1, return a copy of the tensor
+  EXPECT_TRUE(
+      eval("torch.rand([1,2,1,3,1]).squeeze(1).shape.length === 5").getBool());
+  EXPECT_TRUE(
+      eval("torch.rand([1,2,1,3,1]).squeeze().shape[1] === 3").getBool());
+  EXPECT_THROW(
+      eval("torch.rand([1,2,1,3,1]).squeeze(1,2)"), facebook::jsi::JSError);
 }
 } // namespace

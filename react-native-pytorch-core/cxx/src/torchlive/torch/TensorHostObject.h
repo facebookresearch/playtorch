@@ -24,6 +24,7 @@ using namespace facebook;
 
 class JSI_EXPORT TensorHostObject : public jsi::HostObject {
   jsi::Function size_;
+  jsi::Function squeeze_;
   jsi::Function toString_;
 
  public:
@@ -38,6 +39,7 @@ class JSI_EXPORT TensorHostObject : public jsi::HostObject {
  private:
   jsi::Function createSize(jsi::Runtime& runtime);
   jsi::Function createToString(jsi::Runtime& runtime);
+  jsi::Function createSqueeze(jsi::Runtime& runtime);
 };
 
 } // namespace torch

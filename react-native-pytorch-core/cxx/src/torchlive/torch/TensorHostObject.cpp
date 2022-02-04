@@ -24,6 +24,7 @@ namespace torch {
 // TensorHostObject Method Names
 static const std::string SIZE = "size";
 static const std::string TOSTRING = "toString";
+static const std::string SQUEEZE = "squeeze";
 
 // TensorHostObject Property Names
 static const std::string DATA = "data";
@@ -34,12 +35,13 @@ static const std::string SHAPE = "shape";
 static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
 
 // TensorHostObject Methods
-static const std::vector<std::string> METHODS = {SIZE, TOSTRING};
+static const std::vector<std::string> METHODS = {SIZE, TOSTRING, SQUEEZE};
 
 using namespace facebook;
 
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
     : size_(createSize(runtime)),
+      squeeze_(createSqueeze(runtime)),
       toString_(createToString(runtime)),
       tensor(t) {}
 
@@ -109,6 +111,8 @@ jsi::Value TensorHostObject::get(
     return jsi::Value(runtime, size_);
   } else if (name == TOSTRING) {
     return jsi::Value(runtime, toString_);
+  } else if (name == SQUEEZE) {
+    return jsi::Value(runtime, squeeze_);
   }
 
   return jsi::Value::undefined();
@@ -149,5 +153,34 @@ jsi::Function TensorHostObject::createSize(jsi::Runtime& runtime) {
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, SIZE), 0, sizeFunc);
 }
+
+jsi::Function TensorHostObject::createSqueeze(jsi::Runtime& runtime) {
+  auto squeezeFunc = [this](
+                         jsi::Runtime& runtime,
+                         const jsi::Value& thisValue,
+                         const jsi::Value* arguments,
+                         size_t count) -> jsi::Value {
+    if (!((count == 1 && arguments[0].isNumber()) || count == 0)) {
+      throw jsi::JSError(
+          runtime, "Please enter an empty argument list or a single number.");
+    }
+    auto tensor = this->tensor;
+    at::Tensor reshapedTensor;
+    if (count == 0) {
+      reshapedTensor = tensor.squeeze();
+    } else if (count == 1) {
+      int dim = arguments[0].asNumber();
+      reshapedTensor = tensor.squeeze(dim);
+    }
+
+    auto tensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(
+            runtime, reshapedTensor);
+    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+  };
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, SQUEEZE), 1, squeezeFunc);
+}
+
 } // namespace torch
 } // namespace torchlive

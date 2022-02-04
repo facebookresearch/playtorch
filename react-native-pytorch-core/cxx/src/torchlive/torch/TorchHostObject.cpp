@@ -12,10 +12,10 @@
 #include <torch/script.h>
 #include <string>
 
-#include "../constants.h"
 #include "TensorHostObject.h"
 #include "TorchHostObject.h"
 #include "jit/JITHostObject.h"
+#include "utils/constants.h"
 
 // Namespace alias for torch to avoid namespace conflicts with torchlive::torch
 namespace torch_ = torch;
@@ -34,18 +34,18 @@ static const std::string JIT = "jit";
 
 // TorchHostObject Properties
 static const std::vector<std::string> PROPERTIES = {
-    constants::FLOAT32,
-    constants::FLOAT64,
-    constants::FLOAT64,
-    constants::FLOAT64,
-    constants::FLOAT64,
-    constants::FLOAT64,
-    constants::FLOAT64,
-    constants::INT16,
-    constants::INT32,
-    constants::INT64,
-    constants::INT8,
-    constants::UINT8,
+    utils::constants::FLOAT32,
+    utils::constants::FLOAT64,
+    utils::constants::FLOAT64,
+    utils::constants::FLOAT64,
+    utils::constants::FLOAT64,
+    utils::constants::FLOAT64,
+    utils::constants::FLOAT64,
+    utils::constants::INT16,
+    utils::constants::INT32,
+    utils::constants::INT64,
+    utils::constants::INT8,
+    utils::constants::UINT8,
     JIT,
 };
 
@@ -82,26 +82,30 @@ jsi::Value TorchHostObject::get(
     return jsi::Value(runtime, argmax_);
   } else if (name == EMPTY) {
     return jsi::Value(runtime, empty_);
-  } else if (name == constants::FLOAT32 || name == constants::FLOAT32) {
-    return jsi::String::createFromAscii(runtime, constants::FLOAT32);
-  } else if (name == constants::FLOAT64 || name == constants::DOUBLE) {
-    return jsi::String::createFromAscii(runtime, constants::FLOAT64);
-  } else if (name == constants::INT8) {
-    return jsi::String::createFromAscii(runtime, constants::INT8);
-  } else if (name == constants::INT16 || name == constants::SHORT) {
-    return jsi::String::createFromAscii(runtime, constants::INT16);
-  } else if (name == constants::INT32 || name == constants::INT) {
-    return jsi::String::createFromAscii(runtime, constants::INT32);
-  } else if (name == constants::INT64 || name == constants::LONG) {
-    return jsi::String::createFromAscii(runtime, constants::INT64);
+  } else if (
+      name == utils::constants::FLOAT32 || name == utils::constants::FLOAT32) {
+    return jsi::String::createFromAscii(runtime, utils::constants::FLOAT32);
+  } else if (
+      name == utils::constants::FLOAT64 || name == utils::constants::DOUBLE) {
+    return jsi::String::createFromAscii(runtime, utils::constants::FLOAT64);
+  } else if (name == utils::constants::INT8) {
+    return jsi::String::createFromAscii(runtime, utils::constants::INT8);
+  } else if (
+      name == utils::constants::INT16 || name == utils::constants::SHORT) {
+    return jsi::String::createFromAscii(runtime, utils::constants::INT16);
+  } else if (name == utils::constants::INT32 || name == utils::constants::INT) {
+    return jsi::String::createFromAscii(runtime, utils::constants::INT32);
+  } else if (
+      name == utils::constants::INT64 || name == utils::constants::LONG) {
+    return jsi::String::createFromAscii(runtime, utils::constants::INT64);
   } else if (name == JIT) {
     auto jitHostObject =
         std::make_shared<torchlive::torch::jit::JITHostObject>();
     return jsi::Object::createFromHostObject(runtime, jitHostObject);
   } else if (name == RAND) {
     return jsi::Value(runtime, rand_);
-  } else if (name == constants::UINT8) {
-    return jsi::String::createFromAscii(runtime, constants::UINT8);
+  } else if (name == utils::constants::UINT8) {
+    return jsi::String::createFromAscii(runtime, utils::constants::UINT8);
   }
 
   return jsi::Value::undefined();
@@ -151,7 +155,7 @@ jsi::Function TorchHostObject::createRand(jsi::Runtime& runtime) {
                                  .utf8(runtime);
 
       tensorOptions =
-          tensorOptions.dtype(constants::getDtypeFromString(dtypeStr));
+          tensorOptions.dtype(utils::constants::getDtypeFromString(dtypeStr));
     }
 
     auto tensor = torch_::rand(c10::ArrayRef<int64_t>(dims), tensorOptions);
@@ -243,7 +247,7 @@ jsi::Function TorchHostObject::createEmpty(jsi::Runtime& runtime) {
                                  .asString(runtime)
                                  .utf8(runtime);
       tensorOptions =
-          tensorOptions.dtype(constants::getDtypeFromString(dtypeStr));
+          tensorOptions.dtype(utils::constants::getDtypeFromString(dtypeStr));
     }
     auto tensor =
         torch_::empty(c10::ArrayRef<int64_t>(dimensions), tensorOptions);

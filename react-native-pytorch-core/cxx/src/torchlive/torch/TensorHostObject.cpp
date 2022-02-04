@@ -12,8 +12,8 @@
 #include <string>
 #include <vector>
 
-#include "../constants.h"
 #include "TensorHostObject.h"
+#include "utils/constants.h"
 
 // Namespace alias for torch to avoid namespace conflicts with torchlive::torch
 namespace torch_ = torch;
@@ -101,7 +101,7 @@ jsi::Value TensorHostObject::get(
   } else if (name == DTYPE) {
     return jsi::String::createFromUtf8(
         runtime,
-        constants::getStringFromDtype(
+        utils::constants::getStringFromDtype(
             caffe2::typeMetaToScalarType(this->tensor.dtype())));
   } else if (name == SHAPE) {
     return this->size_.call(runtime);

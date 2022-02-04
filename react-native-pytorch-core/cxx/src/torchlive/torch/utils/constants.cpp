@@ -11,6 +11,7 @@
 namespace torch_ = torch;
 
 namespace torchlive {
+namespace utils {
 namespace constants {
 
 // using namespace facebook
@@ -56,4 +57,5 @@ std::string getStringFromDtype(torch_::Dtype dtype) {
 }
 
 } // namespace constants
+} // namespace utils
 } // namespace torchlive

@@ -22,7 +22,7 @@ add_library(
         ../cxx/src/torchlive/torch/TensorHostObject.cpp
         ../cxx/src/torchlive/torch/jit/JITHostObject.cpp
         ../cxx/src/torchlive.cpp
-        ../cxx/src/torchlive/constants.cpp
+        ../cxx/src/torchlive/torch/utils/constants.cpp
         src/main/cpp/cpp-adapter.cpp
 )
 

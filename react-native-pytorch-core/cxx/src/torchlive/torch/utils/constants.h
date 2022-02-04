@@ -11,6 +11,7 @@
 namespace torch_ = torch;
 
 namespace torchlive {
+namespace utils {
 namespace constants {
 
 // Tensor Data Type
@@ -32,4 +33,5 @@ torch_::Dtype getDtypeFromString(std::string dtypeStr);
 std::string getStringFromDtype(torch_::Dtype dtype);
 
 } // namespace constants
+} // namespace utils
 } // namespace torchlive

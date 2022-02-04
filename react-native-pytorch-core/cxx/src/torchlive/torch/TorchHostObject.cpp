@@ -28,6 +28,7 @@ static const std::string ARANGE = "arange";
 static const std::string ARGMAX = "argmax";
 static const std::string EMPTY = "empty";
 static const std::string RAND = "rand";
+static const std::string RANDINT = "randint";
 
 // TorchHostObject Property Names
 static const std::string JIT = "jit";
@@ -56,7 +57,8 @@ TorchHostObject::TorchHostObject(jsi::Runtime& runtime)
     : arange_(createArange(runtime)),
       argmax_(createArgmax(runtime)),
       empty_(createEmpty(runtime)),
-      rand_(createRand(runtime)) {}
+      rand_(createRand(runtime)),
+      randint_(createRandint(runtime)) {}
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(
     jsi::Runtime& rt) {
@@ -104,6 +106,8 @@ jsi::Value TorchHostObject::get(
     return jsi::Object::createFromHostObject(runtime, jitHostObject);
   } else if (name == RAND) {
     return jsi::Value(runtime, rand_);
+  } else if (name == RANDINT) {
+    return jsi::Value(runtime, randint_);
   } else if (name == utils::constants::UINT8) {
     return jsi::String::createFromAscii(runtime, utils::constants::UINT8);
   }
@@ -258,6 +262,44 @@ jsi::Function TorchHostObject::createEmpty(jsi::Runtime& runtime) {
 
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, "empty"), 1, emptyFunc);
+}
+
+jsi::Function TorchHostObject::createRandint(jsi::Runtime& runtime) {
+  auto randintImpl = [](jsi::Runtime& runtime,
+                        const jsi::Value& thisValue,
+                        const jsi::Value* arguments,
+                        size_t count) {
+    if (count < 2) {
+      throw jsi::JSError(
+          runtime, "This function requires at least 2 arguments");
+    }
+
+    auto low = 0;
+    auto high = 0;
+    jsi::Array size = jsi::Array::createWithElements(runtime, {});
+    if (count == 2) {
+      high = arguments[0].asNumber();
+      size = arguments[1].asObject(runtime).asArray(runtime);
+    } else {
+      low = arguments[0].asNumber();
+      high = arguments[1].asNumber();
+      size = arguments[2].asObject(runtime).asArray(runtime);
+    }
+
+    auto shapeLength = size.size(runtime);
+    std::vector<int64_t> dims = {};
+    for (int i = 0; i < shapeLength; i++) {
+      int x = size.getValueAtIndex(runtime, i).asNumber();
+      dims.push_back(x);
+    }
+    auto tensor = torch_::randint(low, high, dims);
+
+    auto tensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
+    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+  };
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, RANDINT), 1, randintImpl);
 }
 
 } // namespace torch

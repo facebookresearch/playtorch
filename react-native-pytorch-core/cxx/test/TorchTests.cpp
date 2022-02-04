@@ -5,8 +5,11 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <fmt/core.h>
+#include <fmt/format.h>
 #include <gtest/gtest.h>
 #include <hermes/hermes.h>
+#include <string>
 
 using namespace facebook::jsi;
 using namespace facebook::hermes;
@@ -130,5 +133,33 @@ TEST_F(TorchliveRuntimeTest, TorchArangeTest) {
   EXPECT_EQ(eval("torch.arange(1, 3.5, 0.5).data[2]").getNumber(), 2.0);
   EXPECT_EQ(eval("torch.arange(1, 3.5, 0.5).data[3]").getNumber(), 2.5);
   EXPECT_EQ(eval("torch.arange(1, 3.5, 0.5).data[4]").getNumber(), 3.0);
+}
+
+TEST_F(TorchliveRuntimeTest, TorchRandintTest) {
+  EXPECT_EQ(eval("torch.randint(10, [2, 2]).shape[0]").getNumber(), 2);
+  EXPECT_EQ(eval("torch.randint(10, [2, 2]).shape[1]").getNumber(), 2);
+  for (auto i = 0; i < 4; i++) {
+    std::string s = fmt::format("torch.randint(10, [2, 2]).data[{}]", i);
+    EXPECT_GE(eval(s.c_str()).getNumber(), 0);
+    EXPECT_LT(eval(s.c_str()).getNumber(), 10);
+  }
+
+  EXPECT_EQ(eval("torch.randint(3, 5, [3]).shape[0]").getNumber(), 3);
+  for (auto i = 0; i < 3; i++) {
+    std::string s = fmt::format("torch.randint(3, 5, [3]).data[{}]", i);
+    EXPECT_GE(eval(s.c_str()).getNumber(), 3);
+    EXPECT_LT(eval(s.c_str()).getNumber(), 5);
+  }
+
+  EXPECT_EQ(eval("torch.randint(3, 7, [3, 3, 4]).shape[2]").getNumber(), 4);
+  for (auto i = 0; i < 36; i++) {
+    std::string s = fmt::format("torch.randint(3, 7, [3, 3, 4]).data[{}]", i);
+    EXPECT_GE(eval(s.c_str()).getNumber(), 3);
+    EXPECT_LT(eval(s.c_str()).getNumber(), 7);
+  }
+
+  EXPECT_THROW(eval("torch.randint(1)"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.randint(3, 7)"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.randint([1], [3])"), facebook::jsi::JSError);
 }
 } // namespace

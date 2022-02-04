@@ -85,6 +85,24 @@ export default function JSIPlayground() {
     console.log(tensor);
     data = new Float32Array(tensor.data);
     console.log(data);
+
+    console.log('---Test torch.randint---');
+    tensor = torch.randint(3, 5, [3]);
+    console.log(tensor.toString());
+    console.log(tensor.shape);
+    console.log(tensor.data);
+    tensor = torch.randint(10, [2, 2]);
+    console.log(tensor.toString());
+    console.log(tensor.shape);
+    console.log(tensor.data);
+    tensor = torch.randint(3, 10, [2, 2]);
+    console.log(tensor.toString());
+    console.log(tensor.shape);
+    console.log(tensor.data);
+    tensor = torch.randint(3, 10, [2, 2, 2]);
+    console.log(tensor.toString());
+    console.log(tensor.shape);
+    console.log(tensor.data);
   };
 
   return (

@@ -16,6 +16,7 @@
 #include "TorchHostObject.h"
 #include "jit/JITHostObject.h"
 #include "utils/constants.h"
+#include "utils/helpers.h"
 
 // Namespace alias for torch to avoid namespace conflicts with torchlive::torch
 namespace torch_ = torch;
@@ -210,43 +211,16 @@ jsi::Function TorchHostObject::createEmpty(jsi::Runtime& runtime) {
       throw jsi::JSError(
           runtime, "This function requires at least one argument.");
     }
-    std::vector<int64_t> dimensions = {};
-    int argCount = 0;
-    if (arguments[0].isNumber()) {
-      // For an input as a sequence of integers
-      for (argCount = 0; argCount < count; argCount++) {
-        if (arguments[argCount].isNumber()) {
-          dimensions.push_back((int)arguments[argCount].asNumber());
-        } else {
-          // Probably encountered an input for different argument
-          break;
-        }
-      }
-    } else if (
-        arguments[0].isObject() &&
-        arguments[0].asObject(runtime).isArray(runtime)) {
-      // For an input as a collection like a list or a tuple
-      jsi::Array jsShape =
-          arguments[argCount++].asObject(runtime).asArray(runtime);
-      for (int i = 0; i < jsShape.size(runtime); i++) {
-        jsi::Value inputValue = jsShape.getValueAtIndex(runtime, i);
-        if (inputValue.isNumber()) {
-          dimensions.push_back(jsShape.getValueAtIndex(runtime, i).asNumber());
-        } else {
-          jsi::JSError(
-              runtime,
-              "Input should be a sequence, collection or a tuple of numbers.");
-        }
-      }
-    } else {
-      throw jsi::JSError(
-          runtime,
-          "Please specify the first input as a sequence of numbers or a collection like a list or a tuple.");
-    }
+    utils::helpers::ParseSizeResult result =
+        utils::helpers::parseSize(runtime, arguments, 0, count);
+
+    std::vector<int64_t> dimensions = result.dimensions;
+    int nextArgumentIndex = result.nextArgumentIndex;
 
     torch_::TensorOptions tensorOptions = torch_::TensorOptions();
-    if (argCount < count) {
-      jsi::Object jsTensorOptions = arguments[argCount].asObject(runtime);
+    if (nextArgumentIndex < count) {
+      jsi::Object jsTensorOptions =
+          arguments[nextArgumentIndex].asObject(runtime);
       std::string dtypeStr = jsTensorOptions.getProperty(runtime, "dtype")
                                  .asString(runtime)
                                  .utf8(runtime);

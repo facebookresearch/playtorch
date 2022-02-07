@@ -26,6 +26,7 @@ class JSI_EXPORT TensorHostObject : public jsi::HostObject {
   jsi::Function size_;
   jsi::Function squeeze_;
   jsi::Function toString_;
+  jsi::Function unsqueeze_;
 
  public:
   explicit TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t);
@@ -40,6 +41,7 @@ class JSI_EXPORT TensorHostObject : public jsi::HostObject {
   jsi::Function createSize(jsi::Runtime& runtime);
   jsi::Function createToString(jsi::Runtime& runtime);
   jsi::Function createSqueeze(jsi::Runtime& runtime);
+  jsi::Function createUnsqueeze(jsi::Runtime& runtime);
 };
 
 } // namespace torch

@@ -103,6 +103,17 @@ export default function JSIPlayground() {
     console.log(tensor.toString());
     console.log(tensor.shape);
     console.log(tensor.data);
+
+    console.log('---Test squeeze and unsqueeze---');
+    tensor = torch.rand([4]);
+    console.log(tensor.shape); // [4]
+    const tensor2 = tensor.unsqueeze(0);
+    console.log(tensor.shape); // [4]
+    console.log(tensor2.shape); //  [4,1]
+    const tensor3 = tensor.unsqueeze(1);
+    console.log(tensor3.shape); //  [1,4]
+    const tensor4 = tensor3.squeeze();
+    console.log(tensor4.shape); //  [4]
   };
 
   return (

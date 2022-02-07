@@ -25,6 +25,7 @@ namespace torch {
 static const std::string SIZE = "size";
 static const std::string TOSTRING = "toString";
 static const std::string SQUEEZE = "squeeze";
+static const std::string UNSQUEEZE = "unsqueeze";
 
 // TensorHostObject Property Names
 static const std::string DATA = "data";
@@ -35,7 +36,11 @@ static const std::string SHAPE = "shape";
 static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
 
 // TensorHostObject Methods
-static const std::vector<std::string> METHODS = {SIZE, TOSTRING, SQUEEZE};
+static const std::vector<std::string> METHODS = {
+    SIZE,
+    TOSTRING,
+    SQUEEZE,
+    UNSQUEEZE};
 
 using namespace facebook;
 
@@ -43,6 +48,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
     : size_(createSize(runtime)),
       squeeze_(createSqueeze(runtime)),
       toString_(createToString(runtime)),
+      unsqueeze_(createUnsqueeze(runtime)),
       tensor(t) {}
 
 TensorHostObject::~TensorHostObject() {}
@@ -109,10 +115,12 @@ jsi::Value TensorHostObject::get(
     return this->size_.call(runtime);
   } else if (name == SIZE) {
     return jsi::Value(runtime, size_);
-  } else if (name == TOSTRING) {
-    return jsi::Value(runtime, toString_);
   } else if (name == SQUEEZE) {
     return jsi::Value(runtime, squeeze_);
+  } else if (name == TOSTRING) {
+    return jsi::Value(runtime, toString_);
+  } else if (name == UNSQUEEZE) {
+    return jsi::Value(runtime, unsqueeze_);
   }
 
   return jsi::Value::undefined();
@@ -180,6 +188,37 @@ jsi::Function TensorHostObject::createSqueeze(jsi::Runtime& runtime) {
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, SQUEEZE), 1, squeezeFunc);
+}
+
+jsi::Function TensorHostObject::createUnsqueeze(jsi::Runtime& runtime) {
+  auto unsqueezeFunc = [this](
+                           jsi::Runtime& runtime,
+                           const jsi::Value& thisValue,
+                           const jsi::Value* arguments,
+                           size_t count) -> jsi::Value {
+    auto tensor = this->tensor;
+    int nDims = tensor.sizes().size();
+
+    bool augumentCheck = (count == 1) && (arguments[0].isNumber()) &&
+        ((int)arguments[0].asNumber() >= 0) &&
+        ((int)arguments[0].asNumber() <= nDims);
+    if (!augumentCheck) {
+      throw jsi::JSError(
+          runtime,
+          "argument for squeeze() must be in range [0, " +
+              std::to_string(nDims) + "]. " +
+              std::to_string((int)arguments[0].asNumber()) + " is provided.\n");
+    }
+
+    at::Tensor reshapedTensor = tensor.unsqueeze(arguments[0].asNumber());
+
+    auto tensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(
+            runtime, reshapedTensor);
+    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+  };
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, UNSQUEEZE), 1, unsqueezeFunc);
 }
 
 } // namespace torch

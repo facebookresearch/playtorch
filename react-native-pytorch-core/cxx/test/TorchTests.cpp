@@ -173,4 +173,25 @@ TEST_F(TorchliveRuntimeTest, TensorSqueezeTest) {
   EXPECT_THROW(
       eval("torch.rand([1,2,1,3,1]).squeeze(1,2)"), facebook::jsi::JSError);
 }
+
+TEST_F(TorchliveRuntimeTest, TensorUnsqueezeTest) {
+  EXPECT_TRUE(eval("torch.rand([1,2,3]).shape.length === 3").getBool());
+  EXPECT_TRUE(
+      eval("torch.rand([1,2,3]).unsqueeze(1).shape.length === 4").getBool());
+  EXPECT_TRUE(
+      eval("torch.rand([1,2,3]).unsqueeze(1).shape[0] === 1").getBool());
+  EXPECT_TRUE(
+      eval("torch.rand([1,2,3]).unsqueeze(1).shape[1] === 1").getBool());
+  EXPECT_TRUE(
+      eval("torch.rand([1,2,3]).unsqueeze(1).shape[2] === 2").getBool());
+  EXPECT_TRUE(
+      eval("torch.rand([1,2,3]).unsqueeze(1).shape[3] === 3").getBool());
+  // wrong number of arguments
+  EXPECT_THROW(
+      eval("torch.rand([1,2,3]).unsqueeze(1,2)"), facebook::jsi::JSError);
+  // argument out of range
+  EXPECT_THROW(
+      eval("torch.rand([1,2,3]).unsqueeze(4)"), facebook::jsi::JSError);
+}
+
 } // namespace

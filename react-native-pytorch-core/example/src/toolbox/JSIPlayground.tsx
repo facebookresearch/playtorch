@@ -114,6 +114,14 @@ export default function JSIPlayground() {
     console.log(tensor3.shape); //  [1,4]
     const tensor4 = tensor3.squeeze();
     console.log(tensor4.shape); //  [4]
+
+    console.log('---Test torch.add---');
+    let addTensor1 = torch.rand([1, 2]);
+    console.log(addTensor1);
+    let addTensor2 = torch.add(addTensor1, 2);
+    console.log(addTensor2);
+    let addTensor3 = torch.add(addTensor1, addTensor2);
+    console.log(addTensor3);
   };
 
   return (

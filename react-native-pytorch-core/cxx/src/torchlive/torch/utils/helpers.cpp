@@ -56,6 +56,17 @@ ParseSizeResult parseSize(
   return result;
 }
 
+torchlive::torch::TensorHostObject* parseTensor(
+    jsi::Runtime& runtime,
+    const jsi::Value* jsValue) {
+  auto object = jsValue->asObject(runtime);
+  if (object.isHostObject(runtime)) {
+    auto hostObject = object.getHostObject(runtime);
+    return dynamic_cast<torchlive::torch::TensorHostObject*>(hostObject.get());
+  }
+  return nullptr;
+}
+
 } // namespace helpers
 } // namespace utils
 } // namespace torchlive

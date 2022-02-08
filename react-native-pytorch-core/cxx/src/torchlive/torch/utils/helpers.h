@@ -7,29 +7,34 @@
 
 #include <jsi/jsi.h>
 #include <torch/script.h>
-
-// Namespace alias for torch to avoid namespace conflicts with torchlive::torch
-namespace torch_ = torch;
+#include "../TensorHostObject.h"
 
 namespace torchlive {
 namespace utils {
 namespace helpers {
 
-using namespace facebook;
-
 struct ParseSizeResult {
   int nextArgumentIndex;
   std::vector<int64_t> dimensions;
 };
+
 /*
  * A helper method to parse input arguments if given as a collection, tuple or a
  * sequence of numbers
  */
 ParseSizeResult parseSize(
-    jsi::Runtime& runtime,
-    const jsi::Value* arguments,
+    facebook::jsi::Runtime& runtime,
+    const facebook::jsi::Value* arguments,
     int argIndex,
     size_t count);
+
+/*
+ * A helper method to parse the tensor provided as an input argument and
+ * convert it to a reference which holds a torch::Tensor
+ */
+torchlive::torch::TensorHostObject* parseTensor(
+    facebook::jsi::Runtime& runtime,
+    const facebook::jsi::Value* jsValue);
 
 } // namespace helpers
 } // namespace utils

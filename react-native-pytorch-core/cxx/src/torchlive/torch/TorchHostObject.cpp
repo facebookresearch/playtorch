@@ -25,6 +25,7 @@ namespace torchlive {
 namespace torch {
 
 // TorchHostObject Method Name
+static const std::string ADD = "add";
 static const std::string ARANGE = "arange";
 static const std::string ARGMAX = "argmax";
 static const std::string EMPTY = "empty";
@@ -55,7 +56,8 @@ static const std::vector<std::string> PROPERTIES = {
 const std::vector<std::string> METHODS = {ARGMAX, EMPTY, RAND};
 
 TorchHostObject::TorchHostObject(jsi::Runtime& runtime)
-    : arange_(createArange(runtime)),
+    : add_(createAdd(runtime)),
+      arange_(createArange(runtime)),
       argmax_(createArgmax(runtime)),
       empty_(createEmpty(runtime)),
       rand_(createRand(runtime)),
@@ -79,7 +81,9 @@ jsi::Value TorchHostObject::get(
     const jsi::PropNameID& propName) {
   auto name = propName.utf8(runtime);
 
-  if (name == ARANGE) {
+  if (name == ADD) {
+    return jsi::Value(runtime, add_);
+  } else if (name == ARANGE) {
     return jsi::Value(runtime, arange_);
   } else if (name == ARGMAX) {
     return jsi::Value(runtime, argmax_);
@@ -114,6 +118,46 @@ jsi::Value TorchHostObject::get(
   }
 
   return jsi::Value::undefined();
+}
+
+jsi::Function TorchHostObject::createAdd(jsi::Runtime& runtime) {
+  auto addFunc = [](jsi::Runtime& runtime,
+                    const jsi::Value& thisValue,
+                    const jsi::Value* arguments,
+                    size_t count) {
+    if (count < 2) {
+      throw jsi::JSError(
+          runtime, "This function requires at least 2 arguments.");
+    }
+    auto inputTensorHostObject =
+        utils::helpers::parseTensor(runtime, &arguments[0]);
+    if (inputTensorHostObject == nullptr) {
+      throw jsi::JSError(runtime, "First argument must be a tensor.");
+    } else {
+      auto inputTensor = inputTensorHostObject->tensor;
+      torch_::Tensor resultTensor;
+      if (arguments[1].isNumber()) {
+        resultTensor = torch_::add(inputTensor, arguments[1].asNumber());
+      } else {
+        auto otherInputTensor =
+            utils::helpers::parseTensor(runtime, &arguments[1]);
+        if (otherInputTensor == nullptr) {
+          throw jsi::JSError(
+              runtime, "Second argument must be a tensor or a number.");
+        }
+        resultTensor = torch_::add(inputTensor, otherInputTensor->tensor);
+      }
+
+      auto tensorHostObject =
+          std::make_shared<torchlive::torch::TensorHostObject>(
+              runtime, resultTensor);
+
+      return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+    }
+  };
+
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, ADD), 1, addFunc);
 }
 
 jsi::Function TorchHostObject::createArange(jsi::Runtime& runtime) {

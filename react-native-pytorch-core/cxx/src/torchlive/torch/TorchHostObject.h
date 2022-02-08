@@ -15,6 +15,7 @@ namespace torch {
 using namespace facebook;
 
 class JSI_EXPORT TorchHostObject : public jsi::HostObject {
+  jsi::Function add_;
   jsi::Function arange_;
   jsi::Function argmax_;
   jsi::Function empty_;
@@ -29,6 +30,7 @@ class JSI_EXPORT TorchHostObject : public jsi::HostObject {
   std::vector<jsi::PropNameID> getPropertyNames(jsi::Runtime& rt) override;
 
  private:
+  static jsi::Function createAdd(jsi::Runtime& runtime);
   static jsi::Function createArange(jsi::Runtime& runtime);
   static jsi::Function createArgmax(jsi::Runtime& runtime);
   static jsi::Function createEmpty(jsi::Runtime& runtime);

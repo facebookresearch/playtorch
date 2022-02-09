@@ -16,17 +16,17 @@ namespace helpers {
 
 using namespace facebook;
 
-ParseSizeResult parseSize(
+int parseSize(
     jsi::Runtime& runtime,
     const jsi::Value* arguments,
     int argIndex,
-    size_t count) {
+    size_t count,
+    std::vector<int64_t>* dimensions) {
   int argCount = argIndex;
-  std::vector<int64_t> dims = {};
   if (arguments[argIndex].isNumber()) {
     // For an input as a sequence of integers
     while (argCount < count && arguments[argCount].isNumber()) {
-      dims.push_back((int)arguments[argCount].asNumber());
+      dimensions->push_back((int)arguments[argCount].asNumber());
       argCount++;
     }
   } else if (
@@ -38,7 +38,7 @@ ParseSizeResult parseSize(
     for (int i = 0; i < jsShape.size(runtime); i++) {
       jsi::Value inputValue = jsShape.getValueAtIndex(runtime, i);
       if (inputValue.isNumber()) {
-        dims.push_back(jsShape.getValueAtIndex(runtime, i).asNumber());
+        dimensions->push_back(jsShape.getValueAtIndex(runtime, i).asNumber());
       } else {
         jsi::JSError(
             runtime,
@@ -50,10 +50,7 @@ ParseSizeResult parseSize(
         runtime,
         "Please specify the first input as a sequence of numbers or a collection like a list or a tuple.");
   }
-  ParseSizeResult result;
-  result.nextArgumentIndex = argCount;
-  result.dimensions = dims;
-  return result;
+  return argCount;
 }
 
 torchlive::torch::TensorHostObject* parseTensor(

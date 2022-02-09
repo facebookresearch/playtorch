@@ -6,27 +6,27 @@
  */
 
 #include <jsi/jsi.h>
+
 #include <torch/script.h>
+
 #include "../TensorHostObject.h"
 
 namespace torchlive {
 namespace utils {
 namespace helpers {
 
-struct ParseSizeResult {
-  int nextArgumentIndex;
-  std::vector<int64_t> dimensions;
-};
-
 /*
  * A helper method to parse input arguments if given as a collection, tuple or a
- * sequence of numbers
+ * sequence of numbers. Modifies the input vector of integers with the size
+ * dimensions parsed from arguments and returns the next argument index to be
+ * processed.
  */
-ParseSizeResult parseSize(
+int parseSize(
     facebook::jsi::Runtime& runtime,
     const facebook::jsi::Value* arguments,
     int argIndex,
-    size_t count);
+    size_t count,
+    std::vector<int64_t>* dimensions);
 
 /*
  * A helper method to parse the tensor provided as an input argument and

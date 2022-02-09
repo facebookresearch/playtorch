@@ -255,11 +255,9 @@ jsi::Function TorchHostObject::createEmpty(jsi::Runtime& runtime) {
       throw jsi::JSError(
           runtime, "This function requires at least one argument.");
     }
-    utils::helpers::ParseSizeResult result =
-        utils::helpers::parseSize(runtime, arguments, 0, count);
-
-    std::vector<int64_t> dimensions = result.dimensions;
-    int nextArgumentIndex = result.nextArgumentIndex;
+    std::vector<int64_t> dimensions = {};
+    int nextArgumentIndex =
+        utils::helpers::parseSize(runtime, arguments, 0, count, &dimensions);
 
     torch_::TensorOptions tensorOptions = torch_::TensorOptions();
     if (nextArgumentIndex < count) {

@@ -11,6 +11,7 @@
 #include <torch/script.h>
 #include <string>
 
+#include "../../IValueHostObject.h"
 #include "../../TensorHostObject.h"
 #include "../../utils/helpers.h"
 #include "ModuleHostObject.h"
@@ -100,7 +101,9 @@ jsi::Function ModuleHostObject::createForward(jsi::Runtime& runtime) {
       return this->module_.forward(inputs);
     }();
 
-    return jsi::Value::undefined();
+    auto valueHostObject =
+        std::make_shared<torchlive::torch::IValueHostObject>(runtime, value);
+    return jsi::Object::createFromHostObject(runtime, valueHostObject);
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, FORWARD), 1, forwardFunc);

@@ -22,6 +22,7 @@ add_library(
         ../cxx/src/torchlive/media/Blob.cpp
         ../cxx/src/torchlive/media/BlobHostObject.cpp
         ../cxx/src/torchlive/media/NativeJSRefBridgeHostObject.cpp
+        ../cxx/src/torchlive/torch/IValueHostObject.cpp
         ../cxx/src/torchlive/torch/TensorHostObject.cpp
         ../cxx/src/torchlive/torch/TorchHostObject.cpp
         ../cxx/src/torchlive/torch/jit/JITHostObject.cpp

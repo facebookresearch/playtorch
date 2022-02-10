@@ -89,23 +89,18 @@ public class MobileModelModule: NSObject {
     }
 
     func fetchCacheAndLoadModel(modelUri: String, completionHandler: @escaping (String?) -> Void) {
-        if let modelUrl = URL(string: modelUri) {
-
-            // Load model from local file system if the scheme is file or if it
-            // doesn't have a scheme (i.e., `nil`), which means it is likely a
-            // local file if URI.
-            if modelUrl.scheme == nil || modelUrl.scheme == "file" {
-                self.loadModelFromURL(modelUri: modelUri, url: modelUrl, completionHandler: completionHandler)
+        let downloadCompletionHandler: (URL?, String?) -> Void = { url, error in
+            if let error = error {
+                completionHandler(error)
             } else {
-            let modelTask = URLSession.shared.downloadTask(with: modelUrl) { urlOrNil, _, _ in
-                guard let tempURL = urlOrNil else { completionHandler("Error downloading file"); return }
-                self.loadModelFromURL(modelUri: modelUri, url: tempURL, completionHandler: completionHandler)
+                guard let modelUrl = url else {
+                    completionHandler("Could not download model")
+                    return
+                }
+                self.loadModelFromURL(modelUri: modelUri, url: modelUrl, completionHandler: completionHandler)
             }
-            modelTask.resume()
-            }
-        } else {
-            completionHandler("Could not create URLSession with provided URL")
         }
+        ModelUtils.downloadModel(modelUri: modelUri, completionHandler: downloadCompletionHandler)
     }
 
     func loadModelFromURL(modelUri: String, url: URL, completionHandler: @escaping (String?) -> Void) {

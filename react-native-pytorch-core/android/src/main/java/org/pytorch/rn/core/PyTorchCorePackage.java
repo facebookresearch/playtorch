@@ -22,6 +22,7 @@ import org.pytorch.rn.core.canvas.ImageDataModule;
 import org.pytorch.rn.core.image.ImageModule;
 import org.pytorch.rn.core.jsi.PyTorchCoreJSIModule;
 import org.pytorch.rn.core.ml.MobileModelModule;
+import org.pytorch.rn.core.ml.ModelLoaderModule;
 
 public class PyTorchCorePackage implements ReactPackage {
 
@@ -29,6 +30,7 @@ public class PyTorchCorePackage implements ReactPackage {
   public List<NativeModule> createNativeModules(@NotNull ReactApplicationContext reactContext) {
     return Arrays.<NativeModule>asList(
         new MobileModelModule(reactContext),
+        new ModelLoaderModule(reactContext),
         new ImageModule(reactContext),
         new ImageDataModule(reactContext),
         new CanvasRenderingContext2DModule(reactContext),

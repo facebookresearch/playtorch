@@ -17,3 +17,4 @@ export {ModelInfo, ModelPath} from './Models';
 export {Camera, CameraFacing} from './CameraView';
 export {Canvas, CanvasRenderingContext2D} from './CanvasView';
 export {AudioUtil} from './audio/AudioModule';
+export {ModelLoader} from './ModelLoader';

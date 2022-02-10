@@ -21,10 +21,7 @@ import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.module.annotations.ReactModule;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,6 +58,7 @@ import org.pytorch.rn.core.ml.processing.unpacker.TensorToStringUnpacker;
 import org.pytorch.rn.core.ml.processing.unpacker.TensorUnpacker;
 import org.pytorch.rn.core.ml.processing.unpacker.TupleUnpacker;
 import org.pytorch.rn.core.utils.FileUtils;
+import org.pytorch.rn.core.utils.ModelUtils;
 
 @ReactModule(name = "PyTorchCoreMobileModelModule")
 public class MobileModelModule extends ReactContextBaseJavaModule {
@@ -183,61 +181,10 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
         });
   }
 
-  /**
-   * Copy specified raw resource to the cache directory and return its absolute path.
-   *
-   * <p>This is a workaround because org.pytorch.LiteModuleLoader as of 1.10.0 does not have an API
-   * to load a model from an asset with extra_files, although the API exists in C++.
-   *
-   * @return absolute file path
-   */
-  private String rawResourceFilePath(String resourceName, int resourceId) throws IOException {
-    File file = new File(mReactContext.getCacheDir(), resourceName);
-    try (InputStream is = mReactContext.getResources().openRawResource(resourceId)) {
-      try (OutputStream os = new FileOutputStream(file)) {
-        byte[] buffer = new byte[4 * 1024];
-        int read;
-        while ((read = is.read(buffer)) != -1) {
-          os.write(buffer, 0, read);
-        }
-        os.flush();
-      }
-    }
-    return file.getAbsolutePath();
-  }
-
   private ModuleHolder fetchCacheAndLoadModel(final String modelUri)
       throws JSONException, ClassNotFoundException, NoSuchMethodException, InstantiationException,
           IllegalAccessException, InvocationTargetException, IOException {
-    Log.d(TAG, "Load model: " + modelUri);
-
-    Uri uri = Uri.parse(modelUri);
-
-    File targetFile;
-    if (uri.getScheme() == null) {
-      // A uri with no scheme (i.e., `null`) is likely to be a resource or local file. Release mode
-      // builds bundle the model file in the APK as a raw resource.
-      int resourceId =
-          mReactContext
-              .getResources()
-              .getIdentifier(modelUri, "raw", mReactContext.getPackageName());
-      if (resourceId != 0) {
-        targetFile = new File(rawResourceFilePath(modelUri, resourceId));
-      } else {
-        // Fall back to the local file system
-        targetFile = new File(uri.getPath());
-      }
-    } else if ("file".equals(uri.getScheme())) {
-      // Load model from local file system if the scheme is file
-      targetFile = new File(uri.getPath());
-    } else {
-      // Get file path to cache model or load model from cache if loading from URI fails
-      targetFile = new File(mReactContext.getCacheDir(), uri.getPath());
-
-      // Always try to load model from uri to make sure it's always the latest version. Only if
-      // fetching the model from the uri fails, it will load the cached version (if exists).
-      FileUtils.downloadUriToFile(modelUri, targetFile);
-    }
+    final File targetFile = ModelUtils.downloadModel(mReactContext, modelUri);
 
     Log.d(TAG, "Absolute local model path: " + targetFile.getAbsolutePath());
 
@@ -253,6 +200,7 @@ public class MobileModelModule extends ReactContextBaseJavaModule {
     // fallback, try to load the live.spec.json from the RN bundle.
     String spec = extraFiles.get("model/live.spec.json");
     if (spec == null || spec.isEmpty()) {
+      Uri uri = Uri.parse(modelUri);
       // ignore
       Uri specUri =
           new Uri.Builder()

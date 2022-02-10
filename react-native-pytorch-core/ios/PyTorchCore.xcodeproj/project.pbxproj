@@ -11,6 +11,8 @@
 		386E479527AF9DA200839701 /* NativeJSRefBridge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 386E479427AF9DA200839701 /* NativeJSRefBridge.cpp */; };
 		386E479727AF9DCF00839701 /* MediaToBlobCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E479627AF9DCF00839701 /* MediaToBlobCache.swift */; };
 		386E479927AF9E0300839701 /* BlobUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E479827AF9E0300839701 /* BlobUtils.swift */; };
+		386E479B27B2DFFE00839701 /* ModelLoaderModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E479A27B2DFFE00839701 /* ModelLoaderModule.swift */; };
+		386E479E27B31AD600839701 /* ModelUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E479D27B31AD600839701 /* ModelUtils.swift */; };
 		387E703C26E16F43003BB6F5 /* CanvasManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E701826E16F43003BB6F5 /* CanvasManager.swift */; };
 		387E703D26E16F43003BB6F5 /* DrawingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E701926E16F43003BB6F5 /* DrawingCanvasView.swift */; };
 		387E703E26E16F43003BB6F5 /* CanvasRenderingContext2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E701A26E16F43003BB6F5 /* CanvasRenderingContext2D.swift */; };
@@ -77,6 +79,9 @@
 		386E479427AF9DA200839701 /* NativeJSRefBridge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NativeJSRefBridge.cpp; sourceTree = "<group>"; };
 		386E479627AF9DCF00839701 /* MediaToBlobCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaToBlobCache.swift; sourceTree = "<group>"; };
 		386E479827AF9E0300839701 /* BlobUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlobUtils.swift; sourceTree = "<group>"; };
+		386E479A27B2DFFE00839701 /* ModelLoaderModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelLoaderModule.swift; sourceTree = "<group>"; };
+		386E479C27B2E03900839701 /* ModelLoaderModule.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ModelLoaderModule.m; sourceTree = "<group>"; };
+		386E479D27B31AD600839701 /* ModelUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelUtils.swift; sourceTree = "<group>"; };
 		387E701826E16F43003BB6F5 /* CanvasManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasManager.swift; sourceTree = "<group>"; };
 		387E701926E16F43003BB6F5 /* DrawingCanvasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingCanvasView.swift; sourceTree = "<group>"; };
 		387E701A26E16F43003BB6F5 /* CanvasRenderingContext2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasRenderingContext2D.swift; sourceTree = "<group>"; };
@@ -198,6 +203,9 @@
 			children = (
 				387E703426E16F43003BB6F5 /* MobileModelModule.m */,
 				387E703526E16F43003BB6F5 /* MobileModelModule.swift */,
+				386E479C27B2E03900839701 /* ModelLoaderModule.m */,
+				386E479A27B2DFFE00839701 /* ModelLoaderModule.swift */,
+				386E479D27B31AD600839701 /* ModelUtils.swift */,
 				387E702926E16F43003BB6F5 /* Processing */,
 			);
 			path = ML;
@@ -365,11 +373,13 @@
 				38DF6AF5278AB2F400608E8E /* TensorFromImagePacker.swift in Sources */,
 				387E703E26E16F43003BB6F5 /* CanvasRenderingContext2D.swift in Sources */,
 				387E705326E16F43003BB6F5 /* MobileModelModule.swift in Sources */,
+				386E479B27B2DFFE00839701 /* ModelLoaderModule.swift in Sources */,
 				387E704C26E16F43003BB6F5 /* BaseIValuePacker.swift in Sources */,
 				38DF6AEB278A8A4700608E8E /* Packer.swift in Sources */,
 				38C0DDB226E59E88003007B6 /* Image.swift in Sources */,
 				38DEE621278AB7B5000EBF1F /* BoundingBoxesUnpacker.swift in Sources */,
 				387E704426E16F43003BB6F5 /* CaptureButton.swift in Sources */,
+				386E479E27B31AD600839701 /* ModelUtils.swift in Sources */,
 				38DF6AE9278A8A1E00608E8E /* PackerRegistry.swift in Sources */,
 				387E704D26E16F43003BB6F5 /* IImageTransform.swift in Sources */,
 				387E704126E16F43003BB6F5 /* CanvasRenderingContext2DModule.m in Sources */,

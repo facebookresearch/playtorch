@@ -267,4 +267,27 @@ TEST_F(TorchliveRuntimeTest, TorchMulTest) {
   EXPECT_THROW(
       eval("torch.mul(torch.arrange(3, 4), 'foo')"), facebook::jsi::JSError);
 }
+
+TEST_F(TorchliveRuntimeTest, TorchSoftmaxTest) {
+  std::string torchSoftmaxEachValueLessThanOne =
+      R"(
+          const tensor = torch.arange(2);
+          const result = torch.softmax(tensor, 0);
+          (result.data[0] <= 1 && result.data[0] >= 0) && (result.data[1] <= 1 && result.data[1] >= 0);
+        )";
+  EXPECT_TRUE(eval(torchSoftmaxEachValueLessThanOne.c_str()).getBool());
+
+  std::string torchSoftmaxSumOfValuesEqualToOne =
+      R"(
+          const tensor = torch.arange(2);
+          const result = torch.softmax(tensor, 0);
+          Math.round(result.data[0] + result.data[1]);
+        )";
+  EXPECT_EQ(eval(torchSoftmaxSumOfValuesEqualToOne.c_str()).getNumber(), 1);
+
+  EXPECT_THROW(eval("torch.softmax()"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.softmax(1)"), facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("torch.softmax(torch.empty(1, 2), [1])"), facebook::jsi::JSError);
+}
 } // namespace

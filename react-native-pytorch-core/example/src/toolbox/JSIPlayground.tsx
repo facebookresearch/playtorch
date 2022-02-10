@@ -138,6 +138,12 @@ export default function JSIPlayground() {
     console.log(tensor2);
     tensor3 = torch.mul(tensor2, tensor1);
     console.log(tensor3);
+
+    console.log('---Test torch.softmax---');
+    let softmaxTensor1 = torch.arange(2);
+    console.log(softmaxTensor1);
+    let softmaxTensor2 = torch.softmax(softmaxTensor1, 0);
+    console.log(softmaxTensor2);
   };
 
   return (

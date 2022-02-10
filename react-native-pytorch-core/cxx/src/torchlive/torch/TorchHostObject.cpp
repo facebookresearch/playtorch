@@ -36,6 +36,7 @@ static const std::string FROM_BLOB = "fromBlob";
 static const std::string MUL = "mul";
 static const std::string RAND = "rand";
 static const std::string RANDINT = "randint";
+static const std::string SOFTMAX = "softmax";
 static const std::string SUB = "sub";
 
 // TorchHostObject Property Names
@@ -60,7 +61,7 @@ static const std::vector<std::string> PROPERTIES = {
 
 // TorchHostObject Methods
 const std::vector<std::string> METHODS =
-    {ARGMAX, EMPTY, FROM_BLOB, RAND, RANDINT};
+    {ADD, ARANGE, ARGMAX, EMPTY, FROM_BLOB, RAND, RANDINT, SOFTMAX, SUB};
 
 TorchHostObject::TorchHostObject(jsi::Runtime& runtime)
     : add_(createAdd(runtime)),
@@ -71,6 +72,7 @@ TorchHostObject::TorchHostObject(jsi::Runtime& runtime)
       mul_(createMul(runtime)),
       rand_(createRand(runtime)),
       randint_(createRandint(runtime)),
+      softmax_(createSoftmax(runtime)),
       sub_(createSub(runtime)) {}
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(
@@ -127,6 +129,8 @@ jsi::Value TorchHostObject::get(
     return jsi::Value(runtime, rand_);
   } else if (name == RANDINT) {
     return jsi::Value(runtime, randint_);
+  } else if (name == SOFTMAX) {
+    return jsi::Value(runtime, softmax_);
   } else if (name == SUB) {
     return jsi::Value(runtime, sub_);
   } else if (name == utils::constants::UINT8) {
@@ -404,6 +408,33 @@ jsi::Function TorchHostObject::createRandint(jsi::Runtime& runtime) {
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, RANDINT), 1, randintImpl);
+}
+
+jsi::Function TorchHostObject::createSoftmax(jsi::Runtime& runtime) {
+  auto softmaxFunc = [](jsi::Runtime& runtime,
+                        const jsi::Value& thisValue,
+                        const jsi::Value* arguments,
+                        size_t count) {
+    if (count < 2) {
+      throw jsi::JSError(
+          runtime, "This function requires at least 2 arguments");
+    }
+    auto inputTensorHostObject =
+        utils::helpers::parseTensor(runtime, arguments);
+    if (inputTensorHostObject == nullptr) {
+      throw jsi::JSError(runtime, "First argument must be a tensor");
+    }
+    auto dimension = arguments[1].asNumber();
+    auto resultTensor =
+        torch_::softmax(inputTensorHostObject->tensor, dimension);
+    auto outputTensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(
+            runtime, resultTensor);
+    return jsi::Object::createFromHostObject(runtime, outputTensorHostObject);
+  };
+
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, SOFTMAX), 1, softmaxFunc);
 }
 
 jsi::Function TorchHostObject::createSub(jsi::Runtime& runtime) {

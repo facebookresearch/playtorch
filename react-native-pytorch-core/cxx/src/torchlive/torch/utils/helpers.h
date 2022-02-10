@@ -48,6 +48,15 @@ void parseArithmeticOperands(
     torchlive::torch::TensorHostObject** operand2Tensor,
     double** operand2Number);
 
+/*
+ * A helper method used to parse tensor options from the input arguments.
+ */
+torch_::TensorOptions parseTensorOptions(
+    facebook::jsi::Runtime& runtime,
+    const facebook::jsi::Value* arguments,
+    int argIndex,
+    size_t count);
+
 } // namespace helpers
 } // namespace utils
 } // namespace torchlive

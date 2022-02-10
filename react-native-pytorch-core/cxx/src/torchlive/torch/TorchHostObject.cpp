@@ -190,16 +190,8 @@ jsi::Function TorchHostObject::createRand(jsi::Runtime& runtime) {
       dims.push_back(x);
     }
 
-    torch_::TensorOptions tensorOptions = torch_::TensorOptions();
-    if (count == 2) {
-      jsi::Object jsTensorOptions = arguments[1].asObject(runtime);
-      std::string dtypeStr = jsTensorOptions.getProperty(runtime, "dtype")
-                                 .asString(runtime)
-                                 .utf8(runtime);
-
-      tensorOptions =
-          tensorOptions.dtype(utils::constants::getDtypeFromString(dtypeStr));
-    }
+    torch_::TensorOptions tensorOptions =
+        utils::helpers::parseTensorOptions(runtime, arguments, 1, count);
 
     auto tensor = torch_::rand(c10::ArrayRef<int64_t>(dims), tensorOptions);
 
@@ -253,16 +245,8 @@ jsi::Function TorchHostObject::createEmpty(jsi::Runtime& runtime) {
     int nextArgumentIndex =
         utils::helpers::parseSize(runtime, arguments, 0, count, &dimensions);
 
-    torch_::TensorOptions tensorOptions = torch_::TensorOptions();
-    if (nextArgumentIndex < count) {
-      jsi::Object jsTensorOptions =
-          arguments[nextArgumentIndex].asObject(runtime);
-      std::string dtypeStr = jsTensorOptions.getProperty(runtime, "dtype")
-                                 .asString(runtime)
-                                 .utf8(runtime);
-      tensorOptions =
-          tensorOptions.dtype(utils::constants::getDtypeFromString(dtypeStr));
-    }
+    torch_::TensorOptions tensorOptions = utils::helpers::parseTensorOptions(
+        runtime, arguments, nextArgumentIndex, count);
     auto tensor =
         torch_::empty(c10::ArrayRef<int64_t>(dimensions), tensorOptions);
     auto tensorHostObject =

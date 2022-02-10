@@ -5,6 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <jsi/jsi.h>
+
+#include "constants.h"
 #include "helpers.h"
 
 // Namespace alias for torch to avoid namespace conflicts with torchlive::torch
@@ -93,6 +96,30 @@ void parseArithmeticOperands(
   }
 }
 
+torch_::TensorOptions parseTensorOptions(
+    facebook::jsi::Runtime& runtime,
+    const jsi::Value* arguments,
+    int argIndex,
+    size_t count) {
+  torch_::TensorOptions tensorOptions = torch_::TensorOptions();
+  if (argIndex >= count) {
+    return tensorOptions;
+  }
+
+  if (!arguments[argIndex].isObject()) {
+    throw jsi::JSError(runtime, "Argument must be an object");
+  }
+
+  jsi::Object jsTensorOptions = arguments[argIndex].asObject(runtime);
+  std::string dtypeStr = jsTensorOptions.getProperty(runtime, "dtype")
+                             .asString(runtime)
+                             .utf8(runtime);
+
+  tensorOptions =
+      tensorOptions.dtype(utils::constants::getDtypeFromString(dtypeStr));
+
+  return tensorOptions;
+}
 } // namespace helpers
 } // namespace utils
 } // namespace torchlive

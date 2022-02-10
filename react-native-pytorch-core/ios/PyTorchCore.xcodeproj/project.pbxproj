@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		384255BF26E17D3F00274872 /* ImageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384255BE26E17D3F00274872 /* ImageData.swift */; };
+		386E479527AF9DA200839701 /* NativeJSRefBridge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 386E479427AF9DA200839701 /* NativeJSRefBridge.cpp */; };
+		386E479727AF9DCF00839701 /* MediaToBlobCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E479627AF9DCF00839701 /* MediaToBlobCache.swift */; };
+		386E479927AF9E0300839701 /* BlobUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E479827AF9E0300839701 /* BlobUtils.swift */; };
 		387E703C26E16F43003BB6F5 /* CanvasManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E701826E16F43003BB6F5 /* CanvasManager.swift */; };
 		387E703D26E16F43003BB6F5 /* DrawingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E701926E16F43003BB6F5 /* DrawingCanvasView.swift */; };
 		387E703E26E16F43003BB6F5 /* CanvasRenderingContext2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E701A26E16F43003BB6F5 /* CanvasRenderingContext2D.swift */; };
@@ -71,6 +74,9 @@
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libPyTorchCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPyTorchCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		384255BE26E17D3F00274872 /* ImageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageData.swift; sourceTree = "<group>"; };
+		386E479427AF9DA200839701 /* NativeJSRefBridge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NativeJSRefBridge.cpp; sourceTree = "<group>"; };
+		386E479627AF9DCF00839701 /* MediaToBlobCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaToBlobCache.swift; sourceTree = "<group>"; };
+		386E479827AF9E0300839701 /* BlobUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlobUtils.swift; sourceTree = "<group>"; };
 		387E701826E16F43003BB6F5 /* CanvasManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasManager.swift; sourceTree = "<group>"; };
 		387E701926E16F43003BB6F5 /* DrawingCanvasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingCanvasView.swift; sourceTree = "<group>"; };
 		387E701A26E16F43003BB6F5 /* CanvasRenderingContext2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasRenderingContext2D.swift; sourceTree = "<group>"; };
@@ -138,6 +144,16 @@
 				134814201AA4EA6300B7C361 /* libPyTorchCore.a */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		386E479327AF9DA200839701 /* Media */ = {
+			isa = PBXGroup;
+			children = (
+				386E479427AF9DA200839701 /* NativeJSRefBridge.cpp */,
+				386E479627AF9DCF00839701 /* MediaToBlobCache.swift */,
+				386E479827AF9E0300839701 /* BlobUtils.swift */,
+			);
+			path = Media;
 			sourceTree = "<group>";
 		};
 		387E701726E16F43003BB6F5 /* Canvas */ = {
@@ -250,6 +266,7 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
+				386E479327AF9DA200839701 /* Media */,
 				387E702026E16F43003BB6F5 /* Camera */,
 				387E701726E16F43003BB6F5 /* Canvas */,
 				387E703626E16F43003BB6F5 /* Image */,
@@ -321,6 +338,7 @@
 				387E704726E16F43003BB6F5 /* CameraManager.swift in Sources */,
 				387E704F26E16F43003BB6F5 /* IImageToTensorTransform.swift in Sources */,
 				387E705226E16F43003BB6F5 /* MobileModelModule.m in Sources */,
+				386E479527AF9DA200839701 /* NativeJSRefBridge.cpp in Sources */,
 				38DEE61B278AB77D000EBF1F /* TensorUnpacker.swift in Sources */,
 				387E704B26E16F43003BB6F5 /* RGBNormTransform.swift in Sources */,
 				387E704A26E16F43003BB6F5 /* ScaleTransform.swift in Sources */,
@@ -328,6 +346,7 @@
 				387E705626E16F43003BB6F5 /* ImageModule.m in Sources */,
 				387E704826E16F43003BB6F5 /* JSContext.swift in Sources */,
 				387E705526E16F43003BB6F5 /* Macros.m in Sources */,
+				386E479727AF9DCF00839701 /* MediaToBlobCache.swift in Sources */,
 				38C0DDB426E59EDD003007B6 /* ImageUtils.swift in Sources */,
 				38DF6AF1278A8A7D00608E8E /* IValuePacker.swift in Sources */,
 				387E704626E16F43003BB6F5 /* CameraView.swift in Sources */,
@@ -361,6 +380,7 @@
 				387E704326E16F43003BB6F5 /* CGContextExtension.swift in Sources */,
 				38DEE61D278AB793000EBF1F /* TensorToImageUnpacker.swift in Sources */,
 				387E705726E16F43003BB6F5 /* ImageModule.swift in Sources */,
+				386E479927AF9E0300839701 /* BlobUtils.swift in Sources */,
 				38DF6AEF278A8A6C00608E8E /* Unpacker.swift in Sources */,
 				387E705426E16F43003BB6F5 /* BitmapImage.swift in Sources */,
 				38DF6AF7278AB30A00608E8E /* ArgmaxUnpacker.swift in Sources */,

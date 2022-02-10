@@ -9,33 +9,36 @@ import Foundation
 
 class JSContext {
 
-    enum JSContextError : Error {
+    enum JSContextError: Error {
         case invalidParam
     }
 
+    // TODO(T102924901) Change name from ID_KEY to IDKEY
+    // swiftlint:disable identifier_name
     public static var ID_KEY = "ID"
+    // swiftlint:enable identifier_name
 
     public static var refs: [String: NativeJSRef] = [:]
 
     public static func setRef(ref: NativeJSRef) -> String {
-        let id = UUID().uuidString
-        JSContext.refs[id] = ref
-        return id
+        let refId = UUID().uuidString
+        JSContext.refs[refId] = ref
+        return refId
     }
 
-    public static func getRef(id: String) throws -> NativeJSRef {
-        guard let unwrappedNativeJSRef = JSContext.refs[id] else { throw JSContextError.invalidParam }
+    public static func getRef(refId: String) throws -> NativeJSRef {
+        guard let unwrappedNativeJSRef = JSContext.refs[refId] else { throw JSContextError.invalidParam }
         return unwrappedNativeJSRef
     }
 
-    public static func get(jsRef: [ String : String ]) throws -> NativeJSRef {
-        guard let id = jsRef[ID_KEY] else { throw JSContextError.invalidParam }
-        return try JSContext.getRef(id: id)
+    public static func get(jsRef: [ String: String ]) throws -> NativeJSRef {
+        guard let refId = jsRef[ID_KEY] else { throw JSContextError.invalidParam }
+        return try JSContext.getRef(refId: refId)
     }
 
-    public static func release(jsRef: [ String : String ]) throws {
-        guard let id = jsRef[ID_KEY] else { throw JSContextError.invalidParam }
-        let removedJSRef = refs.removeValue(forKey: id)
+    public static func release(jsRef: [ String: String ]) throws {
+        guard let refId = jsRef[ID_KEY] else { throw JSContextError.invalidParam }
+        let removedJSRef = refs.removeValue(forKey: refId)
         try removedJSRef?.release()
     }
 
@@ -43,25 +46,25 @@ class JSContext {
         return NativeJSRef(object: object)
     }
 
-    public static func unwrapObject(jsRef: [ String : String ]) throws -> Any {
-        guard let id = jsRef[ID_KEY] else { throw JSContextError.invalidParam }
-        let ref = try JSContext.getRef(id: id)
+    public static func unwrapObject(jsRef: [ String: String ]) throws -> Any {
+        guard let refId = jsRef[ID_KEY] else { throw JSContextError.invalidParam }
+        let ref = try JSContext.getRef(refId: refId)
         return ref.getObject()
     }
 
     class NativeJSRef {
-        //initialized mId and mJSRef to empty values to allow self to be used to set id in init()
+        // initialized mId and mJSRef to empty values to allow self to be used to set id in init()
         private var mId: String? = ""
         private var mObject: Any?
-        private var mJSRef: [String : String]? = [:]
+        private var mJSRef: [String: String]? = [:]
 
-        init(object: Any){
+        init(object: Any) {
             mObject = object
             mId = JSContext.setRef(ref: self)
             mJSRef?[JSContext.ID_KEY] = mId
         }
 
-        public func getJSRef() -> [String:String] {
+        public func getJSRef() -> [String: String] {
             return mJSRef ?? [:]
         }
 
@@ -69,7 +72,7 @@ class JSContext {
             return mObject as Any
         }
 
-        public func release() throws -> Void {
+        public func release() throws {
             if let image = mObject as? Image {
                 try image.close()
             }

@@ -13,6 +13,7 @@ custom_edit_url: null
 - [CanvasView](modules/canvasview.md)
 - [ImageModule](modules/imagemodule.md)
 - [MobileModelModule](modules/mobilemodelmodule.md)
+- [ModelLoader](modules/modelloader.md)
 - [Models](modules/models.md)
 - [NativeJSRef](modules/nativejsref.md)
 - [audio/AudioModule](modules/audio_audiomodule.md)

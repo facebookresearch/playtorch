@@ -17,7 +17,7 @@ The model inference time in milliseconds.
 
 #### Defined in
 
-[MobileModelModule.ts:70](https://github.com/pytorch/live/blob/a04e341/react-native-pytorch-core/src/MobileModelModule.ts#L70)
+[MobileModelModule.ts:23](https://github.com/pytorch/live/blob/912c5cb/react-native-pytorch-core/src/MobileModelModule.ts#L23)
 
 ___
 
@@ -29,7 +29,7 @@ The pack time in milliseconds.
 
 #### Defined in
 
-[MobileModelModule.ts:74](https://github.com/pytorch/live/blob/a04e341/react-native-pytorch-core/src/MobileModelModule.ts#L74)
+[MobileModelModule.ts:27](https://github.com/pytorch/live/blob/912c5cb/react-native-pytorch-core/src/MobileModelModule.ts#L27)
 
 ___
 
@@ -41,7 +41,7 @@ The pack time, model inference time, and unpack time in milliseconds.
 
 #### Defined in
 
-[MobileModelModule.ts:66](https://github.com/pytorch/live/blob/a04e341/react-native-pytorch-core/src/MobileModelModule.ts#L66)
+[MobileModelModule.ts:19](https://github.com/pytorch/live/blob/912c5cb/react-native-pytorch-core/src/MobileModelModule.ts#L19)
 
 ___
 
@@ -53,4 +53,4 @@ The unpack time in milliseconds.
 
 #### Defined in
 
-[MobileModelModule.ts:78](https://github.com/pytorch/live/blob/a04e341/react-native-pytorch-core/src/MobileModelModule.ts#L78)
+[MobileModelModule.ts:31](https://github.com/pytorch/live/blob/912c5cb/react-native-pytorch-core/src/MobileModelModule.ts#L31)

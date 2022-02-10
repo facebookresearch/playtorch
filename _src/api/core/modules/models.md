@@ -21,7 +21,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Models.ts:22](https://github.com/pytorch/live/blob/a04e341/react-native-pytorch-core/src/Models.ts#L22)
+[Models.ts:28](https://github.com/pytorch/live/blob/912c5cb/react-native-pytorch-core/src/Models.ts#L28)
 
 ___
 
@@ -38,4 +38,30 @@ the following options:
 
 #### Defined in
 
-[Models.ts:20](https://github.com/pytorch/live/blob/a04e341/react-native-pytorch-core/src/Models.ts#L20)
+[Models.ts:26](https://github.com/pytorch/live/blob/912c5cb/react-native-pytorch-core/src/Models.ts#L26)
+
+## Functions
+
+### getModelUri
+
+▸ **getModelUri**(`modelPath`): `string`
+
+Checks if the passed in model path is a string or a resolvable asset source.
+In case the path is a string it will be used as a URI. If it is a resolvable
+asset source, it will resolve the asset source and get its URI.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `modelPath` | [ModelPath](models.md#modelpath) | The model path as require or uri (i.e., `require`). |
+
+#### Returns
+
+`string`
+
+A URI to resolve the model.
+
+#### Defined in
+
+[Models.ts:64](https://github.com/pytorch/live/blob/912c5cb/react-native-pytorch-core/src/Models.ts#L64)

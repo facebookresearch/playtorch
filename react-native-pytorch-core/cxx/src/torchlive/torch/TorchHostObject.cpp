@@ -125,35 +125,29 @@ jsi::Function TorchHostObject::createAdd(jsi::Runtime& runtime) {
                     const jsi::Value& thisValue,
                     const jsi::Value* arguments,
                     size_t count) {
-    if (count < 2) {
-      throw jsi::JSError(
-          runtime, "This function requires at least 2 arguments.");
-    }
-    auto inputTensorHostObject =
-        utils::helpers::parseTensor(runtime, &arguments[0]);
-    if (inputTensorHostObject == nullptr) {
-      throw jsi::JSError(runtime, "First argument must be a tensor.");
+    torchlive::torch::TensorHostObject* operand1Tensor = nullptr;
+    torchlive::torch::TensorHostObject* operand2Tensor = nullptr;
+    double* operand2Number = nullptr;
+    utils::helpers::parseArithmeticOperands(
+        runtime,
+        arguments,
+        count,
+        &operand1Tensor,
+        &operand2Tensor,
+        &operand2Number);
+
+    torch_::Tensor resultTensor;
+    if (operand2Number != nullptr) {
+      resultTensor = torch_::add(operand1Tensor->tensor, *operand2Number);
     } else {
-      auto inputTensor = inputTensorHostObject->tensor;
-      torch_::Tensor resultTensor;
-      if (arguments[1].isNumber()) {
-        resultTensor = torch_::add(inputTensor, arguments[1].asNumber());
-      } else {
-        auto otherInputTensor =
-            utils::helpers::parseTensor(runtime, &arguments[1]);
-        if (otherInputTensor == nullptr) {
-          throw jsi::JSError(
-              runtime, "Second argument must be a tensor or a number.");
-        }
-        resultTensor = torch_::add(inputTensor, otherInputTensor->tensor);
-      }
-
-      auto tensorHostObject =
-          std::make_shared<torchlive::torch::TensorHostObject>(
-              runtime, resultTensor);
-
-      return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+      resultTensor =
+          torch_::add(operand1Tensor->tensor, operand2Tensor->tensor);
     }
+    auto tensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(
+            runtime, resultTensor);
+
+    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
   };
 
   return jsi::Function::createFromHostFunction(

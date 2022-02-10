@@ -122,6 +122,14 @@ export default function JSIPlayground() {
     console.log(addTensor2);
     let addTensor3 = torch.add(addTensor1, addTensor2);
     console.log(addTensor3);
+
+    console.log('---Test torch.sub---');
+    let subTensor1 = torch.arange(2);
+    console.log(subTensor1);
+    let subTensor2 = torch.sub(subTensor1, 2);
+    console.log(subTensor2);
+    let subTensor3 = torch.sub(subTensor1, subTensor2);
+    console.log(subTensor3);
   };
 
   return (

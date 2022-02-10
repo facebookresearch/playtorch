@@ -21,6 +21,7 @@ class JSI_EXPORT TorchHostObject : public jsi::HostObject {
   jsi::Function empty_;
   jsi::Function rand_;
   jsi::Function randint_;
+  jsi::Function sub_;
 
  public:
   TorchHostObject(jsi::Runtime& runtime);
@@ -36,6 +37,7 @@ class JSI_EXPORT TorchHostObject : public jsi::HostObject {
   static jsi::Function createEmpty(jsi::Runtime& runtime);
   static jsi::Function createRand(jsi::Runtime& runtime);
   static jsi::Function createRandint(jsi::Runtime& runtime);
+  static jsi::Function createSub(jsi::Runtime& runtime);
 };
 
 } // namespace torch

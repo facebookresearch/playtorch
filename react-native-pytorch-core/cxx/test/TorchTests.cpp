@@ -218,4 +218,29 @@ TEST_F(TorchliveRuntimeTest, TorchAddTest) {
       eval("torch.add(torch.empty(1, 2), 'some_string')"),
       facebook::jsi::JSError);
 }
+
+TEST_F(TorchliveRuntimeTest, TorchSubTest) {
+  std::string torchSubCodeWithNumber =
+      R"(
+          const tensor = torch.arange(2);
+          const result = torch.sub(tensor, 2);
+          result.data[0] == tensor.data[0] - 2;
+        )";
+  EXPECT_TRUE(eval(torchSubCodeWithNumber.c_str()).getBool());
+
+  std::string torchSubCodeWithTensor =
+      R"(
+          const tensor1 = torch.arange(2);
+          const tensor2 = torch.arange(2);
+          const result = torch.sub(tensor1, tensor2);
+          result.data[0] == tensor1.data[0] - tensor2.data[0];
+        )";
+  EXPECT_TRUE(eval(torchSubCodeWithTensor.c_str()).getBool());
+
+  EXPECT_THROW(eval("torch.sub()"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.sub(1)"), facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("torch.sub(torch.empty(1, 2), 'some_string')"),
+      facebook::jsi::JSError);
+}
 } // namespace

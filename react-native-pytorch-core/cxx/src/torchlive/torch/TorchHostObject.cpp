@@ -31,6 +31,7 @@ static const std::string ARGMAX = "argmax";
 static const std::string EMPTY = "empty";
 static const std::string RAND = "rand";
 static const std::string RANDINT = "randint";
+static const std::string SUB = "sub";
 
 // TorchHostObject Property Names
 static const std::string JIT = "jit";
@@ -61,7 +62,8 @@ TorchHostObject::TorchHostObject(jsi::Runtime& runtime)
       argmax_(createArgmax(runtime)),
       empty_(createEmpty(runtime)),
       rand_(createRand(runtime)),
-      randint_(createRandint(runtime)) {}
+      randint_(createRandint(runtime)),
+      sub_(createSub(runtime)) {}
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(
     jsi::Runtime& rt) {
@@ -113,6 +115,8 @@ jsi::Value TorchHostObject::get(
     return jsi::Value(runtime, rand_);
   } else if (name == RANDINT) {
     return jsi::Value(runtime, randint_);
+  } else if (name == SUB) {
+    return jsi::Value(runtime, sub_);
   } else if (name == utils::constants::UINT8) {
     return jsi::String::createFromAscii(runtime, utils::constants::UINT8);
   }
@@ -294,6 +298,34 @@ jsi::Function TorchHostObject::createRandint(jsi::Runtime& runtime) {
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, RANDINT), 1, randintImpl);
+}
+
+jsi::Function TorchHostObject::createSub(jsi::Runtime& runtime) {
+  auto subFunc = [](jsi::Runtime& runtime,
+                    const jsi::Value& thisValue,
+                    const jsi::Value* arguments,
+                    size_t count) {
+    torchlive::torch::TensorHostObject* operand1 = nullptr;
+    torchlive::torch::TensorHostObject* operand2Tensor = nullptr;
+    double* operand2Number = nullptr;
+    utils::helpers::parseArithmeticOperands(
+        runtime, arguments, count, &operand1, &operand2Tensor, &operand2Number);
+
+    torch_::Tensor resultTensor;
+    if (operand2Number != nullptr) {
+      resultTensor = torch_::sub(operand1->tensor, *operand2Number);
+    } else {
+      resultTensor = torch_::sub(operand1->tensor, operand2Tensor->tensor);
+    }
+    auto tensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(
+            runtime, resultTensor);
+
+    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+  };
+
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, SUB), 1, subFunc);
 }
 
 } // namespace torch

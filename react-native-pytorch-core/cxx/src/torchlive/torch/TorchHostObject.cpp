@@ -117,7 +117,7 @@ jsi::Value TorchHostObject::get(
     return jsi::String::createFromAscii(runtime, utils::constants::INT64);
   } else if (name == JIT) {
     auto jitHostObject =
-        std::make_shared<torchlive::torch::jit::JITHostObject>();
+        std::make_shared<torchlive::torch::jit::JITHostObject>(runtime);
     return jsi::Object::createFromHostObject(runtime, jitHostObject);
   } else if (name == RAND) {
     return jsi::Value(runtime, rand_);

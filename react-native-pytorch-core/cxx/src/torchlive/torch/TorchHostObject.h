@@ -14,30 +14,35 @@ namespace torch {
 
 using namespace facebook;
 
-class JSI_EXPORT TorchHostObject : public jsi::HostObject {
-  jsi::Function add_;
-  jsi::Function arange_;
-  jsi::Function argmax_;
-  jsi::Function empty_;
-  jsi::Function rand_;
-  jsi::Function randint_;
-  jsi::Function sub_;
+class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
+  facebook::jsi::Function add_;
+  facebook::jsi::Function arange_;
+  facebook::jsi::Function argmax_;
+  facebook::jsi::Function empty_;
+  facebook::jsi::Function fromBlob_;
+  facebook::jsi::Function rand_;
+  facebook::jsi::Function randint_;
+  facebook::jsi::Function sub_;
 
  public:
-  TorchHostObject(jsi::Runtime& runtime);
+  TorchHostObject(facebook::jsi::Runtime& runtime);
 
- public:
-  jsi::Value get(jsi::Runtime&, const jsi::PropNameID& name) override;
-  std::vector<jsi::PropNameID> getPropertyNames(jsi::Runtime& rt) override;
+  facebook::jsi::Value get(
+      facebook::jsi::Runtime&,
+      const facebook::jsi::PropNameID& name) override;
+  std::vector<facebook::jsi::PropNameID> getPropertyNames(
+      facebook::jsi::Runtime& rt) override;
 
  private:
-  static jsi::Function createAdd(jsi::Runtime& runtime);
-  static jsi::Function createArange(jsi::Runtime& runtime);
-  static jsi::Function createArgmax(jsi::Runtime& runtime);
-  static jsi::Function createEmpty(jsi::Runtime& runtime);
-  static jsi::Function createRand(jsi::Runtime& runtime);
-  static jsi::Function createRandint(jsi::Runtime& runtime);
-  static jsi::Function createSub(jsi::Runtime& runtime);
+  static facebook::jsi::Function createAdd(facebook::jsi::Runtime& runtime);
+  static facebook::jsi::Function createArange(facebook::jsi::Runtime& runtime);
+  static facebook::jsi::Function createArgmax(facebook::jsi::Runtime& runtime);
+  static facebook::jsi::Function createEmpty(facebook::jsi::Runtime& runtime);
+  static facebook::jsi::Function createFromBlob(
+      facebook::jsi::Runtime& runtime);
+  static facebook::jsi::Function createRand(facebook::jsi::Runtime& runtime);
+  static facebook::jsi::Function createRandint(facebook::jsi::Runtime& runtime);
+  static facebook::jsi::Function createSub(facebook::jsi::Runtime& runtime);
 };
 
 } // namespace torch

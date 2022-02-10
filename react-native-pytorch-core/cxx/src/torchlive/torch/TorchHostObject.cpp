@@ -12,6 +12,7 @@
 #include <torch/script.h>
 #include <string>
 
+#include "../media/BlobHostObject.h"
 #include "TensorHostObject.h"
 #include "TorchHostObject.h"
 #include "jit/JITHostObject.h"
@@ -24,11 +25,14 @@ namespace torch_ = torch;
 namespace torchlive {
 namespace torch {
 
+using namespace facebook;
+
 // TorchHostObject Method Name
 static const std::string ADD = "add";
 static const std::string ARANGE = "arange";
 static const std::string ARGMAX = "argmax";
 static const std::string EMPTY = "empty";
+static const std::string FROM_BLOB = "fromBlob";
 static const std::string RAND = "rand";
 static const std::string RANDINT = "randint";
 static const std::string SUB = "sub";
@@ -54,13 +58,15 @@ static const std::vector<std::string> PROPERTIES = {
 };
 
 // TorchHostObject Methods
-const std::vector<std::string> METHODS = {ARGMAX, EMPTY, RAND};
+const std::vector<std::string> METHODS =
+    {ARGMAX, EMPTY, FROM_BLOB, RAND, RANDINT};
 
 TorchHostObject::TorchHostObject(jsi::Runtime& runtime)
     : add_(createAdd(runtime)),
       arange_(createArange(runtime)),
       argmax_(createArgmax(runtime)),
       empty_(createEmpty(runtime)),
+      fromBlob_(createFromBlob(runtime)),
       rand_(createRand(runtime)),
       randint_(createRandint(runtime)),
       sub_(createSub(runtime)) {}
@@ -99,6 +105,8 @@ jsi::Value TorchHostObject::get(
     return jsi::String::createFromAscii(runtime, utils::constants::FLOAT64);
   } else if (name == utils::constants::INT8) {
     return jsi::String::createFromAscii(runtime, utils::constants::INT8);
+  } else if (name == FROM_BLOB) {
+    return jsi::Value(runtime, fromBlob_);
   } else if (
       name == utils::constants::INT16 || name == utils::constants::SHORT) {
     return jsi::String::createFromAscii(runtime, utils::constants::INT16);
@@ -259,7 +267,67 @@ jsi::Function TorchHostObject::createEmpty(jsi::Runtime& runtime) {
   };
 
   return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, "empty"), 1, emptyFunc);
+      runtime, jsi::PropNameID::forUtf8(runtime, EMPTY), 1, emptyFunc);
+}
+
+jsi::Function TorchHostObject::createFromBlob(jsi::Runtime& runtime) {
+  auto fromBlobImpl = [](jsi::Runtime& runtime,
+                         const jsi::Value& thisValue,
+                         const jsi::Value* arguments,
+                         size_t count) {
+    if (count < 2) {
+      throw jsi::JSError(
+          runtime, "This function requires at least 2 arguments");
+    }
+
+    if (!arguments[1].isObject() ||
+        !arguments[1].asObject(runtime).isArray(runtime)) {
+      throw jsi::JSError(runtime, "Arg 2 should be an array of numbers");
+    }
+
+    // We are not using utils::helpers::parseSize here because the
+    // torch::from_blob is only available in C++ and doesn't support sizes as
+    // variadics.
+    jsi::Array jsSizes = arguments[1].asObject(runtime).asArray(runtime);
+    auto sizesLength = jsSizes.size(runtime);
+    std::vector<int64_t> sizes;
+    sizes.reserve(sizesLength);
+    for (int i = 0; i < sizesLength; i++) {
+      auto value = jsSizes.getValueAtIndex(runtime, i);
+      if (value.isNumber()) {
+        sizes.push_back(value.asNumber());
+      } else {
+        throw jsi::JSError(runtime, "Input should be an array of numbers");
+      }
+    }
+
+    torch_::TensorOptions tensorOptions =
+        torch_::TensorOptions().dtype(torch_::kUInt8);
+
+    auto hostObject = arguments[0].asObject(runtime).asHostObject(runtime);
+    auto blobHostObject =
+        dynamic_cast<torchlive::media::BlobHostObject*>(hostObject.get());
+    if (blobHostObject != nullptr) {
+      auto blob = blobHostObject->blob;
+
+      uint8_t* const buffer = blob.getDirectBytes();
+      auto size = blob.getDirectSize();
+      // TODO(T111718110) Check if blob sizes exceed buffer size and if so throw
+      // an error
+
+      auto options = torch_::TensorOptions().dtype(torch_::kUInt8);
+      auto tensor = torch_::from_blob(buffer, sizes, options).clone();
+
+      auto tensorHostObject =
+          std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
+      return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+    } else {
+      throw jsi::JSError(
+          runtime, "The fromBlob function only works with BlobHostObject");
+    }
+  };
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, FROM_BLOB), 1, fromBlobImpl);
 }
 
 jsi::Function TorchHostObject::createRandint(jsi::Runtime& runtime) {

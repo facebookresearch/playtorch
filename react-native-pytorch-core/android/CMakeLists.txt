@@ -18,13 +18,17 @@ set (RN_SO_DIR ${NODE_MODULES_DIR}/react-native/ReactAndroid/src/main/jni/first-
 add_library(
         ${PACKAGE_NAME}
         SHARED
-        ../cxx/src/torchlive/torch/TorchHostObject.cpp
-        ../cxx/src/torchlive/torch/TensorHostObject.cpp
-        ../cxx/src/torchlive/torch/jit/JITHostObject.cpp
         ../cxx/src/torchlive.cpp
+        ../cxx/src/torchlive/media/Blob.cpp
+        ../cxx/src/torchlive/media/BlobHostObject.cpp
+        ../cxx/src/torchlive/media/NativeJSRefBridgeHostObject.cpp
+        ../cxx/src/torchlive/torch/TensorHostObject.cpp
+        ../cxx/src/torchlive/torch/TorchHostObject.cpp
+        ../cxx/src/torchlive/torch/jit/JITHostObject.cpp
         ../cxx/src/torchlive/torch/utils/constants.cpp
         ../cxx/src/torchlive/torch/utils/helpers.cpp
         src/main/cpp/cpp-adapter.cpp
+        src/main/cpp/torchlive/media/NativeJSRefBridge.cpp
 )
 
 # includes

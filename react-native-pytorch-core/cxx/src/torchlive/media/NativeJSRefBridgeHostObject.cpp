@@ -80,10 +80,7 @@ jsi::Function NativeJSRefBridgeHostObject::createToBlob(jsi::Runtime& runtime) {
     }
 
     auto id = idValue.asString(runtime).utf8(runtime);
-    // The following toBlob will be enabled in follow up diffs. For now, it's
-    // going to be an empty blob.
-    // auto blob = torchlive::media::toBlob(id);
-    Blob blob(new uint8_t[0], 0);
+    auto blob = torchlive::media::toBlob(id);
     auto blobHostObject =
         std::make_shared<torchlive::media::BlobHostObject>(runtime, blob);
     return jsi::Object::createFromHostObject(runtime, blobHostObject);

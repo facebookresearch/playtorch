@@ -15,7 +15,7 @@ namespace torchlive {
 namespace utils {
 namespace helpers {
 
-/*
+/**
  * A helper method to parse input arguments if given as a collection, tuple or a
  * sequence of numbers. Modifies the input vector of integers with the size
  * dimensions parsed from arguments and returns the next argument index to be
@@ -28,13 +28,25 @@ int parseSize(
     size_t count,
     std::vector<int64_t>* dimensions);
 
-/*
+/**
  * A helper method to parse the tensor provided as an input argument and
  * convert it to a reference which holds a torch::Tensor
  */
 torchlive::torch::TensorHostObject* parseTensor(
     facebook::jsi::Runtime& runtime,
     const facebook::jsi::Value* jsValue);
+
+/**
+ * A helper method to parse the operands for torch operations which require 2
+ * operands and sets the references passed in with the parsed results.
+ */
+void parseArithmeticOperands(
+    facebook::jsi::Runtime& runtime,
+    const facebook::jsi::Value* arguments,
+    size_t count,
+    torchlive::torch::TensorHostObject** operand1Tensor,
+    torchlive::torch::TensorHostObject** operand2Tensor,
+    double** operand2Number);
 
 } // namespace helpers
 } // namespace utils

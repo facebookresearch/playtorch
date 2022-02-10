@@ -64,6 +64,35 @@ torchlive::torch::TensorHostObject* parseTensor(
   return nullptr;
 }
 
+void parseArithmeticOperands(
+    facebook::jsi::Runtime& runtime,
+    const facebook::jsi::Value* arguments,
+    size_t count,
+    torchlive::torch::TensorHostObject** operand1Tensor,
+    torchlive::torch::TensorHostObject** operand2Tensor,
+    double** operand2Number) {
+  if (count < 2) {
+    throw jsi::JSError(runtime, "This function requires at least 2 arguments.");
+  }
+  auto operand1 = parseTensor(runtime, &arguments[0]);
+  if (operand1 == nullptr) {
+    throw jsi::JSError(runtime, "First argument must be a tensor.");
+  } else {
+    *operand1Tensor = operand1;
+    if (arguments[1].isNumber()) {
+      double other = arguments[1].asNumber();
+      *operand2Number = &other;
+    } else {
+      auto operand2 = parseTensor(runtime, &arguments[1]);
+      if (operand2 == nullptr) {
+        throw jsi::JSError(
+            runtime, "Second argument must be a tensor or a number.");
+      }
+      *operand2Tensor = operand2;
+    }
+  }
+}
+
 } // namespace helpers
 } // namespace utils
 } // namespace torchlive

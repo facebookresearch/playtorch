@@ -107,10 +107,10 @@ export default function JSIPlayground() {
     console.log('---Test squeeze and unsqueeze---');
     tensor = torch.rand([4]);
     console.log(tensor.shape); // [4]
-    const tensor2 = tensor.unsqueeze(0);
+    let tensor2 = tensor.unsqueeze(0);
     console.log(tensor.shape); // [4]
     console.log(tensor2.shape); //  [4,1]
-    const tensor3 = tensor.unsqueeze(1);
+    let tensor3 = tensor.unsqueeze(1);
     console.log(tensor3.shape); //  [1,4]
     const tensor4 = tensor3.squeeze();
     console.log(tensor4.shape); //  [4]
@@ -130,6 +130,14 @@ export default function JSIPlayground() {
     console.log(subTensor2);
     let subTensor3 = torch.sub(subTensor1, subTensor2);
     console.log(subTensor3);
+
+    console.log('---Test torch.mul---');
+    let tensor1 = torch.arange(10);
+    console.log(tensor1);
+    tensor2 = torch.mul(tensor1, 2);
+    console.log(tensor2);
+    tensor3 = torch.mul(tensor2, tensor1);
+    console.log(tensor3);
   };
 
   return (

@@ -14,12 +14,9 @@
 namespace torchlive {
 namespace torch {
 
-class JSI_EXPORT IValueHostObject : public facebook::jsi::HostObject {
-  facebook::jsi::Function toGenericDict_;
-  facebook::jsi::Function toTensor_;
-
+class JSI_EXPORT DictHostObject : public facebook::jsi::HostObject {
  public:
-  explicit IValueHostObject(facebook::jsi::Runtime& runtime, at::IValue v);
+  explicit DictHostObject(c10::Dict<at::IValue, at::IValue> d);
 
   facebook::jsi::Value get(
       facebook::jsi::Runtime&,
@@ -28,9 +25,7 @@ class JSI_EXPORT IValueHostObject : public facebook::jsi::HostObject {
       facebook::jsi::Runtime& rt) override;
 
  private:
-  at::IValue value_;
-  facebook::jsi::Function createToGenericDict(facebook::jsi::Runtime& runtime);
-  facebook::jsi::Function createToTensor(facebook::jsi::Runtime& runtime);
+  c10::Dict<at::IValue, at::IValue> dict_;
 };
 
 } // namespace torch

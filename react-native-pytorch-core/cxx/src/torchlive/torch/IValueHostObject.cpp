@@ -7,6 +7,7 @@
 
 #include <jsi/jsi.h>
 
+#include "DictHostObject.h"
 #include "IValueHostObject.h"
 #include "TensorHostObject.h"
 
@@ -21,7 +22,7 @@ static const std::string TO_TENSOR = "toTensor";
 static const std::string TO_TUPLE = "toTuple";
 
 // IValueHostObject Methods
-const std::vector<std::string> METHODS = {TO_TENSOR};
+const std::vector<std::string> METHODS = {TO_GENERIC_DICT, TO_TENSOR};
 
 // IValueHostObject Property Names
 // empty
@@ -30,7 +31,9 @@ const std::vector<std::string> METHODS = {TO_TENSOR};
 static const std::vector<std::string> PROPERTIES = {};
 
 IValueHostObject::IValueHostObject(jsi::Runtime& runtime, at::IValue v)
-    : toTensor_(createToTensor(runtime)), value_(v) {}
+    : toGenericDict_(createToGenericDict(runtime)),
+      toTensor_(createToTensor(runtime)),
+      value_(v) {}
 
 std::vector<jsi::PropNameID> IValueHostObject::getPropertyNames(
     jsi::Runtime& rt) {
@@ -50,7 +53,7 @@ jsi::Value IValueHostObject::get(
   auto name = propNameId.utf8(runtime);
 
   if (name == TO_GENERIC_DICT) {
-    throw jsi::JSError(runtime, "IValue.toGenericDict not implemented");
+    return jsi::Value(runtime, toGenericDict_);
   } else if (name == TO_TENSOR) {
     return jsi::Value(runtime, toTensor_);
   } else if (name == TO_TUPLE) {
@@ -58,6 +61,25 @@ jsi::Value IValueHostObject::get(
   }
 
   return jsi::Value::undefined();
+}
+
+jsi::Function IValueHostObject::createToGenericDict(jsi::Runtime& runtime) {
+  auto toGenericDictFunc = [this](
+                               jsi::Runtime& runtime,
+                               const jsi::Value& thisValue,
+                               const jsi::Value* arguments,
+                               size_t count) -> jsi::Value {
+    // c10::Dict<IValue, IValue>
+    auto dict = this->value_.toGenericDict();
+    auto dictHostObject =
+        std::make_shared<torchlive::torch::DictHostObject>(dict);
+    return jsi::Object::createFromHostObject(runtime, dictHostObject);
+  };
+  return jsi::Function::createFromHostFunction(
+      runtime,
+      jsi::PropNameID::forUtf8(runtime, TO_GENERIC_DICT),
+      0,
+      toGenericDictFunc);
 }
 
 jsi::Function IValueHostObject::createToTensor(jsi::Runtime& runtime) {

@@ -22,6 +22,7 @@ class JSI_EXPORT BlobHostObject : public facebook::jsi::HostObject {
   explicit BlobHostObject(
       facebook::jsi::Runtime& runtime,
       torchlive::media::Blob b);
+  ~BlobHostObject();
 
   facebook::jsi::Value get(
       facebook::jsi::Runtime&,

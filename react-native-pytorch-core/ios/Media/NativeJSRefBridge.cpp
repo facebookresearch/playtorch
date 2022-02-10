@@ -11,8 +11,8 @@
 
 extern "C" const char* torchlive_media_beginReadData(const char*);
 extern "C" void torchlive_media_endReadData(const char*);
-extern "C" const uint8_t* torchlive_media_getDirectBytes(const char*);
-extern "C" const size_t torchlive_media_getDirectSize(const char*);
+extern "C" uint8_t* const torchlive_media_getDirectBytes(const char*);
+extern "C" size_t torchlive_media_getDirectSize(const char*);
 
 namespace torchlive {
 namespace media {
@@ -20,10 +20,10 @@ namespace media {
 torchlive::media::Blob toBlob(const std::string& refId) {
   auto idRef = refId.c_str();
   auto mediaDataRef = torchlive_media_beginReadData(idRef);
-  const uint8_t* tmpBuffer = torchlive_media_getDirectBytes(mediaDataRef);
-  const size_t size = torchlive_media_getDirectSize(mediaDataRef);
-  uint8_t* buffer = new uint8_t[size];
-  memcpy(buffer, tmpBuffer, size);
+  uint8_t* const tmpBuffer = torchlive_media_getDirectBytes(mediaDataRef);
+  size_t size = torchlive_media_getDirectSize(mediaDataRef);
+  uint8_t* const buffer = new uint8_t[size];
+  std::memcpy(buffer, tmpBuffer, size);
   torchlive_media_endReadData(mediaDataRef);
   torchlive::media::Blob blob(std::move(buffer), size);
   return blob;

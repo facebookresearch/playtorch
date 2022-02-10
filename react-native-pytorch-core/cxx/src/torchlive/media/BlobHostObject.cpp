@@ -32,6 +32,12 @@ BlobHostObject::BlobHostObject(jsi::Runtime& runtime, torchlive::media::Blob b)
       free_(createFree(runtime)),
       blob(b) {}
 
+BlobHostObject::~BlobHostObject() {
+#ifdef __APPLE__
+  delete this->blob.getDirectBytes();
+#endif
+}
+
 std::vector<jsi::PropNameID> BlobHostObject::getPropertyNames(
     jsi::Runtime& runtime) {
   std::vector<jsi::PropNameID> result;

@@ -325,4 +325,36 @@ TEST_F(TorchliveRuntimeTest, TorchTenosrTest) {
       facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveRuntimeTest, TorchDivTest) {
+  for (auto i = 0; i < 4; i++) {
+    std::string torchDivWithNumber = fmt::format(
+        R"(
+          const tensor = torch.arange(1, 5);
+          const result = torch.div(tensor, 2);
+          result.data[{}] == tensor.data[{}] / 2;
+        )",
+        i,
+        i);
+    EXPECT_TRUE(eval(torchDivWithNumber.c_str()).getBool());
+  }
+
+  for (auto i = 0; i < 4; i++) {
+    std::string torchDivWithTensor = fmt::format(
+        R"(
+          const tensor1 = torch.arange(1, 5);
+          const tensor2 = torch.arange(1, 5);
+          const result = torch.div(tensor1, tensor2);
+          result.data[{}] == tensor1.data[{}] / tensor2.data[{}];
+        )",
+        i,
+        i,
+        i);
+    EXPECT_TRUE(eval(torchDivWithTensor.c_str()).getBool());
+  }
+
+  EXPECT_THROW(eval("torch.div()"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.div(1)"), facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("torch.div(torch.arrange(3, 4), 'foo')"), facebook::jsi::JSError);
+}
 } // namespace

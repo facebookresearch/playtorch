@@ -34,6 +34,7 @@ static const std::string ARANGE = "arange";
 static const std::string ARGMAX = "argmax";
 static const std::string EMPTY = "empty";
 static const std::string FROM_BLOB = "fromBlob";
+static const std::string DIV = "div";
 static const std::string MUL = "mul";
 static const std::string RAND = "rand";
 static const std::string RANDINT = "randint";
@@ -63,6 +64,8 @@ const std::vector<std::string> METHODS = {
     ARGMAX,
     EMPTY,
     FROM_BLOB,
+    DIV,
+    MUL,
     RAND,
     RANDINT,
     SOFTMAX,
@@ -75,6 +78,7 @@ TorchHostObject::TorchHostObject(jsi::Runtime& runtime)
       argmax_(createArgmax(runtime)),
       empty_(createEmpty(runtime)),
       fromBlob_(createFromBlob(runtime)),
+      div_(createDiv(runtime)),
       mul_(createMul(runtime)),
       rand_(createRand(runtime)),
       randint_(createRandint(runtime)),
@@ -106,6 +110,8 @@ jsi::Value TorchHostObject::get(
     return jsi::Value(runtime, arange_);
   } else if (name == ARGMAX) {
     return jsi::Value(runtime, argmax_);
+  } else if (name == DIV) {
+    return jsi::Value(runtime, div_);
   } else if (name == EMPTY) {
     return jsi::Value(runtime, empty_);
   } else if (
@@ -259,6 +265,40 @@ jsi::Function TorchHostObject::createArgmax(jsi::Runtime& runtime) {
 
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, ARGMAX), 1, argmaxImpl);
+}
+
+jsi::Function TorchHostObject::createDiv(jsi::Runtime& runtime) {
+  auto mulFunc = [](jsi::Runtime& runtime,
+                    const jsi::Value& thisValue,
+                    const jsi::Value* arguments,
+                    size_t count) {
+    torchlive::torch::TensorHostObject* operand1Tensor = nullptr;
+    torchlive::torch::TensorHostObject* operand2Tensor = nullptr;
+    double* operand2Number = nullptr;
+    utils::helpers::parseArithmeticOperands(
+        runtime,
+        arguments,
+        count,
+        &operand1Tensor,
+        &operand2Tensor,
+        &operand2Number);
+
+    torch_::Tensor resultTensor;
+    if (operand2Number != nullptr) {
+      resultTensor = torch_::div(operand1Tensor->tensor, *operand2Number);
+    } else {
+      resultTensor =
+          torch_::div(operand1Tensor->tensor, operand2Tensor->tensor);
+    }
+    auto tensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(
+            runtime, resultTensor);
+
+    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+  };
+
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, MUL), 1, mulFunc);
 }
 
 jsi::Function TorchHostObject::createEmpty(jsi::Runtime& runtime) {

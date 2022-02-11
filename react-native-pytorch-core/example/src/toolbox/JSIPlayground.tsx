@@ -144,6 +144,21 @@ export default function JSIPlayground() {
     console.log(softmaxTensor1);
     let softmaxTensor2 = torch.softmax(softmaxTensor1, 0);
     console.log(softmaxTensor2);
+
+    console.log('---Test torch.tensor---');
+    let tensor5 = torch.tensor([
+      [
+        [1, 2, 3],
+        [4, 5, 6],
+      ],
+      [
+        [7, 8, 9],
+        [10, 11, 12],
+      ],
+    ]);
+    console.log(tensor5.shape);
+    console.log(tensor5.data);
+    console.log(tensor5.toString());
   };
 
   return (

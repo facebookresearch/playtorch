@@ -57,6 +57,22 @@ torch_::TensorOptions parseTensorOptions(
     int argIndex,
     size_t count);
 
+/**
+ * A helper method to parse the data of a nested JSI Array of number
+ * as a vector of double.
+ */
+std::vector<double> parseJSIArrayData(
+    facebook::jsi::Runtime& runtime,
+    const facebook::jsi::Value& val);
+
+/**
+ * A helper method to parse the shape of a nested JSI Array of number
+ * as a vector of 64-bit integer.
+ */
+std::vector<int64_t> parseJSIArrayShape(
+    facebook::jsi::Runtime& runtime,
+    const facebook::jsi::Value& val);
+
 } // namespace helpers
 } // namespace utils
 } // namespace torchlive

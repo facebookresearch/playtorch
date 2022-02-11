@@ -120,6 +120,65 @@ torch_::TensorOptions parseTensorOptions(
 
   return tensorOptions;
 }
+std::vector<double> parseJSIArrayData(
+    jsi::Runtime& runtime,
+    const jsi::Value& val) {
+  auto parseJSIArrayDataHelper = [&](jsi::Runtime& runtime,
+                                     const jsi::Value& val,
+                                     std::vector<double>& data,
+                                     auto&& parseJSIArrayDataHelper) -> void {
+    if (val.isNumber()) {
+      data.push_back(val.asNumber());
+    } else if (val.isObject() && val.asObject(runtime).isArray(runtime)) {
+      auto jsiArray = val.asObject(runtime).asArray(runtime);
+      for (int i = 0; i < jsiArray.size(runtime); i++) {
+        parseJSIArrayDataHelper(
+            runtime,
+            jsiArray.getValueAtIndex(runtime, i),
+            data,
+            parseJSIArrayDataHelper);
+      }
+    } else {
+      throw jsi::JSError(
+          runtime,
+          "Expect jsi::Number or jsi::Array, but another type is given");
+    }
+  };
+  std::vector<double> result = {};
+  parseJSIArrayDataHelper(runtime, val, result, parseJSIArrayDataHelper);
+  return result;
+}
+
+std::vector<int64_t> parseJSIArrayShape(
+    jsi::Runtime& runtime,
+    const jsi::Value& val) {
+  std::vector<int64_t> shape = {};
+  auto parseJSIArrayShapeHelper = [&](jsi::Runtime& runtime,
+                                      const jsi::Value& val,
+                                      std::vector<int64_t>& shape,
+                                      auto&& parseJSIArrayShapeHelper) -> void {
+    if (val.isNumber()) {
+      return;
+    } else if (val.isObject() && val.asObject(runtime).isArray(runtime)) {
+      jsi::Array jsiArray = val.asObject(runtime).asArray(runtime);
+      int64_t arrSize = jsiArray.size(runtime);
+      shape.push_back(arrSize);
+      parseJSIArrayShapeHelper(
+          runtime,
+          jsiArray.getValueAtIndex(runtime, 0),
+          shape,
+          parseJSIArrayShapeHelper);
+      return;
+    } else {
+      throw jsi::JSError(
+          runtime,
+          "Expect jsi::Number or jsi::Array, but another type is given");
+    }
+  };
+  parseJSIArrayShapeHelper(runtime, val, shape, parseJSIArrayShapeHelper);
+  return shape;
+}
+
 } // namespace helpers
 } // namespace utils
 } // namespace torchlive

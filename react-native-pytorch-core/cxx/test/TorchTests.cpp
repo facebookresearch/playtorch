@@ -290,4 +290,32 @@ TEST_F(TorchliveRuntimeTest, TorchSoftmaxTest) {
   EXPECT_THROW(
       eval("torch.softmax(torch.empty(1, 2), [1])"), facebook::jsi::JSError);
 }
+
+TEST_F(TorchliveRuntimeTest, TorchTenosrTest) {
+  std::string torchCreateTensorFromArrayShape =
+      R"(
+          const tensor = torch.tensor([[[1, 2, 3], [3, 4, 5]], [[1, 2, 3], [3, 4, 5]]]);
+          tensor.shape[0] == 2 && tensor.shape[1] == 2 && tensor.shape[2] == 3;
+        )";
+  EXPECT_TRUE(eval(torchCreateTensorFromArrayShape.c_str()).getBool());
+  std::string torchCreateTensorFromArrayData =
+      R"(
+          const tensor = torch.tensor([[[1, 2, 3], [3, 4, 5]], [[1, 2, 3], [3, 4, 5]]]);
+          tensor.data[0] == 1 && tensor.data[1] == 2 && tensor.data[2] == 3 && tensor.data[3] == 3;
+        )";
+  EXPECT_TRUE(eval(torchCreateTensorFromArrayData.c_str()).getBool());
+  EXPECT_THROW(
+      eval(
+          "const tensor = torch.tensor([[[1, 2, '3'], [3, 4, 5]], [[1, 2, 3], [3, 4, 5]]])"),
+      facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("const tensor = torch.tensor([1, 2, '3'])"), facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("const tensor = torch.tensor([[1, 2, 3], 4])"),
+      facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("const tensor = torch.tensor([[1, 2, 3], [1, 2]])"),
+      facebook::jsi::JSError);
+}
+
 } // namespace

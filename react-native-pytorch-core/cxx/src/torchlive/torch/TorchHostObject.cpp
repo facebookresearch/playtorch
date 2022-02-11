@@ -15,6 +15,7 @@
 #include "../media/BlobHostObject.h"
 #include "TensorHostObject.h"
 #include "TorchHostObject.h"
+#include "c10/util/ArrayRef.h"
 #include "jit/JITHostObject.h"
 #include "utils/constants.h"
 #include "utils/helpers.h"
@@ -38,6 +39,7 @@ static const std::string RAND = "rand";
 static const std::string RANDINT = "randint";
 static const std::string SOFTMAX = "softmax";
 static const std::string SUB = "sub";
+static const std::string TENSOR = "tensor";
 
 // TorchHostObject Property Names
 static const std::string JIT = "jit";
@@ -60,8 +62,17 @@ static const std::vector<std::string> PROPERTIES = {
 };
 
 // TorchHostObject Methods
-const std::vector<std::string> METHODS =
-    {ADD, ARANGE, ARGMAX, EMPTY, FROM_BLOB, RAND, RANDINT, SOFTMAX, SUB};
+const std::vector<std::string> METHODS = {
+    ADD,
+    ARANGE,
+    ARGMAX,
+    EMPTY,
+    FROM_BLOB,
+    RAND,
+    RANDINT,
+    SOFTMAX,
+    SUB,
+    TENSOR};
 
 TorchHostObject::TorchHostObject(jsi::Runtime& runtime)
     : add_(createAdd(runtime)),
@@ -73,7 +84,8 @@ TorchHostObject::TorchHostObject(jsi::Runtime& runtime)
       rand_(createRand(runtime)),
       randint_(createRandint(runtime)),
       softmax_(createSoftmax(runtime)),
-      sub_(createSub(runtime)) {}
+      sub_(createSub(runtime)),
+      tensor_(createTensor(runtime)) {}
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(
     jsi::Runtime& rt) {
@@ -135,6 +147,8 @@ jsi::Value TorchHostObject::get(
     return jsi::Value(runtime, sub_);
   } else if (name == utils::constants::UINT8) {
     return jsi::String::createFromAscii(runtime, utils::constants::UINT8);
+  } else if (name == TENSOR) {
+    return jsi::Value(runtime, tensor_);
   }
 
   return jsi::Value::undefined();
@@ -463,6 +477,26 @@ jsi::Function TorchHostObject::createSub(jsi::Runtime& runtime) {
 
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, SUB), 1, subFunc);
+}
+
+jsi::Function TorchHostObject::createTensor(jsi::Runtime& runtime) {
+  auto tensorImpl = [](jsi::Runtime& runtime,
+                       const jsi::Value& thisValue,
+                       const jsi::Value* arguments,
+                       size_t count) {
+    std::vector<double> data =
+        utils::helpers::parseJSIArrayData(runtime, arguments[0]);
+    std::vector<int64_t> shape =
+        utils::helpers::parseJSIArrayShape(runtime, arguments[0]);
+    auto tensor =
+        torch_::tensor(data, torch_::TensorOptions().dtype(torch_::kFloat64))
+            .reshape(at::IntArrayRef(shape));
+    auto tensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
+    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+  };
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, TENSOR), 1, tensorImpl);
 }
 
 } // namespace torch

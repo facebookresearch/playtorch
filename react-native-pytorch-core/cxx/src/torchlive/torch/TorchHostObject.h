@@ -25,6 +25,7 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
   facebook::jsi::Function randint_;
   facebook::jsi::Function softmax_;
   facebook::jsi::Function sub_;
+  facebook::jsi::Function tensor_;
 
  public:
   TorchHostObject(facebook::jsi::Runtime& runtime);
@@ -47,6 +48,7 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
   static facebook::jsi::Function createRandint(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createSoftmax(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createSub(facebook::jsi::Runtime& runtime);
+  static jsi::Function createTensor(jsi::Runtime& runtime);
 };
 
 } // namespace torch

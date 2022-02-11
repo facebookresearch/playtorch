@@ -48,11 +48,6 @@ static const std::string JIT = "jit";
 static const std::vector<std::string> PROPERTIES = {
     utils::constants::FLOAT32,
     utils::constants::FLOAT64,
-    utils::constants::FLOAT64,
-    utils::constants::FLOAT64,
-    utils::constants::FLOAT64,
-    utils::constants::FLOAT64,
-    utils::constants::FLOAT64,
     utils::constants::INT16,
     utils::constants::INT32,
     utils::constants::INT64,

@@ -488,9 +488,10 @@ jsi::Function TorchHostObject::createTensor(jsi::Runtime& runtime) {
         utils::helpers::parseJSIArrayData(runtime, arguments[0]);
     std::vector<int64_t> shape =
         utils::helpers::parseJSIArrayShape(runtime, arguments[0]);
+    auto tensorOptions =
+        utils::helpers::parseTensorOptions(runtime, arguments, 1, count);
     auto tensor =
-        torch_::tensor(data, torch_::TensorOptions().dtype(torch_::kFloat64))
-            .reshape(at::IntArrayRef(shape));
+        torch_::tensor(data, tensorOptions).reshape(at::IntArrayRef(shape));
     auto tensorHostObject =
         std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
     return jsi::Object::createFromHostObject(runtime, tensorHostObject);

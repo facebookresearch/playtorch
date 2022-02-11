@@ -159,6 +159,24 @@ export default function JSIPlayground() {
     console.log(tensor5.shape);
     console.log(tensor5.data);
     console.log(tensor5.toString());
+    console.log(tensor.dtype);
+    tensor5 = torch.tensor(
+      [
+        [
+          [1.1, 2.1, 3],
+          [4, 5, 6],
+        ],
+        [
+          [7, 8, 9],
+          [10, 11, 12],
+        ],
+      ],
+      {dtype: torch.int},
+    );
+    console.log(tensor5.shape);
+    console.log(tensor5.data);
+    console.log(tensor5.toString());
+    console.log(tensor5.dtype);
   };
 
   return (

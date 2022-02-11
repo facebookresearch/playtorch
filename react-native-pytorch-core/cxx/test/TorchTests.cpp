@@ -304,6 +304,13 @@ TEST_F(TorchliveRuntimeTest, TorchTenosrTest) {
           tensor.data[0] == 1 && tensor.data[1] == 2 && tensor.data[2] == 3 && tensor.data[3] == 3;
         )";
   EXPECT_TRUE(eval(torchCreateTensorFromArrayData.c_str()).getBool());
+  std::string torchCreateTensorFromArrayDtype =
+      R"(
+          const tensor = torch.tensor([[[1, 2, 3], [3, 4, 5]], [[1, 2, 3], [3, 4, 5]]]);
+          const tensor2 = torch.tensor([[[1.1, 2, 3], [3, 4, 5]], [[1, 2, 3], [3, 4, 5]]], {dtype: torch.int});
+          tensor.dtype == torch.float32 && tensor2.dtype == torch.int && tensor2.data[0] == 1;
+        )";
+  EXPECT_TRUE(eval(torchCreateTensorFromArrayDtype.c_str()).getBool());
   EXPECT_THROW(
       eval(
           "const tensor = torch.tensor([[[1, 2, '3'], [3, 4, 5]], [[1, 2, 3], [3, 4, 5]]])"),

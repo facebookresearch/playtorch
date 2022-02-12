@@ -58,13 +58,21 @@ int parseSize(
 
 torchlive::torch::TensorHostObject* parseTensor(
     jsi::Runtime& runtime,
-    const jsi::Value* jsValue) {
-  auto object = jsValue->asObject(runtime);
-  if (object.isHostObject(runtime)) {
-    auto hostObject = object.getHostObject(runtime);
-    return dynamic_cast<torchlive::torch::TensorHostObject*>(hostObject.get());
+    const jsi::Value* value) {
+  if (!value->isObject()) {
+    throw jsi::JSError(runtime, "Value must be a tensor");
   }
-  return nullptr;
+  auto object = value->asObject(runtime);
+  if (!object.isHostObject(runtime)) {
+    throw jsi::JSError(runtime, "Value must be a tensor");
+  }
+  auto hostObject = object.getHostObject(runtime);
+  auto tensorHostObject =
+      dynamic_cast<torchlive::torch::TensorHostObject*>(hostObject.get());
+  if (tensorHostObject == nullptr) {
+    throw jsi::JSError(runtime, "Value must be a tensor");
+  }
+  return tensorHostObject;
 }
 
 void parseArithmeticOperands(

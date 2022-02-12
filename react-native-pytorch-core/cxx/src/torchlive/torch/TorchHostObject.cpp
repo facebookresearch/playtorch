@@ -469,10 +469,7 @@ jsi::Function TorchHostObject::createSoftmax(jsi::Runtime& runtime) {
           runtime, "This function requires at least 2 arguments");
     }
     auto inputTensorHostObject =
-        utils::helpers::parseTensor(runtime, arguments);
-    if (inputTensorHostObject == nullptr) {
-      throw jsi::JSError(runtime, "First argument must be a tensor");
-    }
+        utils::helpers::parseTensor(runtime, &arguments[0]);
     auto dimension = arguments[1].asNumber();
     auto resultTensor =
         torch_::softmax(inputTensorHostObject->tensor, dimension);

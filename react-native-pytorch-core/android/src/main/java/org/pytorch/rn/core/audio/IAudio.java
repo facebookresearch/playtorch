@@ -9,4 +9,6 @@ package org.pytorch.rn.core.audio;
 
 public interface IAudio {
   short[] getData();
+
+  void play();
 }

@@ -17,6 +17,7 @@ import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
+import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.module.annotations.ReactModule;
 import org.jetbrains.annotations.NotNull;
 import org.pytorch.rn.core.javascript.JSContext;
@@ -100,6 +101,12 @@ public class AudioModule extends ReactContextBaseJavaModule {
             });
 
     recordingThread.start();
+  }
+
+  @ReactMethod
+  public void play(ReadableMap audioRef) {
+    IAudio audio = JSContext.unwrapObject(audioRef);
+    audio.play();
   }
 
   private void requestMicrophonePermission() {

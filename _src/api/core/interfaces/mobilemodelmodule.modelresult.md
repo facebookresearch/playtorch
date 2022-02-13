@@ -27,7 +27,7 @@ The model result metrics, e.g., including inference time in milliseconds.
 
 #### Defined in
 
-[MobileModelModule.ts:50](https://github.com/pytorch/live/blob/912c5cb/react-native-pytorch-core/src/MobileModelModule.ts#L50)
+[MobileModelModule.ts:50](https://github.com/pytorch/live/blob/81f499b/react-native-pytorch-core/src/MobileModelModule.ts#L50)
 
 ___
 
@@ -39,4 +39,4 @@ The model result.
 
 #### Defined in
 
-[MobileModelModule.ts:45](https://github.com/pytorch/live/blob/912c5cb/react-native-pytorch-core/src/MobileModelModule.ts#L45)
+[MobileModelModule.ts:45](https://github.com/pytorch/live/blob/81f499b/react-native-pytorch-core/src/MobileModelModule.ts#L45)

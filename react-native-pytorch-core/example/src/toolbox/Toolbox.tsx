@@ -50,6 +50,7 @@ import FastNeuralStyle from './models/FastNeuralStyle';
 import MobileNetV3 from './models/MobileNetV3';
 import CameraTakePicture from './apiTest/camera/CameraTakePicture';
 import JSIPlayground from './JSIPlayground';
+import AudioExample from './apiTest/audio/AudioPlayExample';
 
 export type Tool = {
   icon?: React.ReactNode;
@@ -306,6 +307,18 @@ const tools: ToolSection = [
         subtitle: 'Draw and transform images from an image sprite',
         apiTest: true,
         component: CanvasImageSprite,
+      },
+    ],
+  },
+  {
+    title: 'Audio API Test',
+    data: [
+      {
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
+        title: 'Audio Play',
+        subtitle: 'Record an audio and play the recorded clip.',
+        apiTest: true,
+        component: AudioExample,
       },
     ],
   },

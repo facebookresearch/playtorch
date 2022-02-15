@@ -14,6 +14,7 @@
 
 #include "TensorHostObject.h"
 #include "utils/constants.h"
+#include "utils/helpers.h"
 
 // Namespace alias for torch to avoid namespace conflicts with torchlive::torch
 namespace torch_ = torch;
@@ -22,6 +23,7 @@ namespace torchlive {
 namespace torch {
 
 // TensorHostObject Method Names
+static const std::string DIV = "div";
 static const std::string SIZE = "size";
 static const std::string TOSTRING = "toString";
 static const std::string SQUEEZE = "squeeze";
@@ -36,16 +38,14 @@ static const std::string SHAPE = "shape";
 static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
 
 // TensorHostObject Methods
-static const std::vector<std::string> METHODS = {
-    SIZE,
-    TOSTRING,
-    SQUEEZE,
-    UNSQUEEZE};
+static const std::vector<std::string> METHODS =
+    {DIV, SIZE, TOSTRING, SQUEEZE, UNSQUEEZE};
 
 using namespace facebook;
 
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
-    : size_(createSize(runtime)),
+    : div_(createDiv(runtime)),
+      size_(createSize(runtime)),
       squeeze_(createSqueeze(runtime)),
       toString_(createToString(runtime)),
       unsqueeze_(createUnsqueeze(runtime)),
@@ -106,6 +106,8 @@ jsi::Value TensorHostObject::get(
         .getPropertyAsFunction(runtime, typedArrayName.c_str())
         .callAsConstructor(runtime, buffer)
         .asObject(runtime);
+  } else if (name == DIV) {
+    return jsi::Value(runtime, div_);
   } else if (name == DTYPE) {
     return jsi::String::createFromUtf8(
         runtime,
@@ -167,6 +169,33 @@ jsi::Function TensorHostObject::createToString(jsi::Runtime& runtime) {
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, TOSTRING), 0, toStringFunc);
+}
+
+jsi::Function TensorHostObject::createDiv(jsi::Runtime& runtime) {
+  auto divFunc = [this](
+                     jsi::Runtime& runtime,
+                     const jsi::Value& thisValue,
+                     const jsi::Value* arguments,
+                     size_t count) -> jsi::Value {
+    if (count < 1) {
+      throw jsi::JSError(runtime, "At least 1 arg required");
+    }
+    auto tensor = this->tensor;
+    if (arguments[0].isNumber()) {
+      auto value = arguments[0].asNumber();
+      tensor = tensor.div(value);
+    } else {
+      auto otherTensorHostObject =
+          utils::helpers::parseTensor(runtime, &arguments[0]);
+      auto otherTensor = otherTensorHostObject->tensor;
+      tensor = tensor.div(otherTensor);
+    }
+    auto tensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
+    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+  };
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, DIV), 1, divFunc);
 }
 
 jsi::Function TensorHostObject::createSize(jsi::Runtime& runtime) {

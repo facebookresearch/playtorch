@@ -78,4 +78,45 @@ TEST_F(TorchliveTensorRuntimeTest, TensorTest) {
   EXPECT_THROW(eval("torch.tensor([[128], [255]])[2]"), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
+  std::string tensorDivWithNumber =
+      R"(
+        const tensor = torch.tensor([0, 255]);
+        const result = tensor.div(255);
+        result.data[0] == 0 && result.data[1] == 1
+      )";
+  EXPECT_TRUE(eval(tensorDivWithNumber.c_str()).getBool());
+
+  for (auto i = 0; i < 4; i++) {
+    std::string tensorDivWithNumber = fmt::format(
+        R"(
+          const tensor = torch.arange(1, 5);
+          const result = tensor.div(2);
+          result.data[{}] == tensor.data[{}] / 2;
+        )",
+        i,
+        i);
+    EXPECT_TRUE(eval(tensorDivWithNumber.c_str()).getBool());
+  }
+
+  for (auto i = 0; i < 4; i++) {
+    std::string tensorDivWithTensor = fmt::format(
+        R"(
+          const tensor1 = torch.arange(1, 5);
+          const tensor2 = torch.arange(1, 5);
+          const result = tensor1.div(tensor2);
+          result.data[{}] == tensor1.data[{}] / tensor2.data[{}];
+        )",
+        i,
+        i,
+        i);
+    EXPECT_TRUE(eval(tensorDivWithTensor.c_str()).getBool());
+  }
+
+  EXPECT_THROW(eval("torch.arange(1, 5).div()"), facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("torch.arange(1, 5).div(torch.arrange(3, 4), 'foo')"),
+      facebook::jsi::JSError);
+}
+
 } // namespace

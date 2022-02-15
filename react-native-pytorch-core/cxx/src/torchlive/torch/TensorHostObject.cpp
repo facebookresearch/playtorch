@@ -123,7 +123,33 @@ jsi::Value TensorHostObject::get(
     return jsi::Value(runtime, unsqueeze_);
   }
 
-  return jsi::Value::undefined();
+  try {
+    auto idx = std::stoi(name.c_str());
+    auto tensor = this->tensor;
+    auto dims = tensor.ndimension();
+
+    // Index out of bounds
+    if (idx < 0 || idx >= dims) {
+      throw jsi::JSError(
+          runtime,
+          "Index " + name + " is out of bounds for dimension 0 with size " +
+              std::to_string(dims));
+    }
+
+    auto outputTensor = this->tensor[idx];
+    auto tensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(
+            runtime, outputTensor);
+    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+  } catch (const std::exception& e) {
+    // Cannot parse name value to int. This can happen when the name in bracket
+    // or dot notion is not an int (e.g., tensor['foo']).
+    // Let's ignore this exception here since this function will throw a
+    // jsi::JSError if it reaches the function end.
+  }
+
+  throw jsi::JSError(
+      runtime, "Tensor property with name \"" + name + "\" does not exists");
 }
 
 jsi::Function TensorHostObject::createToString(jsi::Runtime& runtime) {

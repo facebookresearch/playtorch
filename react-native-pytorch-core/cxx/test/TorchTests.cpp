@@ -357,4 +357,27 @@ TEST_F(TorchliveRuntimeTest, TorchDivTest) {
   EXPECT_THROW(
       eval("torch.div(torch.arrange(3, 4), 'foo')"), facebook::jsi::JSError);
 }
+
+TEST_F(TorchliveRuntimeTest, TorchPermuteTest) {
+  std::string torchPermute =
+      R"(
+          const tensor = torch.rand([2, 3, 1]);
+          const result = torch.permute(tensor, [2, 0, 1]);
+          const shape = result.shape;
+          shape[0] === 1 && shape[1] === 2 && shape[2] === 3;
+        )";
+  EXPECT_TRUE(eval(torchPermute.c_str()).getBool());
+
+  // Incorrect number of dims
+  EXPECT_THROW(
+      eval("torch.permute(torch.rand([2, 3, 1]), [0, 1])"),
+      facebook::jsi::JSError);
+  // Incorrect argument order
+  EXPECT_THROW(
+      eval("torch.permute([2, 0, 1], torch.rand([2, 3, 1]))"),
+      facebook::jsi::JSError);
+  // Incorrect call
+  EXPECT_THROW(eval("torch.permute(1)"), facebook::jsi::JSError);
+}
+
 } // namespace

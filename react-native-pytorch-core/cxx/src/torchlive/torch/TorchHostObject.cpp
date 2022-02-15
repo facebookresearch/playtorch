@@ -172,13 +172,35 @@ jsi::Function TorchHostObject::createAdd(jsi::Runtime& runtime) {
         &operand2Tensor,
         &operand2Number);
 
+    auto extractAlphaValue = [](jsi::Runtime& runtime,
+                                const facebook::jsi::Value* arguments,
+                                int argIndex,
+                                size_t count) -> at::Scalar {
+      if (argIndex < count && arguments[argIndex].isObject()) {
+        auto obj = arguments[argIndex].asObject(runtime);
+        if (obj.hasProperty(runtime, "alpha")) {
+          auto alphaValue = obj.getProperty(runtime, "alpha");
+          if (alphaValue.isNumber()) {
+            return at::Scalar(alphaValue.asNumber());
+          } else {
+            throw jsi::JSError(runtime, "Argument 'alpha' must be a Number.");
+          }
+        }
+      }
+      return at::Scalar(1);
+    };
+
+    auto alphaValue = extractAlphaValue(runtime, arguments, 2, count);
+
     torch_::Tensor resultTensor;
     if (operand2Number != nullptr) {
-      resultTensor = torch_::add(operand1Tensor->tensor, *operand2Number);
-    } else {
       resultTensor =
-          torch_::add(operand1Tensor->tensor, operand2Tensor->tensor);
+          torch_::add(operand1Tensor->tensor, *operand2Number, alphaValue);
+    } else {
+      resultTensor = torch_::add(
+          operand1Tensor->tensor, operand2Tensor->tensor, alphaValue);
     }
+
     auto tensorHostObject =
         std::make_shared<torchlive::torch::TensorHostObject>(
             runtime, resultTensor);

@@ -5,8 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <jsi/jsi.h>
-
 #include <ATen/NativeFunctions.h>
 #include <torch/script.h>
 #include <string>
@@ -23,10 +21,11 @@ namespace torchlive {
 namespace torch {
 
 // TensorHostObject Method Names
+static const std::string ABS = "abs";
 static const std::string DIV = "div";
 static const std::string SIZE = "size";
-static const std::string TOSTRING = "toString";
 static const std::string SQUEEZE = "squeeze";
+static const std::string TOSTRING = "toString";
 static const std::string UNSQUEEZE = "unsqueeze";
 
 // TensorHostObject Property Names
@@ -39,12 +38,13 @@ static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
 
 // TensorHostObject Methods
 static const std::vector<std::string> METHODS =
-    {DIV, SIZE, TOSTRING, SQUEEZE, UNSQUEEZE};
+    {ABS, DIV, SIZE, SQUEEZE, TOSTRING, UNSQUEEZE};
 
 using namespace facebook;
 
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
-    : div_(createDiv(runtime)),
+    : abs_(createAbs(runtime)),
+      div_(createDiv(runtime)),
       size_(createSize(runtime)),
       squeeze_(createSqueeze(runtime)),
       toString_(createToString(runtime)),
@@ -70,7 +70,9 @@ jsi::Value TensorHostObject::get(
     const jsi::PropNameID& propNameId) {
   auto name = propNameId.utf8(runtime);
 
-  if (name == DATA) {
+  if (name == ABS) {
+    return jsi::Value(runtime, abs_);
+  } else if (name == DATA) {
     auto tensor = this->tensor;
     int byteLength = tensor.nbytes();
 
@@ -152,6 +154,28 @@ jsi::Value TensorHostObject::get(
 
   throw jsi::JSError(
       runtime, "Tensor property with name \"" + name + "\" does not exists");
+}
+
+jsi::Function TensorHostObject::createAbs(jsi::Runtime& runtime) {
+  auto absFunc = [this](
+                     jsi::Runtime& runtime,
+                     const jsi::Value& thisValue,
+                     const jsi::Value* arguments,
+                     size_t count) -> jsi::Value {
+    if (count > 0) {
+      throw jsi::JSError(
+          runtime,
+          "0 argument is expected but " + std::to_string(count) +
+              " are given.");
+    }
+    auto outputTensor = this->tensor.abs();
+    auto tensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(
+            runtime, outputTensor);
+    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+  };
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, TOSTRING), 0, absFunc);
 }
 
 jsi::Function TensorHostObject::createToString(jsi::Runtime& runtime) {

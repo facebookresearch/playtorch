@@ -184,6 +184,18 @@ export default function JSIPlayground() {
     console.log(tensor2);
     tensor3 = torch.div(divTensor, divTensor);
     console.log(tensor3);
+
+    console.log('---Test torch.abs and tensor.abs---');
+    let absTensor = torch.tensor([
+      [-2, -1],
+      [0, 1],
+    ]);
+    console.log(absTensor.toString());
+    let torchAbsOutput = torch.abs(absTensor);
+    console.log(torchAbsOutput.toString());
+    console.log(absTensor.toString());
+    let tensorAbsOutput = absTensor.abs();
+    console.log(tensorAbsOutput.toString());
   };
 
   return (

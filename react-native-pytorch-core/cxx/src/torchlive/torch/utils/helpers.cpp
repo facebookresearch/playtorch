@@ -91,8 +91,9 @@ void parseArithmeticOperands(
   } else {
     *operand1Tensor = operand1;
     if (arguments[1].isNumber()) {
-      double other = arguments[1].asNumber();
-      *operand2Number = &other;
+      double* other = new double[1];
+      other[0] = arguments[1].asNumber();
+      *operand2Number = other;
     } else {
       auto operand2 = parseTensor(runtime, &arguments[1]);
       if (operand2 == nullptr) {

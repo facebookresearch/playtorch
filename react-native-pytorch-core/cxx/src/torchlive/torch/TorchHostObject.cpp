@@ -226,6 +226,7 @@ jsi::Function TorchHostObject::createAdd(jsi::Runtime& runtime) {
     if (operand2Number != nullptr) {
       resultTensor =
           torch_::add(operand1Tensor->tensor, *operand2Number, alphaValue);
+      delete[] operand2Number;
     } else {
       resultTensor = torch_::add(
           operand1Tensor->tensor, operand2Tensor->tensor, alphaValue);
@@ -339,6 +340,7 @@ jsi::Function TorchHostObject::createDiv(jsi::Runtime& runtime) {
     torch_::Tensor resultTensor;
     if (operand2Number != nullptr) {
       resultTensor = torch_::div(operand1Tensor->tensor, *operand2Number);
+      delete[] operand2Number;
     } else {
       resultTensor =
           torch_::div(operand1Tensor->tensor, operand2Tensor->tensor);
@@ -459,6 +461,7 @@ jsi::Function TorchHostObject::createMul(jsi::Runtime& runtime) {
     torch_::Tensor resultTensor;
     if (operand2Number != nullptr) {
       resultTensor = torch_::mul(operand1Tensor->tensor, *operand2Number);
+      delete[] operand2Number;
     } else {
       resultTensor =
           torch_::mul(operand1Tensor->tensor, operand2Tensor->tensor);
@@ -576,6 +579,7 @@ jsi::Function TorchHostObject::createSub(jsi::Runtime& runtime) {
     torch_::Tensor resultTensor;
     if (operand2Number != nullptr) {
       resultTensor = torch_::sub(operand1->tensor, *operand2Number);
+      delete[] operand2Number;
     } else {
       resultTensor = torch_::sub(operand1->tensor, operand2Tensor->tensor);
     }

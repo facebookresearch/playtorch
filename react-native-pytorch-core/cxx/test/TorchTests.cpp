@@ -316,7 +316,7 @@ TEST_F(TorchliveRuntimeTest, TorchSoftmaxTest) {
       eval("torch.softmax(torch.empty(1, 2), [1])"), facebook::jsi::JSError);
 }
 
-TEST_F(TorchliveRuntimeTest, TorchTenosrTest) {
+TEST_F(TorchliveRuntimeTest, TorchTensorTest) {
   std::string torchCreateTensorFromArrayShape =
       R"(
           const tensor = torch.tensor([[[1, 2, 3], [3, 4, 5]], [[1, 2, 3], [3, 4, 5]]]);

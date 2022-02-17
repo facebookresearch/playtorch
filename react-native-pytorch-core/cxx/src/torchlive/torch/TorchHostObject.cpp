@@ -322,7 +322,7 @@ jsi::Function TorchHostObject::createArgmax(jsi::Runtime& runtime) {
 }
 
 jsi::Function TorchHostObject::createDiv(jsi::Runtime& runtime) {
-  auto mulFunc = [](jsi::Runtime& runtime,
+  auto divFunc = [](jsi::Runtime& runtime,
                     const jsi::Value& thisValue,
                     const jsi::Value* arguments,
                     size_t count) {
@@ -353,7 +353,7 @@ jsi::Function TorchHostObject::createDiv(jsi::Runtime& runtime) {
   };
 
   return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, MUL), 1, mulFunc);
+      runtime, jsi::PropNameID::forUtf8(runtime, DIV), 1, divFunc);
 }
 
 jsi::Function TorchHostObject::createEmpty(jsi::Runtime& runtime) {

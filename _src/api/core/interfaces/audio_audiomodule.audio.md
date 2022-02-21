@@ -31,7 +31,7 @@ functions on the JavaScript object.
 
 #### Defined in
 
-[NativeJSRef.ts:64](https://github.com/pytorch/live/blob/99e32c2/react-native-pytorch-core/src/NativeJSRef.ts#L64)
+[NativeJSRef.ts:64](https://github.com/pytorch/live/blob/21de386/react-native-pytorch-core/src/NativeJSRef.ts#L64)
 
 ## Methods
 
@@ -47,4 +47,4 @@ Play an audio.
 
 #### Defined in
 
-[audio/AudioModule.ts:19](https://github.com/pytorch/live/blob/99e32c2/react-native-pytorch-core/src/audio/AudioModule.ts#L19)
+[audio/AudioModule.ts:19](https://github.com/pytorch/live/blob/21de386/react-native-pytorch-core/src/audio/AudioModule.ts#L19)

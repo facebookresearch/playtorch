@@ -13,15 +13,20 @@ class TensorFromAudioPacker: Packer {
         do {
             if let audioId = (params["audio"] as? NSDictionary)?["ID"] as? String {
                 let audio = try AudioModule.unwrapAudio(audioId)
-
+                let intArray = audio.getData().withUnsafeBytes { (pointer: UnsafeRawBufferPointer) -> [Int16] in
+                    let buffer = UnsafeBufferPointer<Int16>(start: UnsafeRawPointer(pointer.baseAddress!)
+                                                                .bindMemory(to: Int16.self, capacity: 1),
+                                                     count: audio.getData().count / 2)
+                    return [Int16](buffer)
+                }
                 let MAXVALUE = 32767
                 var floatArray: [Float] = []
-                for dat in audio.getData() {
+                for dat in intArray {
                     floatArray.append(Float(dat) / Float(MAXVALUE))
                 }
 
                 guard let tensor = Tensor.fromBlob(data: &floatArray,
-                                                   shape: [1, NSNumber(value: 16000*5)],
+                                                   shape: [1, NSNumber(value: floatArray.count)],
                                                    dtype: .float) else {
                     throw BaseIValuePackerError.audioUnwrapError
                 }

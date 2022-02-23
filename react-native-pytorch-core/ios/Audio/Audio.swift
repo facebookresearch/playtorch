@@ -6,16 +6,30 @@
  */
 
 import Foundation
+import AVFoundation
 
 public class Audio: IAudio {
 
-    private var mData: [Int]
+    private var mPlayer: AVAudioPlayer?
+    private var mData: Data
 
-    init(data: [Int]) {
-        self.mData = data;
+    private static let DEFAULTVOLUME: Float = 1.0
+
+    init(audioData: Data) {
+        self.mData = audioData
     }
 
-    public func getData() -> [Int] {
+    public func getData() -> Data {
         return self.mData
+    }
+
+    public func play() {
+        do {
+            mPlayer?.volume = Audio.DEFAULTVOLUME
+            mPlayer = try AVAudioPlayer(data: mData)
+            mPlayer?.play()
+        } catch {
+            print("Error while playing the audio. \(error)")
+        }
     }
 }

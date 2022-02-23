@@ -8,5 +8,7 @@
 import Foundation
 
 public protocol IAudio {
-    func getData() -> [Int]
+    func getData() -> Data
+
+    func play()
 }

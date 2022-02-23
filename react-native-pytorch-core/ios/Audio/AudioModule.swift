@@ -14,7 +14,7 @@ var audioRecorder: AVAudioRecorder!
 @objc(AudioModule)
 public class AudioModule: NSObject, AVAudioRecorderDelegate {
 
-    static let REACT_MODULE = "PyTorchCoreAudioModule"
+    static let NAME = "PyTorchCoreAudioModule"
     var promiseResolve : RCTPromiseResolveBlock!
     var promiseReject : RCTPromiseRejectBlock!
 
@@ -25,7 +25,7 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
 
     @objc
     public func getName() -> String {
-        return AudioModule.REACT_MODULE
+        return AudioModule.NAME
     }
 
      public static func unwrapAudio(_ audioRef: NSDictionary) throws -> IAudio {
@@ -70,10 +70,9 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
             AVLinearPCMIsFloatKey: false,
             AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
             ] as [String : Any]
-
         do {
             let recorderFilePath = (NSHomeDirectory() as NSString).appendingPathComponent("tmp/recorded_file.wav")
-                audioRecorder = try AVAudioRecorder(url: NSURL.fileURL(withPath: recorderFilePath), settings: settings)
+            audioRecorder = try AVAudioRecorder(url: NSURL.fileURL(withPath: recorderFilePath), settings: settings)
                 audioRecorder.delegate = self
                 audioRecorder.record(forDuration: 5)
         } catch let error {
@@ -83,28 +82,26 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
 
     @objc public func audioRecorderDidFinishRecording(_ recorder: AVAudioRecorder, successfully flag: Bool) {
         let recorderFilePath = (NSHomeDirectory() as NSString).appendingPathComponent("tmp/recorded_file.wav")
-        print(recorderFilePath)
         if flag {
             let url = NSURL.fileURL(withPath: recorderFilePath)
-            let file = try! AVAudioFile(forReading: url)
-            let format = AVAudioFormat(commonFormat: .pcmFormatFloat32, sampleRate: file.fileFormat.sampleRate, channels: 1, interleaved: false)
-
-            let buf = AVAudioPCMBuffer(pcmFormat: format!, frameCapacity: AVAudioFrameCount(file.length))
-            try! file.read(into: buf!)
-
-            let floatArray = Array(UnsafeBufferPointer(start: buf?.floatChannelData![0], count:Int(buf!.frameLength)))
-            let MAX_VALUE = 32767
-            var intArray : [Int] = []
-            for f in floatArray {
-                intArray.append(Int(f * Float(MAX_VALUE)))
-            }
-            if intArray.isEmpty {
+            guard let data = try? Data(contentsOf: url) else { return }
+            if data.isEmpty {
                 promiseReject(RCTErrorUnspecified, "Invalid audio data", nil)
             }
             else {
-                let audio = Audio(data: intArray)
+                let audio = Audio(audioData: data)
                 promiseResolve(JSContext.wrapObject(object: audio).getJSRef())
             }
+        }
+    }
+
+    @objc
+    public func play(_ audioRef: NSDictionary) {
+        do {
+            let audio = try AudioModule.unwrapAudio(audioRef)
+            audio.play()
+        } catch {
+            print("Invalid audio reference sent. \(error)")
         }
     }
 }

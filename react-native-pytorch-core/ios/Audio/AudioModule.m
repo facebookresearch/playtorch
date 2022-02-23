@@ -12,4 +12,5 @@
 @interface RCT_EXTERN_REMAP_MODULE(PyTorchCoreAudioModule, AudioModule, NSObject)
 RCT_EXTERN_METHOD(record:(nonnull NSNumber)length resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(getName);
+RCT_EXTERN_METHOD(play:(nonnull NSDictionary)audioRef);
 @end

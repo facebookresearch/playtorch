@@ -84,7 +84,10 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
         let recorderFilePath = (NSHomeDirectory() as NSString).appendingPathComponent("tmp/recorded_file.wav")
         if flag {
             let url = NSURL.fileURL(withPath: recorderFilePath)
-            guard let data = try? Data(contentsOf: url) else { return }
+            guard let data = try? Data(contentsOf: url) else {
+                audioRecorder.deleteRecording()
+                return
+            }
             if data.isEmpty {
                 promiseReject(RCTErrorUnspecified, "Invalid audio data", nil)
             }
@@ -93,6 +96,7 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
                 promiseResolve(JSContext.wrapObject(object: audio).getJSRef())
             }
         }
+        audioRecorder.deleteRecording()
     }
 
     @objc

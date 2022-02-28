@@ -57,6 +57,16 @@ torch_::TensorOptions parseTensorOptions(
     int argIndex,
     size_t count);
 
+/*
+ * A helper method used to parse a keyword argument.
+ */
+facebook::jsi::Value parseKeywordArgument(
+    facebook::jsi::Runtime& runtime,
+    const facebook::jsi::Value* arguments,
+    int argIndex,
+    size_t count,
+    const char* key);
+
 /**
  * A helper method to parse the data of a nested JSI Array of number
  * as a vector of double.

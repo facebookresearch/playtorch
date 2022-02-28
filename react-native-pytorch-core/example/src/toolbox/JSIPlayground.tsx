@@ -117,7 +117,7 @@ export default function JSIPlayground() {
     console.log(tensor2.shape); //  [4,1]
     let tensor3 = tensor.unsqueeze(1);
     console.log(tensor3.shape); //  [1,4]
-    const tensor4 = tensor3.squeeze();
+    let tensor4 = tensor3.squeeze();
     console.log(tensor4.shape); //  [4]
 
     console.log('---Test torch.add---');
@@ -187,8 +187,10 @@ export default function JSIPlayground() {
     console.log(divTensor);
     tensor2 = torch.div(divTensor, 2);
     console.log(tensor2);
-    tensor3 = torch.div(divTensor, divTensor);
+    tensor3 = torch.div(divTensor, 2, {rounding_mode: 'floor'});
     console.log(tensor3);
+    tensor4 = torch.div(divTensor, divTensor);
+    console.log(tensor4);
 
     console.log('---Test torch.abs and tensor.abs---');
     let absTensor = torch.tensor([

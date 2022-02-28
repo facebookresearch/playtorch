@@ -129,6 +129,26 @@ torch_::TensorOptions parseTensorOptions(
 
   return tensorOptions;
 }
+
+facebook::jsi::Value parseKeywordArgument(
+    facebook::jsi::Runtime& runtime,
+    const facebook::jsi::Value* arguments,
+    int argIndex,
+    size_t count,
+    const char* key) {
+  auto defaultValue = jsi::Value();
+  if (argIndex >= count || !arguments[argIndex].isObject()) {
+    return defaultValue;
+  }
+
+  jsi::Object keywordOptions = arguments[argIndex].asObject(runtime);
+  if (!keywordOptions.hasProperty(runtime, key)) {
+    return defaultValue;
+  }
+
+  return keywordOptions.getProperty(runtime, key);
+}
+
 std::vector<double> parseJSIArrayData(
     jsi::Runtime& runtime,
     const jsi::Value& val) {

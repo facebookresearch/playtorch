@@ -337,14 +337,26 @@ jsi::Function TorchHostObject::createDiv(jsi::Runtime& runtime) {
         &operand2Tensor,
         &operand2Number);
 
+    auto roundingMode = utils::helpers::parseKeywordArgument(
+        runtime, arguments, 2, count, "rounding_mode");
+
     torch_::Tensor resultTensor;
-    if (operand2Number != nullptr) {
-      resultTensor = torch_::div(operand1Tensor->tensor, *operand2Number);
-      delete[] operand2Number;
+    if (roundingMode.isUndefined()) {
+      resultTensor = operand2Number != nullptr
+          ? torch_::div(operand1Tensor->tensor, *operand2Number)
+          : torch_::div(operand1Tensor->tensor, operand2Tensor->tensor);
     } else {
-      resultTensor =
-          torch_::div(operand1Tensor->tensor, operand2Tensor->tensor);
+      auto roundingModeString = roundingMode.asString(runtime).utf8(runtime);
+      resultTensor = operand2Number != nullptr
+          ? torch_::div(
+                operand1Tensor->tensor, *operand2Number, roundingModeString)
+          : torch_::div(
+                operand1Tensor->tensor,
+                operand2Tensor->tensor,
+                roundingModeString);
     }
+
+    delete[] operand2Number;
     auto tensorHostObject =
         std::make_shared<torchlive::torch::TensorHostObject>(
             runtime, resultTensor);

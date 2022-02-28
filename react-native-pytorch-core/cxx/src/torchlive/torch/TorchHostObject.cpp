@@ -202,34 +202,20 @@ jsi::Function TorchHostObject::createAdd(jsi::Runtime& runtime) {
         &operand2Tensor,
         &operand2Number);
 
-    auto extractAlphaValue = [](jsi::Runtime& runtime,
-                                const facebook::jsi::Value* arguments,
-                                int argIndex,
-                                size_t count) -> at::Scalar {
-      if (argIndex < count && arguments[argIndex].isObject()) {
-        auto obj = arguments[argIndex].asObject(runtime);
-        if (obj.hasProperty(runtime, "alpha")) {
-          auto alphaValue = obj.getProperty(runtime, "alpha");
-          if (alphaValue.isNumber()) {
-            return at::Scalar(alphaValue.asNumber());
-          } else {
-            throw jsi::JSError(runtime, "Argument 'alpha' must be a Number.");
-          }
-        }
-      }
-      return at::Scalar(1);
-    };
-
-    auto alphaValue = extractAlphaValue(runtime, arguments, 2, count);
+    auto alphaValue = utils::helpers::parseKeywordArgument(
+        runtime, arguments, 2, count, "alpha");
+    auto alphaScalarValue = alphaValue.isUndefined()
+        ? at::Scalar(1)
+        : at::Scalar(alphaValue.asNumber());
 
     torch_::Tensor resultTensor;
     if (operand2Number != nullptr) {
-      resultTensor =
-          torch_::add(operand1Tensor->tensor, *operand2Number, alphaValue);
+      resultTensor = torch_::add(
+          operand1Tensor->tensor, *operand2Number, alphaScalarValue);
       delete[] operand2Number;
     } else {
       resultTensor = torch_::add(
-          operand1Tensor->tensor, operand2Tensor->tensor, alphaValue);
+          operand1Tensor->tensor, operand2Tensor->tensor, alphaScalarValue);
     }
 
     auto tensorHostObject =

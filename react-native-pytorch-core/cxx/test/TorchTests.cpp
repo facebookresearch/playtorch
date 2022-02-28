@@ -234,6 +234,7 @@ TEST_F(TorchliveRuntimeTest, TorchAddTest) {
   EXPECT_THROW(
       eval("torch.add(torch.empty(1, 2), 'some_string')"),
       facebook::jsi::JSError);
+
   std::string torchAddCodeWithInvalidAlpha =
       R"(
           const tensor1 = torch.arange(2);

@@ -582,13 +582,20 @@ jsi::Function TorchHostObject::createSub(jsi::Runtime& runtime) {
     double* operand2Number = nullptr;
     utils::helpers::parseArithmeticOperands(
         runtime, arguments, count, &operand1, &operand2Tensor, &operand2Number);
+    auto alphaValue = utils::helpers::parseKeywordArgument(
+        runtime, arguments, 2, count, "alpha");
+    auto alphaScalarValue = alphaValue.isUndefined()
+        ? at::Scalar(1)
+        : at::Scalar(alphaValue.asNumber());
 
     torch_::Tensor resultTensor;
     if (operand2Number != nullptr) {
-      resultTensor = torch_::sub(operand1->tensor, *operand2Number);
+      resultTensor =
+          torch_::sub(operand1->tensor, *operand2Number, alphaScalarValue);
       delete[] operand2Number;
     } else {
-      resultTensor = torch_::sub(operand1->tensor, operand2Tensor->tensor);
+      resultTensor = torch_::sub(
+          operand1->tensor, operand2Tensor->tensor, alphaScalarValue);
     }
     auto tensorHostObject =
         std::make_shared<torchlive::torch::TensorHostObject>(

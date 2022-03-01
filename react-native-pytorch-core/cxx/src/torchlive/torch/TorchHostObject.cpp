@@ -238,11 +238,20 @@ jsi::Function TorchHostObject::createArange(jsi::Runtime& runtime) {
       throw jsi::JSError(runtime, "This function requires at least 1 argument");
     }
 
-    auto end = (count > 1) ? arguments[1].asNumber() : arguments[0].asNumber();
-    auto start = (count > 1) ? arguments[0].asNumber() : 0;
-    auto step = (count > 2) ? arguments[2].asNumber() : 1;
+    auto positionalArgCount = count;
+    torch_::TensorOptions tensorOptions = torch_::TensorOptions();
+    if (arguments[count - 1].isObject()) {
+      positionalArgCount--;
+      tensorOptions = utils::helpers::parseTensorOptions(
+          runtime, arguments, count - 1, count);
+    }
 
-    auto tensor = torch_::arange(start, end, step);
+    auto end = (positionalArgCount > 1) ? arguments[1].asNumber()
+                                        : arguments[0].asNumber();
+    auto start = (positionalArgCount > 1) ? arguments[0].asNumber() : 0;
+    auto step = (positionalArgCount > 2) ? arguments[2].asNumber() : 1;
+
+    auto tensor = torch_::arange(start, end, step, tensorOptions);
 
     auto tensorHostObject =
         std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);

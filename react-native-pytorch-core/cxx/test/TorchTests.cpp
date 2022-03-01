@@ -110,23 +110,48 @@ TEST_F(TorchliveRuntimeTest, TensorToStringTest) {
 }
 
 TEST_F(TorchliveRuntimeTest, TorchArangeTest) {
-  EXPECT_EQ(eval("torch.arange(4).shape[0]").getNumber(), 4);
-  EXPECT_EQ(eval("torch.arange(4).data[0]").getNumber(), 0);
-  EXPECT_EQ(eval("torch.arange(4).data[1]").getNumber(), 1);
-  EXPECT_EQ(eval("torch.arange(4).data[2]").getNumber(), 2);
-  EXPECT_EQ(eval("torch.arange(4).data[3]").getNumber(), 3);
+  for (auto i = 0; i < 4; i++) {
+    std::string withDtype =
+        fmt::format("torch.arange(4, {{dtype:'float64'}}).data[{}]", i);
+    std::string withoutDtype = fmt::format("torch.arange(4).data[{}]", i);
+    EXPECT_EQ(eval(withDtype.c_str()).getNumber(), i);
+    EXPECT_EQ(eval(withoutDtype.c_str()).getNumber(), i);
+  }
+  EXPECT_EQ(eval("torch.arange(4, {dtype:'float64'}).shape[0]").getNumber(), 4);
+  EXPECT_EQ(
+      eval("torch.arange(4, {dtype:'float64'}).dtype").asString(*rt).utf8(*rt),
+      "float64");
 
+  for (auto i = 0; i < 3; i++) {
+    std::string withDtype =
+        fmt::format("torch.arange(2, 5, {{dtype:'float64'}}).data[{}]", i);
+    std::string withoutDtype = fmt::format("torch.arange(2, 5).data[{}]", i);
+    int expectedVal = i + 2;
+    EXPECT_EQ(eval(withDtype.c_str()).getNumber(), expectedVal);
+    EXPECT_EQ(eval(withoutDtype.c_str()).getNumber(), expectedVal);
+  }
   EXPECT_EQ(eval("torch.arange(2, 5).shape[0]").getNumber(), 3);
-  EXPECT_EQ(eval("torch.arange(2, 5).data[0]").getNumber(), 2);
-  EXPECT_EQ(eval("torch.arange(2, 5).data[1]").getNumber(), 3);
-  EXPECT_EQ(eval("torch.arange(2, 5).data[2]").getNumber(), 4);
+  EXPECT_EQ(
+      eval("torch.arange(2, 5, {dtype:'float64'}).dtype")
+          .asString(*rt)
+          .utf8(*rt),
+      "float64");
 
+  for (auto i = 0; i < 5; i++) {
+    std::string withDtype = fmt::format(
+        "torch.arange(1, 3.5, 0.5, {{dtype:'float64'}}).data[{}]", i);
+    std::string withoutDtype =
+        fmt::format("torch.arange(1, 3.5, 0.5).data[{}]", i);
+    double expectedVal = 1 + (i * 0.5);
+    EXPECT_EQ(eval(withDtype.c_str()).getNumber(), expectedVal);
+    EXPECT_EQ(eval(withoutDtype.c_str()).getNumber(), expectedVal);
+  }
   EXPECT_EQ(eval("torch.arange(1, 3.5, 0.5).shape[0]").getNumber(), 5);
-  EXPECT_EQ(eval("torch.arange(1, 3.5, 0.5).data[0]").getNumber(), 1.0);
-  EXPECT_EQ(eval("torch.arange(1, 3.5, 0.5).data[1]").getNumber(), 1.5);
-  EXPECT_EQ(eval("torch.arange(1, 3.5, 0.5).data[2]").getNumber(), 2.0);
-  EXPECT_EQ(eval("torch.arange(1, 3.5, 0.5).data[3]").getNumber(), 2.5);
-  EXPECT_EQ(eval("torch.arange(1, 3.5, 0.5).data[4]").getNumber(), 3.0);
+  EXPECT_EQ(
+      eval("torch.arange(1, 3.5, 0.5, {dtype:'float64'}).dtype")
+          .asString(*rt)
+          .utf8(*rt),
+      "float64");
 }
 
 TEST_F(TorchliveRuntimeTest, TorchRandintTest) {

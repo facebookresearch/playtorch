@@ -16,6 +16,7 @@ namespace transforms {
 class JSI_EXPORT TransformsHostObject : public facebook::jsi::HostObject {
   facebook::jsi::Function centerCrop_;
   facebook::jsi::Function normalize_;
+  facebook::jsi::Function resize_;
 
  public:
   TransformsHostObject(facebook::jsi::Runtime& runtime);
@@ -31,6 +32,7 @@ class JSI_EXPORT TransformsHostObject : public facebook::jsi::HostObject {
       facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createNormalize(
       facebook::jsi::Runtime& runtime);
+  static facebook::jsi::Function createResize(facebook::jsi::Runtime& runtime);
 };
 
 } // namespace transforms

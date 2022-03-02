@@ -35,6 +35,7 @@ static inline std::array<int, 2> getImageSize(torch_::Tensor& tensor) {
 // TransformsHostObject Method Name
 static const std::string CENTER_CROP = "centerCrop";
 static const std::string NORMALIZE = "normalize";
+static const std::string RESIZE = "resize";
 
 // TransformsHostObject Property Names
 // empty
@@ -44,11 +45,12 @@ static const std::string NORMALIZE = "normalize";
 static const std::vector<std::string> PROPERTIES = {};
 
 // TransformsHostObject Methods
-const std::vector<std::string> METHODS = {CENTER_CROP, NORMALIZE};
+const std::vector<std::string> METHODS = {CENTER_CROP, NORMALIZE, RESIZE};
 
 TransformsHostObject::TransformsHostObject(jsi::Runtime& runtime)
     : centerCrop_(createCenterCrop(runtime)),
-      normalize_(createNormalize(runtime)) {}
+      normalize_(createNormalize(runtime)),
+      resize_(createResize(runtime)) {}
 
 std::vector<jsi::PropNameID> TransformsHostObject::getPropertyNames(
     jsi::Runtime& rt) {
@@ -71,6 +73,8 @@ jsi::Value TransformsHostObject::get(
     return jsi::Value(runtime, centerCrop_);
   } else if (name == NORMALIZE) {
     return jsi::Value(runtime, normalize_);
+  } else if (name == RESIZE) {
+    return jsi::Value(runtime, resize_);
   }
 
   return jsi::Value::undefined();
@@ -241,6 +245,70 @@ jsi::Function TransformsHostObject::createNormalize(jsi::Runtime& runtime) {
       jsi::PropNameID::forUtf8(runtime, NORMALIZE),
       2,
       normalizeFactoryFunc);
+}
+
+/**
+ * Resize the input image to the given size. It is expected to have […, H, W]
+ * shape, where … means an arbitrary number of leading dimensions.
+ *
+ * Original function:
+ * https://pytorch.org/vision/main/generated/torchvision.transforms.Resize.html
+ */
+jsi::Function TransformsHostObject::createResize(jsi::Runtime& runtime) {
+  auto resizeFactoryFunc = [](jsi::Runtime& runtime,
+                              const jsi::Value& thisValue,
+                              const jsi::Value* arguments,
+                              size_t count) -> jsi::Value {
+    auto size = arguments[0].asNumber();
+
+    auto resizeFunc = [size](
+                          jsi::Runtime& innerRuntime,
+                          const jsi::Value& innerThisValue,
+                          const jsi::Value* innerArguments,
+                          size_t innerCount) -> jsi::Value {
+      if (innerCount != 1) {
+        throw jsi::JSError(innerRuntime, "Tensor required as argument");
+      }
+
+      auto tensorHostObject =
+          utils::helpers::parseTensor(innerRuntime, &innerArguments[0]);
+      auto tensor = tensorHostObject->tensor;
+
+      auto ndim = tensor.ndimension();
+
+      // Unsqueeze if ndim is 3 to work with upsample_bilinear2d, which
+      // requires 4 dims.
+      if (ndim == 3) {
+        tensor = tensor.unsqueeze(0);
+      }
+
+      std::vector<int64_t> resizeSize;
+      resizeSize.push_back(size);
+      resizeSize.push_back(size);
+
+      auto resizedTensor = at::upsample_bilinear2d(tensor, resizeSize, false);
+
+      // Undo unsqueeze if input tensor dimension was 3
+      if (ndim == 3) {
+        resizedTensor = resizedTensor.squeeze(0);
+      }
+
+      auto resizedTensorHostObject =
+          std::make_shared<torchlive::torch::TensorHostObject>(
+              innerRuntime, resizedTensor);
+      return jsi::Object::createFromHostObject(
+          innerRuntime, resizedTensorHostObject);
+    };
+
+    return jsi::Function::createFromHostFunction(
+        runtime,
+        jsi::PropNameID::forUtf8(runtime, "Resize_Tensor"),
+        1,
+        resizeFunc);
+  };
+
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, RESIZE), 1, resizeFactoryFunc);
 }
 
 } // namespace transforms

@@ -112,4 +112,70 @@ TEST_F(TorchliveVisionRuntimeTest, NormalizeTest) {
   EXPECT_TRUE(eval(normalize).getBool());
 }
 
+TEST_F(TorchliveVisionRuntimeTest, ResizeTest) {
+  // 3 dim resize
+
+  std::string resizeBothEdgesSmaller3Dim =
+      R"(
+          const imageTensor1 = torch.rand([3, 640, 480]);
+          const resize = __torchlive_vision__.transforms.resize(400);
+          const imageTensor2 = resize(imageTensor1);
+          const shape = imageTensor2.shape;
+          shape[0] === 3 && shape[1] === 400 && shape[2] === 400;
+        )";
+  EXPECT_TRUE(eval(resizeBothEdgesSmaller3Dim).getBool());
+
+  std::string resizeOneEdgeSmaller3Dim =
+      R"(
+          const imageTensor1 = torch.rand([3, 640, 480]);
+          const resize = __torchlive_vision__.transforms.resize(500);
+          const imageTensor2 = resize(imageTensor1);
+          const shape = imageTensor2.shape;
+          shape[0] === 3 && shape[1] === 500 && shape[2] === 500;
+        )";
+  EXPECT_TRUE(eval(resizeOneEdgeSmaller3Dim).getBool());
+
+  std::string resizeBothEdgesBigger3Dim =
+      R"(
+          const imageTensor1 = torch.rand([3, 640, 480]);
+          const resize = __torchlive_vision__.transforms.resize(700);
+          const imageTensor2 = resize(imageTensor1);
+          const shape = imageTensor2.shape;
+          shape[0] === 3 && shape[1] === 700 && shape[2] === 700;
+        )";
+  EXPECT_TRUE(eval(resizeBothEdgesBigger3Dim).getBool());
+
+  // 4 dim resize
+
+  std::string resizeBothEdgesSmaller4Dim =
+      R"(
+          const imageTensor1 = torch.rand([1, 3, 640, 480]);
+          const resize = __torchlive_vision__.transforms.resize(400);
+          const imageTensor2 = resize(imageTensor1);
+          const shape = imageTensor2.shape;
+          shape[0] === 1 && shape[1] === 3 && shape[2] === 400 && shape[3] === 400;
+        )";
+  EXPECT_TRUE(eval(resizeBothEdgesSmaller4Dim).getBool());
+
+  std::string resizeOneEdgeSmaller4Dim =
+      R"(
+          const imageTensor1 = torch.rand([1, 3, 640, 480]);
+          const resize = __torchlive_vision__.transforms.resize(500);
+          const imageTensor2 = resize(imageTensor1);
+          const shape = imageTensor2.shape;
+          shape[0] === 1 && shape[1] === 3 && shape[2] === 500 && shape[3] === 500;
+        )";
+  EXPECT_TRUE(eval(resizeOneEdgeSmaller4Dim).getBool());
+
+  std::string resizeBothEdgesBigger4Dim =
+      R"(
+          const imageTensor1 = torch.rand([1, 3, 640, 480]);
+          const resize = __torchlive_vision__.transforms.resize(700);
+          const imageTensor2 = resize(imageTensor1);
+          const shape = imageTensor2.shape;
+          shape[0] === 1 && shape[1] === 3 && shape[2] === 700 && shape[3] === 700;
+        )";
+  EXPECT_TRUE(eval(resizeBothEdgesBigger4Dim).getBool());
+}
+
 } // namespace

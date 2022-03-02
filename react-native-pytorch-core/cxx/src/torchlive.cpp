@@ -22,11 +22,11 @@ void install(jsi::Runtime& runtime) {
   auto torch = jsi::Object::createFromHostObject(runtime, torchObject);
   runtime.global().setProperty(runtime, "torch", std::move(torch));
 
-  auto torchvisionObject =
+  auto visionObject =
       std::make_shared<torchlive::vision::VisionHostObject>(runtime);
-  auto torchvision =
-      jsi::Object::createFromHostObject(runtime, torchvisionObject);
-  runtime.global().setProperty(runtime, "torchvision", std::move(torchvision));
+  auto vision = jsi::Object::createFromHostObject(runtime, visionObject);
+  runtime.global().setProperty(
+      runtime, "__torchlive_vision__", std::move(vision));
 
   auto nativeJSRefBridgeObject =
       std::make_shared<torchlive::media::NativeJSRefBridgeHostObject>(runtime);

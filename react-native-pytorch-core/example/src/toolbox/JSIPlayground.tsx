@@ -8,7 +8,7 @@
  */
 
 declare var torch: any;
-declare var torchvision: any;
+declare var __torchlive_vision__: any;
 declare var performance: any;
 
 import * as React from 'react';
@@ -33,8 +33,8 @@ export default function JSIPlayground() {
   const [cxxElapse, setcxxElapse] = React.useState(0);
   const testFunc = async () => {
     console.log('---Test torchlive---');
-    console.log(torchvision);
-    console.log(torchvision.transforms);
+    console.log(__torchlive_vision__);
+    console.log(__torchlive_vision__.transforms);
 
     console.log('------------');
     console.log(Platform.OS);

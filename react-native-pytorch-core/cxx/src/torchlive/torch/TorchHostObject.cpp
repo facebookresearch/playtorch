@@ -523,13 +523,21 @@ jsi::Function TorchHostObject::createRandint(jsi::Runtime& runtime) {
     auto low = 0;
     auto high = 0;
     jsi::Array size = jsi::Array::createWithElements(runtime, {});
+    torch_::TensorOptions tensorOptions = torch_::TensorOptions();
     if (count == 2) {
       high = arguments[0].asNumber();
       size = arguments[1].asObject(runtime).asArray(runtime);
+    } else if (arguments[1].isObject()) {
+      high = arguments[0].asNumber();
+      size = arguments[1].asObject(runtime).asArray(runtime);
+      tensorOptions =
+          utils::helpers::parseTensorOptions(runtime, arguments, 2, count);
     } else {
       low = arguments[0].asNumber();
       high = arguments[1].asNumber();
       size = arguments[2].asObject(runtime).asArray(runtime);
+      tensorOptions =
+          utils::helpers::parseTensorOptions(runtime, arguments, 3, count);
     }
 
     auto shapeLength = size.size(runtime);
@@ -538,7 +546,7 @@ jsi::Function TorchHostObject::createRandint(jsi::Runtime& runtime) {
       int x = size.getValueAtIndex(runtime, i).asNumber();
       dims.push_back(x);
     }
-    auto tensor = torch_::randint(low, high, dims);
+    auto tensor = torch_::randint(low, high, dims, tensorOptions);
 
     auto tensorHostObject =
         std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);

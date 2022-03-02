@@ -157,18 +157,39 @@ TEST_F(TorchliveRuntimeTest, TorchArangeTest) {
 TEST_F(TorchliveRuntimeTest, TorchRandintTest) {
   EXPECT_EQ(eval("torch.randint(10, [2, 2]).shape[0]").getNumber(), 2);
   EXPECT_EQ(eval("torch.randint(10, [2, 2]).shape[1]").getNumber(), 2);
+
+  // Test randint with parameters high and size.
   for (auto i = 0; i < 4; i++) {
     std::string s = fmt::format("torch.randint(10, [2, 2]).data[{}]", i);
+    std::string sWithDtype = fmt::format(
+        "torch.randint(10, [2, 2], {{dtype:'float64'}}).data[{}]", i);
     EXPECT_GE(eval(s.c_str()).getNumber(), 0);
     EXPECT_LT(eval(s.c_str()).getNumber(), 10);
+    EXPECT_GE(eval(sWithDtype.c_str()).getNumber(), 0);
+    EXPECT_LT(eval(sWithDtype.c_str()).getNumber(), 10);
   }
+  EXPECT_EQ(
+      eval("torch.randint(10, [2, 2], {dtype:'float64'}).dtype")
+          .asString(*rt)
+          .utf8(*rt),
+      "float64");
 
+  // Test randint with parameters low, high, and size.
   EXPECT_EQ(eval("torch.randint(3, 5, [3]).shape[0]").getNumber(), 3);
   for (auto i = 0; i < 3; i++) {
     std::string s = fmt::format("torch.randint(3, 5, [3]).data[{}]", i);
+    std::string sWithDtype = fmt::format(
+        "torch.randint(3, 5, [3], {{dtype:'float64'}}).data[{}]", i);
     EXPECT_GE(eval(s.c_str()).getNumber(), 3);
     EXPECT_LT(eval(s.c_str()).getNumber(), 5);
+    EXPECT_GE(eval(sWithDtype.c_str()).getNumber(), 3);
+    EXPECT_LT(eval(sWithDtype.c_str()).getNumber(), 5);
   }
+  EXPECT_EQ(
+      eval("torch.randint(3, 5, [3], {dtype:'float64'}).dtype")
+          .asString(*rt)
+          .utf8(*rt),
+      "float64");
 
   EXPECT_EQ(eval("torch.randint(3, 7, [3, 3, 4]).shape[2]").getNumber(), 4);
   for (auto i = 0; i < 36; i++) {

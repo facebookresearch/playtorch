@@ -34,6 +34,7 @@ static inline std::array<int, 2> getImageSize(torch_::Tensor& tensor) {
 
 // TransformsHostObject Method Name
 static const std::string CENTER_CROP = "centerCrop";
+static const std::string NORMALIZE = "normalize";
 
 // TransformsHostObject Property Names
 // empty
@@ -43,11 +44,11 @@ static const std::string CENTER_CROP = "centerCrop";
 static const std::vector<std::string> PROPERTIES = {};
 
 // TransformsHostObject Methods
-// empty
-const std::vector<std::string> METHODS = {};
+const std::vector<std::string> METHODS = {CENTER_CROP, NORMALIZE};
 
 TransformsHostObject::TransformsHostObject(jsi::Runtime& runtime)
-    : centerCrop_(createCenterCrop(runtime)) {}
+    : centerCrop_(createCenterCrop(runtime)),
+      normalize_(createNormalize(runtime)) {}
 
 std::vector<jsi::PropNameID> TransformsHostObject::getPropertyNames(
     jsi::Runtime& rt) {
@@ -68,6 +69,8 @@ jsi::Value TransformsHostObject::get(
 
   if (name == CENTER_CROP) {
     return jsi::Value(runtime, centerCrop_);
+  } else if (name == NORMALIZE) {
+    return jsi::Value(runtime, normalize_);
   }
 
   return jsi::Value::undefined();
@@ -154,6 +157,90 @@ jsi::Function TransformsHostObject::createCenterCrop(jsi::Runtime& runtime) {
       jsi::PropNameID::forUtf8(runtime, CENTER_CROP),
       1,
       centerCropFactoryFunc);
+}
+
+/**
+ * Normalize a tensor image with mean and standard deviation. Given mean:
+ * (mean[1],...,mean[n]) and std: (std[1],..,std[n]) for n channels, this
+ * transform will normalize each channel of the input torch.*Tensor i.e.,
+ * output[channel] = (input[channel] - mean[channel]) / std[channel]
+ *
+ * Original function:
+ * https://github.com/pytorch/vision/blob/main/torchvision/transforms/functional.py#L320-L364
+ */
+jsi::Function TransformsHostObject::createNormalize(jsi::Runtime& runtime) {
+  auto normalizeFactoryFunc = [](jsi::Runtime& runtime,
+                                 const jsi::Value& thisValue,
+                                 const jsi::Value* arguments,
+                                 size_t count) -> jsi::Value {
+    std::vector<double> dataMean =
+        utils::helpers::parseJSIArrayData(runtime, arguments[0]);
+    std::vector<int64_t> shapeMean =
+        utils::helpers::parseJSIArrayShape(runtime, arguments[0]);
+    auto mean = torch_::tensor(dataMean).reshape(at::IntArrayRef(shapeMean));
+
+    std::vector<double> dataStd =
+        utils::helpers::parseJSIArrayData(runtime, arguments[1]);
+    std::vector<int64_t> shapeStd =
+        utils::helpers::parseJSIArrayShape(runtime, arguments[1]);
+    auto std = torch_::tensor(dataStd).reshape(at::IntArrayRef(shapeStd));
+
+    bool inplace = false;
+    if (count == 3) {
+      if (!arguments[2].isBool()) {
+        throw jsi::JSError(
+            runtime, "The 3rd argument for inplace needs to be a boolean");
+      }
+      inplace = arguments[2].getBool();
+    }
+
+    auto normalizeFunc = [mean, std, inplace](
+                             jsi::Runtime& innerRuntime,
+                             const jsi::Value& innerThisValue,
+                             const jsi::Value* innerArguments,
+                             size_t innerCount) -> jsi::Value {
+      if (innerCount != 1) {
+        throw jsi::JSError(innerRuntime, "Tensor required as argument");
+      }
+
+      auto tensorHostObject =
+          utils::helpers::parseTensor(innerRuntime, &innerArguments[0]);
+      auto tensor = tensorHostObject->tensor;
+
+      if (!inplace) {
+        tensor = tensor.clone();
+      }
+
+      torch_::Tensor meanTensor;
+      torch_::Tensor stdTensor;
+      if (mean.ndimension() == 1) {
+        meanTensor = mean.view({-1, 1, 1});
+      }
+      if (std.ndimension() == 1) {
+        stdTensor = std.view({-1, 1, 1});
+      }
+
+      tensor.sub_(meanTensor).div_(stdTensor);
+
+      auto normalizedTensorHostObject =
+          std::make_shared<torchlive::torch::TensorHostObject>(
+              innerRuntime, tensor);
+      return jsi::Object::createFromHostObject(
+          innerRuntime, normalizedTensorHostObject);
+    };
+
+    return jsi::Function::createFromHostFunction(
+        runtime,
+        jsi::PropNameID::forUtf8(runtime, "Normalize_Tensor"),
+        1,
+        normalizeFunc);
+  };
+
+  return jsi::Function::createFromHostFunction(
+      runtime,
+      jsi::PropNameID::forUtf8(runtime, NORMALIZE),
+      2,
+      normalizeFactoryFunc);
 }
 
 } // namespace transforms

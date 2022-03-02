@@ -97,4 +97,19 @@ TEST_F(TorchliveVisionRuntimeTest, CenterCropTest) {
   EXPECT_TRUE(eval(centerCropWithSize).getBool());
 }
 
+TEST_F(TorchliveVisionRuntimeTest, NormalizeTest) {
+  std::string normalize =
+      R"(
+          const imageTensor1 = torch.rand([3, 640, 480]);
+          const normalize = __torchlive_vision__.transforms.normalize(
+            [0.485, 0.456, 0.406],
+            [0.229, 0.224, 0.225]
+          );
+          const imageTensor2 = normalize(imageTensor1);
+          const shape = imageTensor2.shape;
+          shape[0] === 3 && shape[1] === 640 && shape[2] === 480;
+        )";
+  EXPECT_TRUE(eval(normalize).getBool());
+}
+
 } // namespace

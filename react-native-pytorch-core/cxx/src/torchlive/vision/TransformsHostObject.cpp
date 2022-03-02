@@ -19,7 +19,7 @@
 namespace torch_ = torch;
 
 namespace torchlive {
-namespace torchvision {
+namespace vision {
 namespace transforms {
 
 using namespace facebook;
@@ -59,5 +59,5 @@ jsi::Value TransformsHostObject::get(
 }
 
 } // namespace transforms
-} // namespace torchvision
+} // namespace vision
 } // namespace torchlive

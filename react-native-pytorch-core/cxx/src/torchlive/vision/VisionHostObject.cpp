@@ -5,32 +5,32 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "TorchvisionHostObject.h"
+#include "VisionHostObject.h"
 #include "TransformsHostObject.h"
 
 namespace torchlive {
-namespace torchvision {
+namespace vision {
 
 using namespace facebook;
 
-// TorchHostObject Method Name
+// VisionHostObject Method Name
 // empty
 
-// TorchvisionHostObject Property Name
+// VisionHostObject Property Name
 static const std::string TRANSFORMS = "transforms";
 
-// TorchHostObject Properties
+// VisionHostObject Properties
 static const std::vector<std::string> PROPERTIES = {
     TRANSFORMS,
 };
 
-// TorchHostObject Methods
+// VisionHostObject Methods
 // empty
 const std::vector<std::string> METHODS = {};
 
-TorchvisionHostObject::TorchvisionHostObject(jsi::Runtime& runtime) {}
+VisionHostObject::VisionHostObject(jsi::Runtime& runtime) {}
 
-std::vector<jsi::PropNameID> TorchvisionHostObject::getPropertyNames(
+std::vector<jsi::PropNameID> VisionHostObject::getPropertyNames(
     jsi::Runtime& rt) {
   std::vector<jsi::PropNameID> result;
   for (std::string property : PROPERTIES) {
@@ -42,7 +42,7 @@ std::vector<jsi::PropNameID> TorchvisionHostObject::getPropertyNames(
   return result;
 }
 
-jsi::Value TorchvisionHostObject::get(
+jsi::Value VisionHostObject::get(
     jsi::Runtime& runtime,
     const jsi::PropNameID& propName) {
   auto name = propName.utf8(runtime);
@@ -56,5 +56,5 @@ jsi::Value TorchvisionHostObject::get(
   return jsi::Value::undefined();
 }
 
-} // namespace torchvision
+} // namespace vision
 } // namespace torchlive

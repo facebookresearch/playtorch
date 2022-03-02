@@ -30,8 +30,8 @@ add_library(
         ../cxx/src/torchlive/torch/jit/mobile/ModuleHostObject.cpp
         ../cxx/src/torchlive/torch/utils/constants.cpp
         ../cxx/src/torchlive/torch/utils/helpers.cpp
-        ../cxx/src/torchlive/torchvision/TorchvisionHostObject.cpp
-        ../cxx/src/torchlive/torchvision/TransformsHostObject.cpp
+        ../cxx/src/torchlive/vision/TransformsHostObject.cpp
+        ../cxx/src/torchlive/vision/VisionHostObject.cpp
         src/main/cpp/cpp-adapter.cpp
         src/main/cpp/torchlive/media/NativeJSRefBridge.cpp
 )

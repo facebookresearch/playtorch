@@ -10,19 +10,20 @@
 #include <jsi/jsi.h>
 
 namespace torchlive {
-namespace torchvision {
+namespace vision {
+namespace transforms {
 
-class JSI_EXPORT TorchvisionHostObject : public facebook::jsi::HostObject {
+class JSI_EXPORT TransformsHostObject : public facebook::jsi::HostObject {
  public:
-  TorchvisionHostObject(facebook::jsi::Runtime& runtime);
+  TransformsHostObject(facebook::jsi::Runtime& runtime);
 
   facebook::jsi::Value get(
       facebook::jsi::Runtime&,
       const facebook::jsi::PropNameID& name) override;
-
   std::vector<facebook::jsi::PropNameID> getPropertyNames(
       facebook::jsi::Runtime& rt) override;
 };
 
-} // namespace torchvision
+} // namespace transforms
+} // namespace vision
 } // namespace torchlive

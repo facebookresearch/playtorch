@@ -9,6 +9,7 @@
 
 declare var torch: any;
 declare var __torchlive_vision__: any;
+declare var __torchlive_torchvision__: any;
 declare var performance: any;
 
 import * as React from 'react';
@@ -65,29 +66,29 @@ export default function JSIPlayground() {
     setcxxElapse(delta);
     console.log('argmax (c++)', result);
     console.log('elapsed time (c++)', delta, 'ms');
-    console.log(tensor);
+    console.log(tensor.toString());
     console.log(tensor.size());
     console.log(tensor.shape);
     console.log(tensor.dtype);
 
     let testTensor = torch.empty([1, 2]);
-    console.log(testTensor);
+    console.log(testTensor.toString());
     testTensor = torch.empty(1, 2);
-    console.log(testTensor);
+    console.log(testTensor.toString());
     testTensor = torch.empty([1, 2], {dtype: 'float64'});
-    console.log(testTensor);
+    console.log(testTensor.toString());
 
     console.log('---Test torch.arange---');
     tensor = torch.arange(5);
-    console.log(tensor);
+    console.log(tensor.toString());
     data = new Float32Array(tensor.data);
     console.log(data);
     tensor = torch.arange(1, 4);
-    console.log(tensor);
+    console.log(tensor.toString());
     data = new Float32Array(tensor.data);
     console.log(data);
     tensor = torch.arange(1, 2.5, 0.5);
-    console.log(tensor);
+    console.log(tensor.toString());
     data = new Float32Array(tensor.data);
     console.log(data);
 
@@ -122,32 +123,32 @@ export default function JSIPlayground() {
 
     console.log('---Test torch.add---');
     let addTensor1 = torch.rand([1, 2]);
-    console.log(addTensor1);
+    console.log(addTensor1.toString());
     let addTensor2 = torch.add(addTensor1, 2);
-    console.log(addTensor2);
+    console.log(addTensor2.toString());
     let addTensor3 = torch.add(addTensor1, addTensor2);
-    console.log(addTensor3);
+    console.log(addTensor3.toString());
 
     console.log('---Test torch.sub---');
     let subTensor1 = torch.arange(2);
-    console.log(subTensor1);
+    console.log(subTensor1.toString());
     let subTensor2 = torch.sub(subTensor1, 2);
-    console.log(subTensor2);
+    console.log(subTensor2.toString());
     let subTensor3 = torch.sub(subTensor1, subTensor2);
-    console.log(subTensor3);
+    console.log(subTensor3.toString());
 
     console.log('---Test torch.mul---');
     let tensor1 = torch.arange(10);
-    console.log(tensor1);
+    console.log(tensor1.toString());
     tensor2 = torch.mul(tensor1, 2);
-    console.log(tensor2);
+    console.log(tensor2.toString());
     tensor3 = torch.mul(tensor2, tensor1);
-    console.log(tensor3);
+    console.log(tensor3.toString());
     console.log('---Test torch.softmax---');
     let softmaxTensor1 = torch.arange(2);
-    console.log(softmaxTensor1);
+    console.log(softmaxTensor1.toString());
     let softmaxTensor2 = torch.softmax(softmaxTensor1, 0);
-    console.log(softmaxTensor2);
+    console.log(softmaxTensor2.toString());
 
     console.log('---Test torch.tensor---');
     let tensor5 = torch.tensor([
@@ -184,13 +185,16 @@ export default function JSIPlayground() {
 
     console.log('---Test torch.div---');
     let divTensor = torch.arange(1, 10);
-    console.log(divTensor);
+    console.log(divTensor.toString());
     tensor2 = torch.div(divTensor, 2);
-    console.log(tensor2);
+    console.log(tensor2.toString());
     tensor3 = torch.div(divTensor, 2, {rounding_mode: 'floor'});
-    console.log(tensor3);
+    console.log(tensor3.toString());
     tensor4 = torch.div(divTensor, divTensor);
-    console.log(tensor4);
+    console.log(tensor4.toString());
+    console.log(tensor2.toString());
+    tensor3 = torch.div(divTensor, divTensor);
+    console.log(tensor3.toString());
 
     console.log('---Test torch.abs and tensor.abs---');
     let absTensor = torch.tensor([
@@ -203,6 +207,14 @@ export default function JSIPlayground() {
     console.log(absTensor.toString());
     let tensorAbsOutput = absTensor.abs();
     console.log(tensorAbsOutput.toString());
+
+    console.log('---test torchvision.centercrop---');
+    console.log(__torchlive_torchvision__);
+    let tensor6 = torch.rand([1, 3, 5, 5]);
+    let centerCrop = __torchlive_torchvision__.transforms.centerCrop(3);
+    let tensor7 = centerCrop.forward(tensor6);
+    console.log('original shape: ', tensor6.shape);
+    console.log('transfomred shape: ', tensor7.shape);
   };
 
   return (

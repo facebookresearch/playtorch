@@ -10,6 +10,7 @@
 #include "torchlive.h"
 #include "torchlive/media/NativeJSRefBridgeHostObject.h"
 #include "torchlive/torch/TorchHostObject.h"
+#include "torchlive/torchvision/TorchvisionHostObject.h"
 #include "torchlive/vision/VisionHostObject.h"
 
 namespace torchlive {
@@ -27,6 +28,13 @@ void install(jsi::Runtime& runtime) {
   auto vision = jsi::Object::createFromHostObject(runtime, visionObject);
   runtime.global().setProperty(
       runtime, "__torchlive_vision__", std::move(vision));
+
+  auto torchvisionObject =
+      std::make_shared<torchlive::torchvision::TorchvisionHostObject>(runtime);
+  auto torchvision =
+      jsi::Object::createFromHostObject(runtime, torchvisionObject);
+  runtime.global().setProperty(
+      runtime, "__torchlive_torchvision__", std::move(torchvision));
 
   auto nativeJSRefBridgeObject =
       std::make_shared<torchlive::media::NativeJSRefBridgeHostObject>(runtime);

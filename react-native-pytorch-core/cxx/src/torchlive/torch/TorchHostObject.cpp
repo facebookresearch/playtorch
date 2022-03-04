@@ -119,7 +119,7 @@ jsi::Value TorchHostObject::get(
   } else if (name == EMPTY) {
     return jsi::Value(runtime, empty_);
   } else if (
-      name == utils::constants::FLOAT32 || name == utils::constants::FLOAT32) {
+      name == utils::constants::FLOAT32 || name == utils::constants::FLOAT) {
     return jsi::String::createFromAscii(runtime, utils::constants::FLOAT32);
   } else if (
       name == utils::constants::FLOAT64 || name == utils::constants::DOUBLE) {

@@ -75,6 +75,14 @@ jsi::Value TensorHostObject::get(
   } else if (name == DATA) {
     auto tensor = this->tensor;
     int byteLength = tensor.nbytes();
+    auto type = tensor.dtype();
+
+    // TODO(T113480543): enable BigInt data view once Hermes support the
+    // BigIntArray
+    if (type == torch_::kInt64) {
+      throw jsi::JSError(
+          runtime, "the property 'data' of BigInt Tensor is not supported.");
+    }
 
     jsi::ArrayBuffer buffer = runtime.global()
                                   .getPropertyAsFunction(runtime, "ArrayBuffer")
@@ -84,7 +92,6 @@ jsi::Value TensorHostObject::get(
 
     std::memcpy(buffer.data(runtime), tensor.data_ptr(), byteLength);
 
-    auto type = tensor.dtype();
     std::string typedArrayName;
     if (type == torch_::kUInt8) {
       typedArrayName = "Uint8Array";
@@ -94,8 +101,6 @@ jsi::Value TensorHostObject::get(
       typedArrayName = "Int16Array";
     } else if (type == torch_::kInt32) {
       typedArrayName = "Int32Array";
-    } else if (type == torch_::kInt64) {
-      typedArrayName = "BigInt64Array";
     } else if (type == torch_::kFloat32) {
       typedArrayName = "Float32Array";
     } else if (type == torch_::kFloat64) {

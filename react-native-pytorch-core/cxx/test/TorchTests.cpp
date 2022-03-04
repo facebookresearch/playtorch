@@ -406,7 +406,8 @@ TEST_F(TorchliveRuntimeTest, TorchTensorTest) {
       R"(
           const tensor = torch.tensor([[[1, 2, 3], [3, 4, 5]], [[1, 2, 3], [3, 4, 5]]]);
           const tensor2 = torch.tensor([[[1.1, 2, 3], [3, 4, 5]], [[1, 2, 3], [3, 4, 5]]], {dtype: torch.int});
-          tensor.dtype == torch.float32 && tensor2.dtype == torch.int && tensor2.data[0] == 1;
+          const tensor3 = torch.tensor([[[1.1, 2, 3], [3, 4, 5]], [[1, 2, 3], [3, 4, 5]]], {dtype: torch.int64});
+          tensor.dtype == torch.float32 && tensor2.dtype == torch.int && tensor2.data[0] == 1 && tensor3.dtype == torch.int64;
         )";
   EXPECT_TRUE(eval(torchCreateTensorFromArrayDtype.c_str()).getBool());
   EXPECT_THROW(

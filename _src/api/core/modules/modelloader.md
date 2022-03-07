@@ -14,4 +14,4 @@ custom_edit_url: null
 
 #### Defined in
 
-[ModelLoader.ts:26](https://github.com/pytorch/live/blob/21de386/react-native-pytorch-core/src/ModelLoader.ts#L26)
+[ModelLoader.ts:26](https://github.com/pytorch/live/blob/0b6e700/react-native-pytorch-core/src/ModelLoader.ts#L26)

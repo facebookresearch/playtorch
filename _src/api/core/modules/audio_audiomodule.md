@@ -21,10 +21,11 @@ custom_edit_url: null
 | Name | Type |
 | :------ | :------ |
 | `record` | (`length`: `number`) => `Promise`<[Audio](../interfaces/audio_audiomodule.audio.md)\> |
+| `toFile` | (`audio`: [Audio](../interfaces/audio_audiomodule.audio.md)) => `Promise`<string\> |
 
 #### Defined in
 
-[audio/AudioModule.ts:29](https://github.com/pytorch/live/blob/0b6e700/react-native-pytorch-core/src/audio/AudioModule.ts#L29)
+[audio/AudioModule.ts:29](https://github.com/pytorch/live/blob/6d24853/react-native-pytorch-core/src/audio/AudioModule.ts#L29)
 
 ## Functions
 
@@ -44,4 +45,4 @@ custom_edit_url: null
 
 #### Defined in
 
-[audio/AudioModule.ts:22](https://github.com/pytorch/live/blob/0b6e700/react-native-pytorch-core/src/audio/AudioModule.ts#L22)
+[audio/AudioModule.ts:22](https://github.com/pytorch/live/blob/6d24853/react-native-pytorch-core/src/audio/AudioModule.ts#L22)

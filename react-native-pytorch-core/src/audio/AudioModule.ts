@@ -27,8 +27,18 @@ export const wrapRef = (ref: NativeJSRef): Audio => ({
 });
 
 export const AudioUtil = {
+  /**
+   * Record an audio for a specific time duration.
+   */
   async record(length: number): Promise<Audio> {
     const ref: NativeJSRef = await AudioModule.record(length);
     return wrapRef(ref);
+  },
+
+  /**
+   * Save the recorded audio to a file on device.
+   */
+  async toFile(audio: Audio): Promise<string> {
+    return await AudioModule.toFile(audio);
   },
 };

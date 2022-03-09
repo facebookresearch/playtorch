@@ -125,4 +125,17 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
             reject(RCTErrorUnspecified, "Could not write audio data to a file. \(error)", error)
         }
     }
+
+    @objc(fromFile:resolver:rejecter:)
+    public func fromFile(_ filepath: NSString, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        let path = filepath as String
+        let url = URL(fileURLWithPath: path)
+        do {
+            let data = try Data(contentsOf: url)
+            let ref = JSContext.wrapObject(object: Audio(audioData: data)).getJSRef()
+            resolve(ref)
+        } catch {
+            reject(RCTErrorUnspecified, "Couldn't load file \(path)", nil)
+        }
+    }
 }

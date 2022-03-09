@@ -22,6 +22,8 @@ import com.facebook.react.module.annotations.ReactModule;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.jetbrains.annotations.NotNull;
 import org.pytorch.rn.core.javascript.JSContext;
 
@@ -127,6 +129,18 @@ public class AudioModule extends ReactContextBaseJavaModule {
       promise.resolve(file.getAbsolutePath());
     } catch (final IOException e) {
       promise.reject(e);
+    }
+  }
+
+  @ReactMethod
+  public void fromFile(final String filePath, final Promise promise) {
+    try {
+      final byte[] audioData = Files.readAllBytes(Paths.get(filePath));
+      final IAudio audio = new Audio(AudioUtils.toShortArray(audioData));
+      final JSContext.NativeJSRef ref = JSContext.wrapObject(audio);
+      promise.resolve(ref.getJSRef());
+    } catch (final IOException | OutOfMemoryError | SecurityException exp) {
+      promise.reject(new Error("Could not load audio from " + filePath + " " + exp.getMessage()));
     }
   }
 

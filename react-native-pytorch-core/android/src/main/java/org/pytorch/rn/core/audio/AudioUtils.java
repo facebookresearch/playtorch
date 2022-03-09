@@ -57,6 +57,18 @@ public class AudioUtils {
   }
 
   /**
+   * Helper method to convert an array of byte to an array of short.
+   *
+   * @param data byte[] to be converted
+   * @return converted short[]
+   */
+  public static short[] toShortArray(final byte[] data) {
+    final short[] shorts = new short[data.length / 2];
+    ByteBuffer.wrap(data).order(ByteOrder.nativeOrder()).asShortBuffer().get(shorts);
+    return shorts;
+  }
+
+  /**
    * Helper method to generate a standard 'wav' file header.
    *
    * @param fileSize Size of the audio data

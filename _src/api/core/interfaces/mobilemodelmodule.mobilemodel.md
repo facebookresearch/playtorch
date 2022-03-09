@@ -53,7 +53,7 @@ const topClass = ImageClasses(scores);
 
 #### Defined in
 
-[MobileModelModule.ts:102](https://github.com/pytorch/live/blob/6d24853/react-native-pytorch-core/src/MobileModelModule.ts#L102)
+[MobileModelModule.ts:102](https://github.com/pytorch/live/blob/885e3bb/react-native-pytorch-core/src/MobileModelModule.ts#L102)
 
 ___
 
@@ -78,7 +78,7 @@ of time before running the first inference.
 
 #### Defined in
 
-[MobileModelModule.ts:68](https://github.com/pytorch/live/blob/6d24853/react-native-pytorch-core/src/MobileModelModule.ts#L68)
+[MobileModelModule.ts:68](https://github.com/pytorch/live/blob/885e3bb/react-native-pytorch-core/src/MobileModelModule.ts#L68)
 
 ___
 
@@ -96,4 +96,4 @@ app.
 
 #### Defined in
 
-[MobileModelModule.ts:75](https://github.com/pytorch/live/blob/6d24853/react-native-pytorch-core/src/MobileModelModule.ts#L75)
+[MobileModelModule.ts:75](https://github.com/pytorch/live/blob/885e3bb/react-native-pytorch-core/src/MobileModelModule.ts#L75)

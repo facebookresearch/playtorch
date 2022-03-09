@@ -18,6 +18,9 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
     var promiseResolve : RCTPromiseResolveBlock!
     var promiseReject : RCTPromiseRejectBlock!
 
+    private static let PREFIX = "audio"
+    private static let EXTENSION = ".wav"
+
     enum AudioModuleError : Error {
         case castingObject
         case castingDict
@@ -106,6 +109,20 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
             audio.play()
         } catch {
             print("Invalid audio reference sent. \(error)")
+        }
+    }
+
+    @objc(toFile:resolver:rejecter:)
+    public func toFile(_ audioRef: NSDictionary, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
+        let uuid = NSUUID().uuidString
+        do {
+            let audio = try AudioModule.unwrapAudio(audioRef)
+            let filename = NSURL.fileURL(withPathComponents: [NSTemporaryDirectory()])!.appendingPathComponent(
+                            AudioModule.PREFIX + uuid + AudioModule.EXTENSION)
+            try? audio.getData().write(to: filename)
+            resolve(filename.path)
+        } catch {
+            reject(RCTErrorUnspecified, "Could not write audio data to a file. \(error)", error)
         }
     }
 }

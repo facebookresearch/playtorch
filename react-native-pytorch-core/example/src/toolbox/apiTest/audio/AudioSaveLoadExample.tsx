@@ -14,7 +14,7 @@ import {TouchableOpacity, View, StyleSheet, Text} from 'react-native';
 
 export default function AudioSaveLoadExample() {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
-  const [savedFilePath, setSavedFilePath] = useState<String>('');
+  const [savedFilePath, setSavedFilePath] = useState<string>('');
 
   async function handleRecording() {
     setIsProcessing(true);
@@ -33,6 +33,11 @@ export default function AudioSaveLoadExample() {
     setSavedFilePath(filePath);
   }
 
+  async function loadAndPlay() {
+    const audio = await AudioUtil.fromFile(savedFilePath);
+    audio.play();
+  }
+
   return (
     <>
       <TouchableOpacity onPress={!isProcessing ? startRecording : undefined}>
@@ -47,6 +52,11 @@ export default function AudioSaveLoadExample() {
           <Text style={styles.filePathText}>
             Saved audio to : {savedFilePath}
           </Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={loadAndPlay}>
+        <View style={styles.startButton}>
+          <Text style={styles.startButtonText}>Load Audio and Play</Text>
         </View>
       </TouchableOpacity>
     </>

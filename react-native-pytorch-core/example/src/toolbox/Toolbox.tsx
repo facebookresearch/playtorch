@@ -323,7 +323,7 @@ const tools: ToolSection = [
       },
       {
         icon: <Icon name="clipboard-text" size={32} color="white" />,
-        title: 'Audio Save Example',
+        title: 'Audio Load & Save Example',
         subtitle: 'Record an audio and save to a file on device.',
         apiTest: true,
         component: AudioSaveLoadExample,

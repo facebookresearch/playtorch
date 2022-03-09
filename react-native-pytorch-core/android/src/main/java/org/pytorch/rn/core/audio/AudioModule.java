@@ -19,6 +19,9 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
 import com.facebook.react.module.annotations.ReactModule;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import org.jetbrains.annotations.NotNull;
 import org.pytorch.rn.core.javascript.JSContext;
 
@@ -31,6 +34,8 @@ public class AudioModule extends ReactContextBaseJavaModule {
 
   private static final int REQUEST_RECORD_AUDIO = 13;
   private static final int SAMPLE_RATE = 16000;
+  private static final String DEFAULT_AUDIO_FILE_PREFIX = "audio";
+  private static final String DEFAULT_AUDIO_FILE_EXTENSION = ".wav";
 
   private final ReactApplicationContext mReactContext;
 
@@ -107,6 +112,22 @@ public class AudioModule extends ReactContextBaseJavaModule {
   public void play(ReadableMap audioRef) {
     IAudio audio = JSContext.unwrapObject(audioRef);
     audio.play();
+  }
+
+  @ReactMethod
+  public void toFile(final ReadableMap audioRef, Promise promise) {
+    try {
+      final IAudio audio = JSContext.unwrapObject(audioRef);
+      final File cacheDir = mReactContext.getCacheDir();
+      final File file =
+          File.createTempFile(DEFAULT_AUDIO_FILE_PREFIX, DEFAULT_AUDIO_FILE_EXTENSION, cacheDir);
+      final FileOutputStream outputStream = new FileOutputStream(file);
+      final byte[] audioBytes = AudioUtils.toByteArray(audio.getData());
+      outputStream.write(audioBytes);
+      promise.resolve(file.getAbsolutePath());
+    } catch (final IOException e) {
+      promise.reject(e);
+    }
   }
 
   private void requestMicrophonePermission() {

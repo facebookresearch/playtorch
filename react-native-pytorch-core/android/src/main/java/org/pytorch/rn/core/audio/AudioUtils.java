@@ -17,19 +17,11 @@ public class AudioUtils {
 
   public static final String TAG = "PTLAudioUtils";
 
-  private static final int REQUEST_RECORD_AUDIO = 13;
   private static final int SAMPLE_RATE = 16000;
   private static final int CHANNELS = 1;
   private static final int PCM_BITS = 16;
   private static final int HEADER_FORMAT_PCM = 1;
-  private static final int VOLUME_CALLBACK_RATE_PER_SEC = 10;
-  private static final int SAMPLES_PER_VOLUME_CALLBACK = SAMPLE_RATE / VOLUME_CALLBACK_RATE_PER_SEC;
-  private static final int BYTES_PER_SAMPLE = PCM_BITS / 8;
   private static final int HEADER_SIZE_BYTES = 44;
-  private static final int BUFFER_SIZE = 4096;
-
-  private static final String DEFAULT_EXTENSION = ".wav";
-  private static final String DEFAULT_NAME = "audio";
 
   public static MediaDataSource getAudioAsMediaDataSource(short[] data) {
     try {
@@ -53,7 +45,7 @@ public class AudioUtils {
    * @param data short[] to be converted
    * @return converted byte[]
    */
-  private static byte[] toByteArray(final short[] data) {
+  public static byte[] toByteArray(final short[] data) {
     int index;
     int iterations = data.length;
     ByteBuffer bb = ByteBuffer.allocate(data.length * 2);

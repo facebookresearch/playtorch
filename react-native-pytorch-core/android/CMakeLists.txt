@@ -30,8 +30,9 @@ add_library(
         ../cxx/src/torchlive/torch/TorchHostObject.cpp
         ../cxx/src/torchlive/torch/utils/constants.cpp
         ../cxx/src/torchlive/torch/utils/helpers.cpp
+        ../cxx/src/torchlive/torchvision/AbstractScriptModule.cpp
         ../cxx/src/torchlive/torchvision/CenterCropHostObject.cpp
-        ../cxx/src/torchlive/torchvision/NormalizeHostObject.cpp
+        ../cxx/src/torchlive/torchvision/NormalizeModule.cpp
         ../cxx/src/torchlive/torchvision/ResizeHostObject.cpp
         ../cxx/src/torchlive/torchvision/TorchvisionHostObject.cpp
         ../cxx/src/torchlive/torchvision/VisionTransformHostObject.cpp

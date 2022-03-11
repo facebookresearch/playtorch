@@ -235,8 +235,11 @@ export default function JSIPlayground() {
       [0.2, 0.2, 0.2],
       [0.5, 0.5, 0.5],
     );
-    const normalized = normalize.forward(tensor10);
+    console.log('log normalize: ', normalize.forward);
+    const normalized = normalize(tensor10);
+    const normalizeForwarded = normalize.forward(tensor10);
     console.log(normalized.toString());
+    console.log(normalizeForwarded.toString());
   };
 
   return (

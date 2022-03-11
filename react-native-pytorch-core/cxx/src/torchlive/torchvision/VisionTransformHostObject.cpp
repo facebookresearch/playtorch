@@ -15,8 +15,10 @@
 #include <vector>
 
 #include "../torch/TensorHostObject.h"
+#include "../torch/utils/helpers.h"
+#include "AbstractScriptModule.h"
 #include "CenterCropHostObject.h"
-#include "NormalizeHostObject.h"
+#include "NormalizeModule.h"
 #include "ResizeHostObject.h"
 #include "VisionTransformHostObject.h"
 
@@ -41,12 +43,61 @@ static const std::string NORMALIZE = "normalize";
 static const std::vector<std::string> PROPERTIES = {};
 
 // TransformsHostObject Methods
-const std::vector<std::string> METHODS = {CENTER_CROP, RESIZE};
+const std::vector<std::string> METHODS = {CENTER_CROP, RESIZE, NORMALIZE};
+
+/*
+ * This function returns a lambda factory function (i.e. transformFactoryFunc).
+ * When the factory function is called, it loads the target operator's script
+ * module, parses the parameters, and returns a exec function(i.e.
+ * transformExecFunc). When the exec function is called, it parses the input
+ * (tensor), and returns a transformed tensor.
+ */
+template <class T>
+static jsi::Function createJITScriptModuleFactory(jsi::Runtime& runtime) {
+  auto transformFactoryFunc = [](jsi::Runtime& runtimeFactory,
+                                 const jsi::Value& thisValueFactory,
+                                 const jsi::Value* argumentsFactory,
+                                 size_t countFactory) -> jsi::Value {
+    // ScriptModule would be loaded when transformFactoryFunc is called
+    AbstractScriptModule* scriptModule = T::getInstance();
+    auto params = scriptModule->parseParameters(
+        runtimeFactory, thisValueFactory, argumentsFactory, countFactory);
+    auto transformExecFunc = [params, scriptModule](
+                                 jsi::Runtime& runtimeExec,
+                                 const jsi::Value& thisValueExec,
+                                 const jsi::Value* argumentsExec,
+                                 size_t countExec) -> jsi::Value {
+      auto inputs = scriptModule->parseInput(
+          runtimeExec, thisValueExec, argumentsExec, countExec);
+      inputs.insert(inputs.end(), params.begin(), params.end());
+      auto transformed = scriptModule->forward(inputs).toTensor();
+      auto transformedTensorHostObject =
+          std::make_shared<torchlive::torch::TensorHostObject>(
+              runtimeExec, transformed);
+      return jsi::Object::createFromHostObject(
+          runtimeExec, transformedTensorHostObject);
+    };
+    auto transform = jsi::Function::createFromHostFunction(
+        runtimeFactory,
+        jsi::PropNameID::forUtf8(runtimeFactory, T::moduleName),
+        T::inputCount,
+        transformExecFunc);
+    // operator can be called with "op.forward(tensor)" or "op(tensor)"
+    transform.setProperty(runtimeFactory, "forward", transform);
+    return transform;
+  };
+
+  return jsi::Function::createFromHostFunction(
+      runtime,
+      jsi::PropNameID::forUtf8(runtime, T::moduleName),
+      T::parameterCount,
+      transformFactoryFunc);
+}
 
 VisionTransformHostObject::VisionTransformHostObject(jsi::Runtime& runtime)
     : centerCrop_(createCenterCrop(runtime)),
       resize_(createResize(runtime)),
-      normalize_(createNormalize(runtime)) {}
+      normalize_(createJITScriptModuleFactory<NormalizeModule>(runtime)) {}
 
 std::vector<jsi::PropNameID> VisionTransformHostObject::getPropertyNames(
     jsi::Runtime& rt) {
@@ -118,30 +169,6 @@ jsi::Function VisionTransformHostObject::createResize(jsi::Runtime& runtime) {
 
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, RESIZE), 1, resizeFactoryFunc);
-}
-
-jsi::Function VisionTransformHostObject::createNormalize(
-    jsi::Runtime& runtime) {
-  auto normalizeFactoryFunc = [](jsi::Runtime& runtime,
-                                 const jsi::Value& thisValue,
-                                 const jsi::Value* arguments,
-                                 size_t count) -> jsi::Value {
-    if (count != 2) {
-      throw jsi::JSError(
-          runtime,
-          "Factory function normalize expects 2 argument but " +
-              std::to_string(count) + " are given.");
-    }
-    auto normalizeHostObject = std::make_shared<NormalizeHostObject>(
-        runtime, arguments[0], arguments[1]);
-    return jsi::Object::createFromHostObject(runtime, normalizeHostObject);
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime,
-      jsi::PropNameID::forUtf8(runtime, NORMALIZE),
-      2,
-      normalizeFactoryFunc);
 }
 
 } // namespace transforms

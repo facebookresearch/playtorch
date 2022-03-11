@@ -157,16 +157,25 @@ TEST_F(TorchliveTorchvisionRuntimeTest, NormalizeTest) {
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
         const normalize = __torchlive_torchvision__.transforms.normalize([0.2, 0.2, 0.2], [0.5, 0.5, 0.5]);
-        const normalized = normalize.forward(tensor);
-        normalized.shape[0] == 1 && normalized.shape[1] == 3 && normalized.shape[2] == 5 && normalized.shape[3] == 5;
+        const normalized = normalize(tensor);
+        const expectedShape = [1, 3, 5, 5];
+        normalized.shape.length == expectedShape.length && normalized.shape.every((v, i) => v == expectedShape[i]);
       )";
   EXPECT_TRUE(eval(torchvisionNormalize).getBool());
+  std::string torchvisionNormalizeForward =
+      R"(
+        const tensor = torch.rand([1, 3, 5, 5]);
+        const normalize = __torchlive_torchvision__.transforms.normalize([0.2, 0.2, 0.2], [0.5, 0.5, 0.5]);
+        const normalized = normalize.forward(tensor);
+        const expectedShape = [1, 3, 5, 5];
+        normalized.shape.length == expectedShape.length && normalized.shape.every((v, i) => v == expectedShape[i]);
+      )";
+  EXPECT_TRUE(eval(torchvisionNormalizeForward).getBool());
   std::string torchvisionNormalizeWithUnmatchedChannelsOfTensor =
       R"(
         const tensor = torch.rand([1, 4, 5, 5]);
         const normalize = __torchlive_torchvision__.transforms.normalize([0.2, 0.2, 0.2], [0.5, 0.5, 0.5]);
-        const normalized = normalize.forward(tensor);
-        normalized.shape[0] == 1 && normalized.shape[1] == 3 && normalized.shape[2] == 5 && normalized.shape[3] == 5;
+        normalize(tensor);
       )";
   EXPECT_THROW(
       eval(torchvisionNormalizeWithUnmatchedChannelsOfTensor),
@@ -176,7 +185,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, NormalizeTest) {
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
         const normalize = __torchlive_torchvision__.transforms.normalize([0.2, 0.2, 0.2], [0.5, 0.5]);
-        const normalized = normalize.forward(tensor);
+        normalize(tensor);
       )";
   EXPECT_THROW(
       eval(torchvisionNormalizeWithUnmatchedChannelsOfMeanAndStd),

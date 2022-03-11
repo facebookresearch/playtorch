@@ -31,8 +31,6 @@ class JSI_EXPORT VisionTransformHostObject : public facebook::jsi::HostObject {
   static facebook::jsi::Function createCenterCrop(
       facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createResize(facebook::jsi::Runtime& runtime);
-  static facebook::jsi::Function createNormalize(
-      facebook::jsi::Runtime& runtime);
 };
 
 } // namespace transforms

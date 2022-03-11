@@ -79,7 +79,7 @@ public class BoundingBoxesUnpacker implements Unpacker {
       float[] scores = softmax(confidencesTensor, i * numClasses, (i + 1) * numClasses);
 
       float maxProb = scores[0];
-      int maxIndex = -1;
+      int maxIndex = 0;
       for (int j = 0; j < scores.length; j++) {
         if (scores[j] > maxProb) {
           maxProb = scores[j];

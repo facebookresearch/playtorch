@@ -45,7 +45,7 @@ class BoundingBoxesUnpacker: Unpacker {
                                  toIndex: (cIdx + 1) * numClasses)
 
             var maxProb = scores[0]
-            var maxIndex = -1
+            var maxIndex = 0
             for sIdx in 0..<scores.count where scores[sIdx] > maxProb {
                 maxProb = scores[sIdx]
                 maxIndex = sIdx

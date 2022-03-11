@@ -5,52 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <fmt/core.h>
 #include <fmt/format.h>
 #include <gtest/gtest.h>
-#include <hermes/hermes.h>
+#include <string>
 
-using namespace facebook::jsi;
-using namespace facebook::hermes;
-
-namespace torchlive {
-void install(Runtime& runtime);
-}
+#include "TorchliveTestBase.h"
 
 namespace {
 
-class TorchvisionHermesRuntimeTestBase : public ::testing::Test {
- public:
-  TorchvisionHermesRuntimeTestBase(::hermes::vm::RuntimeConfig runtimeConfig)
-      : rt(makeHermesRuntime(runtimeConfig)) {}
-
- protected:
-  Value eval(const char* code) {
-    return rt->global().getPropertyAsFunction(*rt, "eval").call(*rt, code);
-  }
-  Value eval(const std::string& code) {
-    return rt->global().getPropertyAsFunction(*rt, "eval").call(*rt, code);
-  }
-
-  std::shared_ptr<HermesRuntime> rt;
-};
-
-class TorchvisionHermesRuntimeTest : public TorchvisionHermesRuntimeTestBase {
- public:
-  TorchvisionHermesRuntimeTest()
-      : TorchvisionHermesRuntimeTestBase(::hermes::vm::RuntimeConfig::Builder()
-                                             .withES6Proxy(true)
-                                             .withES6Promise(true)
-                                             .build()) {}
-};
-
-class TorchliveTorchvisionRuntimeTest : public TorchvisionHermesRuntimeTest {
- public:
-  TorchliveTorchvisionRuntimeTest() : TorchvisionHermesRuntimeTest() {
-    // Install the torchlive objects
-    torchlive::install(*rt);
-  }
-};
+class TorchliveTorchvisionRuntimeTest
+    : public torchlive::test::TorchliveBindingsTestBase {};
 
 TEST_F(TorchliveTorchvisionRuntimeTest, CenterCropTest) {
   std::string torchvisionCenterCropWithInt =

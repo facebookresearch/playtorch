@@ -5,49 +5,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <fmt/core.h>
 #include <fmt/format.h>
 #include <gtest/gtest.h>
-#include <hermes/hermes.h>
 #include <string>
 
-using namespace facebook::jsi;
-using namespace facebook::hermes;
-
-namespace torchlive {
-void install(Runtime& runtime);
-}
+#include "TorchliveTestBase.h"
 
 namespace {
 
-class HermesRuntimeTestBase : public ::testing::Test {
- public:
-  HermesRuntimeTestBase(::hermes::vm::RuntimeConfig runtimeConfig)
-      : rt(makeHermesRuntime(runtimeConfig)) {}
-
- protected:
-  Value eval(const char* code) {
-    return rt->global().getPropertyAsFunction(*rt, "eval").call(*rt, code);
-  }
-
-  std::shared_ptr<HermesRuntime> rt;
-};
-
-class HermesRuntimeTest : public HermesRuntimeTestBase {
- public:
-  HermesRuntimeTest()
-      : HermesRuntimeTestBase(::hermes::vm::RuntimeConfig::Builder()
-                                  .withES6Proxy(true)
-                                  .withES6Promise(true)
-                                  .build()) {}
-};
-
-class TorchliveRuntimeTest : public HermesRuntimeTest {
- public:
-  TorchliveRuntimeTest() : HermesRuntimeTest() {
-    // Install the torchlive objects
-    torchlive::install(*rt);
-  }
+class TorchliveRuntimeTest : public torchlive::test::TorchliveBindingsTestBase {
 };
 
 TEST_F(TorchliveRuntimeTest, TorchObjectTest) {

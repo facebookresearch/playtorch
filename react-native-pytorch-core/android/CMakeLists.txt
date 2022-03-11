@@ -35,6 +35,7 @@ add_library(
         ../cxx/src/torchlive/torchvision/TorchvisionHostObject.cpp
         ../cxx/src/torchlive/torchvision/VisionTransformHostObject.cpp
         ../cxx/src/torchlive/torchvision/CenterCropHostObject.cpp
+        ../cxx/src/torchlive/torchvision/ResizeHostObject.cpp
         src/main/cpp/cpp-adapter.cpp
         src/main/cpp/torchlive/media/NativeJSRefBridge.cpp
 )

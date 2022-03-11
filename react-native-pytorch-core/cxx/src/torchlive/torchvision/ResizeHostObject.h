@@ -9,27 +9,37 @@
 
 #include <jsi/jsi.h>
 
+#include <torch/csrc/jit/mobile/module.h>
+#include <torch/script.h>
+
+// Namespace alias for torch to avoid namespace conflicts with torchlive::torch
+namespace torch_ = torch;
+
 namespace torchlive {
 namespace torchvision {
 namespace transforms {
 
-class JSI_EXPORT VisionTransformHostObject : public facebook::jsi::HostObject {
-  facebook::jsi::Function centerCrop_;
-  facebook::jsi::Function resize_;
+class JSI_EXPORT ResizeHostObject : public facebook::jsi::HostObject {
+  facebook::jsi::Function forward_;
+  std::vector<int64_t> shape_;
+  torch_::jit::mobile::Module module_;
 
  public:
-  VisionTransformHostObject(facebook::jsi::Runtime& runtime);
+  facebook::jsi::Value size;
+
+  explicit ResizeHostObject(
+      facebook::jsi::Runtime& runtime,
+      const facebook::jsi::Value& size);
 
   facebook::jsi::Value get(
       facebook::jsi::Runtime&,
       const facebook::jsi::PropNameID& name) override;
+
   std::vector<facebook::jsi::PropNameID> getPropertyNames(
       facebook::jsi::Runtime& rt) override;
 
  private:
-  static facebook::jsi::Function createCenterCrop(
-      facebook::jsi::Runtime& runtime);
-  static facebook::jsi::Function createResize(facebook::jsi::Runtime& runtime);
+  facebook::jsi::Function createForward(facebook::jsi::Runtime& runtime);
 };
 
 } // namespace transforms

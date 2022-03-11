@@ -23,3 +23,17 @@ class CenterCropModule(torch.nn.Module):
 scripted_model = torch.jit.script(CenterCropModule())
 optimized_model = optimize_for_mobile(scripted_model)
 optimized_model._save_for_lite_interpreter("center_crop_scriptmodule.ptl")
+
+
+class ResizeModule(torch.nn.Module):
+    def __init__(self):
+        super(ResizeModule, self).__init__()
+
+    def forward(self, img: Tensor, size: List[int]) -> Tensor:
+        output = T.functional.resize(img, size)
+        return output
+
+
+scripted_model = torch.jit.script(ResizeModule())
+optimized_model = optimize_for_mobile(scripted_model)
+optimized_model._save_for_lite_interpreter("resize_scriptmodule.ptl")

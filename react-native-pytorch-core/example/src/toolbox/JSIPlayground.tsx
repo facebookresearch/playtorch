@@ -228,6 +228,15 @@ export default function JSIPlayground() {
     let tenosr9 = resize.forward(tensor8);
     console.log('original shape: ', tensor8.shape);
     console.log('transfomred shape: ', tenosr9.shape);
+
+    console.log('---test torchvision.normalize---');
+    const tensor10 = torch.rand([1, 3, 5, 5]);
+    const normalize = __torchlive_torchvision__.transforms.normalize(
+      [0.2, 0.2, 0.2],
+      [0.5, 0.5, 0.5],
+    );
+    const normalized = normalize.forward(tensor10);
+    console.log(normalized.toString());
   };
 
   return (

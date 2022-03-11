@@ -152,4 +152,35 @@ TEST_F(TorchliveTorchvisionRuntimeTest, ResizeTest) {
   EXPECT_THROW(eval(torchvisionResizeWithZeroArgument), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTorchvisionRuntimeTest, NormalizeTest) {
+  std::string torchvisionNormalize =
+      R"(
+        const tensor = torch.rand([1, 3, 5, 5]);
+        const normalize = __torchlive_torchvision__.transforms.normalize([0.2, 0.2, 0.2], [0.5, 0.5, 0.5]);
+        const normalized = normalize.forward(tensor);
+        normalized.shape[0] == 1 && normalized.shape[1] == 3 && normalized.shape[2] == 5 && normalized.shape[3] == 5;
+      )";
+  EXPECT_TRUE(eval(torchvisionNormalize).getBool());
+  std::string torchvisionNormalizeWithUnmatchedChannelsOfTensor =
+      R"(
+        const tensor = torch.rand([1, 4, 5, 5]);
+        const normalize = __torchlive_torchvision__.transforms.normalize([0.2, 0.2, 0.2], [0.5, 0.5, 0.5]);
+        const normalized = normalize.forward(tensor);
+        normalized.shape[0] == 1 && normalized.shape[1] == 3 && normalized.shape[2] == 5 && normalized.shape[3] == 5;
+      )";
+  EXPECT_THROW(
+      eval(torchvisionNormalizeWithUnmatchedChannelsOfTensor),
+      facebook::jsi::JSError);
+
+  std::string torchvisionNormalizeWithUnmatchedChannelsOfMeanAndStd =
+      R"(
+        const tensor = torch.rand([1, 3, 5, 5]);
+        const normalize = __torchlive_torchvision__.transforms.normalize([0.2, 0.2, 0.2], [0.5, 0.5]);
+        const normalized = normalize.forward(tensor);
+      )";
+  EXPECT_THROW(
+      eval(torchvisionNormalizeWithUnmatchedChannelsOfMeanAndStd),
+      facebook::jsi::JSError);
+}
+
 } // namespace

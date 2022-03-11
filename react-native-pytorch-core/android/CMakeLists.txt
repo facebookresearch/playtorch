@@ -24,18 +24,19 @@ add_library(
         ../cxx/src/torchlive/media/NativeJSRefBridgeHostObject.cpp
         ../cxx/src/torchlive/torch/DictHostObject.cpp
         ../cxx/src/torchlive/torch/IValueHostObject.cpp
-        ../cxx/src/torchlive/torch/TensorHostObject.cpp
-        ../cxx/src/torchlive/torch/TorchHostObject.cpp
         ../cxx/src/torchlive/torch/jit/JITHostObject.cpp
         ../cxx/src/torchlive/torch/jit/mobile/ModuleHostObject.cpp
+        ../cxx/src/torchlive/torch/TensorHostObject.cpp
+        ../cxx/src/torchlive/torch/TorchHostObject.cpp
         ../cxx/src/torchlive/torch/utils/constants.cpp
         ../cxx/src/torchlive/torch/utils/helpers.cpp
-        ../cxx/src/torchlive/vision/TransformsHostObject.cpp
-        ../cxx/src/torchlive/vision/VisionHostObject.cpp
+        ../cxx/src/torchlive/torchvision/CenterCropHostObject.cpp
+        ../cxx/src/torchlive/torchvision/NormalizeHostObject.cpp
+        ../cxx/src/torchlive/torchvision/ResizeHostObject.cpp
         ../cxx/src/torchlive/torchvision/TorchvisionHostObject.cpp
         ../cxx/src/torchlive/torchvision/VisionTransformHostObject.cpp
-        ../cxx/src/torchlive/torchvision/CenterCropHostObject.cpp
-        ../cxx/src/torchlive/torchvision/ResizeHostObject.cpp
+        ../cxx/src/torchlive/vision/TransformsHostObject.cpp
+        ../cxx/src/torchlive/vision/VisionHostObject.cpp
         src/main/cpp/cpp-adapter.cpp
         src/main/cpp/torchlive/media/NativeJSRefBridge.cpp
 )

@@ -16,6 +16,7 @@
 
 #include "../torch/TensorHostObject.h"
 #include "CenterCropHostObject.h"
+#include "NormalizeHostObject.h"
 #include "ResizeHostObject.h"
 #include "VisionTransformHostObject.h"
 
@@ -31,6 +32,7 @@ using namespace facebook;
 // TransformsHostObject Method Name
 static const std::string CENTER_CROP = "centerCrop";
 static const std::string RESIZE = "resize";
+static const std::string NORMALIZE = "normalize";
 
 // TransformsHostObject Property Names
 // empty
@@ -42,7 +44,9 @@ static const std::vector<std::string> PROPERTIES = {};
 const std::vector<std::string> METHODS = {CENTER_CROP, RESIZE};
 
 VisionTransformHostObject::VisionTransformHostObject(jsi::Runtime& runtime)
-    : centerCrop_(createCenterCrop(runtime)), resize_(createResize(runtime)) {}
+    : centerCrop_(createCenterCrop(runtime)),
+      resize_(createResize(runtime)),
+      normalize_(createNormalize(runtime)) {}
 
 std::vector<jsi::PropNameID> VisionTransformHostObject::getPropertyNames(
     jsi::Runtime& rt) {
@@ -63,6 +67,8 @@ jsi::Value VisionTransformHostObject::get(
 
   if (name == CENTER_CROP) {
     return jsi::Value(runtime, centerCrop_);
+  } else if (name == NORMALIZE) {
+    return jsi::Value(runtime, normalize_);
   } else if (name == RESIZE) {
     return jsi::Value(runtime, resize_);
   }
@@ -112,6 +118,30 @@ jsi::Function VisionTransformHostObject::createResize(jsi::Runtime& runtime) {
 
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, RESIZE), 1, resizeFactoryFunc);
+}
+
+jsi::Function VisionTransformHostObject::createNormalize(
+    jsi::Runtime& runtime) {
+  auto normalizeFactoryFunc = [](jsi::Runtime& runtime,
+                                 const jsi::Value& thisValue,
+                                 const jsi::Value* arguments,
+                                 size_t count) -> jsi::Value {
+    if (count != 2) {
+      throw jsi::JSError(
+          runtime,
+          "Factory function normalize expects 2 argument but " +
+              std::to_string(count) + " are given.");
+    }
+    auto normalizeHostObject = std::make_shared<NormalizeHostObject>(
+        runtime, arguments[0], arguments[1]);
+    return jsi::Object::createFromHostObject(runtime, normalizeHostObject);
+  };
+
+  return jsi::Function::createFromHostFunction(
+      runtime,
+      jsi::PropNameID::forUtf8(runtime, NORMALIZE),
+      2,
+      normalizeFactoryFunc);
 }
 
 } // namespace transforms

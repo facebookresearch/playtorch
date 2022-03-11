@@ -46,10 +46,13 @@ jsi::Value DictHostObject::get(
     jsi::Runtime& runtime,
     const jsi::PropNameID& propName) {
   auto key = propName.utf8(runtime);
-  auto value = this->dict_.at(key);
-  auto valueHostObject =
-      std::make_shared<torchlive::torch::IValueHostObject>(runtime, value);
-  return jsi::Object::createFromHostObject(runtime, valueHostObject);
+  auto it = this->dict_.find(key);
+  if (it != this->dict_.end()) {
+    auto valueHostObject = std::make_shared<torchlive::torch::IValueHostObject>(
+        runtime, it->value());
+    return jsi::Object::createFromHostObject(runtime, valueHostObject);
+  }
+  return jsi::Value::undefined();
 }
 
 } // namespace torch

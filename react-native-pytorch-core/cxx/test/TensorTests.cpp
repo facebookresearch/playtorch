@@ -71,11 +71,9 @@ TEST_F(TorchliveTensorRuntimeTest, TensorTest) {
       )";
   EXPECT_TRUE(eval(tensorIndexWithNumberString).getBool());
 
-  EXPECT_THROW(
-      eval("torch.tensor([[128], [255]])['foo']"), facebook::jsi::JSError);
-  EXPECT_THROW(
-      eval("torch.tensor([[128], [255]])[-1]"), facebook::jsi::JSError);
-  EXPECT_THROW(eval("torch.tensor([[128], [255]])[2]"), facebook::jsi::JSError);
+  EXPECT_TRUE(eval("torch.tensor([[128], [255]])['foo']").isUndefined());
+  EXPECT_TRUE(eval("torch.tensor([[128], [255]])[-1]").isUndefined());
+  EXPECT_TRUE(eval("torch.tensor([[128], [255]])[2]").isUndefined());
 }
 
 TEST_F(TorchliveTensorRuntimeTest, TensorDataTest) {

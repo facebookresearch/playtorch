@@ -45,7 +45,10 @@ class TorchliveTestBase : public HermesRuntimeTest {
 class TorchliveBindingsTestBase : public TorchliveTestBase {
  public:
   TorchliveBindingsTestBase() : TorchliveTestBase() {
-    torchlive::install(*rt);
+    torchlive::install(
+        *rt, [](std::function<void(facebook::jsi::Runtime & runtime)>&&) {
+          FAIL() << "Asychronous execution not yet supported in tests";
+        });
   }
 };
 

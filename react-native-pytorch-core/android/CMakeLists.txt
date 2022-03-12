@@ -38,7 +38,8 @@ add_library(
         ../cxx/src/torchlive/torchvision/VisionTransformHostObject.cpp
         ../cxx/src/torchlive/vision/TransformsHostObject.cpp
         ../cxx/src/torchlive/vision/VisionHostObject.cpp
-        src/main/cpp/cpp-adapter.cpp
+        ../cxx/src/torchlive/torchvision/CenterCropHostObject.cpp
+        src/main/cpp/OnLoad.cpp
         src/main/cpp/torchlive/media/NativeJSRefBridge.cpp
 )
 
@@ -58,6 +59,7 @@ target_include_directories(
         "${NODE_MODULES_DIR}/react-native/ReactCommon"
         "${NODE_MODULES_DIR}/react-native/ReactCommon/callinvoker"
         "${NODE_MODULES_DIR}/react-native/ReactCommon/jsi"
+        "${NODE_MODULES_DIR}/react-native/ReactCommon/runtimeexecutor"
         "${PYTORCH_INCLUDE_DIRS}"
         "../cxx/src"
         "src/main/cpp"

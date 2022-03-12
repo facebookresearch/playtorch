@@ -12,7 +12,9 @@ import androidx.annotation.NonNull;
 import com.facebook.react.bridge.JavaScriptContextHolder;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.RuntimeExecutor;
 import com.facebook.react.module.annotations.ReactModule;
+import com.facebook.react.turbomodule.core.CallInvokerHolderImpl;
 
 @ReactModule(name = PyTorchCoreJSIModule.NAME)
 public class PyTorchCoreJSIModule extends ReactContextBaseJavaModule {
@@ -40,12 +42,18 @@ public class PyTorchCoreJSIModule extends ReactContextBaseJavaModule {
     return NAME;
   }
 
-  private native void nativeInstall(long jsi);
+  private native void nativeInstall(
+      long jsi, RuntimeExecutor runtimeExecutor, CallInvokerHolderImpl jsCallInvokerHolder);
 
   public void installLib(JavaScriptContextHolder reactContext) {
 
     if (reactContext.get() != 0) {
-      this.nativeInstall(reactContext.get());
+      RuntimeExecutor runtimeExecutor =
+          getReactApplicationContext().getCatalystInstance().getRuntimeExecutor();
+      CallInvokerHolderImpl jsCallInvokerHolder =
+          (CallInvokerHolderImpl)
+              getReactApplicationContext().getCatalystInstance().getJSCallInvokerHolder();
+      this.nativeInstall(reactContext.get(), runtimeExecutor, jsCallInvokerHolder);
     } else {
       Log.e(TAG, "JSI Runtime is not available in debug mode");
     }

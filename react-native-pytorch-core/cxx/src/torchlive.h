@@ -19,6 +19,13 @@ namespace torchlive {
 
 using namespace facebook;
 
-void install(jsi::Runtime& runtime);
+// Match definition in ReactCommon/RuntimeExecutor.h to avoid React Native
+// dependency in JSI bindings.
+using RuntimeExecutor =
+    std::function<void(std::function<void(jsi::Runtime& runtime)>&& callback)>;
+
+// Use runtime to run JS now. Use runtimeExecutor to run JS later from any
+// thread, such as an asynchronous callback.
+void install(jsi::Runtime& runtime, RuntimeExecutor runtimeExecutor);
 
 } // namespace torchlive

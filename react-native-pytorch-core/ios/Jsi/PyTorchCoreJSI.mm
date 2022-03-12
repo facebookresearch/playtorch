@@ -7,13 +7,19 @@
 
 #import <React/RCTBridge+Private.h>
 #import <React/RCTUtils.h>
+#import <ReactCommon/CallInvoker.h>
+#import <ReactCommon/RuntimeExecutor.h>
 #import <jsi/jsi.h>
 #import <sys/utsname.h>
 
 #import "PyTorchCoreJSI.h"
 
+@interface RCTCxxBridge ()
+- (void)invokeAsync:(std::function<void()> &&)func;
+@end
+
 namespace torchlive {
-void install(facebook::jsi::Runtime &runtime);
+void install(facebook::jsi::Runtime &runtime, facebook::react::RuntimeExecutor runtimeExecutor);
 }
 
 @implementation PyTorchCoreJSI
@@ -36,7 +42,17 @@ RCT_EXPORT_MODULE()
 - (void)install {
     RCTCxxBridge *cxxBridge = (RCTCxxBridge *)self.bridge;
     if (cxxBridge.runtime) {
-        torchlive::install(*(facebook::jsi::Runtime *)cxxBridge.runtime);
+        facebook::react::RuntimeExecutor runtimeExecutor =
+            [cxxBridge](std::function<void(facebook::jsi::Runtime & runtime)>&& callback) {
+                [cxxBridge invokeAsync:[cxxBridge, callback = std::move(callback)]() {
+                    if (!cxxBridge || !cxxBridge.runtime) {
+                        return;
+                    }
+                    callback(*(facebook::jsi::Runtime *)(cxxBridge.runtime));
+                }];
+            };
+
+        torchlive::install(*(facebook::jsi::Runtime *)cxxBridge.runtime, runtimeExecutor);
     }
 }
 

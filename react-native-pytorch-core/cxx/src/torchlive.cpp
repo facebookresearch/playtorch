@@ -17,7 +17,7 @@ namespace torchlive {
 
 using namespace facebook;
 
-void install(jsi::Runtime& runtime) {
+void install(jsi::Runtime& runtime, RuntimeExecutor runtimeExecutor) {
   auto torchObject =
       std::make_shared<torchlive::torch::TorchHostObject>(runtime);
   auto torch = jsi::Object::createFromHostObject(runtime, torchObject);

@@ -11,6 +11,8 @@
 
 #include <torch/csrc/jit/mobile/module.h>
 
+#include "../../../../torchlive.h"
+
 // Namespace alias for torch to avoid namespace conflicts with torchlive::torch
 namespace torch_ = torch;
 
@@ -21,10 +23,12 @@ namespace mobile {
 
 class JSI_EXPORT ModuleHostObject : public facebook::jsi::HostObject {
   facebook::jsi::Function forward_;
+  facebook::jsi::Function forwardAsync_;
 
  public:
   explicit ModuleHostObject(
       facebook::jsi::Runtime& runtime,
+      torchlive::RuntimeExecutor runtimeExecutor,
       torch_::jit::mobile::Module m);
 
   facebook::jsi::Value get(
@@ -34,8 +38,22 @@ class JSI_EXPORT ModuleHostObject : public facebook::jsi::HostObject {
       facebook::jsi::Runtime& rt) override;
 
  private:
+  torchlive::RuntimeExecutor runtimeExecutor_;
   torch_::jit::mobile::Module module_;
+
+  static std::vector<torch_::jit::IValue> forwardPreWork(
+      facebook::jsi::Runtime& runtime,
+      const facebook::jsi::Value& thisValue,
+      const facebook::jsi::Value* arguments,
+      size_t count);
+  static torch_::jit::IValue forwardWork(
+      torch_::jit::mobile::Module module,
+      std::vector<torch_::jit::IValue> inputs);
+  static facebook::jsi::Value forwardPostWork(
+      facebook::jsi::Runtime& runtime,
+      torch_::jit::IValue value);
   facebook::jsi::Function createForward(facebook::jsi::Runtime& runtime);
+  facebook::jsi::Function createForwardAsync(facebook::jsi::Runtime& runtime);
 };
 
 } // namespace mobile

@@ -7,14 +7,15 @@
 
 #include <jsi/jsi.h>
 
-#include "../TensorHostObject.h"
-#include "JITHostObject.h"
-#include "mobile/ModuleHostObject.h"
-
 #include <torch/csrc/jit/mobile/import.h>
 #include <torch/csrc/jit/mobile/module.h>
 #include <torch/script.h>
 #include <string>
+
+#include "../../Promise.h"
+#include "../TensorHostObject.h"
+#include "JITHostObject.h"
+#include "mobile/ModuleHostObject.h"
 
 // Namespace alias for torch to avoid namespace conflicts with torchlive::torch
 namespace torch_ = torch;
@@ -27,9 +28,12 @@ using namespace facebook;
 
 // JITHostObject Method Name
 static const std::string _LOAD_FOR_MOBILE = "_load_for_mobile";
+static const std::string _LOAD_FOR_MOBILE_ASYNC = "_load_for_mobile_async";
 
 // JITHostObject Methods
-const std::vector<std::string> METHODS = {_LOAD_FOR_MOBILE};
+const std::vector<std::string> METHODS = {
+    _LOAD_FOR_MOBILE,
+    _LOAD_FOR_MOBILE_ASYNC};
 
 // JITHostObject Property Names
 // empty
@@ -37,8 +41,12 @@ const std::vector<std::string> METHODS = {_LOAD_FOR_MOBILE};
 // JITHostObject Properties
 static const std::vector<std::string> PROPERTIES = {};
 
-JITHostObject::JITHostObject(jsi::Runtime& runtime)
-    : _loadForMobile_(create_LoadForMobile(runtime)) {}
+JITHostObject::JITHostObject(
+    jsi::Runtime& runtime,
+    torchlive::RuntimeExecutor runtimeExecutor)
+    : _loadForMobile_(create_LoadForMobile(runtime, runtimeExecutor)),
+      _loadForMobileAsync_(
+          create_LoadForMobileAsync(runtime, runtimeExecutor)) {}
 
 std::vector<jsi::PropNameID> JITHostObject::getPropertyNames(jsi::Runtime& rt) {
   std::vector<jsi::PropNameID> result;
@@ -58,39 +66,98 @@ jsi::Value JITHostObject::get(
 
   if (name == _LOAD_FOR_MOBILE) {
     return jsi::Value(runtime, _loadForMobile_);
+  } else if (name == _LOAD_FOR_MOBILE_ASYNC) {
+    return jsi::Value(runtime, _loadForMobileAsync_);
   }
 
   return jsi::Value::undefined();
 }
 
-jsi::Function JITHostObject::create_LoadForMobile(jsi::Runtime& runtime) {
-  auto loadForMobileFunc = [](jsi::Runtime& runtime,
-                              const jsi::Value& thisValue,
-                              const jsi::Value* arguments,
-                              size_t count) -> jsi::Value {
-    if (count < 1) {
-      throw jsi::JSError(runtime, "At least 1 arg is expected");
-    }
+std::string JITHostObject::_loadForMobilePreWork(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  if (count < 1) {
+    throw jsi::JSError(runtime, "At least 1 arg is expected");
+  }
 
-    if (!arguments[0].isString()) {
-      throw jsi::JSError(runtime, "Argument must be a string");
-    }
+  if (!arguments[0].isString()) {
+    throw jsi::JSError(runtime, "Argument must be a string");
+  }
 
-    std::string modelPath = arguments[0].asString(runtime).utf8(runtime);
+  std::string modelPath = arguments[0].asString(runtime).utf8(runtime);
+  return modelPath;
+}
 
-    auto module_ =
-        torch_::jit::_load_for_mobile(std::move(modelPath), torch_::kCPU);
+torch_::jit::mobile::Module JITHostObject::_loadForMobileWork(
+    const std::string& modelPath) {
+  return torch_::jit::_load_for_mobile(modelPath, torch_::kCPU);
+}
 
-    auto moduleHostObject =
-        std::make_shared<torchlive::torch::jit::mobile::ModuleHostObject>(
-            runtime, module_);
-    return jsi::Object::createFromHostObject(runtime, moduleHostObject);
+jsi::Value JITHostObject::_loadForMobilePostWork(
+    jsi::Runtime& runtime,
+    torchlive::RuntimeExecutor runtimeExecutor,
+    torch_::jit::mobile::Module m) {
+  auto moduleHostObject =
+      std::make_shared<torchlive::torch::jit::mobile::ModuleHostObject>(
+          runtime, runtimeExecutor, m);
+  return jsi::Object::createFromHostObject(runtime, moduleHostObject);
+}
+
+jsi::Function JITHostObject::create_LoadForMobile(
+    jsi::Runtime& runtime,
+    torchlive::RuntimeExecutor runtimeExecutor) {
+  auto loadForMobileFunc = [runtimeExecutor](
+                               jsi::Runtime& runtime,
+                               const jsi::Value& thisValue,
+                               const jsi::Value* arguments,
+                               size_t count) -> jsi::Value {
+    auto inputs = _loadForMobilePreWork(runtime, thisValue, arguments, count);
+    auto outputs = _loadForMobileWork(std::move(inputs));
+    auto result =
+        _loadForMobilePostWork(runtime, runtimeExecutor, std::move(outputs));
+    return result;
   };
   return jsi::Function::createFromHostFunction(
       runtime,
       jsi::PropNameID::forUtf8(runtime, _LOAD_FOR_MOBILE),
       1,
       loadForMobileFunc);
+}
+
+jsi::Function JITHostObject::create_LoadForMobileAsync(
+    jsi::Runtime& runtime,
+    torchlive::RuntimeExecutor runtimeExecutor) {
+  auto loadForMobileAsyncFunc = [runtimeExecutor](
+                                    jsi::Runtime& rt,
+                                    const jsi::Value& thisValue,
+                                    const jsi::Value* arguments,
+                                    size_t count) -> jsi::Value {
+    return createPromiseAsJSIValue(
+        rt, [&](jsi::Runtime& rt2, std::shared_ptr<Promise> promise) {
+          auto inputs = _loadForMobilePreWork(rt2, thisValue, arguments, count);
+          auto fn = [runtimeExecutor,
+                     inputs = std::move(inputs),
+                     promise = std::move(promise)]() {
+            auto outputs = _loadForMobileWork(std::move(inputs));
+            runtimeExecutor([runtimeExecutor,
+                             outputs = std::move(outputs),
+                             promise = std::move(promise)](jsi::Runtime& rt3) {
+              auto result = _loadForMobilePostWork(
+                  rt3, runtimeExecutor, std::move(outputs));
+              promise->resolve(result);
+            });
+          };
+          std::thread t(fn);
+          t.detach();
+        });
+  };
+  return jsi::Function::createFromHostFunction(
+      runtime,
+      jsi::PropNameID::forUtf8(runtime, _LOAD_FOR_MOBILE_ASYNC),
+      1,
+      loadForMobileAsyncFunc);
 }
 
 } // namespace jit

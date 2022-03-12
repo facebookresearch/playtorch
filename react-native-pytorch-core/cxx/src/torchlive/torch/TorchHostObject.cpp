@@ -73,7 +73,9 @@ const std::vector<std::string> METHODS = {
     TOPK,
 };
 
-TorchHostObject::TorchHostObject(jsi::Runtime& runtime)
+TorchHostObject::TorchHostObject(
+    jsi::Runtime& runtime,
+    torchlive::RuntimeExecutor runtimeExecutor)
     : abs_(createAbs(runtime)),
       add_(createAdd(runtime)),
       arange_(createArange(runtime)),
@@ -88,7 +90,8 @@ TorchHostObject::TorchHostObject(jsi::Runtime& runtime)
       softmax_(createSoftmax(runtime)),
       sub_(createSub(runtime)),
       tensor_(createTensor(runtime)),
-      topk_(createTopK(runtime)) {}
+      topk_(createTopK(runtime)),
+      runtimeExecutor_(runtimeExecutor) {}
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(
     jsi::Runtime& rt) {
@@ -139,8 +142,8 @@ jsi::Value TorchHostObject::get(
       name == utils::constants::INT64 || name == utils::constants::LONG) {
     return jsi::String::createFromAscii(runtime, utils::constants::INT64);
   } else if (name == JIT) {
-    auto jitHostObject =
-        std::make_shared<torchlive::torch::jit::JITHostObject>(runtime);
+    auto jitHostObject = std::make_shared<torchlive::torch::jit::JITHostObject>(
+        runtime, runtimeExecutor_);
     return jsi::Object::createFromHostObject(runtime, jitHostObject);
   } else if (name == MUL) {
     return jsi::Value(runtime, mul_);

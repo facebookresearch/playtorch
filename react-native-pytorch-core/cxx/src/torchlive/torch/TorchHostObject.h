@@ -9,6 +9,8 @@
 
 #include <jsi/jsi.h>
 
+#include "../../torchlive.h"
+
 namespace torchlive {
 namespace torch {
 
@@ -32,7 +34,9 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
   facebook::jsi::Function topk_;
 
  public:
-  TorchHostObject(facebook::jsi::Runtime& runtime);
+  TorchHostObject(
+      facebook::jsi::Runtime& runtime,
+      torchlive::RuntimeExecutor runtimeExecutor);
 
   facebook::jsi::Value get(
       facebook::jsi::Runtime&,
@@ -41,6 +45,7 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
       facebook::jsi::Runtime& rt) override;
 
  private:
+  torchlive::RuntimeExecutor runtimeExecutor_;
   static facebook::jsi::Function createAbs(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createAdd(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createArange(facebook::jsi::Runtime& runtime);

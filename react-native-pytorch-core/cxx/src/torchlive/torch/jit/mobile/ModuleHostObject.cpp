@@ -10,7 +10,9 @@
 #include <torch/csrc/jit/mobile/module.h>
 #include <torch/script.h>
 #include <string>
+#include <utility>
 
+#include "../../../Promise.h"
 #include "../../IValueHostObject.h"
 #include "../../TensorHostObject.h"
 #include "../../utils/helpers.h"
@@ -34,9 +36,10 @@ struct LiteJITCallGuard {
 
 // ModuleHostObject Method Name
 static const std::string FORWARD = "forward";
+static const std::string FORWARD_ASYNC = "forwardAsync";
 
 // ModuleHostObject Methods
-const std::vector<std::string> METHODS = {FORWARD};
+const std::vector<std::string> METHODS = {FORWARD, FORWARD_ASYNC};
 
 // ModuleHostObject Property Names
 // empty
@@ -46,8 +49,12 @@ static const std::vector<std::string> PROPERTIES = {};
 
 ModuleHostObject::ModuleHostObject(
     jsi::Runtime& runtime,
+    torchlive::RuntimeExecutor runtimeExecutor,
     torch_::jit::mobile::Module m)
-    : forward_(createForward(runtime)), module_(m) {}
+    : forward_(createForward(runtime)),
+      forwardAsync_(createForwardAsync(runtime)),
+      runtimeExecutor_(runtimeExecutor),
+      module_(m) {}
 
 std::vector<jsi::PropNameID> ModuleHostObject::getPropertyNames(
     jsi::Runtime& rt) {
@@ -68,9 +75,50 @@ jsi::Value ModuleHostObject::get(
 
   if (name == FORWARD) {
     return jsi::Value(runtime, forward_);
+  } else if (name == FORWARD_ASYNC) {
+    return jsi::Value(runtime, forwardAsync_);
   }
 
   return jsi::Value::undefined();
+}
+
+std::vector<torch_::jit::IValue> ModuleHostObject::forwardPreWork(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  if (count < 1) {
+    throw jsi::JSError(runtime, "At least 1 arg is expected");
+  }
+
+  std::vector<torch_::jit::IValue> inputs;
+  for (int i = 0; i < count; i++) {
+    // TODO(T111480077) Allow at::IValue more generally
+    auto tensorHostObject = utils::helpers::parseTensor(runtime, &arguments[i]);
+    if (tensorHostObject == nullptr) {
+      throw jsi::JSError(runtime, "Object is not a TensorHostObject");
+    }
+
+    auto tensor = tensorHostObject->tensor;
+    inputs.push_back(tensor);
+  }
+
+  return inputs;
+}
+
+torch_::jit::IValue ModuleHostObject::forwardWork(
+    torch_::jit::mobile::Module m,
+    std::vector<torch_::jit::IValue> inputs) {
+  LiteJITCallGuard guard;
+  return m.forward(inputs);
+}
+
+jsi::Value ModuleHostObject::forwardPostWork(
+    jsi::Runtime& runtime,
+    torch_::jit::IValue value) {
+  auto valueHostObject =
+      std::make_shared<torchlive::torch::IValueHostObject>(runtime, value);
+  return jsi::Object::createFromHostObject(runtime, valueHostObject);
 }
 
 jsi::Function ModuleHostObject::createForward(jsi::Runtime& runtime) {
@@ -79,34 +127,44 @@ jsi::Function ModuleHostObject::createForward(jsi::Runtime& runtime) {
                          const jsi::Value& thisValue,
                          const jsi::Value* arguments,
                          size_t count) -> jsi::Value {
-    if (count < 1) {
-      throw jsi::JSError(runtime, "At least 1 arg is expected");
-    }
-
-    std::vector<torch_::jit::IValue> inputs;
-    for (int i = 0; i < count; i++) {
-      // TODO(T111480077) Allow at::IValue more generally
-      auto tensorHostObject =
-          utils::helpers::parseTensor(runtime, &arguments[i]);
-      if (tensorHostObject == nullptr) {
-        throw jsi::JSError(runtime, "Object is not a TensorHostObject");
-      }
-
-      auto tensor = tensorHostObject->tensor;
-      inputs.push_back(tensor);
-    }
-
-    auto value = [&]() {
-      LiteJITCallGuard guard;
-      return this->module_.forward(inputs);
-    }();
-
-    auto valueHostObject =
-        std::make_shared<torchlive::torch::IValueHostObject>(runtime, value);
-    return jsi::Object::createFromHostObject(runtime, valueHostObject);
+    auto inputs = forwardPreWork(runtime, thisValue, arguments, count);
+    auto outputs = forwardWork(module_, std::move(inputs));
+    auto result = forwardPostWork(runtime, std::move(outputs));
+    return result;
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, FORWARD), 1, forwardFunc);
+}
+
+jsi::Function ModuleHostObject::createForwardAsync(jsi::Runtime& runtime) {
+  auto forwardAsyncFunc = [this](
+                              jsi::Runtime& rt,
+                              const jsi::Value& thisValue,
+                              const jsi::Value* arguments,
+                              size_t count) -> jsi::Value {
+    return createPromiseAsJSIValue(
+        rt, [&](jsi::Runtime& rt2, std::shared_ptr<Promise> promise) {
+          auto inputs = forwardPreWork(rt2, thisValue, arguments, count);
+          auto fn = [runtimeExecutor = runtimeExecutor_,
+                     m = module_,
+                     inputs = std::move(inputs),
+                     promise = std::move(promise)]() {
+            auto outputs = forwardWork(m, std::move(inputs));
+            runtimeExecutor([outputs = std::move(outputs),
+                             promise = std::move(promise)](jsi::Runtime& rt3) {
+              auto result = forwardPostWork(rt3, std::move(outputs));
+              promise->resolve(result);
+            });
+          };
+          std::thread t(fn);
+          t.detach();
+        });
+  };
+  return jsi::Function::createFromHostFunction(
+      runtime,
+      jsi::PropNameID::forUtf8(runtime, FORWARD_ASYNC),
+      1,
+      forwardAsyncFunc);
 }
 
 } // namespace mobile

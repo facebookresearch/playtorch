@@ -225,6 +225,7 @@ export default function JSIPlayground() {
     console.log('---test torchvision.resize---');
     let tensor8 = torch.rand([1, 3, 100, 100]);
     let resize = __torchlive_torchvision__.transforms.resize(20);
+    console.log('log resize: ', resize.forward);
     let tenosr9 = resize.forward(tensor8);
     console.log('original shape: ', tensor8.shape);
     console.log('transfomred shape: ', tenosr9.shape);

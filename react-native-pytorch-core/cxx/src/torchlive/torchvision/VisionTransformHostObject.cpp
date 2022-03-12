@@ -19,7 +19,7 @@
 #include "AbstractScriptModule.h"
 #include "CenterCropHostObject.h"
 #include "NormalizeModule.h"
-#include "ResizeHostObject.h"
+#include "ResizeModule.h"
 #include "VisionTransformHostObject.h"
 
 // Namespace alias for torch to avoid namespace conflicts with torchlive::torch
@@ -96,7 +96,7 @@ static jsi::Function createJITScriptModuleFactory(jsi::Runtime& runtime) {
 
 VisionTransformHostObject::VisionTransformHostObject(jsi::Runtime& runtime)
     : centerCrop_(createCenterCrop(runtime)),
-      resize_(createResize(runtime)),
+      resize_(createJITScriptModuleFactory<ResizeModule>(runtime)),
       normalize_(createJITScriptModuleFactory<NormalizeModule>(runtime)) {}
 
 std::vector<jsi::PropNameID> VisionTransformHostObject::getPropertyNames(
@@ -149,26 +149,6 @@ jsi::Function VisionTransformHostObject::createCenterCrop(
       jsi::PropNameID::forUtf8(runtime, CENTER_CROP),
       1,
       centerCropFactoryFunc);
-}
-
-jsi::Function VisionTransformHostObject::createResize(jsi::Runtime& runtime) {
-  auto resizeFactoryFunc = [](jsi::Runtime& runtime,
-                              const jsi::Value& thisValue,
-                              const jsi::Value* arguments,
-                              size_t count) -> jsi::Value {
-    if (count != 1) {
-      throw jsi::JSError(
-          runtime,
-          "Factory function resize expects 1 argument but " +
-              std::to_string(count) + " are given.");
-    }
-    auto resizeHostObject =
-        std::make_shared<ResizeHostObject>(runtime, arguments[0]);
-    return jsi::Object::createFromHostObject(runtime, resizeHostObject);
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, RESIZE), 1, resizeFactoryFunc);
 }
 
 } // namespace transforms

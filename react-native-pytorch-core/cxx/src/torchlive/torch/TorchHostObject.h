@@ -32,6 +32,7 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
   facebook::jsi::Function sub_;
   facebook::jsi::Function tensor_;
   facebook::jsi::Function topk_;
+  facebook::jsi::Function zeros_;
 
  public:
   TorchHostObject(
@@ -62,6 +63,7 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
   static facebook::jsi::Function createSub(facebook::jsi::Runtime& runtime);
   static jsi::Function createTensor(jsi::Runtime& runtime);
   static jsi::Function createTopK(jsi::Runtime& runtime);
+  static jsi::Function createZeros(jsi::Runtime& runtime);
 };
 
 } // namespace torch

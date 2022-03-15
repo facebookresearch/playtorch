@@ -38,6 +38,7 @@ static const std::string SOFTMAX = "softmax";
 static const std::string SUB = "sub";
 static const std::string TENSOR = "tensor";
 static const std::string TOPK = "topk";
+static const std::string ZEROS = "zeros";
 
 // TorchHostObject Property Names
 static const std::string JIT = "jit";
@@ -71,6 +72,7 @@ const std::vector<std::string> METHODS = {
     SUB,
     TENSOR,
     TOPK,
+    ZEROS,
 };
 
 TorchHostObject::TorchHostObject(
@@ -91,6 +93,7 @@ TorchHostObject::TorchHostObject(
       sub_(createSub(runtime)),
       tensor_(createTensor(runtime)),
       topk_(createTopK(runtime)),
+      zeros_(createZeros(runtime)),
       runtimeExecutor_(runtimeExecutor) {}
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(
@@ -163,6 +166,8 @@ jsi::Value TorchHostObject::get(
     return jsi::Value(runtime, tensor_);
   } else if (name == TOPK) {
     return jsi::Value(runtime, topk_);
+  } else if (name == ZEROS) {
+    return jsi::Value(runtime, zeros_);
   }
 
   return jsi::Value::undefined();
@@ -684,6 +689,40 @@ jsi::Function TorchHostObject::createTopK(jsi::Runtime& runtime) {
 
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, TOPK), 2, topkFunc);
+}
+
+/**
+ * Returns a tensor filled with the scalar value 0, with the shape defined by
+ * the variable argument size.
+ *
+ * https://pytorch.org/docs/stable/generated/torch.topk.html
+ */
+jsi::Function TorchHostObject::createZeros(jsi::Runtime& runtime) {
+  auto zerosImpl = [](jsi::Runtime& runtime,
+                      const jsi::Value& thisValue,
+                      const jsi::Value* arguments,
+                      size_t count) {
+    if (count == 0) {
+      throw jsi::JSError(
+          runtime, "This function requires at least one argument.");
+    }
+    std::vector<int64_t> dims = {};
+    int nextArgumentIndex =
+        utils::helpers::parseSize(runtime, arguments, 0, count, &dims);
+
+    torch_::TensorOptions tensorOptions = utils::helpers::parseTensorOptions(
+        runtime, arguments, nextArgumentIndex, count);
+
+    auto tensor = torch_::zeros(c10::ArrayRef<int64_t>(dims), tensorOptions);
+
+    auto tensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
+
+    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+  };
+
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, ZEROS), 1, zerosImpl);
 }
 
 } // namespace torch

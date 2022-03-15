@@ -538,4 +538,41 @@ TEST_F(TorchliveRuntimeTest, TorchTopkTest) {
   EXPECT_THROW(
       eval("torch.topk(torch.empty(1, 2), [1])"), facebook::jsi::JSError);
 }
+
+TEST_F(TorchliveRuntimeTest, TorchZerosTest) {
+  // Test zeros with single integer parameters.
+  EXPECT_EQ(eval("torch.zeros(0).shape[0]").getNumber(), 0);
+
+  EXPECT_EQ(eval("torch.zeros(4).shape[0]").getNumber(), 4);
+  for (auto i = 0; i < 4; i++) {
+    std::string val_s = fmt::format("torch.zeros(4).data[{}]", i);
+    EXPECT_EQ(eval(val_s.c_str()).getNumber(), 0);
+  }
+
+  // Test zeros with two integer parameters.
+  EXPECT_EQ(eval("torch.zeros(0, 0).shape[0]").getNumber(), 0);
+  EXPECT_EQ(eval("torch.zeros(0, 0).shape[1]").getNumber(), 0);
+
+  EXPECT_EQ(eval("torch.zeros(2, 3).shape[0]").getNumber(), 2);
+  EXPECT_EQ(eval("torch.zeros(2, 3).shape[1]").getNumber(), 3);
+  for (auto i = 0; i < 6; i++) {
+    std::string val_s = fmt::format("torch.zeros(2, 3).data[{}]", i);
+    EXPECT_EQ(eval(val_s.c_str()).getNumber(), 0);
+  }
+
+  // Test zeros with array parameters.
+  EXPECT_EQ(eval("torch.zeros([0, 0]).shape[0]").getNumber(), 0);
+  EXPECT_EQ(eval("torch.zeros([0, 0]).shape[1]").getNumber(), 0);
+
+  EXPECT_EQ(eval("torch.zeros([3, 2]).shape[0]").getNumber(), 3);
+  EXPECT_EQ(eval("torch.zeros([3, 2]).shape[1]").getNumber(), 2);
+  for (auto i = 0; i < 6; i++) {
+    std::string val_s = fmt::format("torch.zeros([3, 2]).data[{}]", i);
+    EXPECT_EQ(eval(val_s.c_str()).getNumber(), 0);
+  }
+
+  // Test zeros with no parameters (invalid).
+  EXPECT_THROW(eval("torch.zeros()"), facebook::jsi::JSError);
+}
+
 } // namespace

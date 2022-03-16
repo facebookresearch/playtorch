@@ -10,6 +10,7 @@ package org.pytorch.rn.core.audio;
 import android.media.AudioFormat;
 import android.media.AudioRecord;
 import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 import androidx.core.app.ActivityCompat;
@@ -26,6 +27,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import org.jetbrains.annotations.NotNull;
 import org.pytorch.rn.core.javascript.JSContext;
+import org.pytorch.rn.core.utils.FileUtils;
 
 @ReactModule(name = "PyTorchCoreAudioModule")
 public class AudioModule extends ReactContextBaseJavaModule {
@@ -142,6 +144,14 @@ public class AudioModule extends ReactContextBaseJavaModule {
     } catch (final IOException | OutOfMemoryError | SecurityException exp) {
       promise.reject(new Error("Could not load audio from " + filePath + " " + exp.getMessage()));
     }
+  }
+
+  @ReactMethod
+  public void fromBundle(final String uriString, final Promise promise) {
+    final Uri uri = Uri.parse(uriString);
+    final File targetFile = new File(getReactApplicationContext().getCacheDir(), uri.getPath());
+    FileUtils.downloadUriToFile(uriString, targetFile);
+    fromFile(targetFile.getPath(), promise);
   }
 
   private void requestMicrophonePermission() {

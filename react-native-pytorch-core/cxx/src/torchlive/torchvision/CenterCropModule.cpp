@@ -17,7 +17,7 @@ namespace torchvision {
 namespace transforms {
 using namespace facebook;
 
-const std::string CenterCropModule::moduleName = "centercrop";
+const std::string CenterCropModule::moduleName = "centerCrop";
 const int CenterCropModule::inputCount = 1;
 const int CenterCropModule::parameterCount = 1;
 

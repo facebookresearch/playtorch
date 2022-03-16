@@ -138,4 +138,25 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
             reject(RCTErrorUnspecified, "Couldn't load file \(path)", nil)
         }
     }
+
+    @objc(fromBundle:resolver:rejecter:)
+    public func fromBundle(_ assetAudio: NSString, resolve: @escaping RCTPromiseResolveBlock,
+                           reject: @escaping RCTPromiseRejectBlock) {
+        let audioUrl = URL(string: assetAudio as String)
+        let sessionConfig = URLSessionConfiguration.default
+        let session = URLSession(configuration: sessionConfig)
+        let request = URLRequest(url: audioUrl!)
+        let task = session.downloadTask(with: request) { (tempUrl, _, error) in
+            if let destinationUrl = tempUrl, error == nil {
+                do {
+                    let data = try Data(contentsOf: destinationUrl)
+                    let ref = JSContext.wrapObject(object: Audio(audioData: data)).getJSRef()
+                    resolve(ref)
+                } catch {
+                    reject(RCTErrorUnspecified, "Couldn't load audio from asset \(assetAudio)", error)
+                }
+            }
+        }
+        task.resume()
+    }
 }

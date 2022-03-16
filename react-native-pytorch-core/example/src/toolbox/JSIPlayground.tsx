@@ -241,6 +241,13 @@ export default function JSIPlayground() {
     const normalizeForwarded = normalize.forward(tensor10);
     console.log(normalized.toString());
     console.log(normalizeForwarded.toString());
+
+    console.log('---test torchvision.grayscale---');
+    const tensor11 = torch.rand([1, 3, 5, 5]);
+    const grayscale = __torchlive_torchvision__.transforms.grayscale();
+    console.log('log grayscale: ', grayscale.forward);
+    const grayscaled = grayscale(tensor11);
+    console.log(grayscaled.toString());
   };
 
   return (

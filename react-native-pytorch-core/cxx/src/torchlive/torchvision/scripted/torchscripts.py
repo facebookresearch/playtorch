@@ -37,3 +37,17 @@ class ResizeModule(torch.nn.Module):
 scripted_model = torch.jit.script(ResizeModule())
 optimized_model = optimize_for_mobile(scripted_model)
 optimized_model._save_for_lite_interpreter("resize_scriptmodule.ptl")
+
+
+class Grayscale(torch.nn.Module):
+    def __init__(self):
+        super(Grayscale, self).__init__()
+
+    def forward(self, img: Tensor, num_channels: int = 1) -> Tensor:
+        output = T.functional.rgb_to_grayscale(img, num_channels)
+        return output
+
+
+scripted_model = torch.jit.script(Grayscale())
+optimized_model = optimize_for_mobile(scripted_model)
+optimized_model._save_for_lite_interpreter("grayscale_scriptmodule.ptl")

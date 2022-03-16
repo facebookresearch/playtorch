@@ -15,8 +15,9 @@ namespace transforms {
 
 class JSI_EXPORT VisionTransformHostObject : public facebook::jsi::HostObject {
   facebook::jsi::Function centerCrop_;
-  facebook::jsi::Function resize_;
+  facebook::jsi::Function grayscale_;
   facebook::jsi::Function normalize_;
+  facebook::jsi::Function resize_;
 
  public:
   VisionTransformHostObject(facebook::jsi::Runtime& runtime);

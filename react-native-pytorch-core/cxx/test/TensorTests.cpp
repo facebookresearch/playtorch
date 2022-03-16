@@ -36,7 +36,9 @@ TEST_F(TorchliveTensorRuntimeTest, TensorTest) {
   EXPECT_TRUE(eval(tensorIndexWithNumberString).getBool());
 
   EXPECT_TRUE(eval("torch.tensor([[128], [255]])['foo']").isUndefined());
+
   EXPECT_TRUE(eval("torch.tensor([[128], [255]])[-1]").isUndefined());
+
   EXPECT_TRUE(eval("torch.tensor([[128], [255]])[2]").isUndefined());
 }
 
@@ -47,12 +49,14 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDataTest) {
         tensor.dtype == torch.uint8 && tensor.data[0] == 0 && tensor.data[1] == 2 && tensor.data[2] == 2;
       )";
   EXPECT_TRUE(eval(tensorWithDtypeAsUint8).getBool());
+
   std::string tensorWithDtypeAsInt8 =
       R"(
         const tensor = torch.tensor([0.1, -2.0, 2.7, -2.7], {dtype: torch.int8});
         tensor.dtype == torch.int8 && tensor.data[0] == 0 && tensor.data[1] == -2 && tensor.data[2] == 2 && tensor.data[3] == -2;
       )";
   EXPECT_TRUE(eval(tensorWithDtypeAsInt8).getBool());
+
   std::string tensorWithDtypeAsInt16 =
       R"(
         const tensor = torch.tensor([0.1, 2.0], {dtype: torch.int16});
@@ -60,6 +64,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDataTest) {
         tensor.dtype == torch.int16 && tensor2.dtype == torch.int16;
       )";
   EXPECT_TRUE(eval(tensorWithDtypeAsInt16).getBool());
+
   std::string tensorWithDtypeAsInt32 =
       R"(
         const tensor = torch.tensor([0.1, 2.0], {dtype: torch.int32});
@@ -67,6 +72,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDataTest) {
         tensor.dtype == torch.int32 && tensor2.dtype == torch.int32;
       )";
   EXPECT_TRUE(eval(tensorWithDtypeAsInt32).getBool());
+
   std::string tensorWithDtypeAsFloat32 =
       R"(
         const tensor = torch.tensor([1.5, 2.0], {dtype: torch.float32});
@@ -74,6 +80,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDataTest) {
         tensor.dtype == torch.float32 && tensor2.dtype == torch.float32 && tensor.data[0] == 1.5 && tensor.data[1] == 2.0;
       )";
   EXPECT_TRUE(eval(tensorWithDtypeAsFloat32).getBool());
+
   std::string tensorWithDtypeAsFloat64 =
       R"(
         const tensor = torch.tensor([0.1, 2.0], {dtype: torch.float64});
@@ -81,6 +88,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDataTest) {
         tensor.dtype == torch.float64 && tensor2.dtype == torch.float64;
       )";
   EXPECT_TRUE(eval(tensorWithDtypeAsFloat64).getBool());
+
   std::string tensorWithDtypeAsInt64 =
       R"(
         const tensor = torch.tensor([128, 255], {dtype: torch.long});
@@ -125,6 +133,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
   }
 
   EXPECT_THROW(eval("torch.arange(1, 5).div()"), facebook::jsi::JSError);
+
   EXPECT_THROW(
       eval("torch.arange(1, 5).div(torch.arrange(3, 4), 'foo')"),
       facebook::jsi::JSError);

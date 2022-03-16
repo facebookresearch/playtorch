@@ -18,6 +18,7 @@
 #include "../torch/utils/helpers.h"
 #include "AbstractScriptModule.h"
 #include "CenterCropModule.h"
+#include "GrayscaleModule.h"
 #include "NormalizeModule.h"
 #include "ResizeModule.h"
 #include "VisionTransformHostObject.h"
@@ -33,8 +34,9 @@ using namespace facebook;
 
 // TransformsHostObject Method Name
 static const std::string CENTER_CROP = "centerCrop";
-static const std::string RESIZE = "resize";
+static const std::string GRAYSCALE = "grayscale";
 static const std::string NORMALIZE = "normalize";
+static const std::string RESIZE = "resize";
 
 // TransformsHostObject Property Names
 // empty
@@ -43,7 +45,11 @@ static const std::string NORMALIZE = "normalize";
 static const std::vector<std::string> PROPERTIES = {};
 
 // TransformsHostObject Methods
-const std::vector<std::string> METHODS = {CENTER_CROP, RESIZE, NORMALIZE};
+const std::vector<std::string> METHODS = {
+    CENTER_CROP,
+    GRAYSCALE,
+    NORMALIZE,
+    RESIZE};
 
 /*
  * This function returns a lambda factory function (i.e. transformFactoryFunc).
@@ -96,8 +102,9 @@ static jsi::Function createJITScriptModuleFactory(jsi::Runtime& runtime) {
 
 VisionTransformHostObject::VisionTransformHostObject(jsi::Runtime& runtime)
     : centerCrop_(createJITScriptModuleFactory<CenterCropModule>(runtime)),
-      resize_(createJITScriptModuleFactory<ResizeModule>(runtime)),
-      normalize_(createJITScriptModuleFactory<NormalizeModule>(runtime)) {}
+      grayscale_(createJITScriptModuleFactory<GrayscaleModule>(runtime)),
+      normalize_(createJITScriptModuleFactory<NormalizeModule>(runtime)),
+      resize_(createJITScriptModuleFactory<ResizeModule>(runtime)) {}
 
 std::vector<jsi::PropNameID> VisionTransformHostObject::getPropertyNames(
     jsi::Runtime& rt) {
@@ -118,6 +125,8 @@ jsi::Value VisionTransformHostObject::get(
 
   if (name == CENTER_CROP) {
     return jsi::Value(runtime, centerCrop_);
+  } else if (name == GRAYSCALE) {
+    return jsi::Value(runtime, grayscale_);
   } else if (name == NORMALIZE) {
     return jsi::Value(runtime, normalize_);
   } else if (name == RESIZE) {

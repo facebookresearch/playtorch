@@ -19,10 +19,10 @@ add_library(
         ${PACKAGE_NAME}
         SHARED
         ../cxx/src/torchlive.cpp
-        ../cxx/src/torchlive/Promise.cpp
         ../cxx/src/torchlive/media/Blob.cpp
         ../cxx/src/torchlive/media/BlobHostObject.cpp
         ../cxx/src/torchlive/media/NativeJSRefBridgeHostObject.cpp
+        ../cxx/src/torchlive/Promise.cpp
         ../cxx/src/torchlive/torch/DictHostObject.cpp
         ../cxx/src/torchlive/torch/IValueHostObject.cpp
         ../cxx/src/torchlive/torch/jit/JITHostObject.cpp
@@ -33,6 +33,7 @@ add_library(
         ../cxx/src/torchlive/torch/utils/helpers.cpp
         ../cxx/src/torchlive/torchvision/AbstractScriptModule.cpp
         ../cxx/src/torchlive/torchvision/CenterCropModule.cpp
+        ../cxx/src/torchlive/torchvision/GrayscaleModule.cpp
         ../cxx/src/torchlive/torchvision/NormalizeModule.cpp
         ../cxx/src/torchlive/torchvision/ResizeModule.cpp
         ../cxx/src/torchlive/torchvision/TorchvisionHostObject.cpp

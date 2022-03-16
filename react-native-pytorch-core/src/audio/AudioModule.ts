@@ -10,6 +10,8 @@
 import {NativeModules} from 'react-native';
 import type {NativeJSRef} from '../NativeJSRef';
 
+const resolveAssetSource = require('react-native/Libraries/Image/resolveAssetSource');
+
 const {PyTorchCoreAudioModule: AudioModule} = NativeModules;
 
 export interface Audio extends NativeJSRef {
@@ -69,6 +71,26 @@ export const AudioUtil = {
    */
   async fromFile(filePath: string): Promise<Audio> {
     const ref: NativeJSRef = await AudioModule.fromFile(filePath);
+    return wrapRef(ref);
+  },
+
+  /**
+   * The `fromBundle` function loads an [[Audio]] that is bundled with the
+   * React Native app bundle. The function param is a `require` with a relative
+   * path (the path is relative to the file that contains the
+   * [[AudioUtil.fromBundle]] call)
+   *
+   * ```typescript
+   * const audioAsset = require('../../assets/audio/audio_file.wav');
+   * const audio: Audio = await AudioUtil.fromBundle(audioAsset);
+   * ```
+   *
+   * @param audioPath The audio path (i.e., a `require`).
+   * @returns A promise resolving into an [[Audio]].
+   */
+  async fromBundle(path: number): Promise<Audio> {
+    const source = resolveAssetSource(path);
+    const ref: NativeJSRef = await AudioModule.fromBundle(source.uri);
     return wrapRef(ref);
   },
 };

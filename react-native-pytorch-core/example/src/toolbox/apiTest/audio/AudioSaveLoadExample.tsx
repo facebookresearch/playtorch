@@ -12,6 +12,8 @@ import type {Audio} from 'react-native-pytorch-core';
 import {AudioUtil} from 'react-native-pytorch-core';
 import {TouchableOpacity, View, StyleSheet, Text} from 'react-native';
 
+const audioAsset = require('../../../../assets/audio/scent_of_a_woman_future.wav');
+
 export default function AudioSaveLoadExample() {
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
   const [savedFilePath, setSavedFilePath] = useState<string>('');
@@ -38,6 +40,11 @@ export default function AudioSaveLoadExample() {
     audio.play();
   }
 
+  async function loadFromBundleAndPlay() {
+    const audio = await AudioUtil.fromBundle(audioAsset);
+    audio.play();
+  }
+
   return (
     <>
       <TouchableOpacity onPress={!isProcessing ? startRecording : undefined}>
@@ -56,7 +63,12 @@ export default function AudioSaveLoadExample() {
       </TouchableOpacity>
       <TouchableOpacity onPress={loadAndPlay}>
         <View style={styles.startButton}>
-          <Text style={styles.startButtonText}>Load Audio and Play</Text>
+          <Text style={styles.startButtonText}>Load from File and Play</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={loadFromBundleAndPlay}>
+        <View style={styles.startButton}>
+          <Text style={styles.startButtonText}>Load from Bundle and Play</Text>
         </View>
       </TouchableOpacity>
     </>

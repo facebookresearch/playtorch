@@ -26,10 +26,6 @@ class JSI_EXPORT VisionTransformHostObject : public facebook::jsi::HostObject {
       const facebook::jsi::PropNameID& name) override;
   std::vector<facebook::jsi::PropNameID> getPropertyNames(
       facebook::jsi::Runtime& rt) override;
-
- private:
-  static facebook::jsi::Function createCenterCrop(
-      facebook::jsi::Runtime& runtime);
 };
 
 } // namespace transforms

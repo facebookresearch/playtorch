@@ -32,14 +32,13 @@ add_library(
         ../cxx/src/torchlive/torch/utils/constants.cpp
         ../cxx/src/torchlive/torch/utils/helpers.cpp
         ../cxx/src/torchlive/torchvision/AbstractScriptModule.cpp
-        ../cxx/src/torchlive/torchvision/CenterCropHostObject.cpp
+        ../cxx/src/torchlive/torchvision/CenterCropModule.cpp
         ../cxx/src/torchlive/torchvision/NormalizeModule.cpp
         ../cxx/src/torchlive/torchvision/ResizeModule.cpp
         ../cxx/src/torchlive/torchvision/TorchvisionHostObject.cpp
         ../cxx/src/torchlive/torchvision/VisionTransformHostObject.cpp
         ../cxx/src/torchlive/vision/TransformsHostObject.cpp
         ../cxx/src/torchlive/vision/VisionHostObject.cpp
-        ../cxx/src/torchlive/torchvision/CenterCropHostObject.cpp
         src/main/cpp/OnLoad.cpp
         src/main/cpp/torchlive/media/NativeJSRefBridge.cpp
 )

@@ -28,8 +28,7 @@ ResizeModule::ResizeModule()
 
 AbstractScriptModule* ResizeModule::getInstance() {
   static ResizeModule instance;
-  static ResizeModule* instance_ptr = &instance;
-  return instance_ptr;
+  return &instance;
 }
 
 std::vector<torch_::jit::IValue> ResizeModule::parseParameters(

@@ -17,7 +17,7 @@
 #include "../torch/TensorHostObject.h"
 #include "../torch/utils/helpers.h"
 #include "AbstractScriptModule.h"
-#include "CenterCropHostObject.h"
+#include "CenterCropModule.h"
 #include "NormalizeModule.h"
 #include "ResizeModule.h"
 #include "VisionTransformHostObject.h"
@@ -95,7 +95,7 @@ static jsi::Function createJITScriptModuleFactory(jsi::Runtime& runtime) {
 }
 
 VisionTransformHostObject::VisionTransformHostObject(jsi::Runtime& runtime)
-    : centerCrop_(createCenterCrop(runtime)),
+    : centerCrop_(createJITScriptModuleFactory<CenterCropModule>(runtime)),
       resize_(createJITScriptModuleFactory<ResizeModule>(runtime)),
       normalize_(createJITScriptModuleFactory<NormalizeModule>(runtime)) {}
 
@@ -125,30 +125,6 @@ jsi::Value VisionTransformHostObject::get(
   }
 
   return jsi::Value::undefined();
-}
-
-jsi::Function VisionTransformHostObject::createCenterCrop(
-    jsi::Runtime& runtime) {
-  auto centerCropFactoryFunc = [](jsi::Runtime& runtime,
-                                  const jsi::Value& thisValue,
-                                  const jsi::Value* arguments,
-                                  size_t count) -> jsi::Value {
-    if (count != 1) {
-      throw jsi::JSError(
-          runtime,
-          "Factory function centerCrop expects 1 argument but " +
-              std::to_string(count) + " are given.");
-    }
-    auto centerCropHostObject =
-        std::make_shared<CenterCropHostObject>(runtime, arguments[0]);
-    return jsi::Object::createFromHostObject(runtime, centerCropHostObject);
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime,
-      jsi::PropNameID::forUtf8(runtime, CENTER_CROP),
-      1,
-      centerCropFactoryFunc);
 }
 
 } // namespace transforms

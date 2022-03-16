@@ -9,52 +9,65 @@
 
 #include "../torch/utils/helpers.h"
 #include "ATen/core/ivalue.h"
-#include "NormalizeModule.h"
-#include "scripted/normalize_scriptmodule.h"
+#include "CenterCropModule.h"
+#include "scripted/center_crop_scriptmodule.h"
 
 namespace torchlive {
 namespace torchvision {
 namespace transforms {
 using namespace facebook;
 
-const std::string NormalizeModule::moduleName = "normalize";
-const int NormalizeModule::inputCount = 1;
-const int NormalizeModule::parameterCount = 2;
+const std::string CenterCropModule::moduleName = "centercrop";
+const int CenterCropModule::inputCount = 1;
+const int CenterCropModule::parameterCount = 1;
 
-NormalizeModule::NormalizeModule()
+CenterCropModule::CenterCropModule()
     : AbstractScriptModule(
-          normalize_scriptmodule_ptl,
-          normalize_scriptmodule_ptl_len) {}
+          center_crop_scriptmodule_ptl,
+          center_crop_scriptmodule_ptl_len) {}
 
-AbstractScriptModule* NormalizeModule::getInstance() {
-  static NormalizeModule instance;
+AbstractScriptModule* CenterCropModule::getInstance() {
+  static CenterCropModule instance;
   return &instance;
 }
 
-std::vector<torch_::jit::IValue> NormalizeModule::parseParameters(
+std::vector<torch_::jit::IValue> CenterCropModule::parseParameters(
     facebook::jsi::Runtime& runtime,
     const facebook::jsi::Value& thisValue,
     const facebook::jsi::Value* arguments,
     size_t count) {
-  if (count != 2) {
+  if (count != 1) {
     throw jsi::JSError(
         runtime,
-        "Factory function normalize expects 2 argument but " +
+        "Factory function resize expects 1 argument but " +
             std::to_string(count) + " are given.");
   }
-  std::vector<double> mean =
+
+  std::vector<double> shapeData =
       torchlive::utils::helpers::parseJSIArrayData(runtime, arguments[0]);
-  std::vector<double> std =
-      torchlive::utils::helpers::parseJSIArrayData(runtime, arguments[1]);
-  c10::ArrayRef<double> meanArrayRef(mean);
-  c10::ArrayRef<double> stdArrayRef(std);
+
+  auto ndims = shapeData.size();
+  if (ndims < 1) {
+    throw jsi::JSError(
+        runtime,
+        "Not enough values to unpack (expect 2, got " + std::to_string(ndims) +
+            ")");
+  }
+  if (ndims > 2) {
+    throw jsi::JSError(
+        runtime,
+        "Too many values to unpack (expect 2, got " + std::to_string(ndims) +
+            ")");
+  }
+  std::vector<int64_t> shapeVector(shapeData.begin(), shapeData.end());
+
+  c10::ArrayRef<int64_t> shapeArrayRef(shapeVector);
   std::vector<torch_::jit::IValue> params;
-  params.push_back(meanArrayRef);
-  params.push_back(stdArrayRef);
+  params.push_back(shapeArrayRef);
   return params;
 }
 
-std::vector<torch_::jit::IValue> NormalizeModule::parseInput(
+std::vector<torch_::jit::IValue> CenterCropModule::parseInput(
     facebook::jsi::Runtime& runtime,
     const facebook::jsi::Value& thisValue,
     const facebook::jsi::Value* arguments,

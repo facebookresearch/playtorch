@@ -34,12 +34,6 @@ class NormalizeModule : AbstractScriptModule {
       const facebook::jsi::Value& thisValue,
       const facebook::jsi::Value* arguments,
       size_t count) override;
-
-  std::vector<torch_::jit::IValue> parseInput(
-      facebook::jsi::Runtime& runtime,
-      const facebook::jsi::Value& thisValue,
-      const facebook::jsi::Value* arguments,
-      size_t count) override;
 };
 
 } // namespace transforms

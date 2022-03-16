@@ -35,6 +35,24 @@ c10::IValue AbstractScriptModule::forward(
   return this->scriptmodule_.forward(inputs);
 }
 
+std::vector<torch_::jit::IValue> AbstractScriptModule::parseInput(
+    facebook::jsi::Runtime& runtime,
+    const facebook::jsi::Value& thisValue,
+    const facebook::jsi::Value* arguments,
+    size_t count) {
+  if (count != 1) {
+    throw jsi::JSError(
+        runtime,
+        "Module expect 1 input but " + std::to_string(count) + " are given.");
+  }
+  auto tensorHostObject =
+      torchlive::utils::helpers::parseTensor(runtime, &arguments[0]);
+  auto tensor = tensorHostObject->tensor;
+  std::vector<torch_::jit::IValue> inputs;
+  inputs.push_back(tensor);
+  return inputs;
+}
+
 } // namespace transforms
 } // namespace torchvision
 } // namespace torchlive

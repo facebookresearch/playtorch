@@ -53,14 +53,14 @@ class AbstractScriptModule {
       size_t count) = 0;
 
   /**
-   * This overriden function parse the input to the operator.
+   * This function, if not overriden, parses the input to the operator.
    * Most of the time if will be a tensor
    */
-  virtual std::vector<torch_::jit::IValue> parseInput(
+  std::vector<torch_::jit::IValue> parseInput(
       facebook::jsi::Runtime& runtime,
       const facebook::jsi::Value& thisValue,
       const facebook::jsi::Value* arguments,
-      size_t count) = 0;
+      size_t count);
 
   /**
    * This function apply the operator on the inputs.

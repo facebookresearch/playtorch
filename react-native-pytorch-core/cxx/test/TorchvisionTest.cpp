@@ -64,6 +64,16 @@ TEST_F(TorchliveTorchvisionRuntimeTest, CenterCropTest) {
       )";
   EXPECT_THROW(
       eval(torchvisionCenterCropMultipleArguments), facebook::jsi::JSError);
+
+  std::string torchvisionCenterCropWithWrongNumberOfInput =
+      R"(
+        const tensor = torch.rand([1, 3, 5, 5]);
+        const centerCrop = __torchlive_torchvision__.transforms.centerCrop(3);
+        centerCrop.forward(tensor, 1);
+      )";
+  EXPECT_THROW(
+      eval(torchvisionCenterCropWithWrongNumberOfInput),
+      facebook::jsi::JSError);
 }
 
 TEST_F(TorchliveTorchvisionRuntimeTest, ResizeTest) {
@@ -132,6 +142,15 @@ TEST_F(TorchliveTorchvisionRuntimeTest, ResizeTest) {
       )";
   EXPECT_THROW(
       eval(torchvisionResizeOnOneDimensionTensor), facebook::jsi::JSError);
+
+  std::string torchvisionResizeWithWrongNumberOfInput =
+      R"(
+        const tensor = torch.rand([1, 3, 5, 5]);
+        const resize = __torchlive_torchvision__.transforms.resize(3);
+        resize.forward(tensor, 1);
+      )";
+  EXPECT_THROW(
+      eval(torchvisionResizeWithWrongNumberOfInput), facebook::jsi::JSError);
 }
 
 TEST_F(TorchliveTorchvisionRuntimeTest, NormalizeTest) {
@@ -174,6 +193,15 @@ TEST_F(TorchliveTorchvisionRuntimeTest, NormalizeTest) {
   EXPECT_THROW(
       eval(torchvisionNormalizeWithUnmatchedChannelsOfMeanAndStd),
       facebook::jsi::JSError);
+
+  std::string torchvisionNormalizeWithWrongNumberOfInput =
+      R"(
+        const tensor = torch.rand([1, 3, 5, 5]);
+        const normalize = __torchlive_torchvision__.transforms.normalize(3);
+        normalize.forward(tensor, 1);
+      )";
+  EXPECT_THROW(
+      eval(torchvisionNormalizeWithWrongNumberOfInput), facebook::jsi::JSError);
 }
 
 TEST_F(TorchliveTorchvisionRuntimeTest, GrayscaleTest) {

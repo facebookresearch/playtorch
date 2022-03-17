@@ -5,10 +5,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <jsi/jsi.h>
-
 #include <ATen/Functions.h>
-#include <torch/script.h>
 #include <string>
 
 #include "../torch/utils/helpers.h"

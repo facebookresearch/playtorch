@@ -9,7 +9,6 @@
 #elif __APPLE__
 #else
 
-#include "Blob.h"
 #include "NativeJSRefBridge.h"
 
 namespace torchlive {

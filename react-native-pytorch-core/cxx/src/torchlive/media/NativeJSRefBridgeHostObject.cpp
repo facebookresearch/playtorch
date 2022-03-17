@@ -5,11 +5,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <jsi/jsi.h>
-
+#include "NativeJSRefBridgeHostObject.h"
 #include "BlobHostObject.h"
 #include "NativeJSRefBridge.h"
-#include "NativeJSRefBridgeHostObject.h"
 
 namespace torchlive {
 namespace media {

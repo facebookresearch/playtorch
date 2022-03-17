@@ -5,10 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <jsi/jsi.h>
-
-#include "constants.h"
 #include "helpers.h"
+#include "constants.h"
 
 // Namespace alias for torch to avoid namespace conflicts with torchlive::torch
 namespace torch_ = torch;

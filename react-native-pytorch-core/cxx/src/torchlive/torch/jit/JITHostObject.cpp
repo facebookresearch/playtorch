@@ -10,7 +10,6 @@
 #include <torch/csrc/jit/mobile/import.h>
 #include <torch/csrc/jit/mobile/module.h>
 #include <torch/script.h>
-#include <string>
 
 #include "../../Promise.h"
 #include "../TensorHostObject.h"

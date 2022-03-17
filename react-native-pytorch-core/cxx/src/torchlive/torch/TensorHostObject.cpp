@@ -5,11 +5,6 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <ATen/NativeFunctions.h>
-#include <torch/script.h>
-#include <string>
-#include <vector>
-
 #include "TensorHostObject.h"
 #include "utils/constants.h"
 #include "utils/helpers.h"

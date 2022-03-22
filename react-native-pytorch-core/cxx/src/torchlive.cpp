@@ -18,32 +18,33 @@ namespace torchlive {
 using namespace facebook;
 
 void install(jsi::Runtime& runtime, RuntimeExecutor runtimeExecutor) {
+  jsi::Object torchliveObject(runtime);
+
   auto torchObject = std::make_shared<torchlive::torch::TorchHostObject>(
       runtime, runtimeExecutor);
   auto torch = jsi::Object::createFromHostObject(runtime, torchObject);
-  runtime.global().setProperty(runtime, "torch", std::move(torch));
+  torchliveObject.setProperty(runtime, "torch", std::move(torch));
 
   auto visionObject =
       std::make_shared<torchlive::vision::VisionHostObject>(runtime);
   auto vision = jsi::Object::createFromHostObject(runtime, visionObject);
-  runtime.global().setProperty(
-      runtime, "__torchlive_vision__", std::move(vision));
+  torchliveObject.setProperty(runtime, "vision", std::move(vision));
 
   auto torchvisionObject =
       std::make_shared<torchlive::torchvision::TorchvisionHostObject>(runtime);
   auto torchvision =
       jsi::Object::createFromHostObject(runtime, torchvisionObject);
-  runtime.global().setProperty(
-      runtime, "__torchlive_torchvision__", std::move(torchvision));
+  torchliveObject.setProperty(runtime, "torchvision", std::move(torchvision));
 
   auto nativeJSRefBridgeObject =
       std::make_shared<torchlive::media::NativeJSRefBridgeHostObject>(runtime);
   auto nativeJSRefBridge =
       jsi::Object::createFromHostObject(runtime, nativeJSRefBridgeObject);
+  torchliveObject.setProperty(
+      runtime, "NativeJSRefBridge", std::move(nativeJSRefBridge));
+
   runtime.global().setProperty(
-      runtime,
-      "__torchlive__NativeJSRefBridge__",
-      std::move(nativeJSRefBridge));
+      runtime, "__torchlive__", std::move(torchliveObject));
 }
 
 } // namespace torchlive

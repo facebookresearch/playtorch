@@ -14,22 +14,26 @@
 namespace {
 
 class TorchliveVisionRuntimeTest
-    : public torchlive::test::TorchliveBindingsTestBase {};
+    : public torchlive::test::TorchliveBindingsTestBase {
+ public:
+  TorchliveVisionRuntimeTest() : torchlive::test::TorchliveBindingsTestBase() {
+    importTorchliveModule("vision");
+  }
+};
 
 TEST_F(TorchliveVisionRuntimeTest, TorchliveVisionObjectTest) {
-  EXPECT_TRUE(eval("typeof __torchlive_vision__ === 'object'").getBool());
+  EXPECT_TRUE(eval("typeof vision === 'object'").getBool());
 }
 
 TEST_F(TorchliveVisionRuntimeTest, TransformsObjectTest) {
-  EXPECT_TRUE(
-      eval("typeof __torchlive_vision__.transforms === 'object'").getBool());
+  EXPECT_TRUE(eval("typeof vision.transforms === 'object'").getBool());
 }
 
 TEST_F(TorchliveVisionRuntimeTest, CenterCropTest) {
   std::string centerCropWithoutArgs =
       R"(
           const imageTensor1 = torch.rand([3, 640, 480]);
-          const centerCrop = __torchlive_vision__.transforms.centerCrop();
+          const centerCrop = vision.transforms.centerCrop();
           const imageTensor2 = centerCrop(imageTensor1);
           const shape = imageTensor2.shape;
           shape[0] === 3 && shape[1] === 480 && shape[2] === 480;
@@ -39,7 +43,7 @@ TEST_F(TorchliveVisionRuntimeTest, CenterCropTest) {
   std::string centerCropWithSingleSize =
       R"(
           const imageTensor1 = torch.rand([3, 640, 480]);
-          const centerCrop = __torchlive_vision__.transforms.centerCrop(400);
+          const centerCrop = vision.transforms.centerCrop(400);
           const imageTensor2 = centerCrop(imageTensor1);
           const shape = imageTensor2.shape;
           shape[0] === 3 && shape[1] === 400 && shape[2] === 400;
@@ -49,7 +53,7 @@ TEST_F(TorchliveVisionRuntimeTest, CenterCropTest) {
   std::string centerCropWithSize =
       R"(
           const imageTensor1 = torch.rand([3, 640, 480]);
-          const centerCrop = __torchlive_vision__.transforms.centerCrop(200, 300);
+          const centerCrop = vision.transforms.centerCrop(200, 300);
           const imageTensor2 = centerCrop(imageTensor1);
           const shape = imageTensor2.shape;
           shape[0] === 3 && shape[1] === 300 && shape[2] === 200;
@@ -61,7 +65,7 @@ TEST_F(TorchliveVisionRuntimeTest, NormalizeTest) {
   std::string normalize =
       R"(
           const imageTensor1 = torch.rand([3, 640, 480]);
-          const normalize = __torchlive_vision__.transforms.normalize(
+          const normalize = vision.transforms.normalize(
             [0.485, 0.456, 0.406],
             [0.229, 0.224, 0.225]
           );
@@ -78,7 +82,7 @@ TEST_F(TorchliveVisionRuntimeTest, ResizeTest) {
   std::string resizeBothEdgesSmaller3Dim =
       R"(
           const imageTensor1 = torch.rand([3, 640, 480]);
-          const resize = __torchlive_vision__.transforms.resize(400);
+          const resize = vision.transforms.resize(400);
           const imageTensor2 = resize(imageTensor1);
           const shape = imageTensor2.shape;
           shape[0] === 3 && shape[1] === 400 && shape[2] === 400;
@@ -88,7 +92,7 @@ TEST_F(TorchliveVisionRuntimeTest, ResizeTest) {
   std::string resizeOneEdgeSmaller3Dim =
       R"(
           const imageTensor1 = torch.rand([3, 640, 480]);
-          const resize = __torchlive_vision__.transforms.resize(500);
+          const resize = vision.transforms.resize(500);
           const imageTensor2 = resize(imageTensor1);
           const shape = imageTensor2.shape;
           shape[0] === 3 && shape[1] === 500 && shape[2] === 500;
@@ -98,7 +102,7 @@ TEST_F(TorchliveVisionRuntimeTest, ResizeTest) {
   std::string resizeBothEdgesBigger3Dim =
       R"(
           const imageTensor1 = torch.rand([3, 640, 480]);
-          const resize = __torchlive_vision__.transforms.resize(700);
+          const resize = vision.transforms.resize(700);
           const imageTensor2 = resize(imageTensor1);
           const shape = imageTensor2.shape;
           shape[0] === 3 && shape[1] === 700 && shape[2] === 700;
@@ -110,7 +114,7 @@ TEST_F(TorchliveVisionRuntimeTest, ResizeTest) {
   std::string resizeBothEdgesSmaller4Dim =
       R"(
           const imageTensor1 = torch.rand([1, 3, 640, 480]);
-          const resize = __torchlive_vision__.transforms.resize(400);
+          const resize = vision.transforms.resize(400);
           const imageTensor2 = resize(imageTensor1);
           const shape = imageTensor2.shape;
           shape[0] === 1 && shape[1] === 3 && shape[2] === 400 && shape[3] === 400;
@@ -120,7 +124,7 @@ TEST_F(TorchliveVisionRuntimeTest, ResizeTest) {
   std::string resizeOneEdgeSmaller4Dim =
       R"(
           const imageTensor1 = torch.rand([1, 3, 640, 480]);
-          const resize = __torchlive_vision__.transforms.resize(500);
+          const resize = vision.transforms.resize(500);
           const imageTensor2 = resize(imageTensor1);
           const shape = imageTensor2.shape;
           shape[0] === 1 && shape[1] === 3 && shape[2] === 500 && shape[3] === 500;
@@ -130,7 +134,7 @@ TEST_F(TorchliveVisionRuntimeTest, ResizeTest) {
   std::string resizeBothEdgesBigger4Dim =
       R"(
           const imageTensor1 = torch.rand([1, 3, 640, 480]);
-          const resize = __torchlive_vision__.transforms.resize(700);
+          const resize = vision.transforms.resize(700);
           const imageTensor2 = resize(imageTensor1);
           const shape = imageTensor2.shape;
           shape[0] === 1 && shape[1] === 3 && shape[2] === 700 && shape[3] === 700;

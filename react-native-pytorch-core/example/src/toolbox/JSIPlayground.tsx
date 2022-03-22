@@ -7,10 +7,11 @@
  * @format
  */
 
-declare var torch: any;
-declare var __torchlive_vision__: any;
-declare var __torchlive_torchvision__: any;
 declare var performance: any;
+declare var __torchlive__: any;
+const torch = __torchlive__.torch;
+const torchvision = __torchlive__.torchvision;
+const vision = __torchlive__.vision;
 
 import * as React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Platform} from 'react-native';
@@ -34,8 +35,8 @@ export default function JSIPlayground() {
   const [cxxElapse, setcxxElapse] = React.useState(0);
   const testFunc = async () => {
     console.log('---Test torchlive---');
-    console.log(__torchlive_vision__);
-    console.log(__torchlive_vision__.transforms);
+    console.log(vision);
+    console.log(vision.transforms);
 
     console.log('------------');
     console.log(Platform.OS);
@@ -209,9 +210,9 @@ export default function JSIPlayground() {
     console.log(tensorAbsOutput.toString());
 
     console.log('---test torchvision.centercrop---');
-    console.log(__torchlive_torchvision__);
+    console.log(torchvision);
     let tensor6 = torch.rand([1, 3, 5, 5]);
-    let centerCrop = __torchlive_torchvision__.transforms.centerCrop(3);
+    let centerCrop = torchvision.transforms.centerCrop(3);
     let tensor7 = centerCrop.forward(tensor6);
     console.log('original shape: ', tensor6.shape);
     console.log('transfomred shape: ', tensor7.shape);
@@ -224,7 +225,7 @@ export default function JSIPlayground() {
     console.log(indices.data);
     console.log('---test torchvision.resize---');
     let tensor8 = torch.rand([1, 3, 100, 100]);
-    let resize = __torchlive_torchvision__.transforms.resize(20);
+    let resize = torchvision.transforms.resize(20);
     console.log('log resize: ', resize.forward);
     let tenosr9 = resize.forward(tensor8);
     console.log('original shape: ', tensor8.shape);
@@ -232,7 +233,7 @@ export default function JSIPlayground() {
 
     console.log('---test torchvision.normalize---');
     const tensor10 = torch.rand([1, 3, 5, 5]);
-    const normalize = __torchlive_torchvision__.transforms.normalize(
+    const normalize = torchvision.transforms.normalize(
       [0.2, 0.2, 0.2],
       [0.5, 0.5, 0.5],
     );
@@ -244,7 +245,7 @@ export default function JSIPlayground() {
 
     console.log('---test torchvision.grayscale---');
     const tensor11 = torch.rand([1, 3, 5, 5]);
-    const grayscale = __torchlive_torchvision__.transforms.grayscale();
+    const grayscale = torchvision.transforms.grayscale();
     console.log('log grayscale: ', grayscale.forward);
     const grayscaled = grayscale(tensor11);
     console.log(grayscaled.toString());

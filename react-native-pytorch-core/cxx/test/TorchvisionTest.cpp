@@ -14,13 +14,19 @@
 namespace {
 
 class TorchliveTorchvisionRuntimeTest
-    : public torchlive::test::TorchliveBindingsTestBase {};
+    : public torchlive::test::TorchliveBindingsTestBase {
+ public:
+  TorchliveTorchvisionRuntimeTest()
+      : torchlive::test::TorchliveBindingsTestBase() {
+    importTorchliveModule("torchvision");
+  }
+};
 
 TEST_F(TorchliveTorchvisionRuntimeTest, CenterCropTest) {
   std::string torchvisionCenterCropWithInt =
       R"(
         const tensor = torch.rand([20, 3, 1024, 1024]);
-        const centerCrop = __torchlive_torchvision__.transforms.centerCrop(480);
+        const centerCrop = torchvision.transforms.centerCrop(480);
         const centerCropped = centerCrop.forward(tensor);
         centerCropped.shape[0] == 20 && centerCropped.shape[1] == 3 && centerCropped.shape[2] == 480 && centerCropped.shape[3] == 480;
       )";
@@ -29,7 +35,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, CenterCropTest) {
   std::string torchvisionCenterCropWithUnaryArray =
       R"(
         const tensor = torch.rand([20, 3, 1024, 1024]);
-        const centerCrop = __torchlive_torchvision__.transforms.centerCrop([480]);
+        const centerCrop = torchvision.transforms.centerCrop([480]);
         const centerCropped = centerCrop.forward(tensor);
         centerCropped.shape[0] == 20 && centerCropped.shape[1] == 3 && centerCropped.shape[2] == 480 && centerCropped.shape[3] == 480;
       )";
@@ -38,7 +44,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, CenterCropTest) {
   std::string torchvisionCenterCropWithBinaryArray =
       R"(
         const tensor = torch.rand([20, 3, 1024, 1024]);
-        const centerCrop = __torchlive_torchvision__.transforms.centerCrop([480, 640]);
+        const centerCrop = torchvision.transforms.centerCrop([480, 640]);
         const centerCropped = centerCrop.forward(tensor);
         centerCropped.shape[0] == 20 && centerCropped.shape[1] == 3 && centerCropped.shape[2] == 480 && centerCropped.shape[3] == 640;
       )";
@@ -46,21 +52,21 @@ TEST_F(TorchliveTorchvisionRuntimeTest, CenterCropTest) {
 
   std::string torchvisionCenterCropWithEmptyArray =
       R"(
-        __torchlive_torchvision__.transforms.centerCrop([]);
+        torchvision.transforms.centerCrop([]);
       )";
   EXPECT_THROW(
       eval(torchvisionCenterCropWithEmptyArray), facebook::jsi::JSError);
 
   std::string torchvisionCenterCropWithTrinaryArray =
       R"(
-        __torchlive_torchvision__.transforms.centerCrop([480, 640, 720]);
+        torchvision.transforms.centerCrop([480, 640, 720]);
       )";
   EXPECT_THROW(
       eval(torchvisionCenterCropWithTrinaryArray), facebook::jsi::JSError);
 
   std::string torchvisionCenterCropMultipleArguments =
       R"(
-        __torchlive_torchvision__.transforms.centerCrop(100, 100);
+        torchvision.transforms.centerCrop(100, 100);
       )";
   EXPECT_THROW(
       eval(torchvisionCenterCropMultipleArguments), facebook::jsi::JSError);
@@ -68,7 +74,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, CenterCropTest) {
   std::string torchvisionCenterCropWithWrongNumberOfInput =
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
-        const centerCrop = __torchlive_torchvision__.transforms.centerCrop(3);
+        const centerCrop = torchvision.transforms.centerCrop(3);
         centerCrop.forward(tensor, 1);
       )";
   EXPECT_THROW(
@@ -80,7 +86,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, ResizeTest) {
   std::string torchvisionResizeForward =
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
-        const resize = __torchlive_torchvision__.transforms.resize(2);
+        const resize = torchvision.transforms.resize(2);
         const resized = resize.forward(tensor);
         resized.shape[0] == 1 && resized.shape[1] == 3 && resized.shape[2] == 2 && resized.shape[3] == 2;
       )";
@@ -89,7 +95,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, ResizeTest) {
   std::string torchvisionResizeWithInt =
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
-        const resize = __torchlive_torchvision__.transforms.resize(2);
+        const resize = torchvision.transforms.resize(2);
         const resized = resize(tensor);
         resized.shape[0] == 1 && resized.shape[1] == 3 && resized.shape[2] == 2 && resized.shape[3] == 2;
       )";
@@ -98,7 +104,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, ResizeTest) {
   std::string torchvisionResizeWithUnaryArray =
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
-        const resize = __torchlive_torchvision__.transforms.resize([2]);
+        const resize = torchvision.transforms.resize([2]);
         const resized = resize(tensor);
         resized.shape[0] == 1 && resized.shape[1] == 3 && resized.shape[2] == 2 && resized.shape[3] == 2;
       )";
@@ -107,7 +113,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, ResizeTest) {
   std::string torchvisionResizeWithShape =
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
-        const resize = __torchlive_torchvision__.transforms.resize([2, 3]);
+        const resize = torchvision.transforms.resize([2, 3]);
         const resized = resize(tensor);
         resized.shape[0] == 1 && resized.shape[1] == 3 && resized.shape[2] == 2 && resized.shape[3] == 3;
       )";
@@ -116,28 +122,28 @@ TEST_F(TorchliveTorchvisionRuntimeTest, ResizeTest) {
   std::string torchvisionResizeOnSmallTensor =
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
-        const resize = __torchlive_torchvision__.transforms.resize(6);
+        const resize = torchvision.transforms.resize(6);
         const resized = resize(tensor);
         resized.shape[0] == 1 && resized.shape[1] == 3 && resized.shape[2] == 6 && resized.shape[3] == 6;
       )";
   EXPECT_TRUE(eval(torchvisionResizeOnSmallTensor).getBool());
 
   std::string torchvisionResizeWithZeroArgument =
-      R"(__torchlive_torchvision__.transforms.resize();)";
+      R"(torchvision.transforms.resize();)";
   EXPECT_THROW(eval(torchvisionResizeWithZeroArgument), facebook::jsi::JSError);
 
   std::string torchvisionResizeWithEmptyList =
-      R"(__torchlive_torchvision__.transforms.resize([]);)";
+      R"(torchvision.transforms.resize([]);)";
   EXPECT_THROW(eval(torchvisionResizeWithEmptyList), facebook::jsi::JSError);
 
   std::string torchvisionResizeWithTrinaryArray =
-      R"(__torchlive_torchvision__.transforms.resize([2,3,4]);)";
+      R"(torchvision.transforms.resize([2,3,4]);)";
   EXPECT_THROW(eval(torchvisionResizeWithTrinaryArray), facebook::jsi::JSError);
 
   std::string torchvisionResizeOnOneDimensionTensor =
       R"(
         const tensor = torch.rand([5]);
-        const resize = __torchlive_torchvision__.transforms.resize(2);
+        const resize = torchvision.transforms.resize(2);
         const resized = resize(tensor);
       )";
   EXPECT_THROW(
@@ -146,7 +152,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, ResizeTest) {
   std::string torchvisionResizeWithWrongNumberOfInput =
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
-        const resize = __torchlive_torchvision__.transforms.resize(3);
+        const resize = torchvision.transforms.resize(3);
         resize.forward(tensor, 1);
       )";
   EXPECT_THROW(
@@ -157,7 +163,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, NormalizeTest) {
   std::string torchvisionNormalize =
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
-        const normalize = __torchlive_torchvision__.transforms.normalize([0.2, 0.2, 0.2], [0.5, 0.5, 0.5]);
+        const normalize = torchvision.transforms.normalize([0.2, 0.2, 0.2], [0.5, 0.5, 0.5]);
         const normalized = normalize(tensor);
         const expectedShape = [1, 3, 5, 5];
         normalized.shape.length == expectedShape.length && normalized.shape.every((v, i) => v == expectedShape[i]);
@@ -167,7 +173,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, NormalizeTest) {
   std::string torchvisionNormalizeForward =
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
-        const normalize = __torchlive_torchvision__.transforms.normalize([0.2, 0.2, 0.2], [0.5, 0.5, 0.5]);
+        const normalize = torchvision.transforms.normalize([0.2, 0.2, 0.2], [0.5, 0.5, 0.5]);
         const normalized = normalize.forward(tensor);
         const expectedShape = [1, 3, 5, 5];
         normalized.shape.length == expectedShape.length && normalized.shape.every((v, i) => v == expectedShape[i]);
@@ -177,7 +183,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, NormalizeTest) {
   std::string torchvisionNormalizeWithUnmatchedChannelsOfTensor =
       R"(
         const tensor = torch.rand([1, 4, 5, 5]);
-        const normalize = __torchlive_torchvision__.transforms.normalize([0.2, 0.2, 0.2], [0.5, 0.5, 0.5]);
+        const normalize = torchvision.transforms.normalize([0.2, 0.2, 0.2], [0.5, 0.5, 0.5]);
         normalize(tensor);
       )";
   EXPECT_THROW(
@@ -187,7 +193,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, NormalizeTest) {
   std::string torchvisionNormalizeWithUnmatchedChannelsOfMeanAndStd =
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
-        const normalize = __torchlive_torchvision__.transforms.normalize([0.2, 0.2, 0.2], [0.5, 0.5]);
+        const normalize = torchvision.transforms.normalize([0.2, 0.2, 0.2], [0.5, 0.5]);
         normalize(tensor);
       )";
   EXPECT_THROW(
@@ -197,7 +203,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, NormalizeTest) {
   std::string torchvisionNormalizeWithWrongNumberOfInput =
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
-        const normalize = __torchlive_torchvision__.transforms.normalize(3);
+        const normalize = torchvision.transforms.normalize(3);
         normalize.forward(tensor, 1);
       )";
   EXPECT_THROW(
@@ -208,7 +214,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, GrayscaleTest) {
   std::string torchvisionGrayscaleWithDefaultParam =
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
-        const grayscale = __torchlive_torchvision__.transforms.grayscale();
+        const grayscale = torchvision.transforms.grayscale();
         const grayscaled = grayscale(tensor);
         const expectedShape = [1, 1, 5, 5];
         grayscaled.shape.length == expectedShape.length && grayscaled.shape.every((v, i) => v == expectedShape[i]);
@@ -218,7 +224,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, GrayscaleTest) {
   std::string torchvisionGrayScaleForwardWithDefaultParam =
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
-        const grayscale = __torchlive_torchvision__.transforms.grayscale();
+        const grayscale = torchvision.transforms.grayscale();
         const grayscaled = grayscale.forward(tensor);
         const expectedShape = [1, 1, 5, 5];
         grayscaled.shape.length == expectedShape.length && grayscaled.shape.every((v, i) => v == expectedShape[i]);
@@ -228,7 +234,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, GrayscaleTest) {
   std::string torchvisionGrayscaleWithSpecifiedNumberOfChannels =
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
-        const grayscale = __torchlive_torchvision__.transforms.grayscale(3);
+        const grayscale = torchvision.transforms.grayscale(3);
         const grayscaled = grayscale.forward(tensor);
         const expectedShape = [1, 3, 5, 5];
         grayscaled.shape.length == expectedShape.length && grayscaled.shape.every((v, i) => v == expectedShape[i]);
@@ -238,7 +244,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, GrayscaleTest) {
 
   std::string torchvisionGrayscaleWithWrongNumberOfParameters =
       R"(
-        __torchlive_torchvision__.transforms.grayscale(1, 3);
+        torchvision.transforms.grayscale(1, 3);
       )";
   EXPECT_THROW(
       eval(torchvisionGrayscaleWithWrongNumberOfParameters),
@@ -246,7 +252,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, GrayscaleTest) {
 
   std::string torchvisionGrayscaleWithWrongParameters =
       R"(
-        __torchlive_torchvision__.transforms.grayscale(2);
+        torchvision.transforms.grayscale(2);
       )";
   EXPECT_THROW(
       eval(torchvisionGrayscaleWithWrongParameters), facebook::jsi::JSError);
@@ -254,7 +260,7 @@ TEST_F(TorchliveTorchvisionRuntimeTest, GrayscaleTest) {
   std::string torchvisionGrayscaleWithWrongNumberOfInput =
       R"(
         const tensor = torch.rand([1, 3, 5, 5]);
-        const grayscale = __torchlive_torchvision__.transforms.grayscale(3);
+        const grayscale = torchvision.transforms.grayscale(3);
         grayscale.forward(tensor, 1);
       )";
   EXPECT_THROW(

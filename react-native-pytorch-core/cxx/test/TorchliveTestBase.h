@@ -39,6 +39,16 @@ class TorchliveTestBase : public HermesRuntimeTest {
   facebook::jsi::Value eval(const std::string& code) {
     return rt->global().getPropertyAsFunction(*rt, "eval").call(*rt, code);
   }
+
+  void importTorchliveModule(const std::string& moduleName) {
+    auto torchliveObj =
+        rt->global().getProperty(*rt, "__torchlive__").asObject(*rt);
+    if (!torchliveObj.hasProperty(*rt, moduleName.c_str())) {
+      throw std::runtime_error("Did not find torchlive module: " + moduleName);
+    }
+    auto moduleVal = torchliveObj.getProperty(*rt, moduleName.c_str());
+    rt->global().setProperty(*rt, moduleName.c_str(), std::move(moduleVal));
+  }
 };
 
 // Base class for torchlive tests that installs JSI bindings
@@ -49,6 +59,8 @@ class TorchliveBindingsTestBase : public TorchliveTestBase {
         *rt, [](std::function<void(facebook::jsi::Runtime & runtime)>&&) {
           FAIL() << "Asychronous execution not yet supported in tests";
         });
+    // Expose torch module globally.
+    importTorchliveModule("torch");
   }
 };
 

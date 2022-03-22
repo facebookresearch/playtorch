@@ -22,7 +22,6 @@ namespace jit {
 
 class JSI_EXPORT JITHostObject : public facebook::jsi::HostObject {
   facebook::jsi::Function _loadForMobile_;
-  facebook::jsi::Function _loadForMobileAsync_;
 
  public:
   explicit JITHostObject(
@@ -48,9 +47,6 @@ class JSI_EXPORT JITHostObject : public facebook::jsi::HostObject {
       torchlive::RuntimeExecutor runtimeExecutor,
       torch_::jit::mobile::Module m);
   static facebook::jsi::Function create_LoadForMobile(
-      facebook::jsi::Runtime& runtime,
-      torchlive::RuntimeExecutor runtimeExecutor);
-  static facebook::jsi::Function create_LoadForMobileAsync(
       facebook::jsi::Runtime& runtime,
       torchlive::RuntimeExecutor runtimeExecutor);
 };

@@ -23,7 +23,7 @@ namespace mobile {
 
 class JSI_EXPORT ModuleHostObject : public facebook::jsi::HostObject {
   facebook::jsi::Function forward_;
-  facebook::jsi::Function forwardAsync_;
+  facebook::jsi::Function forwardSync_;
 
  public:
   explicit ModuleHostObject(
@@ -53,7 +53,7 @@ class JSI_EXPORT ModuleHostObject : public facebook::jsi::HostObject {
       facebook::jsi::Runtime& runtime,
       torch_::jit::IValue value);
   facebook::jsi::Function createForward(facebook::jsi::Runtime& runtime);
-  facebook::jsi::Function createForwardAsync(facebook::jsi::Runtime& runtime);
+  facebook::jsi::Function createForwardSync(facebook::jsi::Runtime& runtime);
 };
 
 } // namespace mobile

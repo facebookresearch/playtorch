@@ -32,10 +32,10 @@ struct LiteJITCallGuard {
 
 // ModuleHostObject Method Name
 static const std::string FORWARD = "forward";
-static const std::string FORWARD_ASYNC = "forwardAsync";
+static const std::string FORWARD_SYNC = "forwardSync";
 
 // ModuleHostObject Methods
-const std::vector<std::string> METHODS = {FORWARD, FORWARD_ASYNC};
+const std::vector<std::string> METHODS = {FORWARD, FORWARD_SYNC};
 
 // ModuleHostObject Property Names
 // empty
@@ -48,7 +48,7 @@ ModuleHostObject::ModuleHostObject(
     torchlive::RuntimeExecutor runtimeExecutor,
     torch_::jit::mobile::Module m)
     : forward_(createForward(runtime)),
-      forwardAsync_(createForwardAsync(runtime)),
+      forwardSync_(createForwardSync(runtime)),
       runtimeExecutor_(runtimeExecutor),
       module_(m) {}
 
@@ -71,8 +71,8 @@ jsi::Value ModuleHostObject::get(
 
   if (name == FORWARD) {
     return jsi::Value(runtime, forward_);
-  } else if (name == FORWARD_ASYNC) {
-    return jsi::Value(runtime, forwardAsync_);
+  } else if (name == FORWARD_SYNC) {
+    return jsi::Value(runtime, forwardSync_);
   }
 
   return jsi::Value::undefined();
@@ -119,25 +119,10 @@ jsi::Value ModuleHostObject::forwardPostWork(
 
 jsi::Function ModuleHostObject::createForward(jsi::Runtime& runtime) {
   auto forwardFunc = [this](
-                         jsi::Runtime& runtime,
+                         jsi::Runtime& rt,
                          const jsi::Value& thisValue,
                          const jsi::Value* arguments,
                          size_t count) -> jsi::Value {
-    auto inputs = forwardPreWork(runtime, thisValue, arguments, count);
-    auto outputs = forwardWork(module_, std::move(inputs));
-    auto result = forwardPostWork(runtime, std::move(outputs));
-    return result;
-  };
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, FORWARD), 1, forwardFunc);
-}
-
-jsi::Function ModuleHostObject::createForwardAsync(jsi::Runtime& runtime) {
-  auto forwardAsyncFunc = [this](
-                              jsi::Runtime& rt,
-                              const jsi::Value& thisValue,
-                              const jsi::Value* arguments,
-                              size_t count) -> jsi::Value {
     return createPromiseAsJSIValue(
         rt, [&](jsi::Runtime& rt2, std::shared_ptr<Promise> promise) {
           auto inputs = forwardPreWork(rt2, thisValue, arguments, count);
@@ -157,10 +142,25 @@ jsi::Function ModuleHostObject::createForwardAsync(jsi::Runtime& runtime) {
         });
   };
   return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, FORWARD), 1, forwardFunc);
+}
+
+jsi::Function ModuleHostObject::createForwardSync(jsi::Runtime& runtime) {
+  auto forwardSyncFunc = [this](
+                             jsi::Runtime& runtime,
+                             const jsi::Value& thisValue,
+                             const jsi::Value* arguments,
+                             size_t count) -> jsi::Value {
+    auto inputs = forwardPreWork(runtime, thisValue, arguments, count);
+    auto outputs = forwardWork(module_, std::move(inputs));
+    auto result = forwardPostWork(runtime, std::move(outputs));
+    return result;
+  };
+  return jsi::Function::createFromHostFunction(
       runtime,
-      jsi::PropNameID::forUtf8(runtime, FORWARD_ASYNC),
+      jsi::PropNameID::forUtf8(runtime, FORWARD_SYNC),
       1,
-      forwardAsyncFunc);
+      forwardSyncFunc);
 }
 
 } // namespace mobile

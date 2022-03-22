@@ -26,13 +26,10 @@ namespace jit {
 using namespace facebook;
 
 // JITHostObject Method Name
-static const std::string _LOAD_FOR_MOBILE = "_load_for_mobile";
-static const std::string _LOAD_FOR_MOBILE_ASYNC = "_load_for_mobile_async";
+static const std::string _LOAD_FOR_MOBILE = "_loadForMobile";
 
 // JITHostObject Methods
-const std::vector<std::string> METHODS = {
-    _LOAD_FOR_MOBILE,
-    _LOAD_FOR_MOBILE_ASYNC};
+const std::vector<std::string> METHODS = {_LOAD_FOR_MOBILE};
 
 // JITHostObject Property Names
 // empty
@@ -43,9 +40,7 @@ static const std::vector<std::string> PROPERTIES = {};
 JITHostObject::JITHostObject(
     jsi::Runtime& runtime,
     torchlive::RuntimeExecutor runtimeExecutor)
-    : _loadForMobile_(create_LoadForMobile(runtime, runtimeExecutor)),
-      _loadForMobileAsync_(
-          create_LoadForMobileAsync(runtime, runtimeExecutor)) {}
+    : _loadForMobile_(create_LoadForMobile(runtime, runtimeExecutor)) {}
 
 std::vector<jsi::PropNameID> JITHostObject::getPropertyNames(jsi::Runtime& rt) {
   std::vector<jsi::PropNameID> result;
@@ -65,8 +60,6 @@ jsi::Value JITHostObject::get(
 
   if (name == _LOAD_FOR_MOBILE) {
     return jsi::Value(runtime, _loadForMobile_);
-  } else if (name == _LOAD_FOR_MOBILE_ASYNC) {
-    return jsi::Value(runtime, _loadForMobileAsync_);
   }
 
   return jsi::Value::undefined();
@@ -108,31 +101,10 @@ jsi::Function JITHostObject::create_LoadForMobile(
     jsi::Runtime& runtime,
     torchlive::RuntimeExecutor runtimeExecutor) {
   auto loadForMobileFunc = [runtimeExecutor](
-                               jsi::Runtime& runtime,
+                               jsi::Runtime& rt,
                                const jsi::Value& thisValue,
                                const jsi::Value* arguments,
                                size_t count) -> jsi::Value {
-    auto inputs = _loadForMobilePreWork(runtime, thisValue, arguments, count);
-    auto outputs = _loadForMobileWork(std::move(inputs));
-    auto result =
-        _loadForMobilePostWork(runtime, runtimeExecutor, std::move(outputs));
-    return result;
-  };
-  return jsi::Function::createFromHostFunction(
-      runtime,
-      jsi::PropNameID::forUtf8(runtime, _LOAD_FOR_MOBILE),
-      1,
-      loadForMobileFunc);
-}
-
-jsi::Function JITHostObject::create_LoadForMobileAsync(
-    jsi::Runtime& runtime,
-    torchlive::RuntimeExecutor runtimeExecutor) {
-  auto loadForMobileAsyncFunc = [runtimeExecutor](
-                                    jsi::Runtime& rt,
-                                    const jsi::Value& thisValue,
-                                    const jsi::Value* arguments,
-                                    size_t count) -> jsi::Value {
     return createPromiseAsJSIValue(
         rt, [&](jsi::Runtime& rt2, std::shared_ptr<Promise> promise) {
           auto inputs = _loadForMobilePreWork(rt2, thisValue, arguments, count);
@@ -154,9 +126,9 @@ jsi::Function JITHostObject::create_LoadForMobileAsync(
   };
   return jsi::Function::createFromHostFunction(
       runtime,
-      jsi::PropNameID::forUtf8(runtime, _LOAD_FOR_MOBILE_ASYNC),
+      jsi::PropNameID::forUtf8(runtime, _LOAD_FOR_MOBILE),
       1,
-      loadForMobileAsyncFunc);
+      loadForMobileFunc);
 }
 
 } // namespace jit

@@ -104,6 +104,16 @@ find_library(
         NO_CMAKE_FIND_ROOT_PATH
 )
 
+# For RN 0.66+, use the distributed libjsi.so
+if(${REACT_NATIVE_MINOR_VERSION} GREATER_EQUAL 66)
+        find_library(
+                JSI_LIB
+                jsi
+                PATHS ${LIBRN_DIR}
+                NO_CMAKE_FIND_ROOT_PATH
+        )
+endif()
+
 # linking
 
 target_link_libraries(
@@ -113,5 +123,6 @@ target_link_libraries(
         ${REACT_NATIVE_UTILS_LIB}
         ${PYTORCH_LIBRARY}
         ${FBJNI_LIBRARY}
+        ${JSI_LIB}
         android
 )

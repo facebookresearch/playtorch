@@ -8,6 +8,15 @@
 import groovy.json.JsonSlurper
 import org.apache.tools.ant.filters.ReplaceTokens
 
+// read the React-Native version of local app
+def parseAppRnVersion() {
+   def inputFile = new File(rootDir, '../node_modules/react-native/package.json')
+   def json = new JsonSlurper().parseText(inputFile.text)
+   return json.version as String
+}
+
+def (appRnMajorVersion, appRnMinorVersion, appRnPatchVersion) = parseAppRnVersion().tokenize('.')
+
 buildscript {
   if (project == rootProject) {
     repositories {
@@ -45,7 +54,7 @@ android {
       cmake {
         cppFlags "-fexceptions", "-frtti", "-std=c++1y", "-DONANDROID"
         abiFilters 'x86', 'x86_64', 'armeabi-v7a', 'arm64-v8a'
-        arguments '-DANDROID_STL=c++_shared', "-DNODE_MODULES_DIR=${rootDir}/../node_modules"
+        arguments '-DANDROID_STL=c++_shared', "-DNODE_MODULES_DIR=${rootDir}/../node_modules", "-DREACT_NATIVE_MINOR_VERSION=${appRnMinorVersion}"
       }
     }
   }
@@ -113,10 +122,6 @@ dependencies {
   extractJNI("com.facebook.fbjni:fbjni:+")
 
   def rnAAR = fileTree("${rootDir}/../node_modules/react-native/android").matching({ it.include "**/**/*.aar" }).singleFile
-  def inputFile = new File(rootDir, '../node_modules/react-native/package.json')
-  def json = new JsonSlurper().parseText(inputFile.text)
-  def reactNativeVersion = json.version as String
-  def (major, minor, patch) = reactNativeVersion.tokenize('.')
   extractJNI(files(rnAAR))
 
   extractForNativeBuild('org.pytorch:pytorch_android_lite:1.10.0')

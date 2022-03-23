@@ -25,6 +25,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.pytorch.rn.core.javascript.JSContext;
 import org.pytorch.rn.core.utils.FileUtils;
@@ -42,6 +44,9 @@ public class AudioModule extends ReactContextBaseJavaModule {
   private static final String DEFAULT_AUDIO_FILE_EXTENSION = ".wav";
 
   private final ReactApplicationContext mReactContext;
+  private volatile boolean mIsRecording;
+  private int mBufferSize;
+  private List<short[]> mAudioDataChunks = new ArrayList<>();
 
   public AudioModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -55,61 +60,69 @@ public class AudioModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void record(final int length, final Promise promise) {
+  public void startRecord() {
     Log.d(TAG, "started recording");
 
     requestMicrophonePermission();
 
-    final int recordingLength = SAMPLE_RATE * length;
     Thread recordingThread =
         new Thread(
             () -> {
-              try {
-                final int bufferSize =
-                    AudioRecord.getMinBufferSize(
-                        SAMPLE_RATE, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
-                final AudioRecord record =
-                    new AudioRecord(
-                        MediaRecorder.AudioSource.DEFAULT,
-                        SAMPLE_RATE,
-                        AudioFormat.CHANNEL_IN_MONO,
-                        AudioFormat.ENCODING_PCM_16BIT,
-                        bufferSize);
+              synchronized (mAudioDataChunks) {
+                try {
+                  mBufferSize =
+                      AudioRecord.getMinBufferSize(
+                          SAMPLE_RATE, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
+                  final AudioRecord record =
+                      new AudioRecord(
+                          MediaRecorder.AudioSource.DEFAULT,
+                          SAMPLE_RATE,
+                          AudioFormat.CHANNEL_IN_MONO,
+                          AudioFormat.ENCODING_PCM_16BIT,
+                          mBufferSize);
 
-                if (record.getState() != AudioRecord.STATE_INITIALIZED) {
-                  Log.e(TAG, "Audio Record can't initialize!");
-                  return;
+                  if (record.getState() != AudioRecord.STATE_INITIALIZED) {
+                    Log.e(TAG, "Audio Record can't initialize!");
+                    return;
+                  }
+                  record.startRecording();
+                  mIsRecording = true;
+                  mAudioDataChunks = new ArrayList<>();
+                  while (mIsRecording) {
+                    final short[] audioBuffer = new short[mBufferSize / 2];
+                    final int numberOfShort = record.read(audioBuffer, 0, audioBuffer.length);
+                    mAudioDataChunks.add(audioBuffer);
+                  }
+                  record.stop();
+                  record.release();
+                } catch (final Exception e) {
+                  mIsRecording = false;
+                  mAudioDataChunks.clear();
+                  Log.e(TAG, "Error recording audio:", e);
+                  throw new RuntimeException(
+                      "Exception encountered while recording audio. " + e.getMessage());
                 }
-                record.startRecording();
-
-                long shortsRead = 0;
-                int audioDataOffset = 0;
-                int shortsToCopy = 0;
-                short[] audioBuffer = new short[bufferSize / 2];
-                short[] audioData = new short[recordingLength];
-
-                while (shortsRead < recordingLength) {
-                  int numberOfShort = record.read(audioBuffer, 0, audioBuffer.length);
-                  shortsRead += numberOfShort;
-                  shortsToCopy = Math.min(numberOfShort, recordingLength - audioDataOffset);
-                  System.arraycopy(audioBuffer, 0, audioData, audioDataOffset, shortsToCopy);
-                  audioDataOffset += shortsToCopy;
-                  Log.d(TAG, String.format("shortsRead=%d", shortsRead));
-                }
-
-                record.stop();
-                record.release();
-
-                Audio audio = new Audio(audioData);
-                JSContext.NativeJSRef ref = JSContext.wrapObject(audio);
-                promise.resolve(ref.getJSRef());
-              } catch (Exception e) {
-                Log.e(TAG, "Error recording audio:", e);
-                promise.reject(e);
               }
             });
-
     recordingThread.start();
+  }
+
+  @ReactMethod
+  public void stopRecord(final Promise promise) {
+    if (!mIsRecording) {
+      promise.resolve(null);
+    }
+    mIsRecording = false;
+    synchronized (mAudioDataChunks) {
+      // Wait for the recording thread to finish recording
+      if (mAudioDataChunks.size() > 0) {
+        final Audio recordedAudio = processRecordedAudio();
+        JSContext.NativeJSRef ref = JSContext.wrapObject(recordedAudio);
+        promise.resolve(ref.getJSRef());
+      } else {
+        promise.reject("Exception while recording audio.");
+      }
+    }
   }
 
   @ReactMethod
@@ -161,5 +174,17 @@ public class AudioModule extends ReactContextBaseJavaModule {
           new String[] {android.Manifest.permission.RECORD_AUDIO},
           REQUEST_RECORD_AUDIO);
     }
+  }
+
+  private Audio processRecordedAudio() {
+    int index = 0;
+    final short[] audioData = new short[mAudioDataChunks.size() * mBufferSize / 2];
+    for (int i = 0; i < mAudioDataChunks.size(); i++) {
+      final short[] audioDataChunk = mAudioDataChunks.get(i);
+      for (int j = 0; j < audioDataChunk.length; j++) {
+        audioData[index++] = audioDataChunk[j];
+      }
+    }
+    return new Audio(audioData);
   }
 }

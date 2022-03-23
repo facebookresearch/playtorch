@@ -10,7 +10,8 @@
 #import <React/RCTConvert.h>
 
 @interface RCT_EXTERN_REMAP_MODULE(PyTorchCoreAudioModule, AudioModule, NSObject)
-RCT_EXTERN_METHOD(record:(nonnull NSNumber)length resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
+RCT_EXTERN_METHOD(startRecord);
+RCT_EXTERN_METHOD(stopRecord:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(getName);
 RCT_EXTERN_METHOD(play:(nonnull NSDictionary)audioRef);
 RCT_EXTERN_METHOD(fromBundle:(nonnull NSString)assetAudio resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);

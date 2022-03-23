@@ -44,13 +44,11 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
         return audio
     }
 
-    @objc(record:resolver:rejecter:)
-    public func record(_ length : NSNumber, resolver resolve : @escaping RCTPromiseResolveBlock, rejecter reject: @escaping RCTPromiseRejectBlock) {
-        promiseResolve = resolve
-        promiseReject = reject
+    @objc
+    public func startRecord() {
         AVAudioSession.sharedInstance().requestRecordPermission ({(granted: Bool)-> Void in
             if !granted {
-                reject(RCTErrorUnspecified, "Record permission needs to be granted for the app to run successfully.", nil)
+                fatalError("Record permission needs to be granted for the app to run successfully.")
             }
          })
 
@@ -60,8 +58,7 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
             try audioSession.setCategory(AVAudioSession.Category.record)
             try audioSession.setActive(true)
         } catch {
-            reject(RCTErrorUnspecified, "Error during recording", nil)
-            return
+            fatalError("Error while recording audio.")
         }
 
         let settings = [
@@ -77,9 +74,21 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
             let recorderFilePath = (NSHomeDirectory() as NSString).appendingPathComponent("tmp/recorded_file.wav")
             audioRecorder = try AVAudioRecorder(url: NSURL.fileURL(withPath: recorderFilePath), settings: settings)
                 audioRecorder.delegate = self
-                audioRecorder.record(forDuration: 5)
+                audioRecorder.record()
         } catch let error {
-            reject(RCTErrorUnspecified, "error:" + error.localizedDescription, error)
+            fatalError("Error while recording audio : " + error.localizedDescription)
+        }
+    }
+
+    @objc(stopRecord:rejecter:)
+    public func stopRecord(_ resolve: @escaping RCTPromiseResolveBlock,
+                           rejecter reject: @escaping RCTPromiseRejectBlock) {
+        promiseResolve = resolve
+        promiseReject = reject
+        if audioRecorder.isRecording {
+            audioRecorder.stop()
+        } else {
+            promiseResolve(nil)
         }
     }
 

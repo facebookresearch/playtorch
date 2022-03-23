@@ -17,28 +17,28 @@ export default function AudioPlayExample() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
   const [recordedAudio, setRecordedAudio] = useState<Audio>();
 
-  async function handleRecording() {
+  async function startRecording() {
     setIsRecording(true);
-    const audio = await AudioUtil.record(5);
-    setRecordedAudio(audio);
-    setIsRecording(false);
-  }
-
-  function startRecording() {
-    setIsRecording(true);
-    handleRecording();
+    AudioUtil.startRecord();
   }
 
   function play() {
     recordedAudio?.play();
   }
 
+  async function stopRecording() {
+    const audio = await AudioUtil.stopRecord();
+    console.log(audio);
+    setRecordedAudio(audio);
+    setIsRecording(false);
+  }
+
   return (
     <>
-      <TouchableOpacity onPress={!isRecording ? startRecording : undefined}>
+      <TouchableOpacity onPress={!isRecording ? startRecording : stopRecording}>
         <View style={styles.startButton}>
           <Text style={styles.startButtonText}>
-            {isRecording ? 'Listening...' : 'Record 5 seconds'}
+            {isRecording ? 'Stop Recording' : 'Start Recording'}
           </Text>
         </View>
       </TouchableOpacity>

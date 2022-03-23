@@ -33,14 +33,24 @@ export const AudioUtil = {
    * Records an audio of a specific time duration.
    *
    * ```typescript
-   * const audio: Audio = await AudioUtil.record(5);
+   * AudioUtil.startRecord();
+   * ```
+   */
+  startRecord(): void {
+    AudioModule.startRecord();
+  },
+
+  /**
+   * Stops an active audio recording session.
+   *
+   * ```typescript
+   * const audio: Audio = await AudioUtil.stopRecord();
    * ```
    *
-   * @param length Time duration of the audio in seconds.
-   * @returns A promise resolving into an [[Audio]]..
+   * @returns A promise resolving into an [[Audio]]
    */
-  async record(length: number): Promise<Audio> {
-    const ref: NativeJSRef = await AudioModule.record(length);
+  async stopRecord(): Promise<Audio> {
+    const ref: NativeJSRef = await AudioModule.stopRecord();
     return wrapRef(ref);
   },
 

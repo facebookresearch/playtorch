@@ -15,19 +15,19 @@ import {TouchableOpacity, View, StyleSheet, Text} from 'react-native';
 const audioAsset = require('../../../../assets/audio/scent_of_a_woman_future.wav');
 
 export default function AudioSaveLoadExample() {
-  const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const [isRecording, setIsRecording] = useState<boolean>(false);
   const [savedFilePath, setSavedFilePath] = useState<string>('');
 
-  async function handleRecording() {
-    setIsProcessing(true);
-    const audio = await AudioUtil.record(5);
-    setIsProcessing(false);
-    await save(audio);
+  async function startRecording() {
+    setIsRecording(true);
+    AudioUtil.startRecord();
   }
 
-  function startRecording() {
-    setIsProcessing(true);
-    handleRecording();
+  async function stopRecording() {
+    const audio = await AudioUtil.stopRecord();
+    console.log(audio);
+    setIsRecording(false);
+    await save(audio);
   }
 
   async function save(audio: Audio) {
@@ -47,10 +47,10 @@ export default function AudioSaveLoadExample() {
 
   return (
     <>
-      <TouchableOpacity onPress={!isProcessing ? startRecording : undefined}>
+      <TouchableOpacity onPress={!isRecording ? startRecording : stopRecording}>
         <View style={styles.startButton}>
           <Text style={styles.startButtonText}>
-            {isProcessing ? 'Listening...' : 'Record 5 seconds'}
+            {isRecording ? 'Stop Recording' : 'Start Recording'}
           </Text>
         </View>
       </TouchableOpacity>

@@ -27,18 +27,15 @@ export default function Wav2Vec2() {
 
   const isFocused = useIsFocused();
 
-  async function handleRecording() {
-    setIsRecording(true);
-    const audio = await AudioUtil.record(5);
-
+  async function stopRecording() {
+    const audio = await AudioUtil.stopRecord();
+    setIsRecording(false);
     const {metrics: m, result} = await MobileModel.execute<Wav2Vec2Result>(
       Wav2VecModel,
       {
         audio,
       },
     );
-
-    setIsRecording(false);
     setMetrics(m);
     setAnswer(result.answer);
   }
@@ -49,17 +46,17 @@ export default function Wav2Vec2() {
 
   function startRecording() {
     setIsRecording(true);
-    handleRecording();
+    AudioUtil.startRecord();
     setAnswer('');
     setMetrics(null);
   }
 
   return (
     <>
-      <TouchableOpacity onPress={!isRecording ? startRecording : undefined}>
+      <TouchableOpacity onPress={!isRecording ? startRecording : stopRecording}>
         <View style={styles.startButton}>
           <Text style={styles.startButtonText}>
-            {isRecording ? 'Listening...' : 'Record 5 seconds'}
+            {isRecording ? 'Stop Recording' : 'Start Recording'}
           </Text>
         </View>
       </TouchableOpacity>

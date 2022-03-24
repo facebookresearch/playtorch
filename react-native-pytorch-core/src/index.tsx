@@ -17,3 +17,6 @@ export {
   ModelResultMetrics,
 } from './MobileModelModule';
 export {ModelInfo, ModelPath} from './Models';
+
+// Export torchlive torch object and types
+export {torch, Tensor, IValue, Module} from './torchlive/torch';

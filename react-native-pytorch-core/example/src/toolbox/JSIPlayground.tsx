@@ -9,12 +9,12 @@
 
 declare var performance: any;
 declare var __torchlive__: any;
-const torch = __torchlive__.torch;
 const torchvision = __torchlive__.torchvision;
 const vision = __torchlive__.vision;
 
 import * as React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Platform} from 'react-native';
+import {torch} from 'react-native-pytorch-core';
 
 function argmax(array: number[]): number {
   let max = -Number.MAX_VALUE;
@@ -74,9 +74,7 @@ export default function JSIPlayground() {
 
     let testTensor = torch.empty([1, 2]);
     console.log(testTensor.toString());
-    testTensor = torch.empty(1, 2);
-    console.log(testTensor.toString());
-    testTensor = torch.empty([1, 2], {dtype: 'float64'});
+    testTensor = torch.empty([1, 2], {dtype: torch.float64});
     console.log(testTensor.toString());
 
     console.log('---Test torch.arange---');

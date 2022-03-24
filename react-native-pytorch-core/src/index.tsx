@@ -7,6 +7,9 @@
  * @format
  */
 
+export {Audio, AudioUtil} from './audio/AudioModule';
+export {Camera, CameraFacing} from './CameraView';
+export {Canvas, CanvasRenderingContext2D} from './CanvasView';
 export {Image, ImageUtil} from './ImageModule';
 export {
   MobileModel,
@@ -14,7 +17,3 @@ export {
   ModelResultMetrics,
 } from './MobileModelModule';
 export {ModelInfo, ModelPath} from './Models';
-export {Camera, CameraFacing} from './CameraView';
-export {Canvas, CanvasRenderingContext2D} from './CanvasView';
-export {Audio, AudioUtil} from './audio/AudioModule';
-export {ModelLoader} from './ModelLoader';

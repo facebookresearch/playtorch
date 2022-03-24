@@ -10,7 +10,10 @@
 import {NativeModules} from 'react-native';
 import {getModelUri, ModelPath} from './Models';
 
-const {PyTorchCoreMobileModelModule: MobileModelModule} = NativeModules;
+const {
+  PyTorchCoreMobileModelModule: MobileModelModule,
+  PyTorchCoreModelLoaderModule: ModelLoaderModule,
+} = NativeModules;
 
 export interface ModelResultMetrics {
   /**
@@ -58,6 +61,14 @@ export interface ModelResult<T> {
  */
 export interface MobileModel {
   /**
+   * Download a model to the local file system and return the local file path
+   * as a model. If the model path is a file path already, it will return the
+   * same path as a result.
+   *
+   * @param modelPath The model path as require or uri (i.e., `require`).
+   */
+  download(modelPath: ModelPath): Promise<string>;
+  /**
    * Preload a model. If a model is not preloaded, it will be loaded during the
    * first inference call. However, the first inference time will therefore
    * take significantly longer. This function allows to preload a model ahead
@@ -103,6 +114,10 @@ export interface MobileModel {
 }
 
 export const MobileModel: MobileModel = {
+  async download(modelPath: ModelPath): Promise<string> {
+    const uri = getModelUri(modelPath);
+    return await ModelLoaderModule.download(uri);
+  },
   async preload(modelPath: ModelPath): Promise<void> {
     const uri = getModelUri(modelPath);
     return await MobileModelModule.preload(uri);

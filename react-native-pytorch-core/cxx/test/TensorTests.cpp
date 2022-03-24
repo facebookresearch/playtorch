@@ -54,6 +54,55 @@ TEST_F(TorchliveTensorRuntimeTest, TensorAbsTest) {
       eval("torch.tensor([[-2 ,-1], [0, 1]]).abs(1);"), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorAddTest) {
+  std::string tensorAddCodeWithNumber =
+      R"(
+          const tensor = torch.arange(2);
+          const result = tensor.add(2);
+          result.data[0] == tensor.data[0] + 2;
+        )";
+  EXPECT_TRUE(eval(tensorAddCodeWithNumber.c_str()).getBool());
+
+  std::string tensorAddCodeWithTensor =
+      R"(
+          const tensor1 = torch.arange(2);
+          const tensor2 = torch.arange(2);
+          const result = tensor1.add(tensor2);
+          result.data[0] == tensor1.data[0] + tensor2.data[0];
+        )";
+  EXPECT_TRUE(eval(tensorAddCodeWithTensor.c_str()).getBool());
+
+  std::string tensorAddCodeWithNumberAlpha =
+      R"(
+          const tensor1 = torch.arange(2);
+          const result = tensor1.add(2, {alpha: 2});
+          (result.data[0] == tensor1.data[0] + 2 * 2) && (result.data[1] == tensor1.data[1] + 2 * 2);
+        )";
+  EXPECT_TRUE(eval(tensorAddCodeWithNumberAlpha.c_str()).getBool());
+
+  std::string tensorAddCodeWithTensorAlpha =
+      R"(
+          const tensor1 = torch.arange(2);
+          const tensor2 = torch.arange(2);
+          const result = tensor1.add(tensor2, {alpha: 2});
+          (result.data[0] == tensor1.data[0] + 2 * tensor2.data[0]) && (result.data[1] == tensor1.data[1] + 2 * tensor2.data[1]);
+        )";
+  EXPECT_TRUE(eval(tensorAddCodeWithTensorAlpha.c_str()).getBool());
+
+  EXPECT_THROW(eval("torch.arange(2).add()"), facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("torch.empty(1, 2).add('some_string')"), facebook::jsi::JSError);
+
+  std::string tensorAddCodeWithInvalidAlpha =
+      R"(
+          const tensor1 = torch.arange(2);
+          const tensor2 = torch.arange(2);
+          const result = tensor1.add(tensor2, {alpha: 'random_string'});
+        )";
+  EXPECT_THROW(
+      eval(tensorAddCodeWithInvalidAlpha.c_str()), facebook::jsi::JSError);
+}
+
 TEST_F(TorchliveTensorRuntimeTest, TensorDataTest) {
   std::string tensorWithDtypeAsUint8 =
       R"(

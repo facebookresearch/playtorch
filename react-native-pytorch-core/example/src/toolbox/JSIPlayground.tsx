@@ -122,12 +122,12 @@ export default function JSIPlayground() {
     let tensor4 = tensor3.squeeze();
     console.log(tensor4.shape); //  [4]
 
-    console.log('---Test torch.add---');
+    console.log('---Test tensor.add---');
     let addTensor1 = torch.rand([1, 2]);
     console.log(addTensor1.toString());
-    let addTensor2 = torch.add(addTensor1, 2);
+    let addTensor2 = addTensor1.add(2);
     console.log(addTensor2.toString());
-    let addTensor3 = torch.add(addTensor1, addTensor2);
+    let addTensor3 = addTensor1.add(addTensor2);
     console.log(addTensor3.toString());
 
     console.log('---Test torch.sub---');

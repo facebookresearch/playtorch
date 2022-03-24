@@ -17,6 +17,7 @@ namespace torch {
 
 // TensorHostObject Method Names
 static const std::string ABS = "abs";
+static const std::string ADD = "add";
 static const std::string DIV = "div";
 static const std::string SIZE = "size";
 static const std::string SQUEEZE = "squeeze";
@@ -33,12 +34,13 @@ static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
 
 // TensorHostObject Methods
 static const std::vector<std::string> METHODS =
-    {ABS, DIV, SIZE, SQUEEZE, TOSTRING, UNSQUEEZE};
+    {ABS, ADD, DIV, SIZE, SQUEEZE, TOSTRING, UNSQUEEZE};
 
 using namespace facebook;
 
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
     : abs_(createAbs(runtime)),
+      add_(createAdd(runtime)),
       div_(createDiv(runtime)),
       size_(createSize(runtime)),
       squeeze_(createSqueeze(runtime)),
@@ -67,6 +69,8 @@ jsi::Value TensorHostObject::get(
 
   if (name == ABS) {
     return jsi::Value(runtime, abs_);
+  } else if (name == ADD) {
+    return jsi::Value(runtime, add_);
   } else if (name == DATA) {
     auto tensor = this->tensor;
     int byteLength = tensor.nbytes();
@@ -167,6 +171,38 @@ jsi::Function TensorHostObject::createAbs(jsi::Runtime& runtime) {
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, TOSTRING), 0, absFunc);
+}
+
+jsi::Function TensorHostObject::createAdd(jsi::Runtime& runtime) {
+  auto addFunc = [this](
+                     jsi::Runtime& runtime,
+                     const jsi::Value& thisValue,
+                     const jsi::Value* arguments,
+                     size_t count) {
+    if (count < 1) {
+      throw jsi::JSError(runtime, "At least 1 arg required");
+    }
+    auto alphaValue = utils::helpers::parseKeywordArgument(
+        runtime, arguments, 1, count, "alpha");
+    auto alphaScalar = alphaValue.isUndefined()
+        ? at::Scalar(1)
+        : at::Scalar(alphaValue.asNumber());
+    auto tensor = this->tensor;
+    if (arguments[0].isNumber()) {
+      auto value = arguments[0].asNumber();
+      tensor = tensor.add(value, alphaScalar);
+    } else {
+      auto otherTensorHostObject =
+          utils::helpers::parseTensor(runtime, &arguments[0]);
+      auto otherTensor = otherTensorHostObject->tensor;
+      tensor = tensor.add(otherTensor, alphaScalar);
+    }
+    auto tensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
+    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+  };
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, ADD), 1, addFunc);
 }
 
 jsi::Function TensorHostObject::createToString(jsi::Runtime& runtime) {

@@ -23,7 +23,6 @@ namespace torch {
 using namespace facebook;
 
 // TorchHostObject Method Name
-static const std::string ADD = "add";
 static const std::string ARANGE = "arange";
 static const std::string ARGMAX = "argmax";
 static const std::string EMPTY = "empty";
@@ -56,7 +55,6 @@ static const std::vector<std::string> PROPERTIES = {
 
 // TorchHostObject Methods
 const std::vector<std::string> METHODS = {
-    ADD,
     ARANGE,
     ARGMAX,
     EMPTY,
@@ -76,8 +74,7 @@ const std::vector<std::string> METHODS = {
 TorchHostObject::TorchHostObject(
     jsi::Runtime& runtime,
     torchlive::RuntimeExecutor runtimeExecutor)
-    : add_(createAdd(runtime)),
-      arange_(createArange(runtime)),
+    : arange_(createArange(runtime)),
       argmax_(createArgmax(runtime)),
       empty_(createEmpty(runtime)),
       fromBlob_(createFromBlob(runtime)),
@@ -111,9 +108,7 @@ jsi::Value TorchHostObject::get(
     const jsi::PropNameID& propName) {
   auto name = propName.utf8(runtime);
 
-  if (name == ADD) {
-    return jsi::Value(runtime, add_);
-  } else if (name == ARANGE) {
+  if (name == ARANGE) {
     return jsi::Value(runtime, arange_);
   } else if (name == ARGMAX) {
     return jsi::Value(runtime, argmax_);
@@ -166,49 +161,6 @@ jsi::Value TorchHostObject::get(
   }
 
   return jsi::Value::undefined();
-}
-
-jsi::Function TorchHostObject::createAdd(jsi::Runtime& runtime) {
-  auto addFunc = [](jsi::Runtime& runtime,
-                    const jsi::Value& thisValue,
-                    const jsi::Value* arguments,
-                    size_t count) {
-    torchlive::torch::TensorHostObject* operand1Tensor = nullptr;
-    torchlive::torch::TensorHostObject* operand2Tensor = nullptr;
-    double* operand2Number = nullptr;
-    utils::helpers::parseArithmeticOperands(
-        runtime,
-        arguments,
-        count,
-        &operand1Tensor,
-        &operand2Tensor,
-        &operand2Number);
-
-    auto alphaValue = utils::helpers::parseKeywordArgument(
-        runtime, arguments, 2, count, "alpha");
-    auto alphaScalarValue = alphaValue.isUndefined()
-        ? at::Scalar(1)
-        : at::Scalar(alphaValue.asNumber());
-
-    torch_::Tensor resultTensor;
-    if (operand2Number != nullptr) {
-      resultTensor = torch_::add(
-          operand1Tensor->tensor, *operand2Number, alphaScalarValue);
-      delete[] operand2Number;
-    } else {
-      resultTensor = torch_::add(
-          operand1Tensor->tensor, operand2Tensor->tensor, alphaScalarValue);
-    }
-
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(
-            runtime, resultTensor);
-
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, ADD), 1, addFunc);
 }
 
 jsi::Function TorchHostObject::createArange(jsi::Runtime& runtime) {

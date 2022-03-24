@@ -9,6 +9,30 @@ custom_edit_url: null
 
 ## Methods
 
+### download
+
+▸ **download**(`modelPath`): `Promise`<string\>
+
+Download a model to the local file system and return the local file path
+as a model. If the model path is a file path already, it will return the
+same path as a result.
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `modelPath` | [ModelPath](../modules/models.md#modelpath) | The model path as require or uri (i.e., `require`). |
+
+#### Returns
+
+`Promise`<string\>
+
+#### Defined in
+
+[MobileModelModule.ts:70](https://github.com/pytorch/live/blob/ea02e68/react-native-pytorch-core/src/MobileModelModule.ts#L70)
+
+___
+
 ### execute
 
 ▸ **execute**<T\>(`modelPath`, `params`): `Promise`<[ModelResult](mobilemodelmodule.modelresult.md)<T\>\>
@@ -53,7 +77,7 @@ const topClass = ImageClasses(scores);
 
 #### Defined in
 
-[MobileModelModule.ts:102](https://github.com/pytorch/live/blob/920135d/react-native-pytorch-core/src/MobileModelModule.ts#L102)
+[MobileModelModule.ts:113](https://github.com/pytorch/live/blob/ea02e68/react-native-pytorch-core/src/MobileModelModule.ts#L113)
 
 ___
 
@@ -78,7 +102,7 @@ of time before running the first inference.
 
 #### Defined in
 
-[MobileModelModule.ts:68](https://github.com/pytorch/live/blob/920135d/react-native-pytorch-core/src/MobileModelModule.ts#L68)
+[MobileModelModule.ts:79](https://github.com/pytorch/live/blob/ea02e68/react-native-pytorch-core/src/MobileModelModule.ts#L79)
 
 ___
 
@@ -96,4 +120,4 @@ app.
 
 #### Defined in
 
-[MobileModelModule.ts:75](https://github.com/pytorch/live/blob/920135d/react-native-pytorch-core/src/MobileModelModule.ts#L75)
+[MobileModelModule.ts:86](https://github.com/pytorch/live/blob/ea02e68/react-native-pytorch-core/src/MobileModelModule.ts#L86)

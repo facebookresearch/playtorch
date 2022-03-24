@@ -35,7 +35,7 @@ be drawn on a canvas.
 
 #### Defined in
 
-[ImageModule.ts:143](https://github.com/pytorch/live/blob/920135d/react-native-pytorch-core/src/ImageModule.ts#L143)
+[ImageModule.ts:143](https://github.com/pytorch/live/blob/ea02e68/react-native-pytorch-core/src/ImageModule.ts#L143)
 
 ## Functions
 
@@ -55,4 +55,4 @@ be drawn on a canvas.
 
 #### Defined in
 
-[ImageModule.ts:98](https://github.com/pytorch/live/blob/920135d/react-native-pytorch-core/src/ImageModule.ts#L98)
+[ImageModule.ts:98](https://github.com/pytorch/live/blob/ea02e68/react-native-pytorch-core/src/ImageModule.ts#L98)

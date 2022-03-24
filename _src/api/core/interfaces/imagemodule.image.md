@@ -46,7 +46,7 @@ functions on the JavaScript object.
 
 #### Defined in
 
-[NativeJSRef.ts:64](https://github.com/pytorch/live/blob/920135d/react-native-pytorch-core/src/NativeJSRef.ts#L64)
+[NativeJSRef.ts:64](https://github.com/pytorch/live/blob/ea02e68/react-native-pytorch-core/src/NativeJSRef.ts#L64)
 
 ## Methods
 
@@ -62,7 +62,7 @@ Get the height of an image (in pixel).
 
 #### Defined in
 
-[ImageModule.ts:44](https://github.com/pytorch/live/blob/920135d/react-native-pytorch-core/src/ImageModule.ts#L44)
+[ImageModule.ts:44](https://github.com/pytorch/live/blob/ea02e68/react-native-pytorch-core/src/ImageModule.ts#L44)
 
 ___
 
@@ -78,7 +78,7 @@ Get the natural height of an image (in pixel).
 
 #### Defined in
 
-[ImageModule.ts:54](https://github.com/pytorch/live/blob/920135d/react-native-pytorch-core/src/ImageModule.ts#L54)
+[ImageModule.ts:54](https://github.com/pytorch/live/blob/ea02e68/react-native-pytorch-core/src/ImageModule.ts#L54)
 
 ___
 
@@ -94,7 +94,7 @@ Get the natural width of an image (in pixel).
 
 #### Defined in
 
-[ImageModule.ts:59](https://github.com/pytorch/live/blob/920135d/react-native-pytorch-core/src/ImageModule.ts#L59)
+[ImageModule.ts:59](https://github.com/pytorch/live/blob/ea02e68/react-native-pytorch-core/src/ImageModule.ts#L59)
 
 ___
 
@@ -111,7 +111,7 @@ by the `pixelDensity` is `naturalWidth` and `naturalHeight`.
 
 #### Defined in
 
-[ImageModule.ts:65](https://github.com/pytorch/live/blob/920135d/react-native-pytorch-core/src/ImageModule.ts#L65)
+[ImageModule.ts:65](https://github.com/pytorch/live/blob/ea02e68/react-native-pytorch-core/src/ImageModule.ts#L65)
 
 ___
 
@@ -127,7 +127,7 @@ Get the width of an image (in pixel).
 
 #### Defined in
 
-[ImageModule.ts:49](https://github.com/pytorch/live/blob/920135d/react-native-pytorch-core/src/ImageModule.ts#L49)
+[ImageModule.ts:49](https://github.com/pytorch/live/blob/ea02e68/react-native-pytorch-core/src/ImageModule.ts#L49)
 
 ___
 
@@ -152,7 +152,7 @@ example, the `GC` on Android will eventually free the allocated memory.
 
 #### Defined in
 
-[ImageModule.ts:79](https://github.com/pytorch/live/blob/920135d/react-native-pytorch-core/src/ImageModule.ts#L79)
+[ImageModule.ts:79](https://github.com/pytorch/live/blob/ea02e68/react-native-pytorch-core/src/ImageModule.ts#L79)
 
 ___
 
@@ -183,4 +183,4 @@ the scaled [Image](imagemodule.image.md) asynchronously.
 
 #### Defined in
 
-[ImageModule.ts:95](https://github.com/pytorch/live/blob/920135d/react-native-pytorch-core/src/ImageModule.ts#L95)
+[ImageModule.ts:95](https://github.com/pytorch/live/blob/ea02e68/react-native-pytorch-core/src/ImageModule.ts#L95)

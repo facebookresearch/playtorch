@@ -241,21 +241,6 @@ TEST_F(TorchliveRuntimeTest, TorchTensorTest) {
       facebook::jsi::JSError);
 }
 
-TEST_F(TorchliveRuntimeTest, TorchTopkTest) {
-  std::string torchTopkValid =
-      R"(
-          const tensor = torch.arange(10, 20);
-          const [values, indices] = torch.topk(tensor, 3);
-          (values.data[0] == 19 && values.data[1] == 18 && values.data[2] == 17) && (indices.data[0] == 9 && indices.data[1] == 8 && indices.data[2] == 7);
-        )";
-  EXPECT_TRUE(eval(torchTopkValid.c_str()).getBool());
-
-  EXPECT_THROW(eval("torch.topk()"), facebook::jsi::JSError);
-  EXPECT_THROW(eval("torch.topk(1)"), facebook::jsi::JSError);
-  EXPECT_THROW(
-      eval("torch.topk(torch.empty(1, 2), [1])"), facebook::jsi::JSError);
-}
-
 TEST_F(TorchliveRuntimeTest, TorchZerosTest) {
   // Test zeros with single integer parameters.
   EXPECT_EQ(eval("torch.zeros(0).shape[0]").getNumber(), 0);

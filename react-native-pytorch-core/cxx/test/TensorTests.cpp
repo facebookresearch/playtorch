@@ -357,4 +357,17 @@ TEST_F(TorchliveTensorRuntimeTest, tensorSubTest) {
       eval(tensorSubCodeWithInvalidAlpha.c_str()), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TorchTopkTest) {
+  std::string tensorTopkValid =
+      R"(
+          const tensor = torch.arange(10, 20);
+          const [values, indices] = tensor.topk(3);
+          (values.data[0] == 19 && values.data[1] == 18 && values.data[2] == 17) && (indices.data[0] == 9 && indices.data[1] == 8 && indices.data[2] == 7);
+        )";
+  EXPECT_TRUE(eval(tensorTopkValid.c_str()).getBool());
+
+  EXPECT_THROW(eval("torch.arange(10, 20).topk()"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.empty(1, 2).topk([1])"), facebook::jsi::JSError);
+}
+
 } // namespace

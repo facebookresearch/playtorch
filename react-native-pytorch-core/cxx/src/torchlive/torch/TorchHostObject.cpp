@@ -29,7 +29,6 @@ static const std::string FROM_BLOB = "fromBlob";
 static const std::string RAND = "rand";
 static const std::string RANDINT = "randint";
 static const std::string TENSOR = "tensor";
-static const std::string TOPK = "topk";
 static const std::string ZEROS = "zeros";
 
 // TorchHostObject Property Names
@@ -55,7 +54,6 @@ const std::vector<std::string> METHODS = {
     RAND,
     RANDINT,
     TENSOR,
-    TOPK,
     ZEROS,
 };
 
@@ -68,7 +66,6 @@ TorchHostObject::TorchHostObject(
       rand_(createRand(runtime)),
       randint_(createRandint(runtime)),
       tensor_(createTensor(runtime)),
-      topk_(createTopK(runtime)),
       zeros_(createZeros(runtime)),
       runtimeExecutor_(runtimeExecutor) {}
 
@@ -124,8 +121,6 @@ jsi::Value TorchHostObject::get(
     return jsi::String::createFromAscii(runtime, utils::constants::UINT8);
   } else if (name == TENSOR) {
     return jsi::Value(runtime, tensor_);
-  } else if (name == TOPK) {
-    return jsi::Value(runtime, topk_);
   } else if (name == ZEROS) {
     return jsi::Value(runtime, zeros_);
   }
@@ -347,52 +342,8 @@ jsi::Function TorchHostObject::createTensor(jsi::Runtime& runtime) {
 }
 
 /**
- * Returns the k largest elements of the given input tensor along a given
- * dimension.
- *
- * https://pytorch.org/docs/stable/generated/torch.topk.html
- */
-jsi::Function TorchHostObject::createTopK(jsi::Runtime& runtime) {
-  auto topkFunc = [](jsi::Runtime& runtime,
-                     const jsi::Value& thisValue,
-                     const jsi::Value* arguments,
-                     size_t count) {
-    if (count < 2) {
-      throw jsi::JSError(
-          runtime, "This function requires at least 2 arguments");
-    }
-    auto inputTensorHostObject =
-        utils::helpers::parseTensor(runtime, &arguments[0]);
-    auto k = arguments[1].asNumber();
-    auto resultTuple = torch_::topk(inputTensorHostObject->tensor, k);
-    auto outputValuesTensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(
-            runtime, std::get<0>(resultTuple));
-    auto indicesInt64Tensor = std::get<1>(resultTuple);
-    /**
-     * NOTE: We need to convert the int64 type to int32 since Hermes does not
-     * support Int64 data types yet.
-     */
-    auto outputIndicesTensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(
-            runtime, indicesInt64Tensor.to(c10::ScalarType::Int));
-    return jsi::Array::createWithElements(
-        runtime,
-        jsi::Object::createFromHostObject(
-            runtime, outputValuesTensorHostObject),
-        jsi::Object::createFromHostObject(
-            runtime, outputIndicesTensorHostObject));
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, TOPK), 2, topkFunc);
-}
-
-/**
  * Returns a tensor filled with the scalar value 0, with the shape defined by
  * the variable argument size.
- *
- * https://pytorch.org/docs/stable/generated/torch.topk.html
  */
 jsi::Function TorchHostObject::createZeros(jsi::Runtime& runtime) {
   auto zerosImpl = [](jsi::Runtime& runtime,

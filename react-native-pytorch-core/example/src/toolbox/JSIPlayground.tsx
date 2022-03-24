@@ -214,10 +214,10 @@ export default function JSIPlayground() {
     console.log('original shape: ', tensor6.shape);
     console.log('transfomred shape: ', tensor7.shape);
 
-    console.log('---Test torch.topk---');
+    console.log('---Test tensor.topk---');
     let topkTensor = torch.arange(10, 20);
     console.log(topkTensor.data);
-    let [values, indices] = torch.topk(topkTensor, 3);
+    let [values, indices] = topkTensor.topk(3);
     console.log(values.data);
     console.log(indices.data);
     console.log('---test torchvision.resize---');

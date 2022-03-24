@@ -28,6 +28,7 @@ static const std::string SIZE = "size";
 static const std::string SOFTMAX = "softmax";
 static const std::string SQUEEZE = "squeeze";
 static const std::string SUB = "sub";
+static const std::string TOPK = "topk";
 static const std::string TOSTRING = "toString";
 static const std::string UNSQUEEZE = "unsqueeze";
 
@@ -51,6 +52,7 @@ static const std::vector<std::string> METHODS = {
     SOFTMAX,
     SQUEEZE,
     SUB,
+    TOPK,
     TOSTRING,
     UNSQUEEZE};
 
@@ -67,6 +69,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
       softmax_(createSoftmax(runtime)),
       squeeze_(createSqueeze(runtime)),
       sub_(createSub(runtime)),
+      topk_(createTopK(runtime)),
       toString_(createToString(runtime)),
       unsqueeze_(createUnsqueeze(runtime)),
       tensor(t) {}
@@ -158,6 +161,8 @@ jsi::Value TensorHostObject::get(
     return jsi::Value(runtime, squeeze_);
   } else if (name == SUB) {
     return jsi::Value(runtime, sub_);
+  } else if (name == TOPK) {
+    return jsi::Value(runtime, topk_);
   } else if (name == TOSTRING) {
     return jsi::Value(runtime, toString_);
   } else if (name == UNSQUEEZE) {
@@ -461,6 +466,46 @@ jsi::Function TensorHostObject::createSub(jsi::Runtime& runtime) {
 
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, SUB), 1, subFunc);
+}
+
+/**
+ * Returns the k largest elements of the given input tensor along a given
+ * dimension.
+ *
+ * https://pytorch.org/docs/stable/generated/torch.topk.html
+ */
+jsi::Function TensorHostObject::createTopK(jsi::Runtime& runtime) {
+  auto topkFunc = [this](
+                      jsi::Runtime& runtime,
+                      const jsi::Value& thisValue,
+                      const jsi::Value* arguments,
+                      size_t count) {
+    if (count < 1) {
+      throw jsi::JSError(runtime, "This function requires at least 1 argument");
+    }
+    auto k = arguments[0].asNumber();
+    auto resultTuple = this->tensor.topk(k);
+    auto outputValuesTensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(
+            runtime, std::get<0>(resultTuple));
+    auto indicesInt64Tensor = std::get<1>(resultTuple);
+    /**
+     * NOTE: We need to convert the int64 type to int32 since Hermes does not
+     * support Int64 data types yet.
+     */
+    auto outputIndicesTensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(
+            runtime, indicesInt64Tensor.to(c10::ScalarType::Int));
+    return jsi::Array::createWithElements(
+        runtime,
+        jsi::Object::createFromHostObject(
+            runtime, outputValuesTensorHostObject),
+        jsi::Object::createFromHostObject(
+            runtime, outputIndicesTensorHostObject));
+  };
+
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, TOPK), 1, topkFunc);
 }
 
 jsi::Function TensorHostObject::createUnsqueeze(jsi::Runtime& runtime) {

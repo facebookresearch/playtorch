@@ -23,7 +23,6 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
   facebook::jsi::Function rand_;
   facebook::jsi::Function randint_;
   facebook::jsi::Function tensor_;
-  facebook::jsi::Function topk_;
   facebook::jsi::Function zeros_;
 
  public:
@@ -46,7 +45,6 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
   static facebook::jsi::Function createRand(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createRandint(facebook::jsi::Runtime& runtime);
   static jsi::Function createTensor(jsi::Runtime& runtime);
-  static jsi::Function createTopK(jsi::Runtime& runtime);
   static jsi::Function createZeros(jsi::Runtime& runtime);
 };
 

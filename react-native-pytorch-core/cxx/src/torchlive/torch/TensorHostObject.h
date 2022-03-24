@@ -33,6 +33,7 @@ class JSI_EXPORT TensorHostObject : public jsi::HostObject {
   jsi::Function softmax_;
   jsi::Function squeeze_;
   jsi::Function sub_;
+  jsi::Function topk_;
   jsi::Function toString_;
   jsi::Function unsqueeze_;
 
@@ -57,6 +58,7 @@ class JSI_EXPORT TensorHostObject : public jsi::HostObject {
   jsi::Function createToString(jsi::Runtime& runtime);
   jsi::Function createSqueeze(jsi::Runtime& runtime);
   jsi::Function createSub(jsi::Runtime& runtime);
+  jsi::Function createTopK(jsi::Runtime& runtime);
   jsi::Function createUnsqueeze(jsi::Runtime& runtime);
 };
 

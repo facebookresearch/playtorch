@@ -138,12 +138,12 @@ export default function JSIPlayground() {
     let subTensor3 = torch.sub(subTensor1, subTensor2);
     console.log(subTensor3.toString());
 
-    console.log('---Test torch.mul---');
+    console.log('---Test tensor.mul---');
     let tensor1 = torch.arange(10);
     console.log(tensor1.toString());
-    tensor2 = torch.mul(tensor1, 2);
+    tensor2 = tensor1.mul(2);
     console.log(tensor2.toString());
-    tensor3 = torch.mul(tensor2, tensor1);
+    tensor3 = tensor2.mul(tensor1);
     console.log(tensor3.toString());
     console.log('---Test torch.softmax---');
     let softmaxTensor1 = torch.arange(2);

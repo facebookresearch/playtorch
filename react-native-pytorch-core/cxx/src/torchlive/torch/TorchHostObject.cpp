@@ -26,7 +26,6 @@ using namespace facebook;
 static const std::string ARANGE = "arange";
 static const std::string EMPTY = "empty";
 static const std::string FROM_BLOB = "fromBlob";
-static const std::string MUL = "mul";
 static const std::string PERMUTE = "permute";
 static const std::string RAND = "rand";
 static const std::string RANDINT = "randint";
@@ -56,7 +55,6 @@ const std::vector<std::string> METHODS = {
     ARANGE,
     EMPTY,
     FROM_BLOB,
-    MUL,
     PERMUTE,
     RAND,
     RANDINT,
@@ -73,7 +71,6 @@ TorchHostObject::TorchHostObject(
     : arange_(createArange(runtime)),
       empty_(createEmpty(runtime)),
       fromBlob_(createFromBlob(runtime)),
-      mul_(createMul(runtime)),
       permute_(createPermute(runtime)),
       rand_(createRand(runtime)),
       randint_(createRandint(runtime)),
@@ -128,8 +125,6 @@ jsi::Value TorchHostObject::get(
     auto jitHostObject = std::make_shared<torchlive::torch::jit::JITHostObject>(
         runtime, runtimeExecutor_);
     return jsi::Object::createFromHostObject(runtime, jitHostObject);
-  } else if (name == MUL) {
-    return jsi::Value(runtime, mul_);
   } else if (name == PERMUTE) {
     return jsi::Value(runtime, permute_);
   } else if (name == RAND) {
@@ -297,41 +292,6 @@ jsi::Function TorchHostObject::createFromBlob(jsi::Runtime& runtime) {
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, FROM_BLOB), 1, fromBlobImpl);
-}
-
-jsi::Function TorchHostObject::createMul(jsi::Runtime& runtime) {
-  auto mulFunc = [](jsi::Runtime& runtime,
-                    const jsi::Value& thisValue,
-                    const jsi::Value* arguments,
-                    size_t count) {
-    torchlive::torch::TensorHostObject* operand1Tensor = nullptr;
-    torchlive::torch::TensorHostObject* operand2Tensor = nullptr;
-    double* operand2Number = nullptr;
-    utils::helpers::parseArithmeticOperands(
-        runtime,
-        arguments,
-        count,
-        &operand1Tensor,
-        &operand2Tensor,
-        &operand2Number);
-
-    torch_::Tensor resultTensor;
-    if (operand2Number != nullptr) {
-      resultTensor = torch_::mul(operand1Tensor->tensor, *operand2Number);
-      delete[] operand2Number;
-    } else {
-      resultTensor =
-          torch_::mul(operand1Tensor->tensor, operand2Tensor->tensor);
-    }
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(
-            runtime, resultTensor);
-
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, MUL), 1, mulFunc);
 }
 
 jsi::Function TorchHostObject::createPermute(jsi::Runtime& runtime) {

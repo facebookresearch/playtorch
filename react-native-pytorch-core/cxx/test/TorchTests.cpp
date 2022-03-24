@@ -257,30 +257,6 @@ TEST_F(TorchliveRuntimeTest, TorchSubTest) {
       eval(torchSubCodeWithInvalidAlpha.c_str()), facebook::jsi::JSError);
 }
 
-TEST_F(TorchliveRuntimeTest, TorchMulTest) {
-  std::string torchMulWithNumber =
-      R"(
-          const tensor = torch.arange(10);
-          const result = torch.mul(tensor, 10);
-          result.data[0] == tensor.data[0] * 10;
-        )";
-  EXPECT_TRUE(eval(torchMulWithNumber.c_str()).getBool());
-
-  std::string torchMulWithTensor =
-      R"(
-          const tensor1 = torch.arange(2);
-          const tensor2 = torch.arange(2);
-          const result = torch.mul(tensor1, tensor2);
-          result.data[0] == tensor1.data[0] * tensor2.data[0];
-        )";
-  EXPECT_TRUE(eval(torchMulWithTensor.c_str()).getBool());
-
-  EXPECT_THROW(eval("torch.mul()"), facebook::jsi::JSError);
-  EXPECT_THROW(eval("torch.mul(1)"), facebook::jsi::JSError);
-  EXPECT_THROW(
-      eval("torch.mul(torch.arrange(3, 4), 'foo')"), facebook::jsi::JSError);
-}
-
 TEST_F(TorchliveRuntimeTest, TorchSoftmaxTest) {
   std::string torchSoftmaxEachValueLessThanOne =
       R"(

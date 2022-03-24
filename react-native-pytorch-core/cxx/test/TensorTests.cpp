@@ -248,4 +248,26 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
       facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorMulTest) {
+  std::string tensorMulWithNumber =
+      R"(
+          const tensor = torch.arange(10);
+          const result = tensor.mul(10);
+          result.data[0] == tensor.data[0] * 10;
+        )";
+  EXPECT_TRUE(eval(tensorMulWithNumber.c_str()).getBool());
+
+  std::string tensorMulWithTensor =
+      R"(
+          const tensor1 = torch.arange(2);
+          const tensor2 = torch.arange(2);
+          const result = tensor1.mul(tensor2);
+          result.data[0] == tensor1.data[0] * tensor2.data[0];
+        )";
+  EXPECT_TRUE(eval(tensorMulWithTensor.c_str()).getBool());
+
+  EXPECT_THROW(eval("torch.arange(2).mul()"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.arrange(3, 4).mul('foo')"), facebook::jsi::JSError);
+}
+
 } // namespace

@@ -24,6 +24,7 @@ module.exports = {
   organizationName: 'pytorch',
   projectName: 'live',
   trailingSlash: true,
+  scripts: [{src: 'https://snack.expo.dev/embed.js', defer: true}],
   themeConfig: {
     colorMode: {
       defaultMode: 'light',

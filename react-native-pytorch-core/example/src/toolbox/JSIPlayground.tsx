@@ -8,12 +8,10 @@
  */
 
 declare var performance: any;
-declare var __torchlive__: any;
-const vision = __torchlive__.vision;
 
 import * as React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Platform} from 'react-native';
-import {torch, torchvision} from 'react-native-pytorch-core';
+import {torch, torchvision, vision} from 'react-native-pytorch-core';
 
 function argmax(array: number[]): number {
   let max = -Number.MAX_VALUE;

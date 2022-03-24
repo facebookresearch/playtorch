@@ -184,17 +184,17 @@ export default function JSIPlayground() {
     console.log(tensor5.toString());
     console.log(tensor5.dtype);
 
-    console.log('---Test torch.div---');
+    console.log('---Test tensor.div---');
     let divTensor = torch.arange(1, 10);
     console.log(divTensor.toString());
-    tensor2 = torch.div(divTensor, 2);
+    tensor2 = divTensor.div(2);
     console.log(tensor2.toString());
-    tensor3 = torch.div(divTensor, 2, {rounding_mode: 'floor'});
+    tensor3 = divTensor.div(2, {rounding_mode: 'floor'});
     console.log(tensor3.toString());
-    tensor4 = torch.div(divTensor, divTensor);
+    tensor4 = divTensor.div(divTensor);
     console.log(tensor4.toString());
     console.log(tensor2.toString());
-    tensor3 = torch.div(divTensor, divTensor);
+    tensor3 = divTensor.div(divTensor, {rounding_mode: 'floor'});
     console.log(tensor3.toString());
 
     console.log('---Test tensor.abs---');

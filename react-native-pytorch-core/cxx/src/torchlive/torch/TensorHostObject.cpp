@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <c10/util/Optional.h>
+
 #include "TensorHostObject.h"
 #include "utils/constants.h"
 #include "utils/helpers.h"
@@ -250,15 +252,24 @@ jsi::Function TensorHostObject::createDiv(jsi::Runtime& runtime) {
     if (count < 1) {
       throw jsi::JSError(runtime, "At least 1 arg required");
     }
+
+    auto roundingModeValue = utils::helpers::parseKeywordArgument(
+        runtime, arguments, 1, count, "rounding_mode");
+
+    c10::optional<c10::string_view> roundingMode;
+    if (!roundingModeValue.isUndefined()) {
+      roundingMode = roundingModeValue.asString(runtime).utf8(runtime);
+    }
+
     auto tensor = this->tensor;
     if (arguments[0].isNumber()) {
       auto value = arguments[0].asNumber();
-      tensor = tensor.div(value);
+      tensor = tensor.div(value, roundingMode);
     } else {
       auto otherTensorHostObject =
           utils::helpers::parseTensor(runtime, &arguments[0]);
       auto otherTensor = otherTensorHostObject->tensor;
-      tensor = tensor.div(otherTensor);
+      tensor = tensor.div(otherTensor, roundingMode);
     }
     auto tensorHostObject =
         std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);

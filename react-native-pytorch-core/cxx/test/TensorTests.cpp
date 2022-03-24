@@ -180,6 +180,18 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
   }
 
   for (auto i = 0; i < 4; i++) {
+    std::string tensorDivWithNumberFloor = fmt::format(
+        R"(
+          const tensor = torch.arange(1, 5);
+          const result = tensor.div(2, {{rounding_mode: 'floor'}});
+          result.data[{}] == Math.floor(tensor.data[{}] / 2);
+        )",
+        i,
+        i);
+    EXPECT_TRUE(eval(tensorDivWithNumberFloor.c_str()).getBool());
+  }
+
+  for (auto i = 0; i < 4; i++) {
     std::string tensorDivWithTensor = fmt::format(
         R"(
           const tensor1 = torch.arange(1, 5);
@@ -193,8 +205,44 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
     EXPECT_TRUE(eval(tensorDivWithTensor.c_str()).getBool());
   }
 
-  EXPECT_THROW(eval("torch.arange(1, 5).div()"), facebook::jsi::JSError);
+  for (auto i = 0; i < 4; i++) {
+    std::string tensorDivWithTensorTrunc = fmt::format(
+        R"(
+          const tensor1 = torch.arange(1, 5);
+          const tensor2 = torch.arange(3, 7);
+          const result = tensor1.div(
+            tensor2,
+            {{rounding_mode: 'trunc'}});
+          result.data[{}] == Math.trunc(tensor1.data[{}] / tensor2.data[{}]);
+        )",
+        i,
+        i,
+        i);
+    EXPECT_TRUE(eval(tensorDivWithTensorTrunc.c_str()).getBool());
+  }
 
+  std::string tensorDivRoundingModeRandomVal = R"(
+          const tensor1 = torch.arange(1, 5);
+          const tensor2 = torch.arange(3, 7);
+          const result = tensor1.div(
+            tensor2,
+            {{rounding_mode: 'random_val'}});
+        )";
+  EXPECT_THROW(
+      eval(tensorDivRoundingModeRandomVal.c_str()), facebook::jsi::JSError);
+
+  std::string tensorDivInvalidTypeRoundingMode = R"(
+          const tensor1 = torch.arange(1, 5);
+          const tensor2 = torch.arange(3, 7);
+          const result = tensor1.div(
+            tensor2,
+            {{rounding_mode: 1}});
+        )";
+  EXPECT_THROW(
+      eval(tensorDivInvalidTypeRoundingMode.c_str()), facebook::jsi::JSError);
+
+  EXPECT_THROW(eval("torch.arange(1, 5).div()"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.arange(3, 4).div('foo')"), facebook::jsi::JSError);
   EXPECT_THROW(
       eval("torch.arange(1, 5).div(torch.arrange(3, 4), 'foo')"),
       facebook::jsi::JSError);

@@ -20,3 +20,6 @@ export {ModelInfo, ModelPath} from './Models';
 
 // Export torchlive torch object and types
 export {torch, Tensor, IValue, Module} from './torchlive/torch';
+
+// Export torchlive torchvision object and types
+export {torchvision, Transforms, Transform} from './torchlive/torchvision';

@@ -270,4 +270,21 @@ TEST_F(TorchliveTensorRuntimeTest, TensorMulTest) {
   EXPECT_THROW(eval("torch.arrange(3, 4).mul('foo')"), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorPermuteTest) {
+  std::string tensorPermute =
+      R"(
+          const tensor = torch.rand([2, 3, 1]);
+          const result = tensor.permute([2, 0, 1]);
+          const shape = result.shape;
+          shape[0] === 1 && shape[1] === 2 && shape[2] === 3;
+        )";
+  EXPECT_TRUE(eval(tensorPermute.c_str()).getBool());
+
+  // Incorrect number of dims
+  EXPECT_THROW(
+      eval("torch.rand([2, 3, 1]).permute([0, 1])"), facebook::jsi::JSError);
+  // Incorrect call
+  EXPECT_THROW(eval("torch.rand([2, 3, 1]).permute()"), facebook::jsi::JSError);
+}
+
 } // namespace

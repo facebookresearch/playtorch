@@ -23,6 +23,7 @@ static const std::string ADD = "add";
 static const std::string ARGMAX = "argmax";
 static const std::string DIV = "div";
 static const std::string MUL = "mul";
+static const std::string PERMUTE = "permute";
 static const std::string SIZE = "size";
 static const std::string SQUEEZE = "squeeze";
 static const std::string TOSTRING = "toString";
@@ -38,7 +39,7 @@ static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
 
 // TensorHostObject Methods
 static const std::vector<std::string> METHODS =
-    {ABS, ADD, ARGMAX, DIV, MUL, SIZE, SQUEEZE, TOSTRING, UNSQUEEZE};
+    {ABS, ADD, ARGMAX, DIV, MUL, PERMUTE, SIZE, SQUEEZE, TOSTRING, UNSQUEEZE};
 
 using namespace facebook;
 
@@ -48,6 +49,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
       argmax_(createArgmax(runtime)),
       div_(createDiv(runtime)),
       mul_(createMul(runtime)),
+      permute_(createPermute(runtime)),
       size_(createSize(runtime)),
       squeeze_(createSqueeze(runtime)),
       toString_(createToString(runtime)),
@@ -129,6 +131,8 @@ jsi::Value TensorHostObject::get(
             caffe2::typeMetaToScalarType(this->tensor.dtype())));
   } else if (name == MUL) {
     return jsi::Value(runtime, mul_);
+  } else if (name == PERMUTE) {
+    return jsi::Value(runtime, permute_);
   } else if (name == SHAPE) {
     return this->size_.call(runtime);
   } else if (name == SIZE) {
@@ -311,6 +315,31 @@ jsi::Function TensorHostObject::createMul(jsi::Runtime& runtime) {
 
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, MUL), 1, mulFunc);
+}
+
+jsi::Function TensorHostObject::createPermute(jsi::Runtime& runtime) {
+  auto permuteImpl = [this](
+                         jsi::Runtime& runtime,
+                         const jsi::Value& thisValue,
+                         const jsi::Value* arguments,
+                         size_t count) {
+    if (count != 1) {
+      throw jsi::JSError(runtime, "dimensions argument is required");
+    }
+
+    std::vector<int64_t> dims = {};
+    int nextArgIndex =
+        utils::helpers::parseSize(runtime, arguments, 0, count, &dims);
+
+    auto tensor = this->tensor;
+    tensor = tensor.permute(dims);
+    auto permutedTensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
+    return jsi::Object::createFromHostObject(runtime, permutedTensorHostObject);
+  };
+
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, PERMUTE), 1, permuteImpl);
 }
 
 jsi::Function TensorHostObject::createSize(jsi::Runtime& runtime) {

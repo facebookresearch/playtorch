@@ -26,7 +26,6 @@ using namespace facebook;
 static const std::string ARANGE = "arange";
 static const std::string EMPTY = "empty";
 static const std::string FROM_BLOB = "fromBlob";
-static const std::string PERMUTE = "permute";
 static const std::string RAND = "rand";
 static const std::string RANDINT = "randint";
 static const std::string SOFTMAX = "softmax";
@@ -55,7 +54,6 @@ const std::vector<std::string> METHODS = {
     ARANGE,
     EMPTY,
     FROM_BLOB,
-    PERMUTE,
     RAND,
     RANDINT,
     SOFTMAX,
@@ -71,7 +69,6 @@ TorchHostObject::TorchHostObject(
     : arange_(createArange(runtime)),
       empty_(createEmpty(runtime)),
       fromBlob_(createFromBlob(runtime)),
-      permute_(createPermute(runtime)),
       rand_(createRand(runtime)),
       randint_(createRandint(runtime)),
       softmax_(createSoftmax(runtime)),
@@ -125,8 +122,6 @@ jsi::Value TorchHostObject::get(
     auto jitHostObject = std::make_shared<torchlive::torch::jit::JITHostObject>(
         runtime, runtimeExecutor_);
     return jsi::Object::createFromHostObject(runtime, jitHostObject);
-  } else if (name == PERMUTE) {
-    return jsi::Value(runtime, permute_);
   } else if (name == RAND) {
     return jsi::Value(runtime, rand_);
   } else if (name == RANDINT) {
@@ -292,32 +287,6 @@ jsi::Function TorchHostObject::createFromBlob(jsi::Runtime& runtime) {
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, FROM_BLOB), 1, fromBlobImpl);
-}
-
-jsi::Function TorchHostObject::createPermute(jsi::Runtime& runtime) {
-  auto permuteImpl = [](jsi::Runtime& runtime,
-                        const jsi::Value& thisValue,
-                        const jsi::Value* arguments,
-                        size_t count) {
-    if (count != 2) {
-      throw jsi::JSError(
-          runtime, "Tensor argument and dimensions argument are required");
-    }
-
-    auto tensorHostObject = utils::helpers::parseTensor(runtime, &arguments[0]);
-    std::vector<int64_t> dims = {};
-    int nextArgIndex =
-        utils::helpers::parseSize(runtime, arguments, 1, count, &dims);
-
-    auto tensor = tensorHostObject->tensor;
-    tensor = torch_::permute(tensor, dims);
-    auto permutedTensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
-    return jsi::Object::createFromHostObject(runtime, permutedTensorHostObject);
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, PERMUTE), 1, permuteImpl);
 }
 
 jsi::Function TorchHostObject::createRandint(jsi::Runtime& runtime) {

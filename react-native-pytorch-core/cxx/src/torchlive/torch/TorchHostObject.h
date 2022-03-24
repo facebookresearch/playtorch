@@ -20,7 +20,6 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
   facebook::jsi::Function arange_;
   facebook::jsi::Function empty_;
   facebook::jsi::Function fromBlob_;
-  facebook::jsi::Function permute_;
   facebook::jsi::Function rand_;
   facebook::jsi::Function randint_;
   facebook::jsi::Function softmax_;
@@ -46,7 +45,6 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
   static facebook::jsi::Function createEmpty(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createFromBlob(
       facebook::jsi::Runtime& runtime);
-  static facebook::jsi::Function createPermute(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createRand(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createRandint(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createSoftmax(facebook::jsi::Runtime& runtime);

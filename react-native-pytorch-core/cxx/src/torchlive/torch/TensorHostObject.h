@@ -28,6 +28,7 @@ class JSI_EXPORT TensorHostObject : public jsi::HostObject {
   jsi::Function argmax_;
   jsi::Function div_;
   jsi::Function mul_;
+  jsi::Function permute_;
   jsi::Function size_;
   jsi::Function squeeze_;
   jsi::Function toString_;
@@ -48,6 +49,7 @@ class JSI_EXPORT TensorHostObject : public jsi::HostObject {
   jsi::Function createArgmax(jsi::Runtime& runtime);
   jsi::Function createDiv(jsi::Runtime& runtime);
   jsi::Function createMul(jsi::Runtime& runtime);
+  jsi::Function createPermute(jsi::Runtime& runtime);
   jsi::Function createSize(jsi::Runtime& runtime);
   jsi::Function createToString(jsi::Runtime& runtime);
   jsi::Function createSqueeze(jsi::Runtime& runtime);

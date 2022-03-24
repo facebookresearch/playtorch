@@ -53,8 +53,11 @@ module.exports = {
       internal: {
         type: 'category',
         label: '[Meta Only]',
-        collapsed: true,
-        items: ['fb/wikis/creating-a-release'],
+        collapsed: false,
+        items: [
+          'fb/wikis/creating-a-release',
+          'fb/jsi-tutorials/image-classification-jsi',
+        ],
       },
       external: {},
     }),

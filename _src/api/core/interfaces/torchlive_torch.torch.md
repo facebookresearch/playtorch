@@ -15,7 +15,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[torchlive/torch.ts:328](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L328)
+[torchlive/torch.ts:328](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L328)
 
 ___
 
@@ -25,7 +25,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:329](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L329)
+[torchlive/torch.ts:329](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L329)
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:330](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L330)
+[torchlive/torch.ts:330](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L330)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:331](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L331)
+[torchlive/torch.ts:331](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L331)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:332](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L332)
+[torchlive/torch.ts:332](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L332)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:333](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L333)
+[torchlive/torch.ts:333](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L333)
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:334](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L334)
+[torchlive/torch.ts:334](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L334)
 
 ___
 
@@ -85,7 +85,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:335](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L335)
+[torchlive/torch.ts:335](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L335)
 
 ___
 
@@ -95,7 +95,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:336](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L336)
+[torchlive/torch.ts:336](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L336)
 
 ___
 
@@ -107,7 +107,7 @@ JIT module
 
 #### Defined in
 
-[torchlive/torch.ts:325](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L325)
+[torchlive/torch.ts:325](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L325)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:337](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L337)
+[torchlive/torch.ts:337](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L337)
 
 ___
 
@@ -127,7 +127,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:338](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L338)
+[torchlive/torch.ts:338](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L338)
 
 ___
 
@@ -137,7 +137,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:339](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L339)
+[torchlive/torch.ts:339](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L339)
 
 ## Methods
 
@@ -162,7 +162,7 @@ Returns a 1-D tensor of size `(end - 0) / 1` with values from the interval
 
 #### Defined in
 
-[torchlive/torch.ts:226](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L226)
+[torchlive/torch.ts:226](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L226)
 
 ▸ **arange**(`start`, `end`): [Tensor](torchlive_torch.tensor.md)
 
@@ -185,7 +185,7 @@ start.
 
 #### Defined in
 
-[torchlive/torch.ts:237](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L237)
+[torchlive/torch.ts:237](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L237)
 
 ▸ **arange**(`start`, `end`, `step`): [Tensor](torchlive_torch.tensor.md)
 
@@ -209,7 +209,7 @@ start.
 
 #### Defined in
 
-[torchlive/torch.ts:249](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L249)
+[torchlive/torch.ts:249](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L249)
 
 ___
 
@@ -235,7 +235,7 @@ is defined by the variable argument size.
 
 #### Defined in
 
-[torchlive/torch.ts:259](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L259)
+[torchlive/torch.ts:259](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L259)
 
 ___
 
@@ -262,7 +262,7 @@ The shape of the tensor is defined by the arguments n and m.
 
 #### Defined in
 
-[torchlive/torch.ts:269](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L269)
+[torchlive/torch.ts:269](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L269)
 
 ___
 
@@ -292,7 +292,7 @@ The function exists in JavaScript and C++ (torch::from_blob).
 
 #### Defined in
 
-[torchlive/torch.ts:284](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L284)
+[torchlive/torch.ts:284](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L284)
 
 ___
 
@@ -316,7 +316,7 @@ the interval `[0, 1)`.
 
 #### Defined in
 
-[torchlive/torch.ts:292](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L292)
+[torchlive/torch.ts:292](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L292)
 
 ___
 
@@ -342,7 +342,7 @@ Returns a tensor filled with random integers generated uniformly between
 
 #### Defined in
 
-[torchlive/torch.ts:302](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L302)
+[torchlive/torch.ts:302](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L302)
 
 ▸ **randint**(`low`, `high`, `size`): [Tensor](torchlive_torch.tensor.md)
 
@@ -365,7 +365,7 @@ Returns a tensor filled with random integers generated uniformly between
 
 #### Defined in
 
-[torchlive/torch.ts:313](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L313)
+[torchlive/torch.ts:313](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L313)
 
 ___
 
@@ -388,4 +388,4 @@ Constructs a tensor with no autograd history.
 
 #### Defined in
 
-[torchlive/torch.ts:320](https://github.com/pytorch/live/blob/d3d05c1/react-native-pytorch-core/src/torchlive/torch.ts#L320)
+[torchlive/torch.ts:320](https://github.com/pytorch/live/blob/8c557f0/react-native-pytorch-core/src/torchlive/torch.ts#L320)

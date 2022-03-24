@@ -308,4 +308,53 @@ TEST_F(TorchliveTensorRuntimeTest, TensorSoftmaxTest) {
   EXPECT_THROW(eval("torch.empty(1, 2).softmax([1])"), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, tensorSubTest) {
+  std::string tensorSubCodeWithNumber =
+      R"(
+          const tensor = torch.arange(2);
+          const result = tensor.sub(2);
+          result.data[0] == tensor.data[0] - 2;
+        )";
+  EXPECT_TRUE(eval(tensorSubCodeWithNumber.c_str()).getBool());
+
+  std::string tensorSubCodeWithTensor =
+      R"(
+          const tensor1 = torch.arange(2);
+          const tensor2 = torch.arange(2);
+          const result = tensor1.sub(tensor2);
+          result.data[0] == tensor1.data[0] - tensor2.data[0];
+        )";
+  EXPECT_TRUE(eval(tensorSubCodeWithTensor.c_str()).getBool());
+
+  std::string tensorSubCodeWithNumberAlpha =
+      R"(
+          const tensor1 = torch.arange(2);
+          const result = tensor1.sub(2, {alpha: 2});
+          (result.data[0] == tensor1.data[0] - 2 * 2) && (result.data[1] == tensor1.data[1] - 2 * 2);
+        )";
+  EXPECT_TRUE(eval(tensorSubCodeWithNumberAlpha.c_str()).getBool());
+
+  std::string tensorSubCodeWithTensorAlpha =
+      R"(
+          const tensor1 = torch.arange(2);
+          const tensor2 = torch.arange(2);
+          const result = tensor1.sub(tensor2, {alpha: 2});
+          (result.data[0] == tensor1.data[0] - 2 * tensor2.data[0]) && (result.data[1] == tensor1.data[1] - 2 * tensor2.data[1]);
+        )";
+  EXPECT_TRUE(eval(tensorSubCodeWithTensorAlpha.c_str()).getBool());
+
+  EXPECT_THROW(eval("torch.arange(2).sub()"), facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("torch.empty(1, 2).sub('some_string')"), facebook::jsi::JSError);
+
+  std::string tensorSubCodeWithInvalidAlpha =
+      R"(
+          const tensor1 = torch.arange(2);
+          const tensor2 = torch.arange(2);
+          const result = tensor1.sub(tensor2, {alpha: 'random_string'});
+        )";
+  EXPECT_THROW(
+      eval(tensorSubCodeWithInvalidAlpha.c_str()), facebook::jsi::JSError);
+}
+
 } // namespace

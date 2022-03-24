@@ -28,7 +28,6 @@ static const std::string EMPTY = "empty";
 static const std::string FROM_BLOB = "fromBlob";
 static const std::string RAND = "rand";
 static const std::string RANDINT = "randint";
-static const std::string SUB = "sub";
 static const std::string TENSOR = "tensor";
 static const std::string TOPK = "topk";
 static const std::string ZEROS = "zeros";
@@ -55,7 +54,6 @@ const std::vector<std::string> METHODS = {
     FROM_BLOB,
     RAND,
     RANDINT,
-    SUB,
     TENSOR,
     TOPK,
     ZEROS,
@@ -69,7 +67,6 @@ TorchHostObject::TorchHostObject(
       fromBlob_(createFromBlob(runtime)),
       rand_(createRand(runtime)),
       randint_(createRandint(runtime)),
-      sub_(createSub(runtime)),
       tensor_(createTensor(runtime)),
       topk_(createTopK(runtime)),
       zeros_(createZeros(runtime)),
@@ -123,8 +120,6 @@ jsi::Value TorchHostObject::get(
     return jsi::Value(runtime, rand_);
   } else if (name == RANDINT) {
     return jsi::Value(runtime, randint_);
-  } else if (name == SUB) {
-    return jsi::Value(runtime, sub_);
   } else if (name == utils::constants::UINT8) {
     return jsi::String::createFromAscii(runtime, utils::constants::UINT8);
   } else if (name == TENSOR) {
@@ -328,42 +323,6 @@ jsi::Function TorchHostObject::createRandint(jsi::Runtime& runtime) {
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, RANDINT), 1, randintImpl);
-}
-
-jsi::Function TorchHostObject::createSub(jsi::Runtime& runtime) {
-  auto subFunc = [](jsi::Runtime& runtime,
-                    const jsi::Value& thisValue,
-                    const jsi::Value* arguments,
-                    size_t count) {
-    torchlive::torch::TensorHostObject* operand1 = nullptr;
-    torchlive::torch::TensorHostObject* operand2Tensor = nullptr;
-    double* operand2Number = nullptr;
-    utils::helpers::parseArithmeticOperands(
-        runtime, arguments, count, &operand1, &operand2Tensor, &operand2Number);
-    auto alphaValue = utils::helpers::parseKeywordArgument(
-        runtime, arguments, 2, count, "alpha");
-    auto alphaScalarValue = alphaValue.isUndefined()
-        ? at::Scalar(1)
-        : at::Scalar(alphaValue.asNumber());
-
-    torch_::Tensor resultTensor;
-    if (operand2Number != nullptr) {
-      resultTensor =
-          torch_::sub(operand1->tensor, *operand2Number, alphaScalarValue);
-      delete[] operand2Number;
-    } else {
-      resultTensor = torch_::sub(
-          operand1->tensor, operand2Tensor->tensor, alphaScalarValue);
-    }
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(
-            runtime, resultTensor);
-
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, SUB), 1, subFunc);
 }
 
 jsi::Function TorchHostObject::createTensor(jsi::Runtime& runtime) {

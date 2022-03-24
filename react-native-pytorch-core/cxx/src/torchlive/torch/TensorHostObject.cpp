@@ -18,6 +18,7 @@ namespace torch {
 // TensorHostObject Method Names
 static const std::string ABS = "abs";
 static const std::string ADD = "add";
+static const std::string ARGMAX = "argmax";
 static const std::string DIV = "div";
 static const std::string SIZE = "size";
 static const std::string SQUEEZE = "squeeze";
@@ -34,13 +35,14 @@ static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
 
 // TensorHostObject Methods
 static const std::vector<std::string> METHODS =
-    {ABS, ADD, DIV, SIZE, SQUEEZE, TOSTRING, UNSQUEEZE};
+    {ABS, ADD, ARGMAX, DIV, SIZE, SQUEEZE, TOSTRING, UNSQUEEZE};
 
 using namespace facebook;
 
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
     : abs_(createAbs(runtime)),
       add_(createAdd(runtime)),
+      argmax_(createArgmax(runtime)),
       div_(createDiv(runtime)),
       size_(createSize(runtime)),
       squeeze_(createSqueeze(runtime)),
@@ -71,6 +73,8 @@ jsi::Value TensorHostObject::get(
     return jsi::Value(runtime, abs_);
   } else if (name == ADD) {
     return jsi::Value(runtime, add_);
+  } else if (name == ARGMAX) {
+    return jsi::Value(runtime, argmax_);
   } else if (name == DATA) {
     auto tensor = this->tensor;
     int byteLength = tensor.nbytes();
@@ -203,6 +207,21 @@ jsi::Function TensorHostObject::createAdd(jsi::Runtime& runtime) {
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, ADD), 1, addFunc);
+}
+
+jsi::Function TensorHostObject::createArgmax(jsi::Runtime& runtime) {
+  auto argmaxImpl = [this](
+                        jsi::Runtime& runtime,
+                        const jsi::Value& thisValue,
+                        const jsi::Value* arguments,
+                        size_t count) {
+    auto tensor = this->tensor;
+    auto max = tensor.argmax();
+    return jsi::Value(max.item<int>());
+  };
+
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, ARGMAX), 0, argmaxImpl);
 }
 
 jsi::Function TensorHostObject::createToString(jsi::Runtime& runtime) {

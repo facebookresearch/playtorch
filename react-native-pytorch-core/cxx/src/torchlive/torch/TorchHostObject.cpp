@@ -24,7 +24,6 @@ using namespace facebook;
 
 // TorchHostObject Method Name
 static const std::string ARANGE = "arange";
-static const std::string ARGMAX = "argmax";
 static const std::string EMPTY = "empty";
 static const std::string FROM_BLOB = "fromBlob";
 static const std::string DIV = "div";
@@ -56,7 +55,6 @@ static const std::vector<std::string> PROPERTIES = {
 // TorchHostObject Methods
 const std::vector<std::string> METHODS = {
     ARANGE,
-    ARGMAX,
     EMPTY,
     FROM_BLOB,
     DIV,
@@ -75,7 +73,6 @@ TorchHostObject::TorchHostObject(
     jsi::Runtime& runtime,
     torchlive::RuntimeExecutor runtimeExecutor)
     : arange_(createArange(runtime)),
-      argmax_(createArgmax(runtime)),
       empty_(createEmpty(runtime)),
       fromBlob_(createFromBlob(runtime)),
       div_(createDiv(runtime)),
@@ -110,8 +107,6 @@ jsi::Value TorchHostObject::get(
 
   if (name == ARANGE) {
     return jsi::Value(runtime, arange_);
-  } else if (name == ARGMAX) {
-    return jsi::Value(runtime, argmax_);
   } else if (name == DIV) {
     return jsi::Value(runtime, div_);
   } else if (name == EMPTY) {
@@ -221,33 +216,6 @@ jsi::Function TorchHostObject::createRand(jsi::Runtime& runtime) {
 
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, RAND), 2, randImpl);
-}
-
-jsi::Function TorchHostObject::createArgmax(jsi::Runtime& runtime) {
-  auto argmaxImpl = [](jsi::Runtime& runtime,
-                       const jsi::Value& thisValue,
-                       const jsi::Value* arguments,
-                       size_t count) {
-    auto object = arguments[0].asObject(runtime);
-    if (!object.isHostObject(runtime)) {
-      throw std::runtime_error("first argument must be a tensor");
-    }
-
-    auto hostObject = object.getHostObject(runtime);
-    auto tensorHostObject =
-        dynamic_cast<torchlive::torch::TensorHostObject*>(hostObject.get());
-    if (tensorHostObject != nullptr) {
-      auto tensor = tensorHostObject->tensor;
-      auto max = torch_::argmax(tensor);
-      return jsi::Value(max.item<int>());
-    } else {
-      // It's a different kind of HostObject, which is not supported.
-      throw std::runtime_error("unkown HostObject");
-    }
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, ARGMAX), 1, argmaxImpl);
 }
 
 jsi::Function TorchHostObject::createDiv(jsi::Runtime& runtime) {

@@ -61,7 +61,7 @@ export default function JSIPlayground() {
     console.log('elapsed time (js)', delta, 'ms');
 
     startTime = performance.now();
-    result = torch.argmax(tensor);
+    result = tensor.argmax();
     delta = performance.now() - startTime;
     setCxxResult(result);
     setcxxElapse(delta);

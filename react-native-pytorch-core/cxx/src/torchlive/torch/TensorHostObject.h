@@ -25,6 +25,7 @@ using namespace facebook;
 class JSI_EXPORT TensorHostObject : public jsi::HostObject {
   jsi::Function abs_;
   jsi::Function add_;
+  jsi::Function argmax_;
   jsi::Function div_;
   jsi::Function size_;
   jsi::Function squeeze_;
@@ -43,6 +44,7 @@ class JSI_EXPORT TensorHostObject : public jsi::HostObject {
  private:
   jsi::Function createAbs(jsi::Runtime& runtime);
   jsi::Function createAdd(jsi::Runtime& runtime);
+  jsi::Function createArgmax(jsi::Runtime& runtime);
   jsi::Function createDiv(jsi::Runtime& runtime);
   jsi::Function createSize(jsi::Runtime& runtime);
   jsi::Function createToString(jsi::Runtime& runtime);

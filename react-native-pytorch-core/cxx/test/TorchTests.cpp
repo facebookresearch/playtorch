@@ -496,34 +496,6 @@ TEST_F(TorchliveRuntimeTest, TorchPermuteTest) {
   EXPECT_THROW(eval("torch.permute(1)"), facebook::jsi::JSError);
 }
 
-TEST_F(TorchliveRuntimeTest, TorchAbs) {
-  std::string torchAbs =
-      R"(
-          let tensor = torch.tensor([[-2 ,-1], [0, 1]]);
-          let output = torch.abs(tensor);
-          output.data[0] == 2 && output.data[1] == 1 && output.data[2] == 0 && output.data[3] == 1
-        )";
-  EXPECT_TRUE(eval(torchAbs.c_str()).getBool());
-  EXPECT_THROW(
-      eval("torch.abs(torch.tensor([-1]), torch.tensor([1]));"),
-      facebook::jsi::JSError);
-  EXPECT_THROW(eval("torch.abs();"), facebook::jsi::JSError);
-  EXPECT_THROW(eval("torch.abs(1);"), facebook::jsi::JSError);
-  EXPECT_THROW(eval("torch.abs([1, 2, 3]);"), facebook::jsi::JSError);
-}
-
-TEST_F(TorchliveRuntimeTest, TensorAbs) {
-  std::string torchAbs =
-      R"(
-          let tensor = torch.tensor([[-2, -1], [0, 1]]);
-          let output = tensor.abs();
-          output.data[0] == 2 && output.data[1] == 1 && output.data[2] == 0 && output.data[3] == 1
-        )";
-  EXPECT_TRUE(eval(torchAbs.c_str()).getBool());
-  EXPECT_THROW(
-      eval("torch.tensor([[-2 ,-1], [0, 1]]).abs(1);"), facebook::jsi::JSError);
-}
-
 TEST_F(TorchliveRuntimeTest, TorchTopkTest) {
   std::string torchTopkValid =
       R"(

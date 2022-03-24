@@ -23,7 +23,6 @@ namespace torch {
 using namespace facebook;
 
 // TorchHostObject Method Name
-static const std::string ABS = "abs";
 static const std::string ADD = "add";
 static const std::string ARANGE = "arange";
 static const std::string ARGMAX = "argmax";
@@ -57,7 +56,6 @@ static const std::vector<std::string> PROPERTIES = {
 
 // TorchHostObject Methods
 const std::vector<std::string> METHODS = {
-    ABS,
     ADD,
     ARANGE,
     ARGMAX,
@@ -78,8 +76,7 @@ const std::vector<std::string> METHODS = {
 TorchHostObject::TorchHostObject(
     jsi::Runtime& runtime,
     torchlive::RuntimeExecutor runtimeExecutor)
-    : abs_(createAbs(runtime)),
-      add_(createAdd(runtime)),
+    : add_(createAdd(runtime)),
       arange_(createArange(runtime)),
       argmax_(createArgmax(runtime)),
       empty_(createEmpty(runtime)),
@@ -114,9 +111,7 @@ jsi::Value TorchHostObject::get(
     const jsi::PropNameID& propName) {
   auto name = propName.utf8(runtime);
 
-  if (name == ABS) {
-    return jsi::Value(runtime, abs_);
-  } else if (name == ADD) {
+  if (name == ADD) {
     return jsi::Value(runtime, add_);
   } else if (name == ARANGE) {
     return jsi::Value(runtime, arange_);
@@ -171,31 +166,6 @@ jsi::Value TorchHostObject::get(
   }
 
   return jsi::Value::undefined();
-}
-
-jsi::Function TorchHostObject::createAbs(jsi::Runtime& runtime) {
-  auto absFunc = [](jsi::Runtime& runtime,
-                    const jsi::Value& thisValue,
-                    const jsi::Value* arguments,
-                    size_t count) {
-    if (count != 1) {
-      throw jsi::JSError(
-          runtime,
-          "torch.abs expect 1 argument, but " + std::to_string(count) +
-              " are given.");
-    }
-    auto inputTensorHostObject =
-        utils::helpers::parseTensor(runtime, &arguments[0]);
-    auto outputTensor = torch_::abs(inputTensorHostObject->tensor);
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(
-            runtime, outputTensor);
-
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, ADD), 1, absFunc);
 }
 
 jsi::Function TorchHostObject::createAdd(jsi::Runtime& runtime) {

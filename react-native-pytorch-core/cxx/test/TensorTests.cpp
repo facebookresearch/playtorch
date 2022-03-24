@@ -42,6 +42,18 @@ TEST_F(TorchliveTensorRuntimeTest, TensorTest) {
   EXPECT_TRUE(eval("torch.tensor([[128], [255]])[2]").isUndefined());
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorAbsTest) {
+  std::string tensorAbs =
+      R"(
+          let tensor = torch.tensor([[-2, -1], [0, 1]]);
+          let output = tensor.abs();
+          output.data[0] == 2 && output.data[1] == 1 && output.data[2] == 0 && output.data[3] == 1
+        )";
+  EXPECT_TRUE(eval(tensorAbs.c_str()).getBool());
+  EXPECT_THROW(
+      eval("torch.tensor([[-2 ,-1], [0, 1]]).abs(1);"), facebook::jsi::JSError);
+}
+
 TEST_F(TorchliveTensorRuntimeTest, TensorDataTest) {
   std::string tensorWithDtypeAsUint8 =
       R"(

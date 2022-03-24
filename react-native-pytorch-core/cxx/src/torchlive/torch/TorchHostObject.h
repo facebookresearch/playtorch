@@ -17,7 +17,6 @@ namespace torch {
 using namespace facebook;
 
 class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
-  facebook::jsi::Function abs_;
   facebook::jsi::Function add_;
   facebook::jsi::Function arange_;
   facebook::jsi::Function argmax_;
@@ -47,7 +46,6 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
 
  private:
   torchlive::RuntimeExecutor runtimeExecutor_;
-  static facebook::jsi::Function createAbs(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createAdd(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createArange(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createArgmax(facebook::jsi::Runtime& runtime);

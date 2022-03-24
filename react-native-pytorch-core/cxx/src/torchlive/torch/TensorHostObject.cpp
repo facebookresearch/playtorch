@@ -25,6 +25,7 @@ static const std::string DIV = "div";
 static const std::string MUL = "mul";
 static const std::string PERMUTE = "permute";
 static const std::string SIZE = "size";
+static const std::string SOFTMAX = "softmax";
 static const std::string SQUEEZE = "squeeze";
 static const std::string TOSTRING = "toString";
 static const std::string UNSQUEEZE = "unsqueeze";
@@ -38,8 +39,18 @@ static const std::string SHAPE = "shape";
 static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
 
 // TensorHostObject Methods
-static const std::vector<std::string> METHODS =
-    {ABS, ADD, ARGMAX, DIV, MUL, PERMUTE, SIZE, SQUEEZE, TOSTRING, UNSQUEEZE};
+static const std::vector<std::string> METHODS = {
+    ABS,
+    ADD,
+    ARGMAX,
+    DIV,
+    MUL,
+    PERMUTE,
+    SIZE,
+    SOFTMAX,
+    SQUEEZE,
+    TOSTRING,
+    UNSQUEEZE};
 
 using namespace facebook;
 
@@ -51,6 +62,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
       mul_(createMul(runtime)),
       permute_(createPermute(runtime)),
       size_(createSize(runtime)),
+      softmax_(createSoftmax(runtime)),
       squeeze_(createSqueeze(runtime)),
       toString_(createToString(runtime)),
       unsqueeze_(createUnsqueeze(runtime)),
@@ -137,6 +149,8 @@ jsi::Value TensorHostObject::get(
     return this->size_.call(runtime);
   } else if (name == SIZE) {
     return jsi::Value(runtime, size_);
+  } else if (name == SOFTMAX) {
+    return jsi::Value(runtime, softmax_);
   } else if (name == SQUEEZE) {
     return jsi::Value(runtime, squeeze_);
   } else if (name == TOSTRING) {
@@ -359,6 +373,27 @@ jsi::Function TensorHostObject::createSize(jsi::Runtime& runtime) {
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, SIZE), 0, sizeFunc);
+}
+
+jsi::Function TensorHostObject::createSoftmax(jsi::Runtime& runtime) {
+  auto softmaxFunc = [this](
+                         jsi::Runtime& runtime,
+                         const jsi::Value& thisValue,
+                         const jsi::Value* arguments,
+                         size_t count) {
+    if (count < 1) {
+      throw jsi::JSError(runtime, "This function requires at least 1 argument");
+    }
+    auto dimension = arguments[0].asNumber();
+    auto resultTensor = this->tensor.softmax(dimension);
+    auto outputTensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(
+            runtime, resultTensor);
+    return jsi::Object::createFromHostObject(runtime, outputTensorHostObject);
+  };
+
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, SOFTMAX), 1, softmaxFunc);
 }
 
 jsi::Function TensorHostObject::createSqueeze(jsi::Runtime& runtime) {

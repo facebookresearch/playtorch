@@ -145,10 +145,10 @@ export default function JSIPlayground() {
     console.log(tensor2.toString());
     tensor3 = tensor2.mul(tensor1);
     console.log(tensor3.toString());
-    console.log('---Test torch.softmax---');
+    console.log('---Test tensor.softmax---');
     let softmaxTensor1 = torch.arange(2);
     console.log(softmaxTensor1.toString());
-    let softmaxTensor2 = torch.softmax(softmaxTensor1, 0);
+    let softmaxTensor2 = softmaxTensor1.softmax(0);
     console.log(softmaxTensor2.toString());
 
     console.log('---Test torch.tensor---');

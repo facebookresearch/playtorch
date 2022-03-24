@@ -287,4 +287,25 @@ TEST_F(TorchliveTensorRuntimeTest, TensorPermuteTest) {
   EXPECT_THROW(eval("torch.rand([2, 3, 1]).permute()"), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorSoftmaxTest) {
+  std::string tensorSoftmaxEachValueLessThanOne =
+      R"(
+          const tensor = torch.arange(2);
+          const result = tensor.softmax(0);
+          (result.data[0] <= 1 && result.data[0] >= 0) && (result.data[1] <= 1 && result.data[1] >= 0);
+        )";
+  EXPECT_TRUE(eval(tensorSoftmaxEachValueLessThanOne.c_str()).getBool());
+
+  std::string tensorSoftmaxSumOfValuesEqualToOne =
+      R"(
+          const tensor = torch.arange(2);
+          const result = tensor.softmax(0);
+          Math.round(result.data[0] + result.data[1]);
+        )";
+  EXPECT_EQ(eval(tensorSoftmaxSumOfValuesEqualToOne.c_str()).getNumber(), 1);
+
+  EXPECT_THROW(eval("torch.arange(2).softmax()"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.empty(1, 2).softmax([1])"), facebook::jsi::JSError);
+}
+
 } // namespace

@@ -28,7 +28,6 @@ static const std::string EMPTY = "empty";
 static const std::string FROM_BLOB = "fromBlob";
 static const std::string RAND = "rand";
 static const std::string RANDINT = "randint";
-static const std::string SOFTMAX = "softmax";
 static const std::string SUB = "sub";
 static const std::string TENSOR = "tensor";
 static const std::string TOPK = "topk";
@@ -56,7 +55,6 @@ const std::vector<std::string> METHODS = {
     FROM_BLOB,
     RAND,
     RANDINT,
-    SOFTMAX,
     SUB,
     TENSOR,
     TOPK,
@@ -71,7 +69,6 @@ TorchHostObject::TorchHostObject(
       fromBlob_(createFromBlob(runtime)),
       rand_(createRand(runtime)),
       randint_(createRandint(runtime)),
-      softmax_(createSoftmax(runtime)),
       sub_(createSub(runtime)),
       tensor_(createTensor(runtime)),
       topk_(createTopK(runtime)),
@@ -126,8 +123,6 @@ jsi::Value TorchHostObject::get(
     return jsi::Value(runtime, rand_);
   } else if (name == RANDINT) {
     return jsi::Value(runtime, randint_);
-  } else if (name == SOFTMAX) {
-    return jsi::Value(runtime, softmax_);
   } else if (name == SUB) {
     return jsi::Value(runtime, sub_);
   } else if (name == utils::constants::UINT8) {
@@ -333,30 +328,6 @@ jsi::Function TorchHostObject::createRandint(jsi::Runtime& runtime) {
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, RANDINT), 1, randintImpl);
-}
-
-jsi::Function TorchHostObject::createSoftmax(jsi::Runtime& runtime) {
-  auto softmaxFunc = [](jsi::Runtime& runtime,
-                        const jsi::Value& thisValue,
-                        const jsi::Value* arguments,
-                        size_t count) {
-    if (count < 2) {
-      throw jsi::JSError(
-          runtime, "This function requires at least 2 arguments");
-    }
-    auto inputTensorHostObject =
-        utils::helpers::parseTensor(runtime, &arguments[0]);
-    auto dimension = arguments[1].asNumber();
-    auto resultTensor =
-        torch_::softmax(inputTensorHostObject->tensor, dimension);
-    auto outputTensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(
-            runtime, resultTensor);
-    return jsi::Object::createFromHostObject(runtime, outputTensorHostObject);
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, SOFTMAX), 1, softmaxFunc);
 }
 
 jsi::Function TorchHostObject::createSub(jsi::Runtime& runtime) {

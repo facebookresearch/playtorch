@@ -11,7 +11,7 @@ declare var performance: any;
 
 import * as React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Platform} from 'react-native';
-import {torch, torchvision, vision} from 'react-native-pytorch-core';
+import {Tensor, torch, torchvision, vision} from 'react-native-pytorch-core';
 
 function argmax(array: number[]): number {
   let max = -Number.MAX_VALUE;
@@ -73,6 +73,18 @@ export default function JSIPlayground() {
     console.log(testTensor.toString());
     testTensor = torch.empty([1, 2], {dtype: torch.float64});
     console.log(testTensor.toString());
+
+    console.log('---Test torch.eye---');
+    function printTensor(t: Tensor) {
+      console.log(t.toString());
+      console.log(t.shape);
+      console.log(t.data);
+    }
+    printTensor(torch.eye(0));
+    printTensor(torch.eye(3));
+    printTensor(torch.eye(0, 3));
+    printTensor(torch.eye(3, 0));
+    printTensor(torch.eye(3, 3, {dtype: 'int32'}));
 
     console.log('---Test torch.arange---');
     tensor = torch.arange(5);

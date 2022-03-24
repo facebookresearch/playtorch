@@ -63,6 +63,41 @@ TEST_F(TorchliveRuntimeTest, TorchEmptyTest) {
       eval("torch.empty({dtype:'float64'}).dtype"), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveRuntimeTest, TorchEyeTest) {
+  // test dimensions with one int argument
+  const std::vector<int> ns = {0, 1, 3};
+  for (const auto n : ns) {
+    EXPECT_EQ(eval(fmt::format("torch.eye({}).shape[0]", n)).getNumber(), n);
+    EXPECT_EQ(eval(fmt::format("torch.eye({}).shape[1]", n)).getNumber(), n);
+  }
+  // test dimensions with two int arguments
+  const std::vector<std::pair<int, int>> nms = {
+      {0, 0}, {0, 1}, {1, 0}, {1, 1}, {1, 3}, {3, 1}, {3, 3}};
+  for (const auto [n, m] : nms) {
+    EXPECT_EQ(
+        eval(fmt::format("torch.eye({},{}).shape[0]", n, m)).getNumber(), n);
+    EXPECT_EQ(
+        eval(fmt::format("torch.eye({},{}).shape[1]", n, m)).getNumber(), m);
+  }
+  // test with data type
+  const auto dtypes = {"float64", "float32", "int64", "int32"};
+  for (const auto dtype : dtypes) {
+    EXPECT_EQ(
+        eval(fmt::format("torch.eye(3, {{dtype:'{}'}}).dtype", dtype))
+            .asString(*rt)
+            .utf8(*rt),
+        dtype);
+  }
+  // there must be at least one argument
+  EXPECT_THROW(eval("torch.eye()"), facebook::jsi::JSError);
+  // the first argument must be a number
+  EXPECT_THROW(eval("torch.eye([1,2])"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.eye({dtype:'int32'})"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.eye({dtype:'int32'}, 3)"), facebook::jsi::JSError);
+  // only the two initial arguments may be numbers
+  EXPECT_THROW(eval("torch.eye(1,2,3)"), facebook::jsi::JSError);
+}
+
 TEST_F(TorchliveRuntimeTest, TensorDataTest) {
   EXPECT_TRUE(eval("torch.rand([5]).data instanceof Float32Array").getBool());
   EXPECT_TRUE(

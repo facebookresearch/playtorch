@@ -19,6 +19,7 @@ using namespace facebook;
 class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
   facebook::jsi::Function arange_;
   facebook::jsi::Function empty_;
+  facebook::jsi::Function eye_;
   facebook::jsi::Function fromBlob_;
   facebook::jsi::Function rand_;
   facebook::jsi::Function randint_;
@@ -40,6 +41,7 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
   torchlive::RuntimeExecutor runtimeExecutor_;
   static facebook::jsi::Function createArange(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createEmpty(facebook::jsi::Runtime& runtime);
+  static facebook::jsi::Function createEye(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createFromBlob(
       facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createRand(facebook::jsi::Runtime& runtime);

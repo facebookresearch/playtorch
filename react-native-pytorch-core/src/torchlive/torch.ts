@@ -258,6 +258,16 @@ export interface Torch {
    */
   empty(size: number[], options?: TensorOptions): Tensor;
   /**
+   * Returns a tensor filled with ones on the diagonal, and zeroes elsewhere.
+   * The shape of the tensor is defined by the arguments n and m.
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.eye.html}
+   *
+   * @param n An integer defining the number of rows in the result.
+   * @param m An integer defining the number of columns in the result. Optional, defaults to n.
+   */
+  eye(n: number, m?: number, options?: TensorOptions): Tensor;
+  /**
    * Exposes the given data as a Tensor without taking ownership of the
    * original data.
    *

@@ -5,12 +5,16 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <memory>
 #include <vector>
 
 #include "../media/BlobHostObject.h"
+#include "ATen/Functions.h"
+#include "ATen/core/TensorBody.h"
 #include "TensorHostObject.h"
 #include "TorchHostObject.h"
 #include "jit/JITHostObject.h"
+#include "jsi/jsi.h"
 #include "utils/constants.h"
 #include "utils/helpers.h"
 
@@ -25,6 +29,7 @@ using namespace facebook;
 // TorchHostObject Method Name
 static const std::string ARANGE = "arange";
 static const std::string EMPTY = "empty";
+static const std::string EYE = "eye";
 static const std::string FROM_BLOB = "fromBlob";
 static const std::string RAND = "rand";
 static const std::string RANDINT = "randint";
@@ -50,6 +55,7 @@ static const std::vector<std::string> PROPERTIES = {
 const std::vector<std::string> METHODS = {
     ARANGE,
     EMPTY,
+    EYE,
     FROM_BLOB,
     RAND,
     RANDINT,
@@ -62,6 +68,7 @@ TorchHostObject::TorchHostObject(
     torchlive::RuntimeExecutor runtimeExecutor)
     : arange_(createArange(runtime)),
       empty_(createEmpty(runtime)),
+      eye_(createEye(runtime)),
       fromBlob_(createFromBlob(runtime)),
       rand_(createRand(runtime)),
       randint_(createRandint(runtime)),
@@ -91,6 +98,8 @@ jsi::Value TorchHostObject::get(
     return jsi::Value(runtime, arange_);
   } else if (name == EMPTY) {
     return jsi::Value(runtime, empty_);
+  } else if (name == EYE) {
+    return jsi::Value(runtime, eye_);
   } else if (
       name == utils::constants::FLOAT32 || name == utils::constants::FLOAT) {
     return jsi::String::createFromAscii(runtime, utils::constants::FLOAT32);
@@ -212,6 +221,50 @@ jsi::Function TorchHostObject::createEmpty(jsi::Runtime& runtime) {
 
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, EMPTY), 1, emptyFunc);
+}
+
+/**
+ * Returns an eye tensor with the given dimensions:
+ *   * eye(n, m) if two integer arguments n, m given,
+ *   * eye(n, n) if one integer argument n given
+ *
+ * See https://pytorch.org/docs/stable/generated/torch.eye.html
+ */
+jsi::Function TorchHostObject::createEye(jsi::Runtime& runtime) {
+  const auto eye = [](jsi::Runtime& runtime,
+                      const jsi::Value& self,
+                      const jsi::Value* arguments,
+                      size_t count) {
+    const auto createTensorObject = [&runtime](at::Tensor&& tensor) {
+      return jsi::Object::createFromHostObject(
+          runtime,
+          std::make_shared<torchlive::torch::TensorHostObject>(
+              runtime, tensor));
+    };
+    if (count < 1) {
+      throw jsi::JSError(runtime, "torch.eye requires at least one argument");
+    } else if (!arguments[0].isNumber()) {
+      // TODO(T115230811): check for the argument being a non-negative
+      // integer, and modify the error message accordingly
+      throw jsi::JSError(
+          runtime, "torch.eye requires the first argument to be a number");
+    }
+    const auto rows = arguments[0].asNumber();
+    if ((count > 1) && arguments[1].isNumber()) {
+      // TODO(T115230811): check for the argument being a non-negative
+      // integer, raise an error if it is not one but it is a number
+      const auto columns = arguments[1].asNumber();
+      const auto options =
+          utils::helpers::parseTensorOptions(runtime, arguments, 2, count);
+      return createTensorObject(torch_::eye(rows, columns, options));
+    } else {
+      const auto options =
+          utils::helpers::parseTensorOptions(runtime, arguments, 1, count);
+      return createTensorObject(torch_::eye(rows, options));
+    }
+  };
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, EYE), 1, eye);
 }
 
 jsi::Function TorchHostObject::createFromBlob(jsi::Runtime& runtime) {

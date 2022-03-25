@@ -51,6 +51,9 @@ public class AudioModule extends ReactContextBaseJavaModule {
   public AudioModule(ReactApplicationContext reactContext) {
     super(reactContext);
     mReactContext = reactContext;
+    mBufferSize =
+        AudioRecord.getMinBufferSize(
+            SAMPLE_RATE, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
   }
 
   @NotNull
@@ -62,66 +65,22 @@ public class AudioModule extends ReactContextBaseJavaModule {
   @ReactMethod
   public void startRecord() {
     Log.d(TAG, "started recording");
-
     requestMicrophonePermission();
-
-    Thread recordingThread =
-        new Thread(
-            () -> {
-              synchronized (mAudioDataChunks) {
-                try {
-                  mBufferSize =
-                      AudioRecord.getMinBufferSize(
-                          SAMPLE_RATE, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
-                  final AudioRecord record =
-                      new AudioRecord(
-                          MediaRecorder.AudioSource.DEFAULT,
-                          SAMPLE_RATE,
-                          AudioFormat.CHANNEL_IN_MONO,
-                          AudioFormat.ENCODING_PCM_16BIT,
-                          mBufferSize);
-
-                  if (record.getState() != AudioRecord.STATE_INITIALIZED) {
-                    Log.e(TAG, "Audio Record can't initialize!");
-                    return;
-                  }
-                  record.startRecording();
-                  mIsRecording = true;
-                  mAudioDataChunks = new ArrayList<>();
-                  while (mIsRecording) {
-                    final short[] audioBuffer = new short[mBufferSize / 2];
-                    final int numberOfShort = record.read(audioBuffer, 0, audioBuffer.length);
-                    mAudioDataChunks.add(audioBuffer);
-                  }
-                  record.stop();
-                  record.release();
-                } catch (final Exception e) {
-                  mIsRecording = false;
-                  mAudioDataChunks.clear();
-                  Log.e(TAG, "Error recording audio:", e);
-                  throw new RuntimeException(
-                      "Exception encountered while recording audio. " + e.getMessage());
-                }
-              }
-            });
+    Thread recordingThread = new Thread(getStartRecordingThread());
     recordingThread.start();
   }
 
   @ReactMethod
   public void stopRecord(final Promise promise) {
-    if (!mIsRecording) {
+    if (!mIsRecording || mAudioDataChunks.isEmpty()) {
       promise.resolve(null);
     }
     mIsRecording = false;
     synchronized (mAudioDataChunks) {
       // Wait for the recording thread to finish recording
-      if (mAudioDataChunks.size() > 0) {
-        final Audio recordedAudio = processRecordedAudio();
-        JSContext.NativeJSRef ref = JSContext.wrapObject(recordedAudio);
-        promise.resolve(ref.getJSRef());
-      } else {
-        promise.reject("Exception while recording audio.");
-      }
+      final Audio recordedAudio = processRecordedAudio();
+      JSContext.NativeJSRef ref = JSContext.wrapObject(recordedAudio);
+      promise.resolve(ref.getJSRef());
     }
   }
 
@@ -186,5 +145,49 @@ public class AudioModule extends ReactContextBaseJavaModule {
       }
     }
     return new Audio(audioData);
+  }
+
+  private Runnable getStartRecordingThread() {
+    return new Runnable() {
+      @Override
+      public void run() {
+        AudioRecord audioRecorder = null;
+        synchronized (mAudioDataChunks) {
+          try {
+            audioRecorder =
+                new AudioRecord(
+                    MediaRecorder.AudioSource.DEFAULT,
+                    SAMPLE_RATE,
+                    AudioFormat.CHANNEL_IN_MONO,
+                    AudioFormat.ENCODING_PCM_16BIT,
+                    mBufferSize);
+            if (audioRecorder.getState() != AudioRecord.STATE_INITIALIZED) {
+              Log.e(TAG, "Audio Record can't initialize!");
+              return;
+            }
+            audioRecorder.startRecording();
+            mIsRecording = true;
+            mAudioDataChunks = new ArrayList<>();
+            while (mIsRecording) {
+              final short[] audioBuffer = new short[mBufferSize / 2];
+              final int numberOfShort = audioRecorder.read(audioBuffer, 0, audioBuffer.length);
+              mAudioDataChunks.add(audioBuffer);
+            }
+          } catch (final Exception e) {
+            mIsRecording = false;
+            mAudioDataChunks.clear();
+            Log.e(TAG, "Error recording audio:", e);
+            throw new RuntimeException(
+                "Exception encountered while recording audio. " + e.getMessage());
+          } finally {
+            if (audioRecorder != null) {
+              audioRecorder.stop();
+              audioRecorder.release();
+              audioRecorder = null;
+            }
+          }
+        }
+      }
+    };
   }
 }

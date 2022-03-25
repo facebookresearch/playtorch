@@ -25,6 +25,7 @@ public class Audio: IAudio {
 
     public func play() {
         do {
+            try? AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
             mPlayer?.volume = Audio.DEFAULTVOLUME
             mPlayer = try AVAudioPlayer(data: mData)
             mPlayer?.play()

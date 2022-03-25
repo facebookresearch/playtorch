@@ -30,6 +30,10 @@ export default function Wav2Vec2() {
   async function stopRecording() {
     const audio = await AudioUtil.stopRecord();
     setIsRecording(false);
+    if (audio == null) {
+      console.log('No audio recorded!');
+      return;
+    }
     const {metrics: m, result} = await MobileModel.execute<Wav2Vec2Result>(
       Wav2VecModel,
       {

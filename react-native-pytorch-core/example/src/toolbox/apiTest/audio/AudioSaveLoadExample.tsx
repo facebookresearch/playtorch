@@ -25,9 +25,10 @@ export default function AudioSaveLoadExample() {
 
   async function stopRecording() {
     const audio = await AudioUtil.stopRecord();
-    console.log(audio);
     setIsRecording(false);
-    await save(audio);
+    if (audio != null) {
+      await save(audio);
+    }
   }
 
   async function save(audio: Audio) {
@@ -36,8 +37,10 @@ export default function AudioSaveLoadExample() {
   }
 
   async function loadAndPlay() {
-    const audio = await AudioUtil.fromFile(savedFilePath);
-    audio.play();
+    if (savedFilePath.length > 0) {
+      const audio = await AudioUtil.fromFile(savedFilePath);
+      audio.play();
+    }
   }
 
   async function loadFromBundleAndPlay() {

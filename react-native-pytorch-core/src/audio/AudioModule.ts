@@ -47,11 +47,14 @@ export const AudioUtil = {
    * const audio: Audio = await AudioUtil.stopRecord();
    * ```
    *
-   * @returns A promise resolving into an [[Audio]]
+   * @returns A promise resolving into an [[Audio]] or null
    */
-  async stopRecord(): Promise<Audio> {
+  async stopRecord(): Promise<Audio | null> {
     const ref: NativeJSRef = await AudioModule.stopRecord();
-    return wrapRef(ref);
+    if (ref != null) {
+      return wrapRef(ref);
+    }
+    return null;
   },
 
   /**

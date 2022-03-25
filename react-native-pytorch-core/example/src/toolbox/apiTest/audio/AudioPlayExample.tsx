@@ -15,7 +15,7 @@ import {useState} from 'react';
 
 export default function AudioPlayExample() {
   const [isRecording, setIsRecording] = useState<boolean>(false);
-  const [recordedAudio, setRecordedAudio] = useState<Audio>();
+  const [recordedAudio, setRecordedAudio] = useState<Audio | null>();
 
   async function startRecording() {
     setIsRecording(true);
@@ -28,7 +28,6 @@ export default function AudioPlayExample() {
 
   async function stopRecording() {
     const audio = await AudioUtil.stopRecord();
-    console.log(audio);
     setRecordedAudio(audio);
     setIsRecording(false);
   }

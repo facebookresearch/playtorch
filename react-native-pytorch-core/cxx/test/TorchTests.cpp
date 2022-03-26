@@ -262,6 +262,8 @@ TEST_F(TorchliveRuntimeTest, TorchTensorTest) {
           tensor.dtype == torch.float32 && tensor2.dtype == torch.int && tensor2.data[0] == 1 && tensor3.dtype == torch.int64;
         )";
   EXPECT_TRUE(eval(torchCreateTensorFromArrayDtype.c_str()).getBool());
+  // there must be at least one argument
+  EXPECT_THROW(eval("torch.tensor()"), facebook::jsi::JSError);
   EXPECT_THROW(
       eval(
           "const tensor = torch.tensor([[[1, 2, '3'], [3, 4, 5]], [[1, 2, 3], [3, 4, 5]]])"),
@@ -274,6 +276,11 @@ TEST_F(TorchliveRuntimeTest, TorchTensorTest) {
   EXPECT_THROW(
       eval("const tensor = torch.tensor([[1, 2, 3], [1, 2]])"),
       facebook::jsi::JSError);
+}
+
+TEST_F(TorchliveRuntimeTest, TorchRandTest) {
+  // there must be at least one argument
+  EXPECT_THROW(eval("torch.rand()"), facebook::jsi::JSError);
 }
 
 TEST_F(TorchliveRuntimeTest, TorchZerosTest) {

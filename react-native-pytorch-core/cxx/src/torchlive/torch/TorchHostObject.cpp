@@ -174,6 +174,10 @@ jsi::Function TorchHostObject::createRand(jsi::Runtime& runtime) {
                      const jsi::Value& thisValue,
                      const jsi::Value* arguments,
                      size_t count) {
+    if (count == 0) {
+      throw jsi::JSError(
+          runtime, "This function requires at least one argument");
+    }
     jsi::Array jsShape = arguments[0].asObject(runtime).asArray(runtime);
     auto shapeLength = jsShape.size(runtime);
     std::vector<int64_t> dims = {};
@@ -378,6 +382,10 @@ jsi::Function TorchHostObject::createTensor(jsi::Runtime& runtime) {
                        const jsi::Value& thisValue,
                        const jsi::Value* arguments,
                        size_t count) {
+    if (count == 0) {
+      throw jsi::JSError(
+          runtime, "This function requires at least one argument.");
+    }
     std::vector<double> data =
         utils::helpers::parseJSIArrayData(runtime, arguments[0]);
     std::vector<int64_t> shape =

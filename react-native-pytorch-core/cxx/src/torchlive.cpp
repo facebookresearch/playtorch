@@ -8,7 +8,7 @@
 #include <jsi/jsi.h>
 
 #include "torchlive.h"
-#include "torchlive/media/NativeJSRefBridgeHostObject.h"
+#include "torchlive/media/MediaNamespace.h"
 #include "torchlive/torch/TorchHostObject.h"
 #include "torchlive/torchvision/TorchvisionHostObject.h"
 #include "torchlive/vision/VisionHostObject.h"
@@ -36,9 +36,7 @@ void install(jsi::Runtime& runtime, RuntimeExecutor runtimeExecutor) {
       jsi::Object::createFromHostObject(runtime, torchvisionObject);
   torchliveObject.setProperty(runtime, "torchvision", std::move(torchvision));
 
-  auto mediaObject =
-      std::make_shared<torchlive::media::NativeJSRefBridgeHostObject>(runtime);
-  auto media = jsi::Object::createFromHostObject(runtime, mediaObject);
+  auto media = media::buildNamespace(runtime, runtimeExecutor);
   torchliveObject.setProperty(runtime, "media", std::move(media));
 
   runtime.global().setProperty(

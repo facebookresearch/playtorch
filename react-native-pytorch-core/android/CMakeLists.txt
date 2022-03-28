@@ -21,7 +21,7 @@ add_library(
         ../cxx/src/torchlive.cpp
         ../cxx/src/torchlive/media/Blob.cpp
         ../cxx/src/torchlive/media/BlobHostObject.cpp
-        ../cxx/src/torchlive/media/NativeJSRefBridgeHostObject.cpp
+        ../cxx/src/torchlive/media/MediaNamespace.cpp
         ../cxx/src/torchlive/Promise.cpp
         ../cxx/src/torchlive/torch/DictHostObject.cpp
         ../cxx/src/torchlive/torch/IValueHostObject.cpp

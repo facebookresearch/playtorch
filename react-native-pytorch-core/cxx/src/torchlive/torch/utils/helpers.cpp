@@ -206,6 +206,18 @@ std::vector<int64_t> parseJSIArrayShape(
   return shape;
 }
 
+void setPropertyHostFunction(
+    jsi::Runtime& runtime,
+    jsi::Object& obj,
+    const std ::string& name,
+    size_t paramCount,
+    jsi::HostFunctionType hostFunc) {
+  auto propNameId = jsi::PropNameID::forUtf8(runtime, name);
+  auto func = jsi::Function::createFromHostFunction(
+      runtime, propNameId, paramCount, hostFunc);
+  obj.setProperty(runtime, propNameId, std::move(func));
+}
+
 } // namespace helpers
 } // namespace utils
 } // namespace torchlive

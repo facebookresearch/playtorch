@@ -83,6 +83,16 @@ std::vector<int64_t> parseJSIArrayShape(
     facebook::jsi::Runtime& runtime,
     const facebook::jsi::Value& val);
 
+/**
+ * A helper method to assign a HostFunction to an Object property.
+ */
+void setPropertyHostFunction(
+    facebook::jsi::Runtime& runtime,
+    facebook::jsi::Object& obj,
+    const std ::string& name,
+    size_t paramCount,
+    facebook::jsi::HostFunctionType hostFunc);
+
 } // namespace helpers
 } // namespace utils
 } // namespace torchlive

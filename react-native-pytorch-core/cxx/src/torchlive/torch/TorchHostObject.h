@@ -8,6 +8,7 @@
 #pragma once
 
 #include <jsi/jsi.h>
+#include <map>
 
 #include "../../torchlive.h"
 
@@ -48,6 +49,8 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
   static facebook::jsi::Function createRandint(facebook::jsi::Runtime& runtime);
   static jsi::Function createTensor(jsi::Runtime& runtime);
   static jsi::Function createZeros(jsi::Runtime& runtime);
+  std::map<std::string, jsi::Function*> methods;
+  std::map<std::string, std::string> properties;
 };
 
 } // namespace torch

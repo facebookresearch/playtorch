@@ -74,7 +74,31 @@ TorchHostObject::TorchHostObject(
       randint_(createRandint(runtime)),
       tensor_(createTensor(runtime)),
       zeros_(createZeros(runtime)),
-      runtimeExecutor_(runtimeExecutor) {}
+      runtimeExecutor_(runtimeExecutor),
+      methods{
+          {ARANGE, &arange_},
+          {EMPTY, &empty_},
+          {EYE, &eye_},
+          {FROM_BLOB, &fromBlob_},
+          {RAND, &rand_},
+          {RANDINT, &randint_},
+          {TENSOR, &tensor_},
+          {ZEROS, &zeros_},
+      },
+      properties{
+          {utils::constants::FLOAT32, utils::constants::FLOAT32},
+          {utils::constants::FLOAT, utils::constants::FLOAT32},
+          {utils::constants::FLOAT64, utils::constants::FLOAT64},
+          {utils::constants::DOUBLE, utils::constants::FLOAT64},
+          {utils::constants::INT8, utils::constants::INT8},
+          {utils::constants::INT16, utils::constants::INT16},
+          {utils::constants::SHORT, utils::constants::INT16},
+          {utils::constants::INT32, utils::constants::INT32},
+          {utils::constants::INT, utils::constants::INT32},
+          {utils::constants::INT64, utils::constants::INT64},
+          {utils::constants::LONG, utils::constants::INT64},
+          {utils::constants::UINT8, utils::constants::UINT8},
+      } {}
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(
     jsi::Runtime& rt) {
@@ -94,48 +118,25 @@ jsi::Value TorchHostObject::get(
     const jsi::PropNameID& propName) {
   auto name = propName.utf8(runtime);
 
-  if (name == ARANGE) {
-    return jsi::Value(runtime, arange_);
-  } else if (name == EMPTY) {
-    return jsi::Value(runtime, empty_);
-  } else if (name == EYE) {
-    return jsi::Value(runtime, eye_);
-  } else if (
-      name == utils::constants::FLOAT32 || name == utils::constants::FLOAT) {
-    return jsi::String::createFromAscii(runtime, utils::constants::FLOAT32);
-  } else if (
-      name == utils::constants::FLOAT64 || name == utils::constants::DOUBLE) {
-    return jsi::String::createFromAscii(runtime, utils::constants::FLOAT64);
-  } else if (name == utils::constants::INT8) {
-    return jsi::String::createFromAscii(runtime, utils::constants::INT8);
-  } else if (name == FROM_BLOB) {
-    return jsi::Value(runtime, fromBlob_);
-  } else if (
-      name == utils::constants::INT16 || name == utils::constants::SHORT) {
-    return jsi::String::createFromAscii(runtime, utils::constants::INT16);
-  } else if (name == utils::constants::INT32 || name == utils::constants::INT) {
-    return jsi::String::createFromAscii(runtime, utils::constants::INT32);
-  } else if (
-      name == utils::constants::INT64 || name == utils::constants::LONG) {
-    return jsi::String::createFromAscii(runtime, utils::constants::INT64);
-  } else if (name == JIT) {
-    auto jitHostObject = std::make_shared<torchlive::torch::jit::JITHostObject>(
-        runtime, runtimeExecutor_);
-    return jsi::Object::createFromHostObject(runtime, jitHostObject);
-  } else if (name == RAND) {
-    return jsi::Value(runtime, rand_);
-  } else if (name == RANDINT) {
-    return jsi::Value(runtime, randint_);
-  } else if (name == utils::constants::UINT8) {
-    return jsi::String::createFromAscii(runtime, utils::constants::UINT8);
-  } else if (name == TENSOR) {
-    return jsi::Value(runtime, tensor_);
-  } else if (name == ZEROS) {
-    return jsi::Value(runtime, zeros_);
+  auto method = methods.find(name);
+  if (method != methods.end()) {
+    return jsi::Value(runtime, *(method->second));
+  }
+
+  auto property = properties.find(name);
+  if (property != properties.end()) {
+    return jsi::String::createFromAscii(runtime, property->second);
+  }
+
+  if (name == JIT) {
+    return jsi::Object::createFromHostObject(
+        runtime,
+        std::make_shared<torchlive::torch::jit::JITHostObject>(
+            runtime, runtimeExecutor_));
   }
 
   return jsi::Value::undefined();
-}
+};
 
 jsi::Function TorchHostObject::createArange(jsi::Runtime& runtime) {
   auto arangeImpl = [](jsi::Runtime& runtime,

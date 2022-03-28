@@ -29,7 +29,7 @@ Returns a generic dict.
 
 #### Defined in
 
-[torchlive/torch.ts:26](https://github.com/pytorch/live/blob/bb3eb3c/react-native-pytorch-core/src/torchlive/torch.ts#L26)
+[torchlive/torch.ts:53](https://github.com/pytorch/live/blob/8f1c999/react-native-pytorch-core/src/torchlive/torch.ts#L53)
 
 ___
 
@@ -47,4 +47,4 @@ Returns a tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:20](https://github.com/pytorch/live/blob/bb3eb3c/react-native-pytorch-core/src/torchlive/torch.ts#L20)
+[torchlive/torch.ts:47](https://github.com/pytorch/live/blob/8f1c999/react-native-pytorch-core/src/torchlive/torch.ts#L47)

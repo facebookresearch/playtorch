@@ -21,7 +21,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[torchlive/torch.ts:75](https://github.com/pytorch/live/blob/bb3eb3c/react-native-pytorch-core/src/torchlive/torch.ts#L75)
+[torchlive/torch.ts:102](https://github.com/pytorch/live/blob/8f1c999/react-native-pytorch-core/src/torchlive/torch.ts#L102)
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:53](https://github.com/pytorch/live/blob/bb3eb3c/react-native-pytorch-core/src/torchlive/torch.ts#L53)
+[torchlive/torch.ts:80](https://github.com/pytorch/live/blob/8f1c999/react-native-pytorch-core/src/torchlive/torch.ts#L80)
 
 ## Variables
 
@@ -47,4 +47,4 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:348](https://github.com/pytorch/live/blob/bb3eb3c/react-native-pytorch-core/src/torchlive/torch.ts#L348)
+[torchlive/torch.ts:394](https://github.com/pytorch/live/blob/8f1c999/react-native-pytorch-core/src/torchlive/torch.ts#L394)

@@ -247,6 +247,17 @@ export interface Tensor extends IValue {
    * @param dim The index at which to insert the singleton dimension.
    */
   unsqueeze(dim: number): Tensor;
+  /**
+   * Access tensor with index. This is similar to how tensor data is accessed
+   * in PyTorch Python.
+   *
+   * ```python
+   * >>> tensor = torch.rand([2])
+   * >>> tensor, tensor[0]
+   * (tensor([0.8254, 0.0784]), tensor(0.8254))
+   * ```
+   */
+  [index: number]: Tensor;
 }
 
 export interface Torch {

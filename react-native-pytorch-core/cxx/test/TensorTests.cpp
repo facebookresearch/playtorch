@@ -16,32 +16,6 @@ namespace {
 class TorchliveTensorRuntimeTest
     : public torchlive::test::TorchliveBindingsTestBase {};
 
-TEST_F(TorchliveTensorRuntimeTest, TensorTest) {
-  std::string tensorIndexWithNumber =
-      R"(
-        const tensor = torch.tensor([[128], [255]]);
-        const tensor1 = tensor[0];
-        const tensor2 = tensor[1];
-        tensor1.data[0] == 128 && tensor2.data[0] == 255;
-      )";
-  EXPECT_TRUE(eval(tensorIndexWithNumber).getBool());
-
-  std::string tensorIndexWithNumberString =
-      R"(
-        const tensor = torch.tensor([[128], [255]]);
-        const tensor1 = tensor['0'];
-        const tensor2 = tensor['1'];
-        tensor1.data[0] == 128 && tensor2.data[0] == 255;
-      )";
-  EXPECT_TRUE(eval(tensorIndexWithNumberString).getBool());
-
-  EXPECT_TRUE(eval("torch.tensor([[128], [255]])['foo']").isUndefined());
-
-  EXPECT_TRUE(eval("torch.tensor([[128], [255]])[-1]").isUndefined());
-
-  EXPECT_TRUE(eval("torch.tensor([[128], [255]])[2]").isUndefined());
-}
-
 TEST_F(TorchliveTensorRuntimeTest, TensorAbsTest) {
   std::string tensorAbs =
       R"(
@@ -156,6 +130,30 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDataTest) {
         tensor.data;
       )";
   EXPECT_THROW(eval(tensorWithDtypeAsInt64), facebook::jsi::JSError);
+}
+
+TEST_F(TorchliveTensorRuntimeTest, TensorIndexing) {
+  std::string tensorAccessWithIndex =
+      R"(
+        const tensor = torch.tensor([1, 2, 3]);
+        tensor[0].data[0] === 1 && tensor[1].data[0] === 2 && tensor[2].data[0] === 3;
+      )";
+  EXPECT_TRUE(eval(tensorAccessWithIndex).getBool());
+
+  std::string nestedTensorAcessWithIndex =
+      R"(
+        const tensor = torch.tensor([[128], [255]]);
+        const tensor1 = tensor[0];
+        const tensor2 = tensor[1];
+        tensor1.data[0] == 128 && tensor2.data[0] == 255;
+      )";
+  EXPECT_TRUE(eval(nestedTensorAcessWithIndex).getBool());
+
+  EXPECT_TRUE(eval("torch.tensor([[128], [255]])['foo']").isUndefined());
+
+  EXPECT_TRUE(eval("torch.tensor([[128], [255]])[-1]").isUndefined());
+
+  EXPECT_TRUE(eval("torch.tensor([[128], [255]])[2]").isUndefined());
 }
 
 TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {

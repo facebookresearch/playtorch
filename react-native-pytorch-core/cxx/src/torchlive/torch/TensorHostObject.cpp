@@ -178,8 +178,9 @@ jsi::Value TensorHostObject::get(
     // Let's ignore this exception here since this function will return
     // undefined if it reaches the function end.
   }
-  if (idx >= 0 && idx < this->tensor.ndimension()) {
-    auto outputTensor = this->tensor[idx];
+  // Check if index is within bounds of dimension 0
+  if (idx >= 0 && idx < this->tensor.size(0)) {
+    auto outputTensor = this->tensor.index({idx});
     auto tensorHostObject =
         std::make_shared<torchlive::torch::TensorHostObject>(
             runtime, std::move(outputTensor));

@@ -11,6 +11,33 @@
 type Item = ItemArray;
 interface ItemArray extends Array<Item | number> {}
 
+/**
+ * TypedArray type to allow index-based access to tensor data.
+ *
+ * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray}
+ *
+ * The type should preferrably be `ArrayBufferView`. However, that type includes
+ * `DataView`, which itself is not indexable.
+ *
+ * {@link https://developer.mozilla.org/en-US/docs/Web/API/ArrayBufferView}
+ *
+ * A valid TypeScript expression is as follows:
+ *
+ * ```
+ * torch.rand([2, 3]).data[3];
+ * ```
+ */
+type TypedArray =
+  | Int8Array
+  | Uint8Array
+  | Uint8ClampedArray
+  | Int16Array
+  | Uint16Array
+  | Int32Array
+  | Uint32Array
+  | Float32Array
+  | Float64Array;
+
 export interface IValue {
   /**
    * Returns a tensor.
@@ -97,7 +124,15 @@ export interface Tensor extends IValue {
    */
   argmax(): number;
   /**
-   * Returns the tensor data as TypedArray buffer.
+   * Returns the tensor data as [[TypedArray]] buffer.
+   *
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray}
+   *
+   * A valid TypeScript expression is as follows:
+   *
+   * ```typescript
+   * torch.rand([2, 3]).data[3];
+   * ```
    *
    * :::note
    *
@@ -107,7 +142,7 @@ export interface Tensor extends IValue {
    *
    * @experimental
    */
-  data: ArrayBuffer;
+  data: TypedArray;
   /**
    * Divides each element of the input input by the corresponding element of
    * other.

@@ -7,12 +7,12 @@
  * @format
  */
 
-import {useIsFocused} from '@react-navigation/native';
 import * as React from 'react';
-import {AudioUtil, MobileModel} from 'react-native-pytorch-core';
-import {TouchableOpacity, View, StyleSheet, Text} from 'react-native';
+import {Audio, MobileModel} from 'react-native-pytorch-core';
+import {View, StyleSheet, Text} from 'react-native';
 import {useState} from 'react';
 import type {ModelResultMetrics} from 'react-native-pytorch-core';
+import PTLAudioRecorder from '../../components/PTLAudioRecorder';
 
 const Wav2VecModel = require('../../../models/wav2vec2.ptl');
 
@@ -23,13 +23,8 @@ type Wav2Vec2Result = {
 export default function Wav2Vec2() {
   const [answer, setAnswer] = useState<string>('');
   const [metrics, setMetrics] = useState<ModelResultMetrics | null>(null);
-  const [isRecording, setIsRecording] = useState<boolean>(false);
 
-  const isFocused = useIsFocused();
-
-  async function stopRecording() {
-    const audio = await AudioUtil.stopRecord();
-    setIsRecording(false);
+  async function onRecordingCompletedCallback(audio: Audio | null) {
     if (audio == null) {
       console.log('No audio recorded!');
       return;
@@ -44,26 +39,21 @@ export default function Wav2Vec2() {
     setAnswer(result.answer);
   }
 
-  if (!isFocused) {
-    return null;
-  }
-
-  function startRecording() {
-    setIsRecording(true);
-    AudioUtil.startRecord();
+  function onRecordingStartedCallback() {
     setAnswer('');
     setMetrics(null);
   }
 
   return (
     <>
-      <TouchableOpacity onPress={!isRecording ? startRecording : stopRecording}>
-        <View style={styles.startButton}>
-          <Text style={styles.startButtonText}>
-            {isRecording ? 'Stop Recording' : 'Start Recording'}
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <PTLAudioRecorder
+        onRecordingStarted={() => {
+          onRecordingStartedCallback();
+        }}
+        onRecordingComplete={(audio: Audio | null) => {
+          onRecordingCompletedCallback(audio);
+        }}
+      />
 
       <View style={styles.center}>
         <Text style={styles.small}>{answer}</Text>

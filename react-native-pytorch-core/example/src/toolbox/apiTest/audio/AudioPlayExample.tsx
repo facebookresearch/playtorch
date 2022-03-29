@@ -9,38 +9,30 @@
 
 import * as React from 'react';
 import type {Audio} from 'react-native-pytorch-core';
-import {AudioUtil} from 'react-native-pytorch-core';
 import {TouchableOpacity, View, StyleSheet, Text} from 'react-native';
 import {useState} from 'react';
+import PTLAudioRecorder from '../../../components/PTLAudioRecorder';
+import emptyFunction from '../../../utils/emptyFunction';
 
 export default function AudioPlayExample() {
-  const [isRecording, setIsRecording] = useState<boolean>(false);
   const [recordedAudio, setRecordedAudio] = useState<Audio | null>();
-
-  async function startRecording() {
-    setIsRecording(true);
-    AudioUtil.startRecord();
-  }
 
   function play() {
     recordedAudio?.play();
   }
 
-  async function stopRecording() {
-    const audio = await AudioUtil.stopRecord();
-    setRecordedAudio(audio);
-    setIsRecording(false);
+  async function onRecordingCompleteCallback(audio: Audio | null) {
+    if (audio != null) {
+      setRecordedAudio(audio);
+    }
   }
 
   return (
     <>
-      <TouchableOpacity onPress={!isRecording ? startRecording : stopRecording}>
-        <View style={styles.startButton}>
-          <Text style={styles.startButtonText}>
-            {isRecording ? 'Stop Recording' : 'Start Recording'}
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <PTLAudioRecorder
+        onRecordingStarted={emptyFunction}
+        onRecordingComplete={onRecordingCompleteCallback}
+      />
       <TouchableOpacity onPress={play}>
         <View style={styles.playAudioButton}>
           <Text style={styles.startButtonText}>{'Play Recorded Audio'}</Text>
@@ -51,16 +43,6 @@ export default function AudioPlayExample() {
 }
 
 const styles = StyleSheet.create({
-  startButton: {
-    width: 260,
-    height: 40,
-    marginLeft: 60,
-    marginTop: 100,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ff4c2c',
-  },
   startButtonText: {
     color: '#ffffff',
     fontSize: 14,

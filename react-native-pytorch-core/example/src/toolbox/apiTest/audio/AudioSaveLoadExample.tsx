@@ -11,29 +11,19 @@ import React, {useState} from 'react';
 import type {Audio} from 'react-native-pytorch-core';
 import {AudioUtil} from 'react-native-pytorch-core';
 import {TouchableOpacity, View, StyleSheet, Text} from 'react-native';
+import PTLAudioRecorder from '../../../components/PTLAudioRecorder';
+import emptyFunction from '../../../utils/emptyFunction';
 
 const audioAsset = require('../../../../assets/audio/scent_of_a_woman_future.wav');
 
 export default function AudioSaveLoadExample() {
-  const [isRecording, setIsRecording] = useState<boolean>(false);
   const [savedFilePath, setSavedFilePath] = useState<string>('');
 
-  async function startRecording() {
-    setIsRecording(true);
-    AudioUtil.startRecord();
-  }
-
-  async function stopRecording() {
-    const audio = await AudioUtil.stopRecord();
-    setIsRecording(false);
+  async function save(audio: Audio | null) {
     if (audio != null) {
-      await save(audio);
+      const filePath = await AudioUtil.toFile(audio);
+      setSavedFilePath(filePath);
     }
-  }
-
-  async function save(audio: Audio) {
-    const filePath = await AudioUtil.toFile(audio);
-    setSavedFilePath(filePath);
   }
 
   async function loadAndPlay() {
@@ -50,13 +40,12 @@ export default function AudioSaveLoadExample() {
 
   return (
     <>
-      <TouchableOpacity onPress={!isRecording ? startRecording : stopRecording}>
-        <View style={styles.startButton}>
-          <Text style={styles.startButtonText}>
-            {isRecording ? 'Stop Recording' : 'Start Recording'}
-          </Text>
-        </View>
-      </TouchableOpacity>
+      <PTLAudioRecorder
+        onRecordingStarted={emptyFunction}
+        onRecordingComplete={(audio: Audio | null) => {
+          save(audio);
+        }}
+      />
       <TouchableOpacity>
         <View>
           <Text style={styles.filePathText}>
@@ -94,16 +83,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 2,
-  },
-  playAudioButton: {
-    width: 260,
-    height: 40,
-    marginLeft: 60,
-    marginTop: 200,
-    borderRadius: 25,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#ff4c2c',
   },
   filePathText: {
     color: '#000000',

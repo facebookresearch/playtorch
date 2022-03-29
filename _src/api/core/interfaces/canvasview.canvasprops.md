@@ -37,4 +37,4 @@ Properties for the canvas.
 
 #### Defined in
 
-[CanvasView.tsx:692](https://github.com/pytorch/live/blob/8f1c999/react-native-pytorch-core/src/CanvasView.tsx#L692)
+[CanvasView.tsx:692](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/CanvasView.tsx#L692)

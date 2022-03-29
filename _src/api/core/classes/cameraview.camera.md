@@ -93,4 +93,4 @@ export default function CameraTakePicture() {
 
 #### Defined in
 
-[CameraView.tsx:192](https://github.com/pytorch/live/blob/8f1c999/react-native-pytorch-core/src/CameraView.tsx#L192)
+[CameraView.tsx:192](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/CameraView.tsx#L192)

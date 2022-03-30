@@ -44,6 +44,12 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
         return audio
     }
 
+    @objc(isRecording:rejecter:)
+    public func isRecording(_ resolve: @escaping RCTPromiseResolveBlock,
+                            rejecter reject: @escaping RCTPromiseRejectBlock) {
+        resolve(audioRecorder?.isRecording)
+    }
+
     @objc
     public func startRecord() {
         AVAudioSession.sharedInstance().requestRecordPermission ({(granted: Bool)-> Void in

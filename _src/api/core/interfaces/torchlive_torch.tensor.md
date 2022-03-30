@@ -52,7 +52,7 @@ The function only exists in JavaScript.
 
 #### Defined in
 
-[torchlive/torch.ts:145](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L145)
+[torchlive/torch.ts:145](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L145)
 
 ___
 
@@ -66,7 +66,7 @@ A dtype is an string that represents the data type of a torch.Tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:164](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L164)
+[torchlive/torch.ts:164](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L164)
 
 ___
 
@@ -80,7 +80,7 @@ Returns the size of the tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:186](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L186)
+[torchlive/torch.ts:186](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L186)
 
 ## Methods
 
@@ -98,7 +98,7 @@ Computes the absolute value of each element in input.
 
 #### Defined in
 
-[torchlive/torch.ts:110](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L110)
+[torchlive/torch.ts:110](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L110)
 
 ___
 
@@ -122,7 +122,7 @@ Add a scalar or tensor to this tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:118](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L118)
+[torchlive/torch.ts:118](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L118)
 
 ___
 
@@ -141,7 +141,7 @@ tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:125](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L125)
+[torchlive/torch.ts:125](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L125)
 
 ___
 
@@ -167,7 +167,7 @@ other.
 
 #### Defined in
 
-[torchlive/torch.ts:155](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L155)
+[torchlive/torch.ts:155](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L155)
 
 ___
 
@@ -191,7 +191,7 @@ Multiplies input by other scalar or tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:172](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L172)
+[torchlive/torch.ts:172](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L172)
 
 ___
 
@@ -215,7 +215,7 @@ Returns a view of the original tensor input with its dimensions permuted.
 
 #### Defined in
 
-[torchlive/torch.ts:180](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L180)
+[torchlive/torch.ts:180](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L180)
 
 ___
 
@@ -233,7 +233,7 @@ Returns the size of the tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:192](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L192)
+[torchlive/torch.ts:192](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L192)
 
 ___
 
@@ -259,7 +259,7 @@ to `1`.
 
 #### Defined in
 
-[torchlive/torch.ts:202](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L202)
+[torchlive/torch.ts:202](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L202)
 
 ___
 
@@ -283,7 +283,7 @@ Returns a tensor with all the dimensions of input of size 1 removed.
 
 #### Defined in
 
-[torchlive/torch.ts:210](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L210)
+[torchlive/torch.ts:210](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L210)
 
 ___
 
@@ -307,7 +307,7 @@ Subtracts other from input.
 
 #### Defined in
 
-[torchlive/torch.ts:218](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L218)
+[torchlive/torch.ts:218](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L218)
 
 ___
 
@@ -329,7 +329,7 @@ Returns a generic dict.
 
 #### Defined in
 
-[torchlive/torch.ts:53](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L53)
+[torchlive/torch.ts:53](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L53)
 
 ___
 
@@ -354,7 +354,7 @@ The function only exists in JavaScript.
 
 #### Defined in
 
-[torchlive/torch.ts:240](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L240)
+[torchlive/torch.ts:240](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L240)
 
 ___
 
@@ -376,7 +376,7 @@ Returns a tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:47](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L47)
+[torchlive/torch.ts:47](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L47)
 
 ___
 
@@ -401,7 +401,7 @@ dimension.
 
 #### Defined in
 
-[torchlive/torch.ts:227](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L227)
+[torchlive/torch.ts:227](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L227)
 
 ___
 
@@ -426,4 +426,4 @@ specified position.
 
 #### Defined in
 
-[torchlive/torch.ts:249](https://github.com/pytorch/live/blob/2ea8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L249)
+[torchlive/torch.ts:249](https://github.com/pytorch/live/blob/8c3c53c/react-native-pytorch-core/src/torchlive/torch.ts#L249)

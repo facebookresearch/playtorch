@@ -11,7 +11,6 @@ import * as React from 'react';
 import {TouchableOpacity, View, StyleSheet, Text} from 'react-native';
 import {useEffect, useState} from 'react';
 import {useIsFocused} from '@react-navigation/native';
-import emptyFunction from '../utils/emptyFunction';
 import {AudioUtil} from 'react-native-pytorch-core';
 
 type Props = {
@@ -26,14 +25,16 @@ export default function PTLAudioRecorder(props: Props) {
   const [isAudioRecording, setIsAudioRecording] = useState<boolean>(false);
 
   useEffect(() => {
-    return function cleanup() {
-      if (isAudioRecording && !isFocused) {
-        // Make sure we stop the current recording before we navigate
-        console.log('Finishing ongoing recording..');
-        AudioUtil.stopRecord().then(emptyFunction);
-      }
+    return () => {
+      AudioUtil.isRecording().then(isRecording => {
+        if (isRecording) {
+          // Make sure we stop the current recording before we navigate
+          console.log('Finishing ongoing recording..');
+          AudioUtil.stopRecord();
+        }
+      });
     };
-  });
+  }, [isFocused]);
 
   async function stopRecording() {
     const audio = await AudioUtil.stopRecord();

@@ -30,6 +30,17 @@ export const wrapRef = (ref: NativeJSRef): Audio => ({
 
 export const AudioUtil = {
   /**
+   * Returns the native state of audio recording.
+   *
+   * ```typescript
+   * const isRecording = await AudioUtil.isRecording();
+   * ```
+   */
+  isRecording(): Promise<boolean> {
+    return AudioModule.isRecording();
+  },
+
+  /**
    * Records an audio of a specific time duration.
    *
    * ```typescript

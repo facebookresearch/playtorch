@@ -13,6 +13,7 @@ import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
+import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -47,6 +48,7 @@ public class AudioModule extends ReactContextBaseJavaModule {
   private volatile boolean mIsRecording;
   private int mBufferSize;
   private List<short[]> mAudioDataChunks = new ArrayList<>();
+  @Nullable private AudioRecord audioRecorder;
 
   public AudioModule(ReactApplicationContext reactContext) {
     super(reactContext);
@@ -60,6 +62,15 @@ public class AudioModule extends ReactContextBaseJavaModule {
   @Override
   public String getName() {
     return NAME;
+  }
+
+  @ReactMethod
+  public void isRecording(final Promise promise) {
+    boolean recording = false;
+    if (audioRecorder != null) {
+      recording = audioRecorder.getRecordingState() == AudioRecord.RECORDSTATE_RECORDING;
+    }
+    promise.resolve(recording);
   }
 
   @ReactMethod
@@ -151,7 +162,6 @@ public class AudioModule extends ReactContextBaseJavaModule {
     return new Runnable() {
       @Override
       public void run() {
-        AudioRecord audioRecorder = null;
         synchronized (mAudioDataChunks) {
           try {
             audioRecorder =

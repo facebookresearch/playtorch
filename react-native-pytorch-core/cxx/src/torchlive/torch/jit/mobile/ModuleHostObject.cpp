@@ -9,6 +9,7 @@
 #include <utility>
 
 #include "../../../Promise.h"
+#include "../../../ThreadPool.h"
 #include "../../IValueHostObject.h"
 #include "../../TensorHostObject.h"
 #include "../../utils/helpers.h"
@@ -137,8 +138,7 @@ jsi::Function ModuleHostObject::createForward(jsi::Runtime& runtime) {
               promise->resolve(result);
             });
           };
-          std::thread t(fn);
-          t.detach();
+          torchlive::ThreadPool::pool()->run(fn);
         });
   };
   return jsi::Function::createFromHostFunction(

@@ -23,6 +23,7 @@ add_library(
         ../cxx/src/torchlive/media/BlobHostObject.cpp
         ../cxx/src/torchlive/media/MediaNamespace.cpp
         ../cxx/src/torchlive/Promise.cpp
+        ../cxx/src/torchlive/ThreadPool.cpp
         ../cxx/src/torchlive/torch/DictHostObject.cpp
         ../cxx/src/torchlive/torch/IValueHostObject.cpp
         ../cxx/src/torchlive/torch/jit/JITHostObject.cpp

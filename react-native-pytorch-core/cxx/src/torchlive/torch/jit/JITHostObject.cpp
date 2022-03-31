@@ -12,6 +12,7 @@
 #include <torch/script.h>
 
 #include "../../Promise.h"
+#include "../../ThreadPool.h"
 #include "../TensorHostObject.h"
 #include "JITHostObject.h"
 #include "mobile/ModuleHostObject.h"
@@ -120,8 +121,7 @@ jsi::Function JITHostObject::create_LoadForMobile(
               promise->resolve(result);
             });
           };
-          std::thread t(fn);
-          t.detach();
+          torchlive::ThreadPool::pool()->run(fn);
         });
   };
   return jsi::Function::createFromHostFunction(

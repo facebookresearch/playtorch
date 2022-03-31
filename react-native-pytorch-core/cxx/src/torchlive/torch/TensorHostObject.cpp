@@ -18,7 +18,6 @@ namespace torchlive {
 namespace torch {
 
 // TensorHostObject Method Names
-static const std::string ABS = "abs";
 static const std::string ADD = "add";
 static const std::string ARGMAX = "argmax";
 static const std::string DIV = "div";
@@ -42,7 +41,6 @@ static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
 
 // TensorHostObject Methods
 static const std::vector<std::string> METHODS = {
-    ABS,
     ADD,
     ARGMAX,
     DIV,
@@ -58,8 +56,26 @@ static const std::vector<std::string> METHODS = {
 
 using namespace facebook;
 
+jsi::Value absImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  if (count > 0) {
+    throw jsi::JSError(
+        runtime,
+        "0 argument is expected but " + std::to_string(count) + " are given.");
+  }
+  auto thiz =
+      thisValue.asObject(runtime).asHostObject<TensorHostObject>(runtime);
+  auto outputTensor = thiz->tensor.abs();
+  auto tensorHostObject =
+      std::make_shared<TensorHostObject>(runtime, outputTensor);
+  return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+}
+
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
-    : abs_(createAbs(runtime)),
+    : BaseHostObject(runtime),
       add_(createAdd(runtime)),
       argmax_(createArgmax(runtime)),
       div_(createDiv(runtime)),
@@ -72,13 +88,15 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
       topk_(createTopK(runtime)),
       toString_(createToString(runtime)),
       unsqueeze_(createUnsqueeze(runtime)),
-      tensor(t) {}
+      tensor(t) {
+  setPropertyHostFunction(runtime, "abs", 0, absImpl);
+}
 
 TensorHostObject::~TensorHostObject() {}
 
 std::vector<jsi::PropNameID> TensorHostObject::getPropertyNames(
     jsi::Runtime& runtime) {
-  std::vector<jsi::PropNameID> result;
+  auto result = BaseHostObject::getPropertyNames(runtime);
   for (std::string property : PROPERTIES) {
     result.push_back(jsi::PropNameID::forUtf8(runtime, property));
   }
@@ -93,9 +111,7 @@ jsi::Value TensorHostObject::get(
     const jsi::PropNameID& propNameId) {
   auto name = propNameId.utf8(runtime);
 
-  if (name == ABS) {
-    return jsi::Value(runtime, abs_);
-  } else if (name == ADD) {
+  if (name == ADD) {
     return jsi::Value(runtime, add_);
   } else if (name == ARGMAX) {
     return jsi::Value(runtime, argmax_);
@@ -187,29 +203,7 @@ jsi::Value TensorHostObject::get(
     return jsi::Object::createFromHostObject(runtime, tensorHostObject);
   }
 
-  return jsi::Value::undefined();
-}
-
-jsi::Function TensorHostObject::createAbs(jsi::Runtime& runtime) {
-  auto absFunc = [this](
-                     jsi::Runtime& runtime,
-                     const jsi::Value& thisValue,
-                     const jsi::Value* arguments,
-                     size_t count) -> jsi::Value {
-    if (count > 0) {
-      throw jsi::JSError(
-          runtime,
-          "0 argument is expected but " + std::to_string(count) +
-              " are given.");
-    }
-    auto outputTensor = this->tensor.abs();
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(
-            runtime, outputTensor);
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, TOSTRING), 0, absFunc);
+  return BaseHostObject::get(runtime, propNameId);
 }
 
 jsi::Function TensorHostObject::createAdd(jsi::Runtime& runtime) {

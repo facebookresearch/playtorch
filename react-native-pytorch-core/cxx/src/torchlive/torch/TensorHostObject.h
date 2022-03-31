@@ -14,6 +14,8 @@
 #include <string>
 #include <vector>
 
+#include "../common/BaseHostObject.h"
+
 // Namespace alias for torch to avoid namespace conflicts with torchlive::torch
 namespace torch_ = torch;
 
@@ -22,8 +24,7 @@ namespace torch {
 
 using namespace facebook;
 
-class JSI_EXPORT TensorHostObject : public jsi::HostObject {
-  jsi::Function abs_;
+class JSI_EXPORT TensorHostObject : public common::BaseHostObject {
   jsi::Function add_;
   jsi::Function argmax_;
   jsi::Function div_;
@@ -47,7 +48,6 @@ class JSI_EXPORT TensorHostObject : public jsi::HostObject {
   torch_::Tensor tensor;
 
  private:
-  jsi::Function createAbs(jsi::Runtime& runtime);
   jsi::Function createAdd(jsi::Runtime& runtime);
   jsi::Function createArgmax(jsi::Runtime& runtime);
   jsi::Function createDiv(jsi::Runtime& runtime);

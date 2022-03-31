@@ -19,6 +19,7 @@ add_library(
         ${PACKAGE_NAME}
         SHARED
         ../cxx/src/torchlive.cpp
+        ../cxx/src/torchlive/common/BaseHostObject.cpp
         ../cxx/src/torchlive/media/Blob.cpp
         ../cxx/src/torchlive/media/BlobHostObject.cpp
         ../cxx/src/torchlive/media/MediaNamespace.cpp

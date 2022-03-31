@@ -31,55 +31,7 @@ struct LiteJITCallGuard {
   torch_::AutoNonVariableTypeMode non_var_guard;
 };
 
-// ModuleHostObject Method Name
-static const std::string FORWARD = "forward";
-static const std::string FORWARD_SYNC = "forwardSync";
-
-// ModuleHostObject Methods
-const std::vector<std::string> METHODS = {FORWARD, FORWARD_SYNC};
-
-// ModuleHostObject Property Names
-// empty
-
-// ModuleHostObject Properties
-static const std::vector<std::string> PROPERTIES = {};
-
-ModuleHostObject::ModuleHostObject(
-    jsi::Runtime& runtime,
-    torchlive::RuntimeExecutor runtimeExecutor,
-    torch_::jit::mobile::Module m)
-    : forward_(createForward(runtime)),
-      forwardSync_(createForwardSync(runtime)),
-      runtimeExecutor_(runtimeExecutor),
-      module_(m) {}
-
-std::vector<jsi::PropNameID> ModuleHostObject::getPropertyNames(
-    jsi::Runtime& rt) {
-  std::vector<jsi::PropNameID> result;
-  for (std::string property : PROPERTIES) {
-    result.push_back(jsi::PropNameID::forUtf8(rt, property));
-  }
-  for (std::string method : METHODS) {
-    result.push_back(jsi::PropNameID::forUtf8(rt, method));
-  }
-  return result;
-}
-
-jsi::Value ModuleHostObject::get(
-    jsi::Runtime& runtime,
-    const jsi::PropNameID& propName) {
-  auto name = propName.utf8(runtime);
-
-  if (name == FORWARD) {
-    return jsi::Value(runtime, forward_);
-  } else if (name == FORWARD_SYNC) {
-    return jsi::Value(runtime, forwardSync_);
-  }
-
-  return jsi::Value::undefined();
-}
-
-std::vector<torch_::jit::IValue> ModuleHostObject::forwardPreWork(
+std::vector<torch_::jit::IValue> forwardPreWork(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
     const jsi::Value* arguments,
@@ -103,37 +55,42 @@ std::vector<torch_::jit::IValue> ModuleHostObject::forwardPreWork(
   return inputs;
 }
 
-torch_::jit::IValue ModuleHostObject::forwardWork(
+torch_::jit::IValue forwardWork(
     torch_::jit::mobile::Module m,
     std::vector<torch_::jit::IValue> inputs) {
   LiteJITCallGuard guard;
   return m.forward(inputs);
 }
 
-jsi::Value ModuleHostObject::forwardPostWork(
-    jsi::Runtime& runtime,
-    torch_::jit::IValue value) {
+jsi::Value forwardPostWork(jsi::Runtime& runtime, torch_::jit::IValue value) {
   auto valueHostObject =
       std::make_shared<torchlive::torch::IValueHostObject>(runtime, value);
   return jsi::Object::createFromHostObject(runtime, valueHostObject);
 }
 
-jsi::Function ModuleHostObject::createForward(jsi::Runtime& runtime) {
-  auto forwardFunc = [this](
-                         jsi::Runtime& rt,
-                         const jsi::Value& thisValue,
-                         const jsi::Value* arguments,
-                         size_t count) -> jsi::Value {
+jsi::HostFunctionType forwardImpl(
+    jsi::Runtime& runtime,
+    RuntimeExecutor runtimeExecutor) {
+  return [runtimeExecutor](
+             jsi::Runtime& rt,
+             const jsi::Value& thisValue,
+             const jsi::Value* arguments,
+             size_t count) -> jsi::Value {
+    // Called by JavaScript on the JS thread.
+    auto thiz = thisValue.asObject(rt).asHostObject<ModuleHostObject>(rt);
     return createPromiseAsJSIValue(
         rt, [&](jsi::Runtime& rt2, std::shared_ptr<Promise> promise) {
+          // Called immediately to create the promise on the JS thread.
           auto inputs = forwardPreWork(rt2, thisValue, arguments, count);
-          auto fn = [runtimeExecutor = runtimeExecutor_,
-                     m = module_,
+          auto fn = [runtimeExecutor,
+                     thiz,
                      inputs = std::move(inputs),
                      promise = std::move(promise)]() {
-            auto outputs = forwardWork(m, std::move(inputs));
+            // Called from within the new thread. No runtime available.
+            auto outputs = forwardWork(thiz->mobileModule, std::move(inputs));
             runtimeExecutor([outputs = std::move(outputs),
                              promise = std::move(promise)](jsi::Runtime& rt3) {
+              // Called sometime later, again on the JS thread.
               auto result = forwardPostWork(rt3, std::move(outputs));
               promise->resolve(result);
             });
@@ -141,26 +98,28 @@ jsi::Function ModuleHostObject::createForward(jsi::Runtime& runtime) {
           torchlive::ThreadPool::pool()->run(fn);
         });
   };
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, FORWARD), 1, forwardFunc);
 }
 
-jsi::Function ModuleHostObject::createForwardSync(jsi::Runtime& runtime) {
-  auto forwardSyncFunc = [this](
-                             jsi::Runtime& runtime,
-                             const jsi::Value& thisValue,
-                             const jsi::Value* arguments,
-                             size_t count) -> jsi::Value {
-    auto inputs = forwardPreWork(runtime, thisValue, arguments, count);
-    auto outputs = forwardWork(module_, std::move(inputs));
-    auto result = forwardPostWork(runtime, std::move(outputs));
-    return result;
-  };
-  return jsi::Function::createFromHostFunction(
-      runtime,
-      jsi::PropNameID::forUtf8(runtime, FORWARD_SYNC),
-      1,
-      forwardSyncFunc);
+jsi::Value forwardSyncImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto thiz =
+      thisValue.asObject(runtime).asHostObject<ModuleHostObject>(runtime);
+  auto inputs = forwardPreWork(runtime, thisValue, arguments, count);
+  auto outputs = forwardWork(thiz->mobileModule, std::move(inputs));
+  auto result = forwardPostWork(runtime, std::move(outputs));
+  return result;
+}
+
+ModuleHostObject::ModuleHostObject(
+    jsi::Runtime& rt,
+    torchlive::RuntimeExecutor rte,
+    torch_::jit::mobile::Module m)
+    : BaseHostObject(rt), mobileModule(m) {
+  setPropertyHostFunction(rt, "forward", 1, forwardImpl(rt, rte));
+  setPropertyHostFunction(rt, "forwardSync", 1, forwardSyncImpl);
 }
 
 } // namespace mobile

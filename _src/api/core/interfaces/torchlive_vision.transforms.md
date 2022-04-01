@@ -37,7 +37,7 @@ and then center cropped.
 
 #### Defined in
 
-[torchlive/vision.ts:33](https://github.com/pytorch/live/blob/f9ca2ea/react-native-pytorch-core/src/torchlive/vision.ts#L33)
+[torchlive/vision.ts:33](https://github.com/pytorch/live/blob/fbc43cd/react-native-pytorch-core/src/torchlive/vision.ts#L33)
 
 ___
 
@@ -67,7 +67,7 @@ Tensor i.e., `output[channel] = (input[channel] - mean[channel]) / std[channel]`
 
 #### Defined in
 
-[torchlive/vision.ts:48](https://github.com/pytorch/live/blob/f9ca2ea/react-native-pytorch-core/src/torchlive/vision.ts#L48)
+[torchlive/vision.ts:48](https://github.com/pytorch/live/blob/fbc43cd/react-native-pytorch-core/src/torchlive/vision.ts#L48)
 
 ___
 
@@ -93,4 +93,4 @@ dimensions.
 
 #### Defined in
 
-[torchlive/vision.ts:62](https://github.com/pytorch/live/blob/f9ca2ea/react-native-pytorch-core/src/torchlive/vision.ts#L62)
+[torchlive/vision.ts:62](https://github.com/pytorch/live/blob/fbc43cd/react-native-pytorch-core/src/torchlive/vision.ts#L62)

@@ -15,8 +15,6 @@
 namespace torchlive {
 namespace torch {
 
-using namespace facebook;
-
 class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
   facebook::jsi::Function arange_;
   facebook::jsi::Function empty_;
@@ -47,9 +45,9 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
       facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createRand(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createRandint(facebook::jsi::Runtime& runtime);
-  static jsi::Function createTensor(jsi::Runtime& runtime);
-  static jsi::Function createZeros(jsi::Runtime& runtime);
-  std::map<std::string, jsi::Function*> methods;
+  static facebook::jsi::Function createTensor(facebook::jsi::Runtime& runtime);
+  static facebook::jsi::Function createZeros(facebook::jsi::Runtime& runtime);
+  std::map<std::string, facebook::jsi::Function*> methods;
   std::map<std::string, std::string> properties;
 };
 

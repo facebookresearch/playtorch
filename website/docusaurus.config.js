@@ -44,6 +44,10 @@ module.exports = {
       },
       items: [
         {
+          type: 'docsVersionDropdown',
+          position: 'right',
+        },
+        {
           href: '/',
           position: 'right',
           label: 'PyTorch Live',

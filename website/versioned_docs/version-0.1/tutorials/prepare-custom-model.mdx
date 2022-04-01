@@ -1,0 +1,121 @@
+---
+id: prepare-custom-model
+sidebar_position: 4
+title: Prepare Custom Model
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
+
+<div className="tutorial-page">
+
+### In this tutorial, we will learn how to prepare a custom AI model so that it can be integrated into a PyTorch Live demo.
+
+PyTorch Live works with high-level data types such as images and strings. To run inference, these high-level data types need to be transformed into tensors and the model output needs to be transformed into high-level data types. Transforming a high-level data type into a tensor is called `pack` and transforming a tensor into a high-level data type is called `unpack`.
+
+Each model will have a `pack` and an `unpack`. Both are specified in the PyTorch Live Spec (or Live Spec for short). The Live Spec has to be bundled with the model `ptl` file as `extra_files`.
+
+This section will guide you step-by-step for how to bundle the Live Spec with `pack` and `unpack` for an image classification model, more specifically the MobileNet V3 (small) model.
+
+We can do this bundling step from anywhere in our filesystem that has access to `python`. If you already have a PyTorch Live project, follow these steps from a subdirectory in the project directory, for example, `<PYTORCH_LIVE_PROJECT>/models`, so that the bundled model is in place and ready to go when we're done.
+
+## Create Live Spec
+
+Create a `live.spec.json` file and insert the following definition.
+
+```json title=live.spec.json
+{
+  "pack": {
+    "type": "tensor_from_image",
+    "image": "image",
+    "transforms": [
+      {
+        "type": "image_to_image",
+        "name": "center_crop"
+      },
+      {
+        "type": "image_to_image",
+        "name": "scale",
+        "width": 224,
+        "height": 224
+      },
+      {
+        "type": "image_to_tensor",
+        "name": "rgb_norm",
+        "mean": [0.485, 0.456, 0.406],
+        "std": [0.229, 0.224, 0.225]
+      }
+    ]
+  },
+  "unpack": {
+    "type": "argmax",
+    "dtype": "float",
+    "key": "maxIdx",
+    "valueKey": "confidence"
+  }
+}
+```
+
+## Bundle Live Spec with Model
+
+Next is to download and bundle the Live Spec with the MobileNet V3 model using a Python script.
+
+### Set up Python virtual environment
+
+It is recommended to run the Pyhton script in a virtual environment. Python offers a command to create a virtual environment with the following command.
+
+```shell
+python3 -m venv venv
+source venv/bin/activate
+```
+
+### Install `torch` and `torchvision` dependencies
+
+The Python script requires `torch` and `torchvision`. Use the Python package manager (`pip3` or simply `pip` in a virtual environment) to install both dependencies.
+
+```shell
+pip3 install torch torchvision
+```
+
+### Build the Model
+
+The following script will download the MobileNet V3 model from the PyTorch Hub, optimize it for mobile use, and bundle the Live Spec as extra file with the `ptl` file.
+
+```py title=make_model.py
+from pathlib import Path
+
+import torch
+import torchvision
+from torch.utils.mobile_optimizer import optimize_for_mobile
+
+model = torchvision.models.mobilenet_v3_small(pretrained=True)
+model.eval()
+
+scripted_model = torch.jit.script(model)
+optimized_model = optimize_for_mobile(scripted_model)
+spec = Path("live.spec.json").read_text()
+extra_files = {}
+extra_files["model/live.spec.json"] = spec
+optimized_model._save_for_lite_interpreter("mobilenet_v3_small.ptl", _extra_files=extra_files)
+
+print("model successfully exported")
+```
+
+Create the `make_model.py` file, add the Python script above, and then run Python script to create `mobilenet_v3_small.ptl`.
+
+```shell
+python3 make_model.py
+```
+
+If you already have a PyTorch Live project, and you haven't run the commands in the `<PYTORCH_LIVE_PROJECT>/models` directory, copy `mobilenet_v3_small.ptl` to the `<PYTORCH_LIVE_PROJECT>/models` directory. It will now be accessible to load and run in your PyTorch Live project using the path `models/mobilenet_v3_small.ptl`.
+
+## Learn More About Live Spec
+
+For additional details about the Live Spec JSON format and its transforms, read the [model specification](../api/model-spec.md) page in the API documentation.
+
+## Give us feedback
+
+<SurveyLinkButton docTitle="Prepare Custom Model" />
+
+</div>

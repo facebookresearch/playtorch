@@ -56,6 +56,7 @@ module.exports = {
         collapsed: false,
         items: [
           'fb/wikis/creating-a-release',
+          'fb/wikis/install-ptl-app',
           'fb/jsi-tutorials/image-classification-jsi',
         ],
       },

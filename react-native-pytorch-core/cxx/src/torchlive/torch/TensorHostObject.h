@@ -22,44 +22,45 @@ namespace torch_ = torch;
 namespace torchlive {
 namespace torch {
 
-using namespace facebook;
-
 class JSI_EXPORT TensorHostObject : public common::BaseHostObject {
-  jsi::Function add_;
-  jsi::Function argmax_;
-  jsi::Function div_;
-  jsi::Function mul_;
-  jsi::Function permute_;
-  jsi::Function size_;
-  jsi::Function softmax_;
-  jsi::Function squeeze_;
-  jsi::Function sub_;
-  jsi::Function topk_;
-  jsi::Function toString_;
-  jsi::Function unsqueeze_;
+  facebook::jsi::Function add_;
+  facebook::jsi::Function argmax_;
+  facebook::jsi::Function div_;
+  facebook::jsi::Function mul_;
+  facebook::jsi::Function permute_;
+  facebook::jsi::Function size_;
+  facebook::jsi::Function softmax_;
+  facebook::jsi::Function squeeze_;
+  facebook::jsi::Function sub_;
+  facebook::jsi::Function topk_;
+  facebook::jsi::Function toString_;
+  facebook::jsi::Function unsqueeze_;
 
  public:
-  explicit TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t);
+  explicit TensorHostObject(facebook::jsi::Runtime& runtime, torch_::Tensor t);
   ~TensorHostObject();
 
-  jsi::Value get(jsi::Runtime&, const jsi::PropNameID& name) override;
-  std::vector<jsi::PropNameID> getPropertyNames(jsi::Runtime& rt) override;
+  facebook::jsi::Value get(
+      facebook::jsi::Runtime&,
+      const facebook::jsi::PropNameID& name) override;
+  std::vector<facebook::jsi::PropNameID> getPropertyNames(
+      facebook::jsi::Runtime& rt) override;
 
   torch_::Tensor tensor;
 
  private:
-  jsi::Function createAdd(jsi::Runtime& runtime);
-  jsi::Function createArgmax(jsi::Runtime& runtime);
-  jsi::Function createDiv(jsi::Runtime& runtime);
-  jsi::Function createMul(jsi::Runtime& runtime);
-  jsi::Function createPermute(jsi::Runtime& runtime);
-  jsi::Function createSize(jsi::Runtime& runtime);
-  jsi::Function createSoftmax(jsi::Runtime& runtime);
-  jsi::Function createToString(jsi::Runtime& runtime);
-  jsi::Function createSqueeze(jsi::Runtime& runtime);
-  jsi::Function createSub(jsi::Runtime& runtime);
-  jsi::Function createTopK(jsi::Runtime& runtime);
-  jsi::Function createUnsqueeze(jsi::Runtime& runtime);
+  facebook::jsi::Function createAdd(facebook::jsi::Runtime& runtime);
+  facebook::jsi::Function createArgmax(facebook::jsi::Runtime& runtime);
+  facebook::jsi::Function createDiv(facebook::jsi::Runtime& runtime);
+  facebook::jsi::Function createMul(facebook::jsi::Runtime& runtime);
+  facebook::jsi::Function createPermute(facebook::jsi::Runtime& runtime);
+  facebook::jsi::Function createSize(facebook::jsi::Runtime& runtime);
+  facebook::jsi::Function createSoftmax(facebook::jsi::Runtime& runtime);
+  facebook::jsi::Function createToString(facebook::jsi::Runtime& runtime);
+  facebook::jsi::Function createSqueeze(facebook::jsi::Runtime& runtime);
+  facebook::jsi::Function createSub(facebook::jsi::Runtime& runtime);
+  facebook::jsi::Function createTopK(facebook::jsi::Runtime& runtime);
+  facebook::jsi::Function createUnsqueeze(facebook::jsi::Runtime& runtime);
 };
 
 } // namespace torch

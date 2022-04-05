@@ -20,6 +20,7 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
   facebook::jsi::Function empty_;
   facebook::jsi::Function eye_;
   facebook::jsi::Function fromBlob_;
+  facebook::jsi::Function ones_;
   facebook::jsi::Function rand_;
   facebook::jsi::Function randint_;
   facebook::jsi::Function tensor_;
@@ -43,6 +44,7 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
   static facebook::jsi::Function createEye(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createFromBlob(
       facebook::jsi::Runtime& runtime);
+  static facebook::jsi::Function createOnes(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createRand(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createRandint(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createTensor(facebook::jsi::Runtime& runtime);

@@ -319,4 +319,44 @@ TEST_F(TorchliveRuntimeTest, TorchZerosTest) {
   EXPECT_THROW(eval("torch.zeros()"), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveRuntimeTest, TorchOnesTest) {
+  // Test ones with single integer parameters.
+  EXPECT_EQ(eval("torch.ones(3).shape[0]").getNumber(), 3);
+  for (auto i = 0; i < 3; i++) {
+    std::string tensorDataAtToEval = fmt::format("torch.ones(3).data[{}]", i);
+    EXPECT_EQ(eval(tensorDataAtToEval.c_str()).getNumber(), 1);
+  }
+
+  // Test ones with multiple integer parameters.
+  EXPECT_EQ(eval("torch.ones(2, 3).shape[0]").getNumber(), 2);
+  EXPECT_EQ(eval("torch.ones(2, 3).shape[1]").getNumber(), 3);
+  for (auto i = 0; i < 6; i++) {
+    std::string tensorDataAtToEval =
+        fmt::format("torch.ones(2, 3).data[{}]", i);
+    EXPECT_EQ(eval(tensorDataAtToEval.c_str()).getNumber(), 1);
+  }
+
+  // Test ones with array parameters.
+  EXPECT_EQ(eval("torch.ones([2, 3]).shape[0]").getNumber(), 2);
+  EXPECT_EQ(eval("torch.ones([2, 3]).shape[1]").getNumber(), 3);
+  for (auto i = 0; i < 6; i++) {
+    std::string tensorDataAtToEval =
+        fmt::format("torch.ones([2, 3]).data[{}]", i);
+    EXPECT_EQ(eval(tensorDataAtToEval.c_str()).getNumber(), 1);
+  }
+
+  // Test data type parameter.
+  auto const dtypes = {"float64", "float32", "int64", "int32"};
+  for (auto const dtype : dtypes) {
+    EXPECT_EQ(
+        eval(fmt::format("torch.ones(2, 3, {{dtype:'{}'}}).dtype", dtype))
+            .asString(*rt)
+            .utf8(*rt),
+        dtype);
+  }
+
+  // Test ones with no parameters.
+  EXPECT_THROW(eval("torch.ones()"), facebook::jsi::JSError);
+}
+
 } // namespace

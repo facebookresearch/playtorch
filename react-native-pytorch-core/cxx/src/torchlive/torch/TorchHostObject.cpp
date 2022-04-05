@@ -31,6 +31,7 @@ static const std::string ARANGE = "arange";
 static const std::string EMPTY = "empty";
 static const std::string EYE = "eye";
 static const std::string FROM_BLOB = "fromBlob";
+static const std::string ONES = "ones";
 static const std::string RAND = "rand";
 static const std::string RANDINT = "randint";
 static const std::string TENSOR = "tensor";
@@ -57,6 +58,7 @@ const std::vector<std::string> METHODS = {
     EMPTY,
     EYE,
     FROM_BLOB,
+    ONES,
     RAND,
     RANDINT,
     TENSOR,
@@ -70,6 +72,7 @@ TorchHostObject::TorchHostObject(
       empty_(createEmpty(runtime)),
       eye_(createEye(runtime)),
       fromBlob_(createFromBlob(runtime)),
+      ones_(createOnes(runtime)),
       rand_(createRand(runtime)),
       randint_(createRandint(runtime)),
       tensor_(createTensor(runtime)),
@@ -80,6 +83,7 @@ TorchHostObject::TorchHostObject(
           {EMPTY, &empty_},
           {EYE, &eye_},
           {FROM_BLOB, &fromBlob_},
+          {ONES, &ones_},
           {RAND, &rand_},
           {RANDINT, &randint_},
           {TENSOR, &tensor_},
@@ -330,6 +334,41 @@ jsi::Function TorchHostObject::createFromBlob(jsi::Runtime& runtime) {
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, FROM_BLOB), 1, fromBlobImpl);
+}
+
+/**
+ * Returns a tensor filled with the scalar value 1,
+ * with the shape defined by the variable argument size.
+ *
+ * See: https://pytorch.org/docs/stable/generated/torch.ones.html
+ */
+jsi::Function TorchHostObject::createOnes(jsi::Runtime& runtime) {
+  auto onesImpl = [](jsi::Runtime& runtime,
+                     const jsi::Value& thisValue,
+                     const jsi::Value* arguments,
+                     size_t count) {
+    if (count == 0) {
+      throw jsi::JSError(
+          runtime, "This function requires at least one argument.");
+    }
+    std::vector<int64_t> dimensions = {};
+    int nextArgumentIndex =
+        utils::helpers::parseSize(runtime, arguments, 0, count, &dimensions);
+
+    torch_::TensorOptions tensorOptions = utils::helpers::parseTensorOptions(
+        runtime, arguments, nextArgumentIndex, count);
+
+    auto tensor =
+        torch_::ones(c10::ArrayRef<int64_t>(dimensions), tensorOptions);
+
+    auto tensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
+
+    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+  };
+
+  return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, ONES), 1, onesImpl);
 }
 
 jsi::Function TorchHostObject::createRandint(jsi::Runtime& runtime) {

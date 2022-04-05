@@ -368,4 +368,18 @@ TEST_F(TorchliveTensorRuntimeTest, TorchTopkTest) {
   EXPECT_THROW(eval("torch.empty(1, 2).topk([1])"), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TorchToTest) {
+  std::string tensorToAnotherDtypeCreateNewTensor =
+      R"(
+          const tensor = torch.tensor([1.5]);
+          const outputTensor = tensor.to({dtype: torch.int});
+          const outputTensor2 = outputTensor.to({dtype: torch.float});
+          tensor.data[0] === 1.5 && outputTensor.data[0] === 1 && outputTensor2.data[0] === 1;
+        )";
+  EXPECT_TRUE(eval(tensorToAnotherDtypeCreateNewTensor.c_str()).getBool());
+  EXPECT_THROW(eval("torch.tensor([1.5]).to()"), facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("torch.tensor([1.5]).to({dtype: 'xyz'})"), facebook::jsi::JSError);
+}
+
 } // namespace

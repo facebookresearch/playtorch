@@ -74,6 +74,27 @@ jsi::Value absImpl(
   return jsi::Object::createFromHostObject(runtime, tensorHostObject);
 }
 
+jsi::Value toImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  if (count < 1) {
+    throw jsi::JSError(
+        runtime,
+        "1 argument is expected but " + std::to_string(count) + " are given.");
+  }
+  auto thiz =
+      thisValue.asObject(runtime).asHostObject<TensorHostObject>(runtime);
+  auto tensorOptions =
+      utils::helpers::parseTensorOptions(runtime, arguments, 0, count);
+  auto outputTensor = thiz->tensor.to(tensorOptions);
+  auto tensorHostObject =
+      std::make_shared<TensorHostObject>(runtime, std::move(outputTensor));
+
+  return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+}
+
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
     : BaseHostObject(runtime),
       add_(createAdd(runtime)),
@@ -90,6 +111,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
       unsqueeze_(createUnsqueeze(runtime)),
       tensor(t) {
   setPropertyHostFunction(runtime, "abs", 0, absImpl);
+  setPropertyHostFunction(runtime, "to", 1, toImpl);
 }
 
 TensorHostObject::~TensorHostObject() {}

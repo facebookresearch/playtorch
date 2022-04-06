@@ -15,6 +15,7 @@ import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.RuntimeExecutor;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.turbomodule.core.CallInvokerHolderImpl;
+import com.facebook.soloader.SoLoader;
 
 @ReactModule(name = PyTorchCoreJSIModule.NAME)
 public class PyTorchCoreJSIModule extends ReactContextBaseJavaModule {
@@ -25,8 +26,7 @@ public class PyTorchCoreJSIModule extends ReactContextBaseJavaModule {
 
   static {
     try {
-      // Used to load the 'native-lib' library on application startup.
-      System.loadLibrary("torchlive");
+      SoLoader.loadLibrary("torchlive");
     } catch (Exception e) {
       Log.e(TAG, e.getMessage());
     }

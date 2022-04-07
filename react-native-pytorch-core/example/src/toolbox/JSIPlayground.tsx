@@ -253,6 +253,10 @@ export default function JSIPlayground() {
     console.log('log grayscale: ', grayscale.forward);
     const grayscaled = grayscale(tensor11);
     console.log(grayscaled.toString());
+
+    console.log('---test async function that returns HostObject---');
+    const asyncResult = await (async () => torch.rand([3]))();
+    console.log(asyncResult && asyncResult.data);
   };
 
   return (

@@ -17,6 +17,8 @@ custom_edit_url: null
 - [NativeJSRef](modules/nativejsref.md)
 - [audio/AudioModule](modules/audio_audiomodule.md)
 - [expo-plugin/withPyTorchCore](modules/expo_plugin_withpytorchcore.md)
+- [text](modules/text.md)
+- [text/WordpieceTokenizer](modules/text_wordpiecetokenizer.md)
 - [torchlive/media](modules/torchlive_media.md)
 - [torchlive/torch](modules/torchlive_torch.md)
 - [torchlive/torchvision](modules/torchlive_torchvision.md)

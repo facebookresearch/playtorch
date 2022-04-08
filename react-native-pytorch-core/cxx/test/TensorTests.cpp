@@ -382,4 +382,26 @@ TEST_F(TorchliveTensorRuntimeTest, TorchToTest) {
       eval("torch.tensor([1.5]).to({dtype: 'xyz'})"), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TorchClampTest_InvalidInput) {
+  EXPECT_THROW(eval("torch.arange(1, 6).clamp()"), facebook::jsi::JSError);
+}
+
+TEST_F(TorchliveTensorRuntimeTest, TorchClampTest_Scalar) {
+  std::string tensorClampWithMinAndMaxNumbers =
+      R"(
+          let tensor = torch.tensor([1, 2, 3, 4, 5]);
+          tensor = tensor.clamp(3, 4);
+          tensor.data[0] == 3 && tensor.data[1] == 3 && tensor.data[2] == 3 && tensor.data[3] == 4 && tensor.data[4] == 4;
+        )";
+  EXPECT_TRUE(eval(tensorClampWithMinAndMaxNumbers.c_str()).getBool());
+
+  std::string tensorClampWithMinNumber =
+      R"(
+          let tensor = torch.tensor([1, 2, 3, 4, 5]);
+          tensor = tensor.clamp(3);
+          tensor.data[0] == 3 && tensor.data[1] == 3 && tensor.data[2] == 3 && tensor.data[3] == 4 && tensor.data[4] == 5;
+        )";
+  EXPECT_TRUE(eval(tensorClampWithMinNumber.c_str()).getBool());
+}
+
 } // namespace

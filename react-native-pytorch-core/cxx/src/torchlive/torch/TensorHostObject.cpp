@@ -56,6 +56,8 @@ static const std::vector<std::string> METHODS = {
 
 using namespace facebook;
 
+namespace {
+
 jsi::Value absImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -93,7 +95,41 @@ jsi::Value toImpl(
       std::make_shared<TensorHostObject>(runtime, std::move(outputTensor));
 
   return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+};
+
+jsi::Value clampImp(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  if (count < 1) {
+    throw jsi::JSError(
+        runtime,
+        "1 argument is expected but " + std::to_string(count) + " are given.");
+  }
+  auto thiz =
+      thisValue.asObject(runtime).asHostObject<TensorHostObject>(runtime);
+  at::Tensor outputTensor;
+
+  if (arguments[0].isNumber()) {
+    auto min = arguments[0].asNumber();
+    c10::optional<at::Scalar> max = c10::nullopt;
+    if (count > 1) {
+      max = arguments[1].asNumber();
+    }
+    outputTensor = thiz->tensor.clamp(min, max);
+  } else {
+    // TODO(T116250134)
+  }
+
+  auto tensorHostObject = std::make_shared<torchlive::torch::TensorHostObject>(
+      runtime, std::move(outputTensor));
+
+  return jsi::Object::createFromHostObject(
+      runtime, std::move(tensorHostObject));
 }
+
+} // namespace
 
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
     : BaseHostObject(runtime),
@@ -112,6 +148,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
       tensor(t) {
   setPropertyHostFunction(runtime, "abs", 0, absImpl);
   setPropertyHostFunction(runtime, "to", 1, toImpl);
+  setPropertyHostFunction(runtime, "clamp", 1, clampImp);
 }
 
 TensorHostObject::~TensorHostObject() {}

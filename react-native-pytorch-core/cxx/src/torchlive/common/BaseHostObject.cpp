@@ -49,7 +49,7 @@ void BaseHostObject::setPropertyHostFunction(
       rt,
       name,
       jsi::Function::createFromHostFunction(
-          rt, jsi::PropNameID::forUtf8(rt, name), paramCount, func));
+          rt, jsi::PropNameID::forUtf8(rt, name), paramCount, std::move(func)));
 }
 
 } // namespace common

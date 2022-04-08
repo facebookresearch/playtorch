@@ -119,7 +119,16 @@ jsi::Value clampImp(
     }
     outputTensor = thiz->tensor.clamp(min, max);
   } else {
-    // TODO(T116250134)
+    auto minTensorHostObject =
+        utils::helpers::parseTensor(runtime, &arguments[0]);
+    auto minTensor = minTensorHostObject->tensor;
+    c10::optional<at::Tensor> maxTensor = {};
+    if (count > 1) {
+      auto maxTensorHostObject =
+          utils::helpers::parseTensor(runtime, &arguments[1]);
+      maxTensor = maxTensorHostObject->tensor;
+    }
+    outputTensor = thiz->tensor.clamp(minTensor, maxTensor);
   }
 
   auto tensorHostObject = std::make_shared<torchlive::torch::TensorHostObject>(

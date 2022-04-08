@@ -384,9 +384,27 @@ TEST_F(TorchliveTensorRuntimeTest, TorchToTest) {
 
 TEST_F(TorchliveTensorRuntimeTest, TorchClampTest_InvalidInput) {
   EXPECT_THROW(eval("torch.arange(1, 6).clamp()"), facebook::jsi::JSError);
+
+  std::string tensorClampWithMixedScalarAndTensor =
+      R"(
+          let tensor = torch.tensor([1, 2, 3, 4, 5]);
+          let otherTensor = torch.arange(5);
+          tensor = tensor.clamp(3, otherTensor);
+        )";
+  EXPECT_THROW(
+      eval(tensorClampWithMixedScalarAndTensor), facebook::jsi::JSError);
+
+  std::string tensorClampWithTensorsOfDifferentSizes =
+      R"(
+          let tensor = torch.tensor([1, 2, 3, 4, 5]);
+          let otherTensor = torch.arange(6);
+          tensor = tensor.clamp(otherTensor);
+        )";
+  EXPECT_THROW(
+      eval(tensorClampWithMixedScalarAndTensor), facebook::jsi::JSError);
 }
 
-TEST_F(TorchliveTensorRuntimeTest, TorchClampTest_Scalar) {
+TEST_F(TorchliveTensorRuntimeTest, TorchClampTest_ScalarArgument) {
   std::string tensorClampWithMinAndMaxNumbers =
       R"(
           let tensor = torch.tensor([1, 2, 3, 4, 5]);
@@ -402,6 +420,27 @@ TEST_F(TorchliveTensorRuntimeTest, TorchClampTest_Scalar) {
           tensor.data[0] == 3 && tensor.data[1] == 3 && tensor.data[2] == 3 && tensor.data[3] == 4 && tensor.data[4] == 5;
         )";
   EXPECT_TRUE(eval(tensorClampWithMinNumber.c_str()).getBool());
+}
+
+TEST_F(TorchliveTensorRuntimeTest, TorchClampTest_TensorArgument) {
+  std::string tensorClampWithMinAndMaxTensor =
+      R"(
+          let tensor = torch.tensor([1, 2, 3, 4, 5]);
+          let minTensor = torch.tensor([3, 3, 3, 3, 3]);
+          let maxTensor = torch.tensor([4, 4, 4, 4, 4]);
+          tensor = tensor.clamp(minTensor, maxTensor);
+          tensor.data[0] == 3 && tensor.data[1] == 3 && tensor.data[2] == 3 && tensor.data[3] == 4 && tensor.data[4] == 4;
+        )";
+  EXPECT_TRUE(eval(tensorClampWithMinAndMaxTensor.c_str()).getBool());
+
+  std::string tensorClampWithMinTensor =
+      R"(
+          let tensor = torch.tensor([1, 2, 3, 4, 5]);
+          let minTensor = torch.tensor([3, 3, 3, 3, 3]);
+          tensor = tensor.clamp(minTensor);
+          tensor.data[0] == 3 && tensor.data[1] == 3 && tensor.data[2] == 3 && tensor.data[3] == 4 && tensor.data[4] == 5;
+        )";
+  EXPECT_TRUE(eval(tensorClampWithMinTensor.c_str()).getBool());
 }
 
 } // namespace

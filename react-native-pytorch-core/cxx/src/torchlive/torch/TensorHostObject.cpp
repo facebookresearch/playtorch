@@ -8,6 +8,7 @@
 #include <c10/util/Optional.h>
 
 #include "TensorHostObject.h"
+#include "utils/ArgumentParser.h"
 #include "utils/constants.h"
 #include "utils/helpers.h"
 
@@ -18,7 +19,6 @@ namespace torchlive {
 namespace torch {
 
 // TensorHostObject Method Names
-static const std::string ADD = "add";
 static const std::string ARGMAX = "argmax";
 static const std::string DIV = "div";
 static const std::string MUL = "mul";
@@ -41,7 +41,6 @@ static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
 
 // TensorHostObject Methods
 static const std::vector<std::string> METHODS = {
-    ADD,
     ARGMAX,
     DIV,
     MUL,
@@ -63,16 +62,36 @@ jsi::Value absImpl(
     const jsi::Value& thisValue,
     const jsi::Value* arguments,
     size_t count) {
-  if (count > 0) {
-    throw jsi::JSError(
-        runtime,
-        "0 argument is expected but " + std::to_string(count) + " are given.");
-  }
-  auto thiz =
-      thisValue.asObject(runtime).asHostObject<TensorHostObject>(runtime);
-  auto outputTensor = thiz->tensor.abs();
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  auto result = args.thisAsHostObject<TensorHostObject>()->tensor.abs();
   auto tensorHostObject =
-      std::make_shared<TensorHostObject>(runtime, outputTensor);
+      std::make_shared<TensorHostObject>(runtime, std::move(result));
+  return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+}
+
+jsi::Value addImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto thiz = args.thisAsHostObject<TensorHostObject>();
+  auto alphaValue = args.keywordValue(1, "alpha");
+  auto alphaScalar = alphaValue.isUndefined()
+      ? at::Scalar(1)
+      : at::Scalar(alphaValue.asNumber());
+
+  torch_::Tensor result;
+  if (args[0].isNumber()) {
+    auto scalar = args[0].asNumber();
+    result = thiz->tensor.add(scalar, alphaScalar);
+  } else {
+    auto otherTensor = args.asHostObject<TensorHostObject>(0)->tensor;
+    result = thiz->tensor.add(otherTensor, alphaScalar);
+  }
+  auto tensorHostObject =
+      std::make_shared<TensorHostObject>(runtime, std::move(result));
   return jsi::Object::createFromHostObject(runtime, tensorHostObject);
 }
 
@@ -142,7 +161,6 @@ jsi::Value clampImp(
 
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
     : BaseHostObject(runtime),
-      add_(createAdd(runtime)),
       argmax_(createArgmax(runtime)),
       div_(createDiv(runtime)),
       mul_(createMul(runtime)),
@@ -156,8 +174,9 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
       unsqueeze_(createUnsqueeze(runtime)),
       tensor(t) {
   setPropertyHostFunction(runtime, "abs", 0, absImpl);
-  setPropertyHostFunction(runtime, "to", 1, toImpl);
+  setPropertyHostFunction(runtime, "add", 1, addImpl);
   setPropertyHostFunction(runtime, "clamp", 1, clampImp);
+  setPropertyHostFunction(runtime, "to", 1, toImpl);
 }
 
 TensorHostObject::~TensorHostObject() {}
@@ -179,9 +198,7 @@ jsi::Value TensorHostObject::get(
     const jsi::PropNameID& propNameId) {
   auto name = propNameId.utf8(runtime);
 
-  if (name == ADD) {
-    return jsi::Value(runtime, add_);
-  } else if (name == ARGMAX) {
+  if (name == ARGMAX) {
     return jsi::Value(runtime, argmax_);
   } else if (name == DATA) {
     auto tensor = this->tensor;
@@ -272,38 +289,6 @@ jsi::Value TensorHostObject::get(
   }
 
   return BaseHostObject::get(runtime, propNameId);
-}
-
-jsi::Function TensorHostObject::createAdd(jsi::Runtime& runtime) {
-  auto addFunc = [this](
-                     jsi::Runtime& runtime,
-                     const jsi::Value& thisValue,
-                     const jsi::Value* arguments,
-                     size_t count) {
-    if (count < 1) {
-      throw jsi::JSError(runtime, "At least 1 arg required");
-    }
-    auto alphaValue = utils::helpers::parseKeywordArgument(
-        runtime, arguments, 1, count, "alpha");
-    auto alphaScalar = alphaValue.isUndefined()
-        ? at::Scalar(1)
-        : at::Scalar(alphaValue.asNumber());
-    auto tensor = this->tensor;
-    if (arguments[0].isNumber()) {
-      auto value = arguments[0].asNumber();
-      tensor = tensor.add(value, alphaScalar);
-    } else {
-      auto otherTensorHostObject =
-          utils::helpers::parseTensor(runtime, &arguments[0]);
-      auto otherTensor = otherTensorHostObject->tensor;
-      tensor = tensor.add(otherTensor, alphaScalar);
-    }
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, ADD), 1, addFunc);
 }
 
 jsi::Function TensorHostObject::createArgmax(jsi::Runtime& runtime) {

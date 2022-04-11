@@ -24,8 +24,6 @@ TEST_F(TorchliveTensorRuntimeTest, TensorAbsTest) {
           output.data[0] == 2 && output.data[1] == 1 && output.data[2] == 0 && output.data[3] == 1
         )";
   EXPECT_TRUE(eval(tensorAbs.c_str()).getBool());
-  EXPECT_THROW(
-      eval("torch.tensor([[-2 ,-1], [0, 1]]).abs(1);"), facebook::jsi::JSError);
 }
 
 TEST_F(TorchliveTensorRuntimeTest, TensorAddTest) {

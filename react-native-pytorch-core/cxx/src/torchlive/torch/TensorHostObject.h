@@ -23,7 +23,6 @@ namespace torchlive {
 namespace torch {
 
 class JSI_EXPORT TensorHostObject : public common::BaseHostObject {
-  facebook::jsi::Function add_;
   facebook::jsi::Function argmax_;
   facebook::jsi::Function div_;
   facebook::jsi::Function mul_;
@@ -49,7 +48,6 @@ class JSI_EXPORT TensorHostObject : public common::BaseHostObject {
   torch_::Tensor tensor;
 
  private:
-  facebook::jsi::Function createAdd(facebook::jsi::Runtime& runtime);
   facebook::jsi::Function createArgmax(facebook::jsi::Runtime& runtime);
   facebook::jsi::Function createDiv(facebook::jsi::Runtime& runtime);
   facebook::jsi::Function createMul(facebook::jsi::Runtime& runtime);

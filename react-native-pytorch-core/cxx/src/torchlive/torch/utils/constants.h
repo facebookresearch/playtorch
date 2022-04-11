@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#pragma once
+
 #include <torch/script.h>
 
 // Namespace alias for torch to avoid namespace conflicts with torchlive::torch

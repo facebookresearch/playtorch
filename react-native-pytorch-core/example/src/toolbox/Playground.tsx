@@ -10,6 +10,7 @@
 import {useIsFocused} from '@react-navigation/native';
 import * as React from 'react';
 import {useCallback} from 'react';
+import {StyleSheet, Switch, Text, View} from 'react-native';
 import {
   Camera,
   CameraFacing,
@@ -17,10 +18,10 @@ import {
   CanvasRenderingContext2D,
   Image,
 } from 'react-native-pytorch-core';
-import {StyleSheet} from 'react-native';
 
 export default function Playground() {
   const isFocused = useIsFocused();
+  const [isShowCaptureButton, setIsShowCaptureButton] = React.useState(false);
   const contextRef = React.useRef<CanvasRenderingContext2D>();
 
   const handleCapture = useCallback(
@@ -44,7 +45,7 @@ export default function Playground() {
     <>
       <Camera
         onFrame={handleCapture}
-        hideCaptureButton={true}
+        hideCaptureButton={!isShowCaptureButton}
         style={styles.camera}
         targetResolution={{width: 480, height: 640}}
         facing={CameraFacing.BACK}
@@ -55,11 +56,36 @@ export default function Playground() {
           contextRef.current = context;
         }}
       />
+      <View style={styles.controls}>
+        <View style={styles.control}>
+          <Switch
+            value={isShowCaptureButton}
+            onValueChange={() => setIsShowCaptureButton(v => !v)}
+          />
+          <Text style={styles.controlLabel}>Show capture button</Text>
+        </View>
+      </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  controls: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    backgroundColor: 'white',
+    padding: 5,
+    borderRadius: 5,
+  },
+  control: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  controlLabel: {
+    paddingStart: 5,
+    alignSelf: 'center',
+  },
   camera: {
     flex: 1,
   },

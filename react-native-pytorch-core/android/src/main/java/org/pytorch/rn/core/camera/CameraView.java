@@ -67,8 +67,12 @@ public class CameraView extends ConstraintLayout {
   private final int DURATION = 100;
   private final float SCALE_BUTTON_BY = 1.15f;
 
-  private Camera mCamera;
+  private boolean mIsDirty = false;
+  private boolean mIsDirtyForCameraRestart = false;
+  private boolean mHideCaptureButton = false;
   private Size mTargetResolution = new Size(480, 640);
+
+  private Camera mCamera;
 
   /** Blocking camera operations are performed using this executor */
   private ExecutorService cameraExecutor;
@@ -302,20 +306,41 @@ public class CameraView extends ConstraintLayout {
   }
 
   public void setHideCaptureButton(boolean hideCaptureButton) {
-    mCaptureButton.post(
-        () -> {
-          mCaptureButton.setVisibility(hideCaptureButton ? View.INVISIBLE : View.VISIBLE);
-        });
+    if (mHideCaptureButton != hideCaptureButton) {
+      mHideCaptureButton = hideCaptureButton;
+      mIsDirty = true;
+    }
   }
 
   public void setCameraSelector(CameraSelector cameraSelector) {
-    mPreferredCameraSelector = cameraSelector;
-    startCamera();
+    if (!mPreferredCameraSelector.equals(cameraSelector)) {
+      mPreferredCameraSelector = cameraSelector;
+      mIsDirty = true;
+      mIsDirtyForCameraRestart = true;
+    }
   }
 
   public void setTargetResolution(Size size) {
-    mTargetResolution = size;
-    startCamera();
+    if (!mTargetResolution.equals(size)) {
+      mTargetResolution = size;
+      mIsDirty = true;
+      mIsDirtyForCameraRestart = true;
+    }
+  }
+
+  public void maybeUpdateView() {
+    if (!mIsDirty) {
+      return;
+    }
+
+    mCaptureButton.post(
+        () -> {
+          mCaptureButton.setVisibility(mHideCaptureButton ? View.INVISIBLE : View.VISIBLE);
+        });
+
+    if (mIsDirtyForCameraRestart) {
+      startCamera();
+    }
   }
 
   private static class ReactNativeCameraPreviewRemeasure

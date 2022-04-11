@@ -107,4 +107,10 @@ public class CameraViewManager extends SimpleViewManager<CameraView> {
       view.setCameraSelector(CameraSelector.DEFAULT_FRONT_CAMERA);
     }
   }
+
+  @Override
+  protected void onAfterUpdateTransaction(CameraView view) {
+    super.onAfterUpdateTransaction(view);
+    view.maybeUpdateView();
+  }
 }

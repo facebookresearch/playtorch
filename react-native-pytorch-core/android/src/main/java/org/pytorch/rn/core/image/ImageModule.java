@@ -10,16 +10,18 @@ package org.pytorch.rn.core.image;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.common.build.ReactBuildConfig;
 import com.facebook.react.module.annotations.ReactModule;
+import com.facebook.react.views.imagehelper.ImageSource;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,6 +32,8 @@ import org.pytorch.rn.core.utils.FileUtils;
 
 @ReactModule(name = "PyTorchCoreImageModule")
 public class ImageModule extends ReactContextBaseJavaModule {
+
+  public static final String TAG = "PTLImageModule";
 
   public static final String NAME = "PyTorchCoreImageModule";
 
@@ -118,26 +122,49 @@ public class ImageModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void fromBundle(final String uriString, Promise promise) {
-    Uri uri = Uri.parse(uriString);
-
-    // Get file path to cache image or load image model from cache if loading from Uri fails
-    File targetFile = new File(getReactApplicationContext().getCacheDir(), uri.getPath());
-
-    FileUtils.downloadUriToFile(uriString, targetFile);
-
-    InputStream inputStream;
-    try {
-      inputStream = new FileInputStream(targetFile);
-    } catch (FileNotFoundException e) {
-      promise.reject(e);
-      return;
+  public void fromBundle(final ReadableMap source, Promise promise) {
+    final String uri = source.getString("uri");
+    final ImageSource imageSource = new ImageSource(mReactContext, uri);
+    if (Uri.EMPTY.equals(imageSource.getUri())) {
+      warnImageSource(uri);
     }
 
-    Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
-    IImage image = new Image(bitmap);
-    JSContext.NativeJSRef ref = JSContext.wrapObject(image);
-    promise.resolve(ref.getJSRef());
+    try {
+      InputStream inputStream;
+      if (imageSource.isResource()) {
+        // A uri with no scheme (i.e., `null`) is likely to be a resource or
+        // local file. Release mode builds bundle the model file in the APK as
+        // a raw resource.
+        final int resourceId =
+            mReactContext
+                .getResources()
+                .getIdentifier(imageSource.getSource(), "drawable", mReactContext.getPackageName());
+        if (resourceId != 0) {
+          inputStream = mReactContext.getResources().openRawResource(resourceId);
+        } else {
+          // Fall back to the local file system
+          inputStream = new FileInputStream(uri);
+        }
+      } else {
+        // Get file path to cache image resource or load image resource from
+        // cache if loading from URI fails
+        final File targetFile = new File(mReactContext.getCacheDir(), uri);
+
+        // Always try to load image resource from URI to make sure it's always
+        // the latest version. Only if fetching the image resource from the URI
+        // fails, it will load the cached version (if exists).
+        FileUtils.downloadUriToFile(imageSource.getSource(), targetFile);
+
+        inputStream = new FileInputStream(targetFile);
+      }
+
+      Bitmap bitmap = BitmapFactory.decodeStream(inputStream);
+      IImage image = new Image(bitmap);
+      JSContext.NativeJSRef ref = JSContext.wrapObject(image);
+      promise.resolve(ref.getJSRef());
+    } catch (IOException e) {
+      promise.reject(e);
+    }
   }
 
   @ReactMethod
@@ -161,6 +188,16 @@ public class ImageModule extends ReactContextBaseJavaModule {
       promise.resolve(file.getAbsolutePath());
     } catch (IOException e) {
       promise.reject(e);
+    }
+  }
+
+  private void warnImageSource(String uri) {
+    if (ReactBuildConfig.DEBUG) {
+      Toast.makeText(
+              mReactContext,
+              "Warning: Image source \"" + uri + "\" doesn't exist",
+              Toast.LENGTH_SHORT)
+          .show();
     }
   }
 }

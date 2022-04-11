@@ -8,55 +8,39 @@
  */
 
 import * as React from 'react';
-import {Audio, MobileModel} from 'react-native-pytorch-core';
+import type {Audio} from 'react-native-pytorch-core';
 import {View, StyleSheet, Text} from 'react-native';
-import {useState} from 'react';
-import type {ModelResultMetrics} from 'react-native-pytorch-core';
+import {useCallback} from 'react';
 import PTLAudioRecorder from '../../components/PTLAudioRecorder';
-
-const Wav2VecModel = require('../../../models/wav2vec2.ptl');
-
-type Wav2Vec2Result = {
-  answer: string;
-};
+import useAudioModelInference from '../../useAudioModelInference';
+import {AudioModels} from '../../Models';
+import emptyFunction from '../../utils/emptyFunction';
 
 export default function Wav2Vec2() {
-  const [answer, setAnswer] = useState<string>('');
-  const [metrics, setMetrics] = useState<ModelResultMetrics | null>(null);
+  const {translatedText, metrics, processAudio} = useAudioModelInference(
+    AudioModels[0],
+  );
 
-  async function onRecordingCompletedCallback(audio: Audio | null) {
-    if (audio == null) {
-      console.log('No audio recorded!');
-      return;
-    }
-    const {metrics: m, result} = await MobileModel.execute<Wav2Vec2Result>(
-      Wav2VecModel,
-      {
-        audio,
-      },
-    );
-    setMetrics(m);
-    setAnswer(result.answer);
-  }
-
-  function onRecordingStartedCallback() {
-    setAnswer('');
-    setMetrics(null);
-  }
+  const handleRecordingComplete = useCallback(
+    async (audio: Audio | null) => {
+      if (audio == null) {
+        console.log('No audio recorded!');
+        return;
+      }
+      await processAudio(audio);
+    },
+    [processAudio],
+  );
 
   return (
     <>
       <PTLAudioRecorder
-        onRecordingStarted={() => {
-          onRecordingStartedCallback();
-        }}
-        onRecordingComplete={(audio: Audio | null) => {
-          onRecordingCompletedCallback(audio);
-        }}
+        onRecordingStarted={emptyFunction}
+        onRecordingComplete={handleRecordingComplete}
       />
 
       <View style={styles.center}>
-        <Text style={styles.small}>{answer}</Text>
+        <Text style={styles.small}>{translatedText}</Text>
         {metrics && (
           <Text style={styles.small}>
             Time taken: {metrics?.totalTime}ms (p={metrics?.packTime}/i=

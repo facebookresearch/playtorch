@@ -20,4 +20,4 @@ custom_edit_url: null
 
 #### Defined in
 
-[text/index.ts:12](https://github.com/pytorch/live/blob/5332dc9/react-native-pytorch-core/src/text/index.ts#L12)
+[text/index.ts:12](https://github.com/pytorch/live/blob/a3dd409/react-native-pytorch-core/src/text/index.ts#L12)

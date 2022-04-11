@@ -33,4 +33,4 @@ LICENSE file in the root directory of this source tree.
 
 #### Defined in
 
-[text/WordpieceTokenizer.ts:10](https://github.com/pytorch/live/blob/5332dc9/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L10)
+[text/WordpieceTokenizer.ts:10](https://github.com/pytorch/live/blob/a3dd409/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L10)

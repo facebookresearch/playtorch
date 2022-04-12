@@ -211,6 +211,14 @@ android {
 
         }
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs += ["$buildDir/extra-jniLibs/jni"]
+        }
+    }
+    configurations {
+        extraJNILibs
+    }
 }
 
 dependencies {
@@ -220,6 +228,9 @@ dependencies {
     implementation fileTree(dir: "libs", include: ["*.jar"])
     //noinspection GradleDynamicVersion
     implementation "com.facebook.react:react-native:+"  // From node_modules
+
+    // Used to control the version of libfbjni.so packaged into the APK
+    extraJNILibs("com.facebook.fbjni:fbjni:0.0.5-SNAPSHOT")
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
 
@@ -259,3 +270,23 @@ apply from: file("../../node_modules/@react-native-community/cli-platform-androi
 
 // Include the icon font for react-native-vector-icons
 apply from: file("../../node_modules/react-native-vector-icons/fonts.gradle")
+
+task extraJNILibs {
+  doLast {
+    configurations.extraJNILibs.files.each {
+      def file = it.absoluteFile
+
+      copy {
+        from zipTree(file)
+        into "$buildDir/extra-jniLibs" // temp location instead of "src/main/jniLibs"
+        include "jni/**/*"
+      }
+    }
+  }
+}
+
+tasks.whenTaskAdded { task ->
+  if (task.name.startsWith('merge') && task.name.endsWith('JniLibFolders')) {
+    task.dependsOn(extraJNILibs)
+  }
+}

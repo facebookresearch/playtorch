@@ -15,6 +15,7 @@ RCT_EXTERN_METHOD(startRecord);
 RCT_EXTERN_METHOD(stopRecord:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(getName);
 RCT_EXTERN_METHOD(play:(nonnull NSDictionary)audioRef);
+RCT_EXTERN_METHOD(pause:(nonnull NSDictionary)audioRef);
 RCT_EXTERN_METHOD(fromBundle:(nonnull NSString)assetAudio resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(fromFile:(nonnull NSString)filepath resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);
 RCT_EXTERN_METHOD(toFile:(nonnull NSDictionary)audioRef resolver:(RCTPromiseResolveBlock)resolve rejecter:(RCTPromiseRejectBlock)reject);

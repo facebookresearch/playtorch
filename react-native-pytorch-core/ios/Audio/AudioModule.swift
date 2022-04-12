@@ -127,6 +127,16 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
         }
     }
 
+    @objc
+    public func pause(_ audioRef: NSDictionary) {
+        do {
+            let audio = try AudioModule.unwrapAudio(audioRef)
+            audio.pause()
+        } catch {
+            print("Invalid audio reference sent. \(error)")
+        }
+    }
+
     @objc(toFile:resolver:rejecter:)
     public func toFile(_ audioRef: NSDictionary, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         let uuid = NSUUID().uuidString

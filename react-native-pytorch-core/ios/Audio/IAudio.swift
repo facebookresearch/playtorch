@@ -11,4 +11,6 @@ public protocol IAudio {
     func getData() -> Data
 
     func play()
+
+    func pause()
 }

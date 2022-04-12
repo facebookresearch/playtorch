@@ -25,12 +25,20 @@ public class Audio: IAudio {
 
     public func play() {
         do {
+            if self.mPlayer == nil {
+                mPlayer = try AVAudioPlayer(data: mData)
+            }
             try? AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
             mPlayer?.volume = Audio.DEFAULTVOLUME
-            mPlayer = try AVAudioPlayer(data: mData)
             mPlayer?.play()
         } catch {
             print("Error while playing the audio. \(error)")
+        }
+    }
+
+    public func pause() {
+        if (mPlayer?.isPlaying) != nil {
+            mPlayer?.pause()
         }
     }
 }

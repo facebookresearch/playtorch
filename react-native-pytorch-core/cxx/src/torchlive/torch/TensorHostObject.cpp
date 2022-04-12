@@ -124,30 +124,69 @@ jsi::Value clampImp(
   if (count < 1) {
     throw jsi::JSError(
         runtime,
-        "1 argument is expected but " + std::to_string(count) + " are given.");
+        "at least 1 argument is expected but " + std::to_string(count) +
+            " are given.");
   }
   auto thiz =
       thisValue.asObject(runtime).asHostObject<TensorHostObject>(runtime);
+  auto minValue =
+      utils::helpers::parseKeywordArgument(runtime, arguments, 0, count, "min");
+  auto maxValue =
+      utils::helpers::parseKeywordArgument(runtime, arguments, 0, count, "max");
   at::Tensor outputTensor;
 
-  if (arguments[0].isNumber()) {
-    auto min = arguments[0].asNumber();
-    c10::optional<at::Scalar> max = c10::nullopt;
-    if (count > 1) {
-      max = arguments[1].asNumber();
+  if (minValue.isUndefined() && maxValue.isUndefined()) {
+    // No keyword arguments
+    if (arguments[0].isNumber()) {
+      auto min = arguments[0].asNumber();
+      c10::optional<at::Scalar> max = c10::nullopt;
+      if (count > 1) {
+        max = arguments[1].asNumber();
+      }
+      outputTensor = thiz->tensor.clamp(min, max);
+    } else {
+      auto minTensorHostObject =
+          utils::helpers::parseTensor(runtime, &arguments[0]);
+      auto minTensor = minTensorHostObject->tensor;
+      c10::optional<at::Tensor> maxTensor = {};
+      if (count > 1) {
+        auto maxTensorHostObject =
+            utils::helpers::parseTensor(runtime, &arguments[1]);
+        maxTensor = maxTensorHostObject->tensor;
+      }
+      outputTensor = thiz->tensor.clamp(minTensor, maxTensor);
     }
-    outputTensor = thiz->tensor.clamp(min, max);
   } else {
-    auto minTensorHostObject =
-        utils::helpers::parseTensor(runtime, &arguments[0]);
-    auto minTensor = minTensorHostObject->tensor;
+    // Keyword arguments
+    c10::optional<at::Scalar> minScalar = c10::nullopt;
+    c10::optional<at::Scalar> maxScalar = c10::nullopt;
+    c10::optional<at::Tensor> minTensor = {};
     c10::optional<at::Tensor> maxTensor = {};
-    if (count > 1) {
-      auto maxTensorHostObject =
-          utils::helpers::parseTensor(runtime, &arguments[1]);
-      maxTensor = maxTensorHostObject->tensor;
+    bool isScalarArg = false;
+
+    if (!minValue.isUndefined()) {
+      if (minValue.isNumber()) {
+        minScalar = minValue.asNumber();
+        isScalarArg = true;
+      } else {
+        minTensor = utils::helpers::parseTensor(runtime, &minValue)->tensor;
+      }
     }
-    outputTensor = thiz->tensor.clamp(minTensor, maxTensor);
+
+    if (!maxValue.isUndefined()) {
+      if (maxValue.isNumber()) {
+        maxScalar = maxValue.asNumber();
+        isScalarArg = true;
+      } else {
+        maxTensor = utils::helpers::parseTensor(runtime, &maxValue)->tensor;
+      }
+    }
+
+    if (isScalarArg) {
+      outputTensor = thiz->tensor.clamp(minScalar, maxScalar);
+    } else {
+      outputTensor = thiz->tensor.clamp(minTensor, maxTensor);
+    }
   }
 
   auto tensorHostObject = std::make_shared<torchlive::torch::TensorHostObject>(

@@ -380,7 +380,8 @@ TEST_F(TorchliveTensorRuntimeTest, TorchToTest) {
       eval("torch.tensor([1.5]).to({dtype: 'xyz'})"), facebook::jsi::JSError);
 }
 
-TEST_F(TorchliveTensorRuntimeTest, TorchClampTest_InvalidInput) {
+TEST_F(TorchliveTensorRuntimeTest, TorchClampTest) {
+  // InvalidInputs
   EXPECT_THROW(eval("torch.arange(1, 6).clamp()"), facebook::jsi::JSError);
 
   std::string tensorClampWithMixedScalarAndTensor =
@@ -399,10 +400,23 @@ TEST_F(TorchliveTensorRuntimeTest, TorchClampTest_InvalidInput) {
           tensor = tensor.clamp(otherTensor);
         )";
   EXPECT_THROW(
-      eval(tensorClampWithMixedScalarAndTensor), facebook::jsi::JSError);
-}
+      eval(tensorClampWithTensorsOfDifferentSizes), facebook::jsi::JSError);
 
-TEST_F(TorchliveTensorRuntimeTest, TorchClampTest_ScalarArgument) {
+  std::string tensorClampWithEmptyTensor =
+      R"(
+          let tensor = torch.tensor([1, 2, 3, 4, 5]);
+          tensor = tensor.clamp({});
+        )";
+  EXPECT_THROW(eval(tensorClampWithEmptyTensor), facebook::jsi::JSError);
+
+  std::string tensorClampWithUndefinedTensors =
+      R"(
+          let tensor = torch.tensor([1, 2, 3, 4, 5]);
+          tensor = tensor.clamp({min: undefined, max: undefined});
+        )";
+  EXPECT_THROW(eval(tensorClampWithUndefinedTensors), facebook::jsi::JSError);
+
+  // ScalarArgument
   std::string tensorClampWithMinAndMaxNumbers =
       R"(
           let tensor = torch.tensor([1, 2, 3, 4, 5]);
@@ -418,9 +432,8 @@ TEST_F(TorchliveTensorRuntimeTest, TorchClampTest_ScalarArgument) {
           tensor.data[0] == 3 && tensor.data[1] == 3 && tensor.data[2] == 3 && tensor.data[3] == 4 && tensor.data[4] == 5;
         )";
   EXPECT_TRUE(eval(tensorClampWithMinNumber.c_str()).getBool());
-}
 
-TEST_F(TorchliveTensorRuntimeTest, TorchClampTest_TensorArgument) {
+  // TensorArgument
   std::string tensorClampWithMinAndMaxTensor =
       R"(
           let tensor = torch.tensor([1, 2, 3, 4, 5]);
@@ -439,6 +452,60 @@ TEST_F(TorchliveTensorRuntimeTest, TorchClampTest_TensorArgument) {
           tensor.data[0] == 3 && tensor.data[1] == 3 && tensor.data[2] == 3 && tensor.data[3] == 4 && tensor.data[4] == 5;
         )";
   EXPECT_TRUE(eval(tensorClampWithMinTensor.c_str()).getBool());
+
+  // ScalarWithKeywordArgument
+  tensorClampWithMinAndMaxNumbers =
+      R"(
+          let tensor = torch.tensor([1, 2, 3, 4, 5]);
+          tensor = tensor.clamp({min: 3, max: 4});
+          tensor.data[0] == 3 && tensor.data[1] == 3 && tensor.data[2] == 3 && tensor.data[3] == 4 && tensor.data[4] == 4;
+        )";
+  EXPECT_TRUE(eval(tensorClampWithMinAndMaxNumbers.c_str()).getBool());
+
+  tensorClampWithMinNumber =
+      R"(
+          let tensor = torch.tensor([1, 2, 3, 4, 5]);
+          tensor = tensor.clamp({min: 3});
+          tensor.data[0] == 3 && tensor.data[1] == 3 && tensor.data[2] == 3 && tensor.data[3] == 4 && tensor.data[4] == 5;
+        )";
+  EXPECT_TRUE(eval(tensorClampWithMinNumber.c_str()).getBool());
+
+  std::string tensorClampWithMaxNumber =
+      R"(
+          let tensor = torch.tensor([1, 2, 3, 4, 5]);
+          tensor = tensor.clamp({max: 4});
+          tensor.data[0] == 1 && tensor.data[1] == 2 && tensor.data[2] == 3 && tensor.data[3] == 4 && tensor.data[4] == 4;
+        )";
+  EXPECT_TRUE(eval(tensorClampWithMaxNumber.c_str()).getBool());
+
+  // TensorWithKeywordArgument
+  std::string tensorClampWithMinAndMaxTensors =
+      R"(
+          let tensor = torch.tensor([1, 2, 3, 4, 5]);
+          let minTensor = torch.tensor([3, 3, 3, 3, 3]);
+          let maxTensor = torch.tensor([4, 4, 4, 4, 4]);
+          tensor = tensor.clamp({min: minTensor, max: maxTensor});
+          tensor.data[0] == 3 && tensor.data[1] == 3 && tensor.data[2] == 3 && tensor.data[3] == 4 && tensor.data[4] == 4;
+        )";
+  EXPECT_TRUE(eval(tensorClampWithMinAndMaxTensors.c_str()).getBool());
+
+  tensorClampWithMinTensor =
+      R"(
+          let tensor = torch.tensor([1, 2, 3, 4, 5]);
+          let minTensor = torch.tensor([3, 3, 3, 3, 3]);
+          tensor = tensor.clamp({min: minTensor});
+          tensor.data[0] == 3 && tensor.data[1] == 3 && tensor.data[2] == 3 && tensor.data[3] == 4 && tensor.data[4] == 5;
+        )";
+  EXPECT_TRUE(eval(tensorClampWithMinTensor.c_str()).getBool());
+
+  std::string tensorClampWithMaxTensor =
+      R"(
+          let tensor = torch.tensor([1, 2, 3, 4, 5]);
+          let maxTensor = torch.tensor([4, 4, 4, 4, 4]);
+          tensor = tensor.clamp({max: maxTensor});
+          tensor.data[0] == 1 && tensor.data[1] == 2 && tensor.data[2] == 3 && tensor.data[3] == 4 && tensor.data[4] == 4;
+        )";
+  EXPECT_TRUE(eval(tensorClampWithMaxTensor.c_str()).getBool());
 }
 
 } // namespace

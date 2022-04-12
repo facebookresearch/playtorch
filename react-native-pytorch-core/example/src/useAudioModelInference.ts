@@ -25,15 +25,20 @@ export default function useAudioModelInference(modelInfo: ModelInfo) {
   const [translatedText, setTranslatedText] = useState<string>();
 
   const processAudio = useCallback(
-    async (audio: Audio) => {
-      const {
-        result: {answer},
-        metrics: m,
-      } = await MobileModel.execute<Wav2Vec2Result>(modelInfo.model, {
-        audio,
-      });
-      setMetrics(m);
-      setTranslatedText(answer);
+    async (audio: Audio | null) => {
+      if (audio != null) {
+        const {
+          result: {answer},
+          metrics: m,
+        } = await MobileModel.execute<Wav2Vec2Result>(modelInfo.model, {
+          audio,
+        });
+        setMetrics(m);
+        setTranslatedText(answer);
+      } else {
+        setMetrics(undefined);
+        setTranslatedText(undefined);
+      }
     },
     [modelInfo.model, setTranslatedText, setMetrics],
   );

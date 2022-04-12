@@ -23,10 +23,6 @@ export default function Wav2Vec2() {
 
   const handleRecordingComplete = useCallback(
     async (audio: Audio | null) => {
-      if (audio == null) {
-        console.log('No audio recorded!');
-        return;
-      }
       await processAudio(audio);
     },
     [processAudio],

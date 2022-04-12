@@ -18,4 +18,4 @@ custom_edit_url: null
 
 #### Defined in
 
-[torchlive/vision.ts:75](https://github.com/pytorch/live/blob/a3dd409/react-native-pytorch-core/src/torchlive/vision.ts#L75)
+[torchlive/vision.ts:75](https://github.com/pytorch/live/blob/4306bd7/react-native-pytorch-core/src/torchlive/vision.ts#L75)

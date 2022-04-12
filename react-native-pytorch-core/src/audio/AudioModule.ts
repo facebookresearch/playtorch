@@ -19,12 +19,20 @@ export interface Audio extends NativeJSRef {
    * Play an audio.
    */
   play(): void;
+
+  /**
+   * Pause an audio.
+   */
+  pause(): void;
 }
 
 export const wrapRef = (ref: NativeJSRef): Audio => ({
   ...ref,
   play(): void {
     return AudioModule.play(ref);
+  },
+  pause(): void {
+    return AudioModule.pause(ref);
   },
 });
 

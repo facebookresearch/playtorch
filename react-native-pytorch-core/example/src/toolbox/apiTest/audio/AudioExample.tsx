@@ -14,11 +14,15 @@ import {useState} from 'react';
 import PTLAudioRecorder from '../../../components/PTLAudioRecorder';
 import emptyFunction from '../../../utils/emptyFunction';
 
-export default function AudioPlayExample() {
+export default function AudioExample() {
   const [recordedAudio, setRecordedAudio] = useState<Audio | null>();
 
   function play() {
     recordedAudio?.play();
+  }
+
+  function pause() {
+    recordedAudio?.pause();
   }
 
   async function onRecordingCompleteCallback(audio: Audio | null) {
@@ -34,8 +38,13 @@ export default function AudioPlayExample() {
         onRecordingComplete={onRecordingCompleteCallback}
       />
       <TouchableOpacity onPress={play}>
-        <View style={styles.playAudioButton}>
-          <Text style={styles.startButtonText}>{'Play Recorded Audio'}</Text>
+        <View style={styles.button}>
+          <Text style={styles.buttonText}>{'Play'}</Text>
+        </View>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={pause}>
+        <View style={styles.button}>
+          <Text style={styles.buttonText}>{'Pause'}</Text>
         </View>
       </TouchableOpacity>
     </>
@@ -43,13 +52,13 @@ export default function AudioPlayExample() {
 }
 
 const styles = StyleSheet.create({
-  startButtonText: {
+  buttonText: {
     color: '#ffffff',
     fontSize: 14,
     fontWeight: 'bold',
     marginBottom: 2,
   },
-  playAudioButton: {
+  button: {
     width: 260,
     height: 40,
     marginLeft: 60,

@@ -50,7 +50,7 @@ import FastNeuralStyle from './models/FastNeuralStyle';
 import MobileNetV3 from './models/MobileNetV3';
 import CameraTakePicture from './apiTest/camera/CameraTakePicture';
 import JSIPlayground from './JSIPlayground';
-import AudioPlayExample from './apiTest/audio/AudioPlayExample';
+import AudioExample from './apiTest/audio/AudioExample';
 import AudioSaveLoadExample from './apiTest/audio/AudioSaveLoadExample';
 
 export type Tool = {
@@ -316,10 +316,10 @@ const tools: ToolSection = [
     data: [
       {
         icon: <Icon name="clipboard-text" size={32} color="white" />,
-        title: 'Audio Play',
-        subtitle: 'Record an audio and play the recorded clip.',
+        title: 'Audio APIs',
+        subtitle: 'Record an audio and test audio APIs on the recorded clip.',
         apiTest: true,
-        component: AudioPlayExample,
+        component: AudioExample,
       },
       {
         icon: <Icon name="clipboard-text" size={32} color="white" />,

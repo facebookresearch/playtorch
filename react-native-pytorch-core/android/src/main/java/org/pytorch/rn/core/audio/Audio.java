@@ -43,4 +43,10 @@ public class Audio implements IAudio {
     }
     mPlayer.start();
   }
+
+  public void pause() {
+    if (mPlayer != null && mPlayer.isPlaying()) {
+      mPlayer.pause();
+    }
+  }
 }

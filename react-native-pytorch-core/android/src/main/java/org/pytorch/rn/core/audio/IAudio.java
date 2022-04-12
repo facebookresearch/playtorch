@@ -11,4 +11,6 @@ public interface IAudio {
   short[] getData();
 
   void play();
+
+  void pause();
 }

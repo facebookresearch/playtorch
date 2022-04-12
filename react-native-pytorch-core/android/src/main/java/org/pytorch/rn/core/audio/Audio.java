@@ -10,6 +10,7 @@ package org.pytorch.rn.core.audio;
 import android.media.MediaDataSource;
 import android.media.MediaPlayer;
 import android.util.Log;
+import androidx.annotation.Nullable;
 
 public class Audio implements IAudio {
 
@@ -18,6 +19,7 @@ public class Audio implements IAudio {
   private static final int DEFAULT_SPEED = 1;
 
   private final short[] mData;
+  @Nullable private MediaPlayer mPlayer;
 
   public Audio(short[] data) {
     this.mData = data;
@@ -28,15 +30,17 @@ public class Audio implements IAudio {
   }
 
   public void play() {
-    MediaPlayer mediaPlayer = new MediaPlayer();
+    if (mPlayer == null) {
+      mPlayer = new MediaPlayer();
+    }
     MediaDataSource mediaDataSource = AudioUtils.getAudioAsMediaDataSource(mData);
     try {
-      mediaPlayer.setDataSource(mediaDataSource);
-      mediaPlayer.prepare();
-      mediaPlayer.setPlaybackParams(mediaPlayer.getPlaybackParams().setSpeed(DEFAULT_SPEED));
+      mPlayer.setDataSource(mediaDataSource);
+      mPlayer.prepare();
+      mPlayer.setPlaybackParams(mPlayer.getPlaybackParams().setSpeed(DEFAULT_SPEED));
     } catch (Exception e) {
       Log.e(TAG, "Could not play the audio.", e);
     }
-    mediaPlayer.start();
+    mPlayer.start();
   }
 }

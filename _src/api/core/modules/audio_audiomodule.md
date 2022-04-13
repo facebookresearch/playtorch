@@ -29,7 +29,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[audio/AudioModule.ts:39](https://github.com/pytorch/live/blob/4306bd7/react-native-pytorch-core/src/audio/AudioModule.ts#L39)
+[audio/AudioModule.ts:47](https://github.com/pytorch/live/blob/7cc166b/react-native-pytorch-core/src/audio/AudioModule.ts#L47)
 
 ## Functions
 
@@ -49,4 +49,4 @@ custom_edit_url: null
 
 #### Defined in
 
-[audio/AudioModule.ts:29](https://github.com/pytorch/live/blob/4306bd7/react-native-pytorch-core/src/audio/AudioModule.ts#L29)
+[audio/AudioModule.ts:34](https://github.com/pytorch/live/blob/7cc166b/react-native-pytorch-core/src/audio/AudioModule.ts#L34)

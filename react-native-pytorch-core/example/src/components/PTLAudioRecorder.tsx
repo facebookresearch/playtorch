@@ -57,7 +57,7 @@ export default function PTLAudioRecorder(props: Props) {
   }
 
   return (
-    <>
+    <View style={styles.container}>
       <TouchableOpacity
         onPress={!isAudioRecording ? startRecording : stopRecording}>
         <View style={styles.startButton}>
@@ -66,16 +66,20 @@ export default function PTLAudioRecorder(props: Props) {
           </Text>
         </View>
       </TouchableOpacity>
-    </>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignContent: 'center',
+    marginTop: 100,
+  },
   startButton: {
     width: 260,
     height: 40,
-    marginLeft: 60,
-    marginTop: 100,
     borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',

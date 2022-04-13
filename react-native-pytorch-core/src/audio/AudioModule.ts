@@ -24,6 +24,11 @@ export interface Audio extends NativeJSRef {
    * Pause an audio.
    */
   pause(): void;
+
+  /**
+   * Stop the current playing audio.
+   */
+  stop(): void;
 }
 
 export const wrapRef = (ref: NativeJSRef): Audio => ({
@@ -33,6 +38,9 @@ export const wrapRef = (ref: NativeJSRef): Audio => ({
   },
   pause(): void {
     return AudioModule.pause(ref);
+  },
+  stop(): void {
+    return AudioModule.stop(ref);
   },
 });
 

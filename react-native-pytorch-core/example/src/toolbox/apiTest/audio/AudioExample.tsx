@@ -25,6 +25,10 @@ export default function AudioExample() {
     recordedAudio?.pause();
   }
 
+  function stop() {
+    recordedAudio?.stop();
+  }
+
   async function onRecordingCompleteCallback(audio: Audio | null) {
     if (audio != null) {
       setRecordedAudio(audio);
@@ -37,21 +41,34 @@ export default function AudioExample() {
         onRecordingStarted={emptyFunction}
         onRecordingComplete={onRecordingCompleteCallback}
       />
-      <TouchableOpacity onPress={play}>
-        <View style={styles.button}>
-          <Text style={styles.buttonText}>{'Play'}</Text>
-        </View>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={pause}>
-        <View style={styles.button}>
-          <Text style={styles.buttonText}>{'Pause'}</Text>
-        </View>
-      </TouchableOpacity>
+      <View style={styles.container}>
+        <TouchableOpacity onPress={play}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>{'Play'}</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={pause}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>{'Pause'}</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={stop}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>{'Stop'}</Text>
+          </View>
+        </TouchableOpacity>
+      </View>
     </>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignContent: 'center',
+    padding: 50,
+  },
   buttonText: {
     color: '#ffffff',
     fontSize: 14,
@@ -59,10 +76,8 @@ const styles = StyleSheet.create({
     marginBottom: 2,
   },
   button: {
-    width: 260,
+    width: 80,
     height: 40,
-    marginLeft: 60,
-    marginTop: 200,
     borderRadius: 25,
     alignItems: 'center',
     justifyContent: 'center',

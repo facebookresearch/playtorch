@@ -108,6 +108,12 @@ public class AudioModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void stop(ReadableMap audioRef) {
+    IAudio audio = JSContext.unwrapObject(audioRef);
+    audio.stop();
+  }
+
+  @ReactMethod
   public void toFile(final ReadableMap audioRef, Promise promise) {
     try {
       final IAudio audio = JSContext.unwrapObject(audioRef);

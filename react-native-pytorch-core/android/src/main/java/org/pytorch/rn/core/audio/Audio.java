@@ -49,4 +49,15 @@ public class Audio implements IAudio {
       mPlayer.pause();
     }
   }
+
+  public void stop() {
+    if (mPlayer != null && mPlayer.isPlaying()) {
+      mPlayer.stop();
+      try {
+        mPlayer.prepare();
+      } catch (Exception e) {
+        Log.e(TAG, "Could not prepare the audio.", e);
+      }
+    }
+  }
 }

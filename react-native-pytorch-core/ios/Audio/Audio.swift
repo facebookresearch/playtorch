@@ -41,4 +41,11 @@ public class Audio: IAudio {
             mPlayer?.pause()
         }
     }
+
+    public func stop() {
+        if let mPlayer = mPlayer, mPlayer.isPlaying {
+            mPlayer.stop()
+            mPlayer.currentTime = 0
+        }
+    }
 }

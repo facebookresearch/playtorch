@@ -13,4 +13,6 @@ public protocol IAudio {
     func play()
 
     func pause()
+
+    func stop()
 }

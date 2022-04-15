@@ -15,4 +15,6 @@ public interface IAudio {
   void pause();
 
   void stop();
+
+  int getDuration();
 }

@@ -8,9 +8,11 @@
 package org.pytorch.rn.core.audio;
 
 import android.media.MediaDataSource;
+import android.media.MediaMetadataRetriever;
 import android.media.MediaPlayer;
 import android.util.Log;
 import androidx.annotation.Nullable;
+import java.io.File;
 
 public class Audio implements IAudio {
 
@@ -58,6 +60,23 @@ public class Audio implements IAudio {
       } catch (Exception e) {
         Log.e(TAG, "Could not prepare the audio.", e);
       }
+    }
+  }
+
+  public int getDuration() {
+    final File tempFile = AudioUtils.toTempFile(mData);
+    if (tempFile == null) {
+      return -1;
+    }
+    try {
+      final MediaMetadataRetriever mediaMetadataRetriever = new MediaMetadataRetriever();
+      mediaMetadataRetriever.setDataSource(tempFile.getAbsolutePath());
+      final String durationStr =
+          mediaMetadataRetriever.extractMetadata(MediaMetadataRetriever.METADATA_KEY_DURATION);
+      return Integer.parseInt(durationStr);
+    } catch (final Exception e) {
+      Log.e(TAG, "Could not extract the audio clip duration.", e);
+      return -1;
     }
   }
 }

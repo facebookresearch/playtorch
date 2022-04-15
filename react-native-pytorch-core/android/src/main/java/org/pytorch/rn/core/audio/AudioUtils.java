@@ -9,6 +9,9 @@ package org.pytorch.rn.core.audio;
 
 import android.media.MediaDataSource;
 import android.util.Log;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.Arrays;
@@ -25,13 +28,7 @@ public class AudioUtils {
 
   public static MediaDataSource getAudioAsMediaDataSource(short[] data) {
     try {
-      byte[] audioDataBytes = AudioUtils.toByteArray(data);
-      byte[] header =
-          getWaveHeader(
-              (int) audioDataBytes.length, HEADER_FORMAT_PCM, CHANNELS, SAMPLE_RATE, PCM_BITS);
-      byte[] completeAudioFileData = Arrays.copyOf(header, header.length + audioDataBytes.length);
-      System.arraycopy(
-          audioDataBytes, 0, completeAudioFileData, header.length, audioDataBytes.length);
+      final byte[] completeAudioFileData = prepareAudioData(data);
       return new AudioDataSource(completeAudioFileData);
     } catch (Exception e) {
       Log.e(TAG, "Exception while creating the audio data source : ", e);
@@ -66,6 +63,27 @@ public class AudioUtils {
     final short[] shorts = new short[data.length / 2];
     ByteBuffer.wrap(data).order(ByteOrder.nativeOrder()).asShortBuffer().get(shorts);
     return shorts;
+  }
+
+  /**
+   * Helper method to write the audio data to a temp file.
+   *
+   * @param data short[] to be written to a file
+   * @return file reference which holds the audio data
+   */
+  public static File toTempFile(final short[] data) {
+    try {
+      final byte[] completeAudioFileData = prepareAudioData(data);
+      final File tempFile = File.createTempFile("temp", "wav");
+      final OutputStream fileOutputStream = new FileOutputStream(tempFile);
+      fileOutputStream.write(completeAudioFileData);
+      fileOutputStream.flush();
+      fileOutputStream.close();
+      return tempFile;
+    } catch (Exception e) {
+      Log.e(TAG, "Exception while writing audio data to tempfile : ", e);
+      return null;
+    }
   }
 
   /**
@@ -131,5 +149,24 @@ public class AudioUtils {
     header[42] = (byte) ((audioLength >> 16) & 0xff);
     header[43] = (byte) ((audioLength >> 24) & 0xff);
     return header;
+  }
+
+  /**
+   * Helper method to convert the audio file data by appending the 'wav' header to the raw audio
+   * bytes.
+   *
+   * @param data short[] to be written to a file which holds raw audio data
+   * @return byte[] reference which holds the raw audio data and wav header
+   */
+  private static byte[] prepareAudioData(final short[] data) {
+    final byte[] audioDataBytes = AudioUtils.toByteArray(data);
+    final byte[] header =
+        getWaveHeader(
+            (int) audioDataBytes.length, HEADER_FORMAT_PCM, CHANNELS, SAMPLE_RATE, PCM_BITS);
+    final byte[] completeAudioFileData =
+        Arrays.copyOf(header, header.length + audioDataBytes.length);
+    System.arraycopy(
+        audioDataBytes, 0, completeAudioFileData, header.length, audioDataBytes.length);
+    return completeAudioFileData;
   }
 }

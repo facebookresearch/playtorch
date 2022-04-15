@@ -31,9 +31,25 @@ functions on the JavaScript object.
 
 #### Defined in
 
-[NativeJSRef.ts:64](https://github.com/pytorch/live/blob/7cc166b/react-native-pytorch-core/src/NativeJSRef.ts#L64)
+[NativeJSRef.ts:64](https://github.com/pytorch/live/blob/32554ae/react-native-pytorch-core/src/NativeJSRef.ts#L64)
 
 ## Methods
+
+### getDuration
+
+▸ **getDuration**(): `number`
+
+Get the duration of an audio in ms.
+
+#### Returns
+
+`number`
+
+#### Defined in
+
+[audio/AudioModule.ts:36](https://github.com/pytorch/live/blob/32554ae/react-native-pytorch-core/src/audio/AudioModule.ts#L36)
+
+___
 
 ### pause
 
@@ -47,7 +63,7 @@ Pause an audio.
 
 #### Defined in
 
-[audio/AudioModule.ts:26](https://github.com/pytorch/live/blob/7cc166b/react-native-pytorch-core/src/audio/AudioModule.ts#L26)
+[audio/AudioModule.ts:26](https://github.com/pytorch/live/blob/32554ae/react-native-pytorch-core/src/audio/AudioModule.ts#L26)
 
 ___
 
@@ -63,7 +79,32 @@ Play an audio.
 
 #### Defined in
 
-[audio/AudioModule.ts:21](https://github.com/pytorch/live/blob/7cc166b/react-native-pytorch-core/src/audio/AudioModule.ts#L21)
+[audio/AudioModule.ts:21](https://github.com/pytorch/live/blob/32554ae/react-native-pytorch-core/src/audio/AudioModule.ts#L21)
+
+___
+
+### release
+
+▸ **release**(): `Promise`<void\>
+
+Until explicitly released, an [Audio](audio_audiomodule.audio.md) will have a reference in memory.
+Not calling [Audio.release](audio_audiomodule.audio.md#release) can eventually result in an
+`OutOfMemoryException`.
+
+:::caution
+
+While this is an `async` function, it does not need to be `await`ed. For
+example, the `GC` on Android will eventually free the allocated memory.
+
+:::
+
+#### Returns
+
+`Promise`<void\>
+
+#### Defined in
+
+[audio/AudioModule.ts:50](https://github.com/pytorch/live/blob/32554ae/react-native-pytorch-core/src/audio/AudioModule.ts#L50)
 
 ___
 
@@ -79,4 +120,4 @@ Stop the current playing audio.
 
 #### Defined in
 
-[audio/AudioModule.ts:31](https://github.com/pytorch/live/blob/7cc166b/react-native-pytorch-core/src/audio/AudioModule.ts#L31)
+[audio/AudioModule.ts:31](https://github.com/pytorch/live/blob/32554ae/react-native-pytorch-core/src/audio/AudioModule.ts#L31)

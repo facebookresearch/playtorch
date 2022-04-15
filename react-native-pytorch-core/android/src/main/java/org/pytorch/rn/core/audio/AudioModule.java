@@ -120,6 +120,12 @@ public class AudioModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
+  public void release(ReadableMap audioRef, Promise promise) throws Exception {
+    JSContext.release(audioRef);
+    promise.resolve(null);
+  }
+
+  @ReactMethod
   public void toFile(final ReadableMap audioRef, Promise promise) {
     try {
       final IAudio audio = JSContext.unwrapObject(audioRef);

@@ -16,8 +16,10 @@ import emptyFunction from '../../../utils/emptyFunction';
 
 export default function AudioExample() {
   const [recordedAudio, setRecordedAudio] = useState<Audio | null>();
+  const [duration, setDuration] = useState<number | null>();
 
   function play() {
+    setDuration(recordedAudio?.getDuration() ?? null);
     recordedAudio?.play();
   }
 
@@ -41,6 +43,7 @@ export default function AudioExample() {
         onRecordingStarted={emptyFunction}
         onRecordingComplete={onRecordingCompleteCallback}
       />
+      <Text style={styles.textArea}>{'Audio duration is: ' + duration}</Text>
       <View style={styles.container}>
         <TouchableOpacity onPress={play}>
           <View style={styles.button}>
@@ -82,5 +85,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#ff4c2c',
+  },
+  textArea: {
+    marginTop: 20,
+    marginLeft: 20,
+    color: '#000000',
+    fontSize: 14,
+    fontWeight: 'bold',
   },
 });

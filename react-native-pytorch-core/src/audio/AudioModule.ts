@@ -29,6 +29,11 @@ export interface Audio extends NativeJSRef {
    * Stop the current playing audio.
    */
   stop(): void;
+
+  /**
+   * Get the duration of an audio in ms.
+   */
+  getDuration(): number;
 }
 
 export const wrapRef = (ref: NativeJSRef): Audio => ({
@@ -41,6 +46,9 @@ export const wrapRef = (ref: NativeJSRef): Audio => ({
   },
   stop(): void {
     return AudioModule.stop(ref);
+  },
+  getDuration(): number {
+    return AudioModule.getDuration(ref);
   },
 });
 

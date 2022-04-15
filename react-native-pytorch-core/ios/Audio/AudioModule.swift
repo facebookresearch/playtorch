@@ -205,4 +205,17 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
         }
         task.resume()
     }
+
+    @objc(release:resolver:rejecter:)
+    public func release(_ audioRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock,
+                        rejecter reject: RCTPromiseRejectBlock) {
+        do {
+            if let audioRef = audioRef as? [ String: String] {
+                try JSContext.release(jsRef: audioRef)
+            }
+            resolve(nil)
+        } catch {
+            reject(RCTErrorUnspecified, "Invalid audio reference in release: \(error)", error)
+        }
+    }
 }

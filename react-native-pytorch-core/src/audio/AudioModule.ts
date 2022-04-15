@@ -34,6 +34,20 @@ export interface Audio extends NativeJSRef {
    * Get the duration of an audio in ms.
    */
   getDuration(): number;
+
+  /**
+   * Until explicitly released, an [[Audio]] will have a reference in memory.
+   * Not calling [[Audio.release]] can eventually result in an
+   * `OutOfMemoryException`.
+   *
+   * :::caution
+   *
+   * While this is an `async` function, it does not need to be `await`ed. For
+   * example, the `GC` on Android will eventually free the allocated memory.
+   *
+   * :::
+   */
+  release(): Promise<void>;
 }
 
 export const wrapRef = (ref: NativeJSRef): Audio => ({
@@ -49,6 +63,9 @@ export const wrapRef = (ref: NativeJSRef): Audio => ({
   },
   getDuration(): number {
     return AudioModule.getDuration(ref);
+  },
+  async release(): Promise<void> {
+    return await AudioModule.release(ref);
   },
 });
 

@@ -31,6 +31,10 @@ export default function AudioExample() {
     recordedAudio?.stop();
   }
 
+  function release() {
+    recordedAudio?.release();
+  }
+
   async function onRecordingCompleteCallback(audio: Audio | null) {
     if (audio != null) {
       setRecordedAudio(audio);
@@ -58,6 +62,11 @@ export default function AudioExample() {
         <TouchableOpacity onPress={stop}>
           <View style={styles.button}>
             <Text style={styles.buttonText}>{'Stop'}</Text>
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={release}>
+          <View style={styles.button}>
+            <Text style={styles.buttonText}>{'Release'}</Text>
           </View>
         </TouchableOpacity>
       </View>

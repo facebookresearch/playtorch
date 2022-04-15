@@ -15,4 +15,6 @@ public protocol IAudio {
     func pause()
 
     func stop()
+
+    func getDuration() -> Int
 }

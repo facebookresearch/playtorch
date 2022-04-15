@@ -48,4 +48,17 @@ public class Audio: IAudio {
             mPlayer.currentTime = 0
         }
     }
+
+    public func getDuration() -> Int {
+        do {
+            if self.mPlayer == nil {
+                mPlayer = try AVAudioPlayer(data: mData)
+                try? AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
+            }
+            return Int(mPlayer!.duration * 1000)
+        } catch {
+            print("Error while fetching duration of audio. \(error)")
+            return -1
+        }
+    }
 }

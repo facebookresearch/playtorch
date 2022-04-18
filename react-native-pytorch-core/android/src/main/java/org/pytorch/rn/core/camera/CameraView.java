@@ -70,6 +70,7 @@ public class CameraView extends ConstraintLayout {
   private boolean mIsDirty = false;
   private boolean mIsDirtyForCameraRestart = false;
   private boolean mHideCaptureButton = false;
+  private boolean mHideFlipButton = false;
   private Size mTargetResolution = new Size(480, 640);
 
   private Camera mCamera;
@@ -214,7 +215,7 @@ public class CameraView extends ConstraintLayout {
     }
   }
 
-  private void flipCamera() {
+  protected void flipCamera() {
     if (mPreferredCameraSelector == CameraSelector.DEFAULT_BACK_CAMERA) {
       mPreferredCameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA;
     } else {
@@ -289,7 +290,6 @@ public class CameraView extends ConstraintLayout {
             preview,
             imageAnalysis,
             mImageCapture);
-    mCaptureButton.setVisibility(View.VISIBLE);
 
     preview.setSurfaceProvider(
         ContextCompat.getMainExecutor(mReactContext), mPreviewView.getSurfaceProvider());
@@ -308,6 +308,13 @@ public class CameraView extends ConstraintLayout {
   public void setHideCaptureButton(boolean hideCaptureButton) {
     if (mHideCaptureButton != hideCaptureButton) {
       mHideCaptureButton = hideCaptureButton;
+      mIsDirty = true;
+    }
+  }
+
+  public void setHideFlipButton(boolean hideFlipButton) {
+    if (mHideFlipButton != hideFlipButton) {
+      mHideFlipButton = hideFlipButton;
       mIsDirty = true;
     }
   }
@@ -336,6 +343,11 @@ public class CameraView extends ConstraintLayout {
     mCaptureButton.post(
         () -> {
           mCaptureButton.setVisibility(mHideCaptureButton ? View.INVISIBLE : View.VISIBLE);
+        });
+
+    mFlipButton.post(
+        () -> {
+          mFlipButton.setVisibility(mHideFlipButton ? View.INVISIBLE : View.VISIBLE);
         });
 
     if (mIsDirtyForCameraRestart) {

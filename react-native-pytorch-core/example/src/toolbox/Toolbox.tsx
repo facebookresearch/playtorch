@@ -49,6 +49,7 @@ import Wav2Vec2 from './models/Wav2Vec2';
 import FastNeuralStyle from './models/FastNeuralStyle';
 import MobileNetV3 from './models/MobileNetV3';
 import CameraTakePicture from './apiTest/camera/CameraTakePicture';
+import CameraFlip from './apiTest/camera/CameraFlip';
 import JSIPlayground from './JSIPlayground';
 import AudioExample from './apiTest/audio/AudioExample';
 import AudioSaveLoadExample from './apiTest/audio/AudioSaveLoadExample';
@@ -149,6 +150,13 @@ const tools: ToolSection = [
         subtitle: 'Manually calling takePicture API on camera',
         apiTest: true,
         component: CameraTakePicture,
+      },
+      {
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
+        title: 'Camera#flip',
+        subtitle: 'Manually calling flip API on camera',
+        apiTest: true,
+        component: CameraFlip,
       },
     ],
   },

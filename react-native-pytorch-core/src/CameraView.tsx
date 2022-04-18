@@ -70,6 +70,12 @@ export interface CameraProps extends ViewProps {
   hideCaptureButton?: boolean;
 
   /**
+   * Hides the flip button if set to `true`, otherwise the camera will show
+   * a flip button.
+   */
+  hideFlipButton?: boolean;
+
+  /**
    * Camera target resolution. It is not guaranteed that the camera runs at the
    * set target resolution, and it might pick the closest available resolution.
    *
@@ -203,6 +209,15 @@ export class Camera extends React.PureComponent<CameraProps> {
     }
   }
 
+  public flip(): void {
+    if (this.cameraRef.current) {
+      const flipCommandId =
+        UIManager.getViewManagerConfig(nativeCameraViewName).Commands.flip;
+      const cameraViewHandle = findNodeHandle(this.cameraRef.current);
+      UIManager.dispatchViewManagerCommand(cameraViewHandle, flipCommandId, []);
+    }
+  }
+
   private handleOnCapture = (event: any): void => {
     const {onCapture} = this.props;
     const {nativeEvent} = event;
@@ -226,6 +241,7 @@ export class Camera extends React.PureComponent<CameraProps> {
     const {
       facing,
       hideCaptureButton,
+      hideFlipButton,
       onFrame,
       targetResolution,
       ...otherProps
@@ -236,6 +252,7 @@ export class Camera extends React.PureComponent<CameraProps> {
         {...otherProps}
         facing={facing}
         hideCaptureButton={hideCaptureButton}
+        hideFlipButton={hideFlipButton}
         onCapture={this.handleOnCapture}
         onFrame={onFrame != null ? this.handleOnFrame : undefined}
         ref={this.cameraRef}

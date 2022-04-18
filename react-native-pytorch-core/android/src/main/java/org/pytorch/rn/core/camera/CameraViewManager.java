@@ -25,6 +25,7 @@ public class CameraViewManager extends SimpleViewManager<CameraView> {
   public static final String REACT_CLASS = "PyTorchCoreCameraView";
 
   public final int COMMAND_TAKE_PICTURE = 1;
+  public final int COMMAND_FLIP = 2;
 
   private final ReactApplicationContext mReactContext;
 
@@ -47,7 +48,9 @@ public class CameraViewManager extends SimpleViewManager<CameraView> {
   @Nullable
   @Override
   public Map<String, Integer> getCommandsMap() {
-    return MapBuilder.of("takePicture", COMMAND_TAKE_PICTURE);
+    return MapBuilder.of(
+        "takePicture", COMMAND_TAKE_PICTURE,
+        "flip", COMMAND_FLIP);
   }
 
   @Override
@@ -56,6 +59,9 @@ public class CameraViewManager extends SimpleViewManager<CameraView> {
     switch (commandId) {
       case COMMAND_TAKE_PICTURE:
         cameraView.takePicture();
+        break;
+      case COMMAND_FLIP:
+        cameraView.flipCamera();
         break;
     }
   }
@@ -67,6 +73,9 @@ public class CameraViewManager extends SimpleViewManager<CameraView> {
     switch (commandIdInt) {
       case COMMAND_TAKE_PICTURE:
         cameraView.takePicture();
+        break;
+      case COMMAND_FLIP:
+        cameraView.flipCamera();
         break;
     }
   }
@@ -88,6 +97,11 @@ public class CameraViewManager extends SimpleViewManager<CameraView> {
   @ReactProp(name = "hideCaptureButton")
   public void setCaptureButtonVisibility(CameraView view, boolean hideCaptureButton) {
     view.setHideCaptureButton(hideCaptureButton);
+  }
+
+  @ReactProp(name = "hideFlipButton")
+  public void setFlipButtonVisibility(CameraView view, boolean hideFlipButton) {
+    view.setHideFlipButton(hideFlipButton);
   }
 
   @ReactProp(name = "targetResolution")

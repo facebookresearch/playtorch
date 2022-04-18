@@ -14,85 +14,41 @@ namespace torch {
 
 using namespace facebook;
 
-// IValueHostObject Method Name
-static const std::string TO_GENERIC_DICT = "toGenericDict";
-static const std::string TO_TENSOR = "toTensor";
-static const std::string TO_TUPLE = "toTuple";
+namespace {
 
-// IValueHostObject Methods
-const std::vector<std::string> METHODS = {TO_GENERIC_DICT, TO_TENSOR};
+jsi::Value toGenericDictImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  // c10::Dict<IValue, IValue>
+  auto thiz =
+      thisValue.asObject(runtime).asHostObject<IValueHostObject>(runtime);
+  auto dict = thiz->value.toGenericDict();
+  auto dictHostObject =
+      std::make_shared<torchlive::torch::DictHostObject>(dict);
+  return jsi::Object::createFromHostObject(runtime, std::move(dictHostObject));
+};
 
-// IValueHostObject Property Names
-// empty
-
-// IValueHostObject Properties
-static const std::vector<std::string> PROPERTIES = {};
+jsi::Value toTensorImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto thiz =
+      thisValue.asObject(runtime).asHostObject<IValueHostObject>(runtime);
+  auto tensor = thiz->value.toTensor();
+  auto tensorHostObject = std::make_shared<torchlive::torch::TensorHostObject>(
+      runtime, std::move(tensor));
+  return jsi::Object::createFromHostObject(
+      runtime, std::move(tensorHostObject));
+}
+} // namespace
 
 IValueHostObject::IValueHostObject(jsi::Runtime& runtime, at::IValue v)
-    : toGenericDict_(createToGenericDict(runtime)),
-      toTensor_(createToTensor(runtime)),
-      value_(v) {}
-
-std::vector<jsi::PropNameID> IValueHostObject::getPropertyNames(
-    jsi::Runtime& rt) {
-  std::vector<jsi::PropNameID> result;
-  for (std::string property : PROPERTIES) {
-    result.push_back(jsi::PropNameID::forUtf8(rt, property));
-  }
-  for (std::string method : METHODS) {
-    result.push_back(jsi::PropNameID::forUtf8(rt, method));
-  }
-  return result;
-}
-
-jsi::Value IValueHostObject::get(
-    jsi::Runtime& runtime,
-    const jsi::PropNameID& propNameId) {
-  auto name = propNameId.utf8(runtime);
-
-  if (name == TO_GENERIC_DICT) {
-    return jsi::Value(runtime, toGenericDict_);
-  } else if (name == TO_TENSOR) {
-    return jsi::Value(runtime, toTensor_);
-  } else if (name == TO_TUPLE) {
-    throw jsi::JSError(runtime, "IValue.toTuple not implemented");
-  }
-
-  return jsi::Value::undefined();
-}
-
-jsi::Function IValueHostObject::createToGenericDict(jsi::Runtime& runtime) {
-  auto toGenericDictFunc = [this](
-                               jsi::Runtime& runtime,
-                               const jsi::Value& thisValue,
-                               const jsi::Value* arguments,
-                               size_t count) -> jsi::Value {
-    // c10::Dict<IValue, IValue>
-    auto dict = this->value_.toGenericDict();
-    auto dictHostObject =
-        std::make_shared<torchlive::torch::DictHostObject>(dict);
-    return jsi::Object::createFromHostObject(runtime, dictHostObject);
-  };
-  return jsi::Function::createFromHostFunction(
-      runtime,
-      jsi::PropNameID::forUtf8(runtime, TO_GENERIC_DICT),
-      0,
-      toGenericDictFunc);
-}
-
-jsi::Function IValueHostObject::createToTensor(jsi::Runtime& runtime) {
-  auto toTensorFunc = [this](
-                          jsi::Runtime& runtime,
-                          const jsi::Value& thisValue,
-                          const jsi::Value* arguments,
-                          size_t count) -> jsi::Value {
-    auto tensor = this->value_.toTensor();
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, TO_TENSOR), 0, toTensorFunc);
+    : BaseHostObject(runtime), value(std::move(v)) {
+  setPropertyHostFunction(runtime, "toGenericDict", 0, toGenericDictImpl);
+  setPropertyHostFunction(runtime, "toTensor", 0, toTensorImpl);
 }
 
 } // namespace torch

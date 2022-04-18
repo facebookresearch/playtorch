@@ -10,27 +10,16 @@
 #include <jsi/jsi.h>
 
 #include <torch/script.h>
+#include "../common/BaseHostObject.h"
 
 namespace torchlive {
 namespace torch {
 
-class JSI_EXPORT IValueHostObject : public facebook::jsi::HostObject {
-  facebook::jsi::Function toGenericDict_;
-  facebook::jsi::Function toTensor_;
-
+class JSI_EXPORT IValueHostObject : public common::BaseHostObject {
  public:
   explicit IValueHostObject(facebook::jsi::Runtime& runtime, at::IValue v);
 
-  facebook::jsi::Value get(
-      facebook::jsi::Runtime&,
-      const facebook::jsi::PropNameID& name) override;
-  std::vector<facebook::jsi::PropNameID> getPropertyNames(
-      facebook::jsi::Runtime& rt) override;
-
- private:
-  at::IValue value_;
-  facebook::jsi::Function createToGenericDict(facebook::jsi::Runtime& runtime);
-  facebook::jsi::Function createToTensor(facebook::jsi::Runtime& runtime);
+  at::IValue value;
 };
 
 } // namespace torch

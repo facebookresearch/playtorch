@@ -15,8 +15,8 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
 
     private let captureButtonSize = 75.0
     private let captureButtonMargin = 16.0
-    private let switchCameraButtonSize = 36.0
-    private let switchCameraButtonMargin = 30.0
+    private let flipCameraButtonSize = 36.0
+    private let flipCameraButtonMargin = 30.0
     private let photoOutput = AVCapturePhotoOutput()
     private var videoOutput: AVCaptureVideoDataOutput!
     private var captureSession: AVCaptureSession!
@@ -29,14 +29,15 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
     @objc public var onCapture: RCTDirectEventBlock?
     @objc public var onFrame: RCTDirectEventBlock?
     @objc public var hideCaptureButton: Bool = false
+    @objc public var hideFlipButton: Bool = false
     @objc public var targetResolution: NSDictionary = [ "width": 480, "height": 640]
     var captureButton: CaptureButton?
-    var switchCameraButton: UIButton?
+    var flipCameraButton: UIButton?
     var backCameraOn = true
 
     public func openCamera() {
         setupCaptureButton()
-        setupSwitchCameraButton()
+        setupFlipCameraButton()
         switch AVCaptureDevice.authorizationStatus(for: .video) {
         case .authorized:
             self.setupCaptureSession()
@@ -61,29 +62,49 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
 
     override func didSetProps(_ changedProps: [String]!) {
         captureButton?.isHidden = hideCaptureButton
+        flipCameraButton?.isHidden = hideFlipButton
         if changedProps.contains("targetResolution") { setSessionPreset() }
     }
 
     override func layoutSubviews() {
         let height = self.bounds.height
         let width = self.bounds.width
+
         cameraLayer?.frame = CGRect(x: 0, y: 0, width: width, height: height)
-        captureButton?.frame = CGRect(x: Double(width)/2.0 - captureButtonSize/2.0, y: Double(height) - captureButtonSize - captureButtonMargin, width: captureButtonSize, height: captureButtonSize)
-        switchCameraButton?.frame = CGRect(x: Double(width) - switchCameraButtonMargin - switchCameraButtonSize, y: Double(self.bounds.height) - captureButtonMargin - (captureButtonSize - switchCameraButtonSize) / 2.0 - switchCameraButtonSize, width: switchCameraButtonSize, height: switchCameraButtonSize)
+
+        let captureButtonX = Double(width) / 2.0 - captureButtonSize / 2.0
+        let captureButtonY = Double(height) - captureButtonSize - captureButtonMargin
+
+        captureButton?.frame = CGRect(x: captureButtonX,
+                                      y: captureButtonY,
+                                      width: captureButtonSize,
+                                      height: captureButtonSize)
+
+        let flipCameraButtonX = Double(width) - flipCameraButtonMargin - flipCameraButtonSize
+        let flipCameraButtonY = Double(height) -
+            captureButtonMargin -
+            (captureButtonSize - flipCameraButtonSize) / 2.0 -
+            flipCameraButtonSize
+
+        flipCameraButton?.frame = CGRect(x: flipCameraButtonX,
+                                         y: flipCameraButtonY,
+                                         width: flipCameraButtonSize,
+                                         height: flipCameraButtonSize)
         captureButton?.isHidden = hideCaptureButton
+        flipCameraButton?.isHidden = hideFlipButton
     }
 
     func setSessionPreset() {
         if let captureSession = captureSession,
            let width = (targetResolution["width"] as? NSNumber)?.intValue,
            let height = (targetResolution["height"] as? NSNumber)?.intValue {
-            if (width <= 288 && height <= 352) {
+            if width <= 288 && height <= 352 {
                 captureSession.sessionPreset = .cif352x288
-            } else if (width <= 480 && height <= 640) {
+            } else if width <= 480 && height <= 640 {
                 captureSession.sessionPreset = .vga640x480
-            } else if (width <= 720 && height <= 1280) {
+            } else if width <= 720 && height <= 1280 {
                 captureSession.sessionPreset = .hd1280x720
-            } else if (width <= 1080 && height <= 1920) {
+            } else if width <= 1080 && height <= 1920 {
                 captureSession.sessionPreset = .hd1920x1080
             } else {
                 captureSession.sessionPreset = .hd4K3840x2160
@@ -92,7 +113,10 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
     }
 
     func setupCaptureButton() {
-        captureButton = CaptureButton(frame: CGRect(x: Double(self.bounds.width)/2.0 - captureButtonSize/2.0, y: Double(self.bounds.height) - captureButtonSize - captureButtonMargin, width: captureButtonSize, height: captureButtonSize))
+        let xPos = Double(self.bounds.width) / 2.0 - captureButtonSize / 2.0
+        let yPos = Double(self.bounds.height) - captureButtonSize - captureButtonMargin
+        let frame = CGRect(x: xPos, y: yPos, width: captureButtonSize, height: captureButtonSize)
+        captureButton = CaptureButton(frame: frame)
         captureButton?.isHidden = hideCaptureButton
         captureButton?.addTarget(self, action: #selector(captureImage), for: .touchDown)
         if let captureButton = captureButton {
@@ -100,25 +124,35 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
         }
     }
 
-    func setupSwitchCameraButton() {
-        if let _ = switchCameraButton?.superview {
-            switchCameraButton?.removeFromSuperview()
+    func setupFlipCameraButton() {
+        if flipCameraButton?.superview != nil {
+            flipCameraButton?.removeFromSuperview()
         }
 
-        switchCameraButton = UIButton()
-        switchCameraButton?.tintColor = UIColor.white
-        switchCameraButton?.frame = CGRect(x: Double(self.bounds.width) - switchCameraButtonMargin, y: Double(self.bounds.height) - captureButtonMargin - (captureButtonSize - switchCameraButtonSize) / 2.0 - switchCameraButtonSize, width: switchCameraButtonSize, height: switchCameraButtonSize)
-        switchCameraButton?.addTarget(self, action: #selector(switchCameraInput), for: .touchDown)
+        let xPos = Double(self.bounds.width) - flipCameraButtonMargin
+        let yPos = Double(self.bounds.height) -
+            captureButtonMargin -
+            (captureButtonSize - flipCameraButtonSize) / 2.0 -
+            flipCameraButtonSize
+
+        flipCameraButton = UIButton()
+        flipCameraButton?.tintColor = UIColor.white
+        flipCameraButton?.frame = CGRect(x: xPos,
+                                         y: yPos,
+                                         width: flipCameraButtonSize,
+                                         height: flipCameraButtonSize)
+        flipCameraButton?.isHidden = hideFlipButton
+        flipCameraButton?.addTarget(self, action: #selector(flipCamera), for: .touchDown)
 
         let bundle = Bundle(for: CameraView.self)
         if let url = bundle.url(forResource: "PyTorchCore", withExtension: "bundle") {
             let coreBundle = Bundle(url: url)
             let flipCameraImage = UIImage(named: "FlipCamera", in: coreBundle, compatibleWith: nil)
-            switchCameraButton?.setImage(flipCameraImage, for: .normal)
+            flipCameraButton?.setImage(flipCameraImage, for: .normal)
         }
 
-        if let switchCameraButton = switchCameraButton {
-            self.addSubview(switchCameraButton)
+        if let flipCameraButton = flipCameraButton {
+            self.addSubview(flipCameraButton)
         }
     }
 
@@ -202,8 +236,8 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
         self.addSubview(label)
     }
 
-    @objc func switchCameraInput() {
-        switchCameraButton?.isUserInteractionEnabled = false
+    @objc func flipCamera() {
+        flipCameraButton?.isUserInteractionEnabled = false
         captureSession.beginConfiguration()
         if backCameraOn {
             captureSession.removeInput(backInput)
@@ -216,7 +250,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
         }
         videoOutput.connection(with: AVMediaType.video)?.videoOrientation = .portrait
         captureSession.commitConfiguration()
-        switchCameraButton?.isUserInteractionEnabled = true
+        flipCameraButton?.isUserInteractionEnabled = true
     }
 
     @objc func captureImage() {

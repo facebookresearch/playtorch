@@ -12,6 +12,8 @@
 RCT_EXPORT_VIEW_PROPERTY(onCapture, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(onFrame, RCTDirectEventBlock)
 RCT_EXPORT_VIEW_PROPERTY(hideCaptureButton, BOOL)
+RCT_EXPORT_VIEW_PROPERTY(hideFlipButton, BOOL)
 RCT_EXPORT_VIEW_PROPERTY(targetResolution, NSDictionary)
 RCT_EXTERN_METHOD(takePicture:(nonnull NSNumber *)reactTag)
+RCT_EXTERN_METHOD(flip:(nonnull NSNumber *)reactTag)
 @end

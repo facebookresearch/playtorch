@@ -17,9 +17,20 @@ class CameraManager: RCTViewManager {
   }
 
   @objc func takePicture(_ reactTag: NSNumber) {
-    self.bridge!.uiManager.addUIBlock { (uiManager: RCTUIManager?, viewRegistry:[NSNumber : UIView]?) in
-      let view: CameraView = viewRegistry![reactTag] as! CameraView;
-      view.captureImage();
+    self.bridge!.uiManager.addUIBlock { (_: RCTUIManager?, viewRegistry: [NSNumber: UIView]?) in
+      guard let view: CameraView = viewRegistry?[reactTag] as? CameraView else {
+          return
+      }
+      view.captureImage()
+    }
+  }
+
+  @objc func flip(_ reactTag: NSNumber) {
+    self.bridge!.uiManager.addUIBlock { (_: RCTUIManager?, viewRegistry: [NSNumber: UIView]?) in
+      guard let view: CameraView = viewRegistry?[reactTag] as? CameraView else {
+          return
+      }
+      view.flipCamera()
     }
   }
 }

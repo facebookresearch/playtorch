@@ -47,6 +47,20 @@ export default function App() {
 
 ## Methods
 
+### flip
+
+▸ **flip**(): `void`
+
+#### Returns
+
+`void`
+
+#### Defined in
+
+[CameraView.tsx:212](https://github.com/pytorch/live/blob/f064709/react-native-pytorch-core/src/CameraView.tsx#L212)
+
+___
+
 ### takePicture
 
 ▸ **takePicture**(): `void`
@@ -93,4 +107,4 @@ export default function CameraTakePicture() {
 
 #### Defined in
 
-[CameraView.tsx:192](https://github.com/pytorch/live/blob/32554ae/react-native-pytorch-core/src/CameraView.tsx#L192)
+[CameraView.tsx:198](https://github.com/pytorch/live/blob/f064709/react-native-pytorch-core/src/CameraView.tsx#L198)

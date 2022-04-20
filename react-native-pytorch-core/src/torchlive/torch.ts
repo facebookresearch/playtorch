@@ -363,7 +363,7 @@ export interface Torch {
    * @param data Tensor data as multi-dimensional array.
    * @param options Tensor options.
    */
-  tensor(data: ItemArray, options?: TensorOptions): Tensor;
+  tensor(data: ItemArray | number, options?: TensorOptions): Tensor;
 
   /**
    * JIT module

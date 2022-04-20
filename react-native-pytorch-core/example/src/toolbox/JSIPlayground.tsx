@@ -191,6 +191,12 @@ export default function JSIPlayground() {
     console.log(tensor5.toString());
     console.log(tensor5.dtype);
 
+    tensor5 = torch.tensor(1, {dtype: torch.int});
+    console.log(tensor5.shape);
+    console.log(tensor5.data);
+    console.log(tensor5.toString());
+    console.log(tensor5.dtype);
+
     console.log('---Test tensor.div---');
     let divTensor = torch.arange(1, 10);
     console.log(divTensor.toString());

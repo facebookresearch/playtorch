@@ -196,6 +196,23 @@ jsi::Value clampImp(
       runtime, std::move(tensorHostObject));
 }
 
+jsi::Value itemImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto thiz =
+      thisValue.asObject(runtime).asHostObject<TensorHostObject>(runtime);
+  auto scalar = thiz->tensor.item();
+  if (scalar.isIntegral(/*includeBool=*/false)) {
+    return jsi::Value(scalar.toInt());
+  } else if (scalar.isFloatingPoint()) {
+    return jsi::Value(scalar.toDouble());
+  } else {
+    throw jsi::JSError(runtime, "unsupported dtype for item().");
+  }
+}
+
 } // namespace
 
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
@@ -215,6 +232,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "abs", 0, absImpl);
   setPropertyHostFunction(runtime, "add", 1, addImpl);
   setPropertyHostFunction(runtime, "clamp", 1, clampImp);
+  setPropertyHostFunction(runtime, "item", 0, itemImpl);
   setPropertyHostFunction(runtime, "to", 1, toImpl);
 }
 

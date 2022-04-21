@@ -163,6 +163,13 @@ export interface Tensor extends IValue {
    */
   dtype: string;
   /**
+   * Returns the value of this tensor as a standard Python number. This only works for tensors with one element.
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.item.html}
+   *
+   */
+  item(): number;
+  /**
    * Multiplies input by other scalar or tensor.
    *
    * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.mul.html}

@@ -508,4 +508,35 @@ TEST_F(TorchliveTensorRuntimeTest, TorchClampTest) {
   EXPECT_TRUE(eval(tensorClampWithMaxTensor.c_str()).getBool());
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorItemTest) {
+  std::string tensorItemForZeroDimTensorInteger = R"(
+    const tensor = torch.tensor(1);
+    tensor.item() === 1;
+  )";
+  EXPECT_TRUE(eval(tensorItemForZeroDimTensorInteger.c_str()).getBool());
+  std::string tensorItemForSingleElementTensorInteger = R"(
+    const tensor = torch.tensor([[1]]);
+    tensor.item() === 1;
+  )";
+  EXPECT_TRUE(eval(tensorItemForSingleElementTensorInteger.c_str()).getBool());
+
+  std::string tensorItemForSingleElementTensorFloat = R"(
+    const tensor = torch.tensor([[1.5]]);
+    tensor.item() === 1.5;
+  )";
+  EXPECT_TRUE(eval(tensorItemForSingleElementTensorFloat.c_str()).getBool());
+
+  std::string tensorItemForMultiElementTensor = R"(
+    const tensor = torch.tensor([[1.5, 2.5]]);
+    tensor.item();
+  )";
+  EXPECT_THROW(eval(tensorItemForMultiElementTensor), facebook::jsi::JSError);
+
+  std::string tensorItemForMultiElementTensorInvalidType = R"(
+    const tensor = torch.tensor([[true]]);
+    tensor.item();
+  )";
+  EXPECT_THROW(eval(tensorItemForMultiElementTensor), facebook::jsi::JSError);
+}
+
 } // namespace

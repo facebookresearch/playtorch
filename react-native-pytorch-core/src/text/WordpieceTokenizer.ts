@@ -7,9 +7,12 @@
  * @format
  */
 
+import {BasicTokenizer} from './BasicTokenizer';
+
 export type WordPieceTokenizerConfig = {
   vocab: string;
   unknownToken?: string;
+  neverSplit?: string[];
   lowercase?: boolean;
 };
 
@@ -18,7 +21,9 @@ export class WordPieceTokenizer {
   private idTokenMap = new Map<number, string>();
   private unknownToken: string;
   private unknownTokenId: number = -1;
+  private neverSplit: string[];
   private lowercase: boolean;
+  private basicTokenizer: BasicTokenizer;
 
   /**
    * Construct a tokenizer with a WordPieceTokenizer object.
@@ -28,11 +33,17 @@ export class WordPieceTokenizer {
   constructor({
     vocab,
     unknownToken = '[UNK]',
+    neverSplit = ['[UNK]', '[SEP]', '[PAD]', '[CLS]', '[MASK]'],
     lowercase = true,
   }: WordPieceTokenizerConfig) {
     this.unknownToken = unknownToken;
     this.loadVocabFromString(vocab);
     this.lowercase = lowercase;
+    this.neverSplit = [...neverSplit];
+    this.basicTokenizer = new BasicTokenizer({
+      neverSplit: this.neverSplit,
+      lowercase: this.lowercase,
+    });
   }
 
   private loadVocabFromString(vocab: string): void {
@@ -115,10 +126,11 @@ export class WordPieceTokenizer {
   /**
    * Encode the raw input to a NLP model to an array of number, which is tensorizable.
    *
-   * @param text the raw input of the model
-   * @returns an array of number, which can then be used to create a tensor as model input with the torch.tensor API
+   * @param text The raw input of the model
+   * @returns An array of number, which can then be used to create a tensor as model input with the torch.tensor API
    */
   public encode(text: string): number[] {
+    text = this.basicTokenizer.tokenize(text).join(' ');
     return this.tokenize(text).map(token => this.tokenToId(token));
   }
 
@@ -130,6 +142,6 @@ export class WordPieceTokenizer {
    */
   public decode(tokenIds: number[]): string {
     const texts: string[] = tokenIds.map(tokenId => this.idToToken(tokenId));
-    return texts.join(' ').replaceAll(/\s?##/g, '');
+    return texts.join(' ').replace(/\s?##/g, '');
   }
 }

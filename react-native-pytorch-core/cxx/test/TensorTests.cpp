@@ -92,6 +92,16 @@ TEST_F(TorchliveTensorRuntimeTest, TensorArgmaxTest) {
         )";
   EXPECT_TRUE(eval(tensorArgmaxReturnIndexOnFlattenArray.c_str()).getBool());
 
+  std::string tensorArgmaxWithDimOption =
+      R"(
+      const tensor = torch.tensor([[[1,2,3], [4,5,6]], [[7, 8, 9], [10, 11, 12]]]);
+      const result = tensor.argmax({dim: 0});
+      const expectedShape = [2, 3];
+      expectedData = [1, 1, 1, 1, 1, 1];
+      result.shape.length == expectedShape.length && result.shape.every((v, i) => v == expectedShape[i]) && result.data.every((v, i) => v == expectedData[i]);
+    )";
+  EXPECT_TRUE(eval(tensorArgmaxWithDimOption.c_str()).getBool());
+
   std::string tensorArgmaxWtihNonEmptyTensor =
       R"(
           const tensor = torch.tensor([]);
@@ -99,6 +109,14 @@ TEST_F(TorchliveTensorRuntimeTest, TensorArgmaxTest) {
         )";
   EXPECT_THROW(
       eval(tensorArgmaxWtihNonEmptyTensor.c_str()), facebook::jsi::JSError);
+
+  std::string tensorArgmaxWtihDimOptionNotExistd =
+      R"(
+          const tensor = torch.tensor([[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]]);
+          tensor.argmax({dim: 5});
+        )";
+  EXPECT_THROW(
+      eval(tensorArgmaxWtihDimOptionNotExistd.c_str()), facebook::jsi::JSError);
 }
 
 TEST_F(TorchliveTensorRuntimeTest, TensorDataTest) {

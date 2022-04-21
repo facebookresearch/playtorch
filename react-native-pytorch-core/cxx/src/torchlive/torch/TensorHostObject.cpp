@@ -93,10 +93,16 @@ jsi::Value argmaxImpl(
   utils::ArgumentParser args(runtime, thisValue, arguments, count);
   auto thiz = args.thisAsHostObject<TensorHostObject>();
 
+  auto dimValue = args.keywordValue(0, "dim");
+  c10::optional<int64_t> dim = c10::nullopt;
+  if (!dimValue.isUndefined()) {
+    dim = dimValue.asNumber();
+  }
+
   // transform the tensor to dtype of Int32 because Hermes doesn't support
   // BigInt yet.
-  auto maxIdx =
-      thiz->tensor.argmax().to(torch_::TensorOptions().dtype(torch_::kInt32));
+  auto maxIdx = thiz->tensor.argmax(dim).to(
+      torch_::TensorOptions().dtype(torch_::kInt32));
   auto tensorHostObject =
       std::make_shared<TensorHostObject>(runtime, std::move(maxIdx));
   return jsi::Object::createFromHostObject(

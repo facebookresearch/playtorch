@@ -23,7 +23,7 @@ Construct a tokenizer with a WordPieceTokenizer object.
 
 #### Defined in
 
-[text/WordpieceTokenizer.ts:21](https://github.com/pytorch/live/blob/a0d6a87/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L21)
+[text/WordpieceTokenizer.ts:26](https://github.com/pytorch/live/blob/0d3e16a/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L26)
 
 ## Methods
 
@@ -47,7 +47,7 @@ a string decoded from the output of the model
 
 #### Defined in
 
-[text/WordpieceTokenizer.ts:131](https://github.com/pytorch/live/blob/a0d6a87/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L131)
+[text/WordpieceTokenizer.ts:143](https://github.com/pytorch/live/blob/0d3e16a/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L143)
 
 ___
 
@@ -61,17 +61,17 @@ Encode the raw input to a NLP model to an array of number, which is tensorizable
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `text` | `string` | the raw input of the model |
+| `text` | `string` | The raw input of the model |
 
 #### Returns
 
 `number`[]
 
-an array of number, which can then be used to create a tensor as model input with the torch.tensor API
+An array of number, which can then be used to create a tensor as model input with the torch.tensor API
 
 #### Defined in
 
-[text/WordpieceTokenizer.ts:121](https://github.com/pytorch/live/blob/a0d6a87/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L121)
+[text/WordpieceTokenizer.ts:132](https://github.com/pytorch/live/blob/0d3e16a/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L132)
 
 ___
 
@@ -96,4 +96,4 @@ an array of tokens in vocabulary representing the input text.
 
 #### Defined in
 
-[text/WordpieceTokenizer.ts:60](https://github.com/pytorch/live/blob/a0d6a87/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L60)
+[text/WordpieceTokenizer.ts:71](https://github.com/pytorch/live/blob/0d3e16a/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L71)

@@ -18,6 +18,7 @@ custom_edit_url: null
 - [audio/AudioModule](modules/audio_audiomodule.md)
 - [expo-plugin/withPyTorchCore](modules/expo_plugin_withpytorchcore.md)
 - [text](modules/text.md)
+- [text/BasicTokenizer](modules/text_basictokenizer.md)
 - [text/WordpieceTokenizer](modules/text_wordpiecetokenizer.md)
 - [torchlive/media](modules/torchlive_media.md)
 - [torchlive/torch](modules/torchlive_torch.md)

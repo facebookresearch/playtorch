@@ -19,7 +19,6 @@ namespace torchlive {
 namespace torch {
 
 // TensorHostObject Method Names
-static const std::string ARGMAX = "argmax";
 static const std::string DIV = "div";
 static const std::string MUL = "mul";
 static const std::string PERMUTE = "permute";
@@ -40,18 +39,8 @@ static const std::string SHAPE = "shape";
 static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
 
 // TensorHostObject Methods
-static const std::vector<std::string> METHODS = {
-    ARGMAX,
-    DIV,
-    MUL,
-    PERMUTE,
-    SIZE,
-    SOFTMAX,
-    SQUEEZE,
-    SUB,
-    TOPK,
-    TOSTRING,
-    UNSQUEEZE};
+static const std::vector<std::string> METHODS =
+    {DIV, MUL, PERMUTE, SIZE, SOFTMAX, SQUEEZE, SUB, TOPK, TOSTRING, UNSQUEEZE};
 
 using namespace facebook;
 
@@ -77,6 +66,7 @@ jsi::Value addImpl(
   utils::ArgumentParser args(runtime, thisValue, arguments, count);
   args.requireNumArguments(1);
   auto thiz = args.thisAsHostObject<TensorHostObject>();
+
   auto alphaValue = args.keywordValue(1, "alpha");
   auto alphaScalar = alphaValue.isUndefined()
       ? at::Scalar(1)
@@ -94,6 +84,24 @@ jsi::Value addImpl(
       std::make_shared<TensorHostObject>(runtime, std::move(result));
   return jsi::Object::createFromHostObject(runtime, tensorHostObject);
 }
+
+jsi::Value argmaxImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  auto thiz = args.thisAsHostObject<TensorHostObject>();
+
+  // transform the tensor to dtype of Int32 because Hermes doesn't support
+  // BigInt yet.
+  auto maxIdx =
+      thiz->tensor.argmax().to(torch_::TensorOptions().dtype(torch_::kInt32));
+  auto tensorHostObject =
+      std::make_shared<TensorHostObject>(runtime, std::move(maxIdx));
+  return jsi::Object::createFromHostObject(
+      runtime, std::move(tensorHostObject));
+};
 
 jsi::Value toImpl(
     jsi::Runtime& runtime,
@@ -217,7 +225,6 @@ jsi::Value itemImpl(
 
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
     : BaseHostObject(runtime),
-      argmax_(createArgmax(runtime)),
       div_(createDiv(runtime)),
       mul_(createMul(runtime)),
       permute_(createPermute(runtime)),
@@ -231,6 +238,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
       tensor(t) {
   setPropertyHostFunction(runtime, "abs", 0, absImpl);
   setPropertyHostFunction(runtime, "add", 1, addImpl);
+  setPropertyHostFunction(runtime, "argmax", 0, argmaxImpl);
   setPropertyHostFunction(runtime, "clamp", 1, clampImp);
   setPropertyHostFunction(runtime, "item", 0, itemImpl);
   setPropertyHostFunction(runtime, "to", 1, toImpl);
@@ -255,9 +263,7 @@ jsi::Value TensorHostObject::get(
     const jsi::PropNameID& propNameId) {
   auto name = propNameId.utf8(runtime);
 
-  if (name == ARGMAX) {
-    return jsi::Value(runtime, argmax_);
-  } else if (name == DATA) {
+  if (name == DATA) {
     auto tensor = this->tensor;
     int byteLength = tensor.nbytes();
     auto type = tensor.dtype();
@@ -346,21 +352,6 @@ jsi::Value TensorHostObject::get(
   }
 
   return BaseHostObject::get(runtime, propNameId);
-}
-
-jsi::Function TensorHostObject::createArgmax(jsi::Runtime& runtime) {
-  auto argmaxImpl = [this](
-                        jsi::Runtime& runtime,
-                        const jsi::Value& thisValue,
-                        const jsi::Value* arguments,
-                        size_t count) {
-    auto tensor = this->tensor;
-    auto max = tensor.argmax();
-    return jsi::Value(max.item<int>());
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, ARGMAX), 0, argmaxImpl);
 }
 
 jsi::Function TensorHostObject::createToString(jsi::Runtime& runtime) {

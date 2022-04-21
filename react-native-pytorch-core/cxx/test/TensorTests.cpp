@@ -75,6 +75,32 @@ TEST_F(TorchliveTensorRuntimeTest, TensorAddTest) {
       eval(tensorAddCodeWithInvalidAlpha.c_str()), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorArgmaxTest) {
+  std::string tensorArgmaxWithMultipleMaxValue =
+      R"(
+          const tensor = torch.tensor([[5, 1, 4, 1, 5]]);
+          const result = tensor.argmax();
+          result.item() === 0;
+        )";
+  EXPECT_TRUE(eval(tensorArgmaxWithMultipleMaxValue.c_str()).getBool());
+
+  std::string tensorArgmaxReturnIndexOnFlattenArray =
+      R"(
+          const tensor = torch.tensor([[3, 1, 4, 1, 5], [9, 2, 6, 5, 2]]);
+          const result = tensor.argmax();
+          result.item() === 5;
+        )";
+  EXPECT_TRUE(eval(tensorArgmaxReturnIndexOnFlattenArray.c_str()).getBool());
+
+  std::string tensorArgmaxWtihNonEmptyTensor =
+      R"(
+          const tensor = torch.tensor([]);
+          tensor.argmax();
+        )";
+  EXPECT_THROW(
+      eval(tensorArgmaxWtihNonEmptyTensor.c_str()), facebook::jsi::JSError);
+}
+
 TEST_F(TorchliveTensorRuntimeTest, TensorDataTest) {
   std::string tensorWithDtypeAsUint8 =
       R"(

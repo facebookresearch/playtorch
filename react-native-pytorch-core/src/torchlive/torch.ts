@@ -121,8 +121,12 @@ export interface Tensor extends IValue {
    * tensor.
    *
    * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.argmax.html}
+   *
+   * @param options argmax Options as keywords argument in pytorch
+   * @param options.dim The dimension to reduce. If `undefined`, the argmax of the flattened input is returned.
+   * @param options.keepdim Whether the output tensor has `dim` retained or not. Ignored if `dim` is `undefined`.
    */
-  argmax(): number;
+  argmax(options?: {dim?: number; keepdim?: boolean}): Tensor;
   /**
    * Returns the tensor data as [[TypedArray]] buffer.
    *

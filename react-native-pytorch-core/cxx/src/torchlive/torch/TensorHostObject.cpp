@@ -102,7 +102,7 @@ jsi::Value argmaxImpl(
   auto keepdimValue = args.keywordValue(0, "keepdim");
   bool keepdim = false;
   if (!keepdimValue.isUndefined()) {
-    keepdim = keepdimValue.asBool();
+    keepdim = keepdimValue.getBool();
   }
 
   // transform the tensor to dtype of Int32 because Hermes doesn't support

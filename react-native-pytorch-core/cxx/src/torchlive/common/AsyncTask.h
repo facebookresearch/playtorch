@@ -118,9 +118,10 @@ AsyncTask<TSetupResultType, TWorkResultType>::createPromiseFunction(
         error = true;
 
         // Report the error on the JavaScript thread.
-        runtimeExecutor([=](facebook::jsi::Runtime& executorRuntime) {
-          promise->reject(e.what());
-        });
+        runtimeExecutor(
+            [=, m = e.what()](facebook::jsi::Runtime& executorRuntime) {
+              promise->reject(m);
+            });
       }
 
       if (!error) {

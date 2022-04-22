@@ -24,14 +24,10 @@ static const std::vector<std::string> PROPERTIES = {};
 // BlobHostObject Methods
 const std::vector<std::string> METHODS = {ARRAY_BUFFER};
 
-BlobHostObject::BlobHostObject(jsi::Runtime& runtime, torchlive::media::Blob b)
-    : arrayBuffer_(createArrayBuffer(runtime)), blob(b) {}
-
-BlobHostObject::~BlobHostObject() {
-#ifdef __APPLE__
-  delete this->blob.getDirectBytes();
-#endif
-}
+BlobHostObject::BlobHostObject(
+    jsi::Runtime& runtime,
+    std::unique_ptr<torchlive::media::Blob>&& b)
+    : arrayBuffer_(createArrayBuffer(runtime)), blob(std::move(b)) {}
 
 std::vector<jsi::PropNameID> BlobHostObject::getPropertyNames(
     jsi::Runtime& runtime) {
@@ -60,15 +56,15 @@ jsi::Function BlobHostObject::createArrayBuffer(jsi::Runtime& runtime) {
                              jsi::Runtime& runtime,
                              const jsi::Value& thisValue,
                              const jsi::Value* arguments,
-                             size_t count) {
-    auto blob = this->blob;
-    const uint8_t* buffer = blob.getDirectBytes();
-    int size = (int)blob.getDirectSize();
+                             size_t count) -> jsi::Value {
+    auto blob = this->blob.get();
+    auto buffer = blob->getDirectBytes();
+    auto size = blob->getDirectSize();
 
     jsi::ArrayBuffer arrayBuffer =
         runtime.global()
             .getPropertyAsFunction(runtime, "ArrayBuffer")
-            .callAsConstructor(runtime, size)
+            .callAsConstructor(runtime, (int)size)
             .asObject(runtime)
             .getArrayBuffer(runtime);
 

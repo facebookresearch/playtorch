@@ -25,17 +25,19 @@ alias_ref<JClass> getJBlobUtilsClass() {
   return JBlobUtilsClass;
 }
 
-torchlive::media::Blob toBlob(const std::string& refId) {
+std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
   auto blobUtilsClass = getJBlobUtilsClass();
   static const auto nativeJSRefToByteBufferMethod =
       blobUtilsClass->getStaticMethod<local_ref<JByteBuffer>(std::string)>(
           "nativeJSRefToByteBuffer");
   local_ref<JByteBuffer> buffer =
       nativeJSRefToByteBufferMethod(blobUtilsClass, refId);
+
   uint8_t* const bytes = buffer->getDirectBytes();
   size_t const size = buffer->getDirectSize();
-  torchlive::media::Blob blob(bytes, size);
-  return blob;
+  auto data = std::make_unique<uint8_t[]>(size);
+  std::memcpy(data.get(), bytes, size);
+  return std::make_unique<torchlive::media::Blob>(std::move(data), size);
 }
 
 } // namespace media

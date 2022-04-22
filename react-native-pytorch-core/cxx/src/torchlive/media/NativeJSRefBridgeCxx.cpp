@@ -14,9 +14,10 @@
 namespace torchlive {
 namespace media {
 
-torchlive::media::Blob toBlob(const std::string& refId) {
-  torchlive::media::Blob blob(new uint8_t[0], 0);
-  return blob;
+std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
+  size_t const size = 0;
+  auto data = std::unique_ptr<uint8_t[]>(0);
+  return std::make_unique<torchlive::media::Blob>(std::move(data), size);
 }
 
 } // namespace media

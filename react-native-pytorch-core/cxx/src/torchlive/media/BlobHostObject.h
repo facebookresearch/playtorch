@@ -20,8 +20,7 @@ class JSI_EXPORT BlobHostObject : public facebook::jsi::HostObject {
  public:
   explicit BlobHostObject(
       facebook::jsi::Runtime& runtime,
-      torchlive::media::Blob b);
-  ~BlobHostObject();
+      std::unique_ptr<torchlive::media::Blob>&& b);
 
   facebook::jsi::Value get(
       facebook::jsi::Runtime&,
@@ -29,7 +28,7 @@ class JSI_EXPORT BlobHostObject : public facebook::jsi::HostObject {
   std::vector<facebook::jsi::PropNameID> getPropertyNames(
       facebook::jsi::Runtime& runtime) override;
 
-  torchlive::media::Blob blob;
+  std::unique_ptr<torchlive::media::Blob> blob;
 
  private:
   facebook::jsi::Function createArrayBuffer(facebook::jsi::Runtime& runtime);

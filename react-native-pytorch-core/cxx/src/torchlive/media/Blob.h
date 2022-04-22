@@ -7,21 +7,20 @@
 
 #pragma once
 
-#include <cstddef>
-#include <cstdint>
+#include <memory>
 
 namespace torchlive {
 namespace media {
 
-struct Blob {
+class Blob {
  public:
-  Blob(uint8_t* b, size_t bl);
+  Blob(std::unique_ptr<uint8_t[]>&& b, size_t bl);
 
   uint8_t* const getDirectBytes();
   size_t getDirectSize();
 
  private:
-  uint8_t* const buffer;
+  std::unique_ptr<uint8_t[]> buffer;
   size_t byteLength;
 };
 

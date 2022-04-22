@@ -17,16 +17,15 @@ extern "C" size_t torchlive_media_getDirectSize(const char*);
 namespace torchlive {
 namespace media {
 
-torchlive::media::Blob toBlob(const std::string& refId) {
+std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
   auto idRef = refId.c_str();
   auto mediaDataRef = torchlive_media_beginReadData(idRef);
   uint8_t* const tmpBuffer = torchlive_media_getDirectBytes(mediaDataRef);
   size_t size = torchlive_media_getDirectSize(mediaDataRef);
-  uint8_t* const buffer = new uint8_t[size];
-  std::memcpy(buffer, tmpBuffer, size);
+  auto data = std::unique_ptr<uint8_t[]>(new uint8_t[size]);
+  std::memcpy(data.get(), tmpBuffer, size);
   torchlive_media_endReadData(mediaDataRef);
-  torchlive::media::Blob blob(std::move(buffer), size);
-  return blob;
+  return std::make_unique<torchlive::media::Blob>(std::move(data), size);
 }
 
 } // namespace media

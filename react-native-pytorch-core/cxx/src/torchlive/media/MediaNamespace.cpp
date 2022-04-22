@@ -41,8 +41,8 @@ jsi::Value toBlobImpl(
 
   auto id = idValue.asString(runtime).utf8(runtime);
   auto blob = torchlive::media::toBlob(id);
-  auto blobHostObject =
-      std::make_shared<torchlive::media::BlobHostObject>(runtime, blob);
+  auto blobHostObject = std::make_shared<torchlive::media::BlobHostObject>(
+      runtime, std::move(blob));
   return jsi::Object::createFromHostObject(runtime, blobHostObject);
 }
 

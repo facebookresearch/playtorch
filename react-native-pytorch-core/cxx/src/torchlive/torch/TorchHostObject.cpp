@@ -314,16 +314,14 @@ jsi::Function TorchHostObject::createFromBlob(jsi::Runtime& runtime) {
     auto blobHostObject =
         dynamic_cast<torchlive::media::BlobHostObject*>(hostObject.get());
     if (blobHostObject != nullptr) {
-      auto blob = blobHostObject->blob;
-
-      uint8_t* const buffer = blob.getDirectBytes();
-      auto size = blob.getDirectSize();
-      // TODO(T111718110) Check if blob sizes exceed buffer size and if so throw
-      // an error
+      auto blob = blobHostObject->blob.get();
+      uint8_t* const buffer = blob->getDirectBytes();
+      auto size = blob->getDirectSize();
 
       auto options = torch_::TensorOptions().dtype(torch_::kUInt8);
+      // TODO(T111718110) Check if blob sizes exceed buffer size and if so throw
+      // an error
       auto tensor = torch_::from_blob(buffer, sizes, options).clone();
-
       auto tensorHostObject =
           std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
       return jsi::Object::createFromHostObject(runtime, tensorHostObject);

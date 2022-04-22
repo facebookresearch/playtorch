@@ -14,7 +14,6 @@ using namespace facebook;
 
 // BlobHostObject Method Name
 static const std::string ARRAY_BUFFER = "arrayBuffer";
-static const std::string FREE = "free";
 
 // BlobHostObject Property Names
 // empty
@@ -23,12 +22,10 @@ static const std::string FREE = "free";
 static const std::vector<std::string> PROPERTIES = {};
 
 // BlobHostObject Methods
-const std::vector<std::string> METHODS = {ARRAY_BUFFER, FREE};
+const std::vector<std::string> METHODS = {ARRAY_BUFFER};
 
 BlobHostObject::BlobHostObject(jsi::Runtime& runtime, torchlive::media::Blob b)
-    : arrayBuffer_(createArrayBuffer(runtime)),
-      free_(createFree(runtime)),
-      blob(b) {}
+    : arrayBuffer_(createArrayBuffer(runtime)), blob(b) {}
 
 BlobHostObject::~BlobHostObject() {
 #ifdef __APPLE__
@@ -54,8 +51,6 @@ jsi::Value BlobHostObject::get(
   auto name = propName.utf8(runtime);
   if (name == ARRAY_BUFFER) {
     return jsi::Value(runtime, arrayBuffer_);
-  } else if (name == FREE) {
-    return jsi::Value(runtime, free_);
   }
   return jsi::Value::undefined();
 }
@@ -89,20 +84,6 @@ jsi::Function BlobHostObject::createArrayBuffer(jsi::Runtime& runtime) {
       jsi::PropNameID::forUtf8(runtime, ARRAY_BUFFER),
       0,
       arrayBufferFunc);
-}
-
-jsi::Function BlobHostObject::createFree(jsi::Runtime& runtime) {
-  auto freeFunc = [this](
-                      jsi::Runtime& runtime,
-                      const jsi::Value& thisValue,
-                      const jsi::Value* arguments,
-                      size_t count) {
-    auto buffer = this->blob.getDirectBytes();
-    delete buffer;
-    return jsi::Value::undefined();
-  };
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, FREE), 0, freeFunc);
 }
 
 } // namespace media

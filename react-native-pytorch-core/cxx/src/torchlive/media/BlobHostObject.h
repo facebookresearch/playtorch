@@ -16,7 +16,6 @@ namespace media {
 
 class JSI_EXPORT BlobHostObject : public facebook::jsi::HostObject {
   facebook::jsi::Function arrayBuffer_;
-  facebook::jsi::Function free_;
 
  public:
   explicit BlobHostObject(
@@ -34,7 +33,6 @@ class JSI_EXPORT BlobHostObject : public facebook::jsi::HostObject {
 
  private:
   facebook::jsi::Function createArrayBuffer(facebook::jsi::Runtime& runtime);
-  facebook::jsi::Function createFree(facebook::jsi::Runtime& runtime);
 };
 
 } // namespace media

@@ -43,12 +43,36 @@ jsi::Value toTensorImpl(
   return jsi::Object::createFromHostObject(
       runtime, std::move(tensorHostObject));
 }
+
+jsi::Value toTupleImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto thiz =
+      thisValue.asObject(runtime).asHostObject<IValueHostObject>(runtime);
+  auto tuple = thiz->value.toTuple();
+  auto elements = tuple->elements();
+
+  jsi::Array tupleValue = jsi::Array(runtime, elements.size());
+  for (size_t i = 0; i < elements.size(); i++) {
+    at::IValue val = elements[i];
+    auto valueHostObject = std::make_shared<torchlive::torch::IValueHostObject>(
+        runtime, std::move(val));
+    auto value = jsi::Object::createFromHostObject(runtime, valueHostObject);
+    tupleValue.setValueAtIndex(runtime, i, value);
+  }
+
+  return tupleValue;
+}
+
 } // namespace
 
 IValueHostObject::IValueHostObject(jsi::Runtime& runtime, at::IValue v)
     : BaseHostObject(runtime), value(std::move(v)) {
   setPropertyHostFunction(runtime, "toGenericDict", 0, toGenericDictImpl);
   setPropertyHostFunction(runtime, "toTensor", 0, toTensorImpl);
+  setPropertyHostFunction(runtime, "toTuple", 0, toTupleImpl);
 }
 
 } // namespace torch

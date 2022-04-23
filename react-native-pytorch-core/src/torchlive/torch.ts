@@ -38,19 +38,32 @@ type TypedArray =
   | Float32Array
   | Float64Array;
 
+/**
+ * IValue (Interpreter Value) is a tagged union over the types supported by the
+ * TorchScript interpreter.
+ *
+ * {@link https://pytorch.org/cppdocs/api/structc10_1_1_i_value.html#struct-documentation}
+ */
 export interface IValue {
   /**
-   * Returns a tensor.
+   * Returns a [[Tensor]].
    *
-   * @experimental
+   * @experimental This function is subject to change.
    */
   toTensor(): Tensor;
   /**
-   * Returns a generic dict.
+   * Returns a generic dict of key value pairs of strings as keys and
+   * [[IValue]] as values.
    *
-   * @experimental
+   * @experimental This function is subject to change.
    */
-  toGenericDict(): {[key: string]: Tensor | IValue | any};
+  toGenericDict(): {[key: string]: IValue};
+  /**
+   * Returns a tuple of [[IValue]].
+   *
+   * @experimental This function is subject to change.
+   */
+  toTuple(): Array<IValue>;
 }
 
 export interface Module {

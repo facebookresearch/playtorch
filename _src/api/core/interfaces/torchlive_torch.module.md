@@ -27,7 +27,7 @@ Module forward function.
 
 #### Defined in
 
-[torchlive/torch.ts:62](https://github.com/pytorch/live/blob/74b8d52/react-native-pytorch-core/src/torchlive/torch.ts#L62)
+[torchlive/torch.ts:81](https://github.com/pytorch/live/blob/c947816/react-native-pytorch-core/src/torchlive/torch.ts#L81)
 
 ___
 
@@ -49,4 +49,4 @@ Synchronous module forward function.
 
 #### Defined in
 
-[torchlive/torch.ts:68](https://github.com/pytorch/live/blob/74b8d52/react-native-pytorch-core/src/torchlive/torch.ts#L68)
+[torchlive/torch.ts:87](https://github.com/pytorch/live/blob/c947816/react-native-pytorch-core/src/torchlive/torch.ts#L87)

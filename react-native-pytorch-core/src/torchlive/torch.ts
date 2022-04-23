@@ -46,6 +46,12 @@ type TypedArray =
  */
 export interface IValue {
   /**
+   * Returns a list of [[IValue]].
+   *
+   * @experimental This function is subject to change.
+   */
+  toList(): Array<IValue>;
+  /**
    * Returns a [[Tensor]].
    *
    * @experimental This function is subject to change.

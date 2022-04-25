@@ -31,9 +31,6 @@ import {
 import ModelPreloader from '../components/ModelPreloader';
 import {MultiClassClassificationModels} from '../Models';
 
-// This is the custom model you have trained. See the tutorial for more on preparing a PyTorch model for mobile.
-const mnistModel = require('../../models/mnist.ptl');
-
 /**
  * The React hook provides MNIST model inference on an input image.
  */
@@ -42,15 +39,18 @@ function useMNISTModel() {
     // Runs model inference on input image
     const {
       result: {scores},
-    } = await MobileModel.execute<{scores: number[]}>(mnistModel, {
-      image,
-      crop_width: 1,
-      crop_height: 1,
-      scale_width: 28,
-      scale_height: 28,
-      colorBackground: colors.light,
-      colorForeground: colors.dark,
-    });
+    } = await MobileModel.execute<{scores: number[]}>(
+      MultiClassClassificationModels[0].model,
+      {
+        image,
+        crop_width: 1,
+        crop_height: 1,
+        scale_width: 28,
+        scale_height: 28,
+        colorBackground: colors.light,
+        colorForeground: colors.dark,
+      },
+    );
 
     // Get the score of each number (index), and sort the array by the most likely first.
     const sortedScore: number[][] = scores

@@ -22,11 +22,6 @@ import {HintText, IconButton} from '../components/UIComponents';
 import ModelPreloader from '../components/ModelPreloader';
 import {ObjectDetectionModels} from '../Models';
 
-const modelInfo: ModelInfo = {
-  name: 'DETR',
-  model: require('../../models/detr_resnet50.ptl'),
-};
-
 const objectColors = [
   '#ee4c2caa',
   '#00cc99aa',
@@ -43,7 +38,7 @@ export default function ObjectDetectionExample() {
   const [loading, setLoading] = useState(false);
   const [capturing, setCapturing] = useState(true);
   const [hint, setHint] = useState('Capture a photo to detect objects in view');
-  const {detectObjects} = useObjectDetection(modelInfo);
+  const {detectObjects} = useObjectDetection(ObjectDetectionModels[0]);
 
   // This is a drawImage function wrapped in useCallback (for improving render performance)
   const drawImage = useCallback(

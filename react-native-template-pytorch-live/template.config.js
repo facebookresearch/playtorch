@@ -10,5 +10,4 @@
 module.exports = {
   placeholderName: 'PyTorchLiveExample',
   templateDir: './template',
-  postInitScript: './script.js',
 };

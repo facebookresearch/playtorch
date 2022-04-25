@@ -253,16 +253,23 @@ jsi::Function TorchHostObject::createEye(jsi::Runtime& runtime) {
     if (count < 1) {
       throw jsi::JSError(runtime, "torch.eye requires at least one argument");
     } else if (!arguments[0].isNumber()) {
-      // TODO(T115230811): check for the argument being a non-negative
-      // integer, and modify the error message accordingly
       throw jsi::JSError(
           runtime, "torch.eye requires the first argument to be a number");
     }
     const auto rows = arguments[0].asNumber();
     if ((count > 1) && arguments[1].isNumber()) {
-      // TODO(T115230811): check for the argument being a non-negative
-      // integer, raise an error if it is not one but it is a number
       const auto columns = arguments[1].asNumber();
+      if (std::trunc(rows) != rows) {
+        throw jsi::JSError(
+            runtime,
+            "torch.eye requires the first argument to be a positive integer");
+      }
+      if (std::trunc(columns) != columns) {
+        throw jsi::JSError(
+            runtime,
+            "torch.eye requires the second argument to be a positive integer");
+      }
+
       const auto options =
           utils::helpers::parseTensorOptions(runtime, arguments, 2, count);
       return createTensorObject(torch_::eye(rows, columns, options));

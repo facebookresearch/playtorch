@@ -92,6 +92,16 @@ TEST_F(TorchliveRuntimeTest, TorchEyeTest) {
   EXPECT_THROW(eval("torch.eye()"), facebook::jsi::JSError);
   // the first argument must be a number
   EXPECT_THROW(eval("torch.eye([1,2])"), facebook::jsi::JSError);
+  // the first argument must be a positive integer
+  EXPECT_THROW(eval("torch.eye(1.2, 2)"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.eye(-1.2, 2)"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.eye(-1, 2)"), facebook::jsi::JSError);
+
+  // the second argument must be a positive integer
+  EXPECT_THROW(eval("torch.eye(1, -2.5)"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.eye(1, 2.5)"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.eye(1, -2)"), facebook::jsi::JSError);
+
   EXPECT_THROW(eval("torch.eye({dtype:'int32'})"), facebook::jsi::JSError);
   EXPECT_THROW(eval("torch.eye({dtype:'int32'}, 3)"), facebook::jsi::JSError);
   // only the two initial arguments may be numbers

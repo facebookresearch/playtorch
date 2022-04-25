@@ -279,14 +279,15 @@ export interface Tensor extends IValue {
    */
   unsqueeze(dim: number): Tensor;
   /**
-   * Access tensor with index. This is similar to how tensor data is accessed
-   * in PyTorch Python.
+   * Access tensor with index.
    *
-   * ```python
-   * >>> tensor = torch.rand([2])
-   * >>> tensor, tensor[0]
-   * (tensor([0.8254, 0.0784]), tensor(0.8254))
+   * ```typescript
+   * const tensor = torch.rand([2]);
+   * console.log(tensor.data, tensor[0].data);
+   * // [0.8339180946350098, 0.17733973264694214], [0.8339180946350098]
    * ```
+   *
+   * {@link https://pytorch.org/cppdocs/notes/tensor_indexing.html}
    */
   [index: number]: Tensor;
 }

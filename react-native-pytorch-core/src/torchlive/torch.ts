@@ -186,7 +186,8 @@ export interface Tensor extends IValue {
    */
   dtype: string;
   /**
-   * Returns the value of this tensor as a standard Python number. This only works for tensors with one element.
+   * Returns the value of this tensor as a `number`. This only works for
+   * tensors with one element.
    *
    * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.item.html}
    *

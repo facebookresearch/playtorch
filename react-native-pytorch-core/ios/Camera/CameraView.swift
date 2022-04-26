@@ -264,10 +264,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
             print("Error capturing photo: \(error)")
             return
         }
-        guard let buffer = photo.pixelBuffer else { print("Could not get pixelBuffer"); return };
-        var cgImage: CGImage?
-        VTCreateCGImageFromCVPixelBuffer(buffer, options: nil, imageOut: &cgImage);
-        guard let image: CGImage = cgImage else { print("Could not get imageData"); return };
+        guard let image: CGImage = photo.cgImageRepresentation() else { print("Could not get imageData"); return }
         let colorSpace: CGColorSpace = image.colorSpace ?? CGColorSpace(name: CGColorSpace.sRGB)!
         guard let context = CGContext(
                 data: nil,

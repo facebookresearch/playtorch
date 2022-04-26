@@ -32,10 +32,10 @@ BlobHostObject::BlobHostObject(
 std::vector<jsi::PropNameID> BlobHostObject::getPropertyNames(
     jsi::Runtime& runtime) {
   std::vector<jsi::PropNameID> result;
-  for (std::string property : PROPERTIES) {
+  for (const auto& property : PROPERTIES) {
     result.push_back(jsi::PropNameID::forUtf8(runtime, property));
   }
-  for (std::string method : METHODS) {
+  for (const auto& method : METHODS) {
     result.push_back(jsi::PropNameID::forUtf8(runtime, method));
   }
   return result;
@@ -64,7 +64,7 @@ jsi::Function BlobHostObject::createArrayBuffer(jsi::Runtime& runtime) {
     jsi::ArrayBuffer arrayBuffer =
         runtime.global()
             .getPropertyAsFunction(runtime, "ArrayBuffer")
-            .callAsConstructor(runtime, (int)size)
+            .callAsConstructor(runtime, static_cast<int>(size))
             .asObject(runtime)
             .getArrayBuffer(runtime);
 
@@ -72,14 +72,14 @@ jsi::Function BlobHostObject::createArrayBuffer(jsi::Runtime& runtime) {
 
     return runtime.global()
         .getPropertyAsFunction(runtime, "Uint8Array")
-        .callAsConstructor(runtime, arrayBuffer)
+        .callAsConstructor(runtime, std::move(arrayBuffer))
         .asObject(runtime);
   };
   return jsi::Function::createFromHostFunction(
       runtime,
       jsi::PropNameID::forUtf8(runtime, ARRAY_BUFFER),
       0,
-      arrayBufferFunc);
+      std::move(arrayBufferFunc));
 }
 
 } // namespace media

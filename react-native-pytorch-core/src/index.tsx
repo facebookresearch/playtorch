@@ -24,9 +24,6 @@ export {torch, Tensor, IValue, Module} from './torchlive/torch';
 // Export torchlive torchvision object and types
 export {torchvision, Transforms, Transform} from './torchlive/torchvision';
 
-// Export torchlive vision object
-export {vision} from './torchlive/vision';
-
 // Export torchlive media object and types
 export {media, Blob} from './torchlive/media';
 

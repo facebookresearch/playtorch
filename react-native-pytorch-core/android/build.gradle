@@ -110,8 +110,9 @@ repositories {
 }
 
 dependencies {
-  implementation 'org.pytorch:pytorch_android_lite:1.10.0'
-  implementation 'org.pytorch:pytorch_android_torchvision_lite:1.10.0'
+  def pytorchLiteVersion = '1.10.0'
+  implementation "org.pytorch:pytorch_android_lite:${pytorchLiteVersion}"
+  implementation "org.pytorch:pytorch_android_torchvision_lite:${pytorchLiteVersion}"
 
   //noinspection GradleDynamicVersion
   api "com.facebook.react:react-native:+"  // From node_modules
@@ -124,7 +125,7 @@ dependencies {
   def rnAAR = fileTree("${rootDir}/../node_modules/react-native/android").matching({ it.include "**/**/*.aar" }).singleFile
   extractJNI(files(rnAAR))
 
-  extractForNativeBuild('org.pytorch:pytorch_android_lite:1.10.0')
+  extractForNativeBuild("org.pytorch:pytorch_android_lite:${pytorchLiteVersion}")
 
   implementation "androidx.appcompat:appcompat:1.2.0"
   implementation "com.android.support.constraint:constraint-layout:2.0.4"
@@ -142,10 +143,10 @@ dependencies {
   androidTestImplementation 'androidx.test:rules:1.3.0'
   androidTestImplementation 'com.facebook.soloader:soloader:0.9.0'
 
-  def camerax_version = "1.1.0-alpha05"
-  implementation "androidx.camera:camera-core:$camerax_version"
-  implementation "androidx.camera:camera-camera2:$camerax_version"
-  implementation "androidx.camera:camera-lifecycle:$camerax_version"
+  def cameraxVersion = "1.1.0-alpha05"
+  implementation "androidx.camera:camera-core:${cameraxVersion}"
+  implementation "androidx.camera:camera-camera2:${cameraxVersion}"
+  implementation "androidx.camera:camera-lifecycle:${cameraxVersion}"
   implementation "androidx.camera:camera-view:1.0.0-alpha25"
 
   implementation "androidx.constraintlayout:constraintlayout:2.0.4"

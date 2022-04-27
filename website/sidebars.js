@@ -58,6 +58,7 @@ module.exports = {
           'fb/wikis/creating-a-release',
           'fb/wikis/install-ptl-app',
           'fb/jsi-tutorials/image-classification-jsi',
+          'fb/jsi-tutorials/nlp-qa-jsi',
         ],
       },
       external: {},

@@ -15,13 +15,13 @@ var audioRecorder: AVAudioRecorder!
 public class AudioModule: NSObject, AVAudioRecorderDelegate {
 
     static let NAME = "PyTorchCoreAudioModule"
-    var promiseResolve : RCTPromiseResolveBlock!
-    var promiseReject : RCTPromiseRejectBlock!
+    var promiseResolve: RCTPromiseResolveBlock!
+    var promiseReject: RCTPromiseRejectBlock!
 
     private static let PREFIX = "audio"
     private static let EXTENSION = ".wav"
 
-    enum AudioModuleError : Error {
+    enum AudioModuleError: Error {
         case castingObject
         case castingDict
     }
@@ -52,7 +52,7 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
 
     @objc
     public func startRecord() {
-        AVAudioSession.sharedInstance().requestRecordPermission ({(granted: Bool)-> Void in
+        AVAudioSession.sharedInstance().requestRecordPermission({(granted: Bool) -> Void in
             if !granted {
                 fatalError("Record permission needs to be granted for the app to run successfully.")
             }
@@ -75,7 +75,7 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
             AVLinearPCMIsBigEndianKey: false,
             AVLinearPCMIsFloatKey: false,
             AVEncoderAudioQualityKey: AVAudioQuality.high.rawValue
-            ] as [String : Any]
+            ] as [String: Any]
         do {
             let recorderFilePath = (NSHomeDirectory() as NSString).appendingPathComponent("tmp/recorded_file.wav")
             audioRecorder = try AVAudioRecorder(url: NSURL.fileURL(withPath: recorderFilePath), settings: settings)
@@ -108,8 +108,7 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
             }
             if data.isEmpty {
                 promiseReject(RCTErrorUnspecified, "Invalid audio data", nil)
-            }
-            else {
+            } else {
                 let audio = Audio(audioData: data)
                 promiseResolve(JSContext.wrapObject(object: audio).getJSRef())
             }

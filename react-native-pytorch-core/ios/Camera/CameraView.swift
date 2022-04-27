@@ -275,7 +275,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
                 space: colorSpace,
                 bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue)
         else {
-            print("Could not create context to rotate image, resolving with unrotated image");
+            print("Could not create context to rotate image, resolving with unrotated image")
             let bitmapImage = Image(image: image)
             let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
             if let onCapture = onCapture {
@@ -310,7 +310,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
         guard let cvBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
             print("Could not get sample buffer")
             return
-            //TODO(T92857704) Eventually forward Error to React Native using promises
+            // TODO(T92857704) Eventually forward Error to React Native using promises
         }
         let ciImage = CIImage(cvImageBuffer: cvBuffer)
         let imageFrame = Image(image: ciImage)

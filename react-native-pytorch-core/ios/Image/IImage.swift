@@ -15,5 +15,5 @@ public protocol IImage {
     func getNaturalHeight() -> Int
     func scale(sx: CGFloat, sy: CGFloat) throws -> IImage
     func getBitmap() -> CGImage?
-    func close() throws -> Void
+    func close() throws
 }

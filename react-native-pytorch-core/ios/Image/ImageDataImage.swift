@@ -50,7 +50,7 @@ public class ImageDataImage: IImage {
         return uiImage?.cgImage
     }
 
-    public func close() throws -> Void {
+    public func close() throws {
         // TODO(T94684939)
     }
 }

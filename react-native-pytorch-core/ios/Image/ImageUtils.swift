@@ -26,7 +26,7 @@ class ImageUtils {
                 size: size,
                 format: renderFormat
             )
-            let scaledImage = renderer.image { (context) in
+            let scaledImage = renderer.image { (_) in
                 uiImage.draw(in: rect)
             }
             guard let newBitmap = scaledImage.cgImage else {

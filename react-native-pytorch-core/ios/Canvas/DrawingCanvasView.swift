@@ -19,13 +19,13 @@ class DrawingCanvasView: UIView {
     }
 
     @objc public var onContext2D: RCTBubblingEventBlock?
-    var ref: [String:String] = [:] // initialized to allow using self in init()
+    var ref: [String: String] = [:] // initialized to allow using self in init()
     var stateStack = Stack()
     var path = CGMutablePath()
     var currentState = CanvasState()
     var sublayers = [LayerData]()
     let scaleText = UIScreen.main.scale
-    var shapeLayers = [ShapeLayerData] ()
+    var shapeLayers = [ShapeLayerData]()
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -38,17 +38,17 @@ class DrawingCanvasView: UIView {
         ref = JSContext.wrapObject(object: self).getJSRef()
     }
 
-    override class var layerClass : AnyClass {
+    override class var layerClass: AnyClass {
         return CATransformLayer.self
     }
 
     override func didSetProps(_ changedProps: [String]!) {
         guard let unwrappedOnContext2D = onContext2D else { return }
-        unwrappedOnContext2D(["ID" : ref[JSContext.ID_KEY]])
+        unwrappedOnContext2D(["ID": ref[JSContext.ID_KEY]])
     }
 
     func arc(x: CGFloat, y: CGFloat, radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat, counterclockwise: Bool) {
-        path.addArc(center: CGPoint(x:x, y: y), radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: counterclockwise) // seems counterintuitve to set clockwise to counterclockwise, but is the only way to get it to match web canvas
+        path.addArc(center: CGPoint(x: x, y: y), radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: counterclockwise) // seems counterintuitve to set clockwise to counterclockwise, but is the only way to get it to match web canvas
     }
 
     func strokeRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
@@ -77,7 +77,7 @@ class DrawingCanvasView: UIView {
         path.addRect(rect)
     }
 
-    private func renderLayers(allLayerData: [LayerData], layer: CALayer) -> Void {
+    private func renderLayers(allLayerData: [LayerData], layer: CALayer) {
         for layerData in allLayerData {
             let baseLayer = CALayer()
             baseLayer.transform = layerData.transform
@@ -129,7 +129,7 @@ class DrawingCanvasView: UIView {
     func clearRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) { // doesn't work yet
         let tempColor = currentState.fillStyle
         currentState.fillStyle = UIColor.white.cgColor
-        fillRect(x:x, y: y, width: width, height: height)
+        fillRect(x: x, y: y, width: width, height: height)
         currentState.fillStyle = tempColor
     }
 
@@ -187,11 +187,11 @@ class DrawingCanvasView: UIView {
         // Note that the Apple CGAffineTransform matrix is the transpose of the matrix used by PyTorch Live, but so is their labeling
     }
 
-    func setFillStyle(color: CGColor){
+    func setFillStyle(color: CGColor) {
         currentState.fillStyle = color
     }
 
-    func setStrokeStyle(color: CGColor){
+    func setStrokeStyle(color: CGColor) {
         currentState.strokeStyle = color
     }
 
@@ -265,13 +265,13 @@ class DrawingCanvasView: UIView {
         }
 
         if let fontWeight = font["fontWeight"] as? NSString {
-            if (fontWeight == "bold") {
+            if fontWeight == "bold" {
                 fontName += "Bold"
             }
         }
 
         if let fontStyle = font["fontStyle"] as? NSString {
-            if (fontStyle == "italic") {
+            if fontStyle == "italic" {
                 fontName += "Italic"
             }
         }
@@ -305,20 +305,20 @@ class DrawingCanvasView: UIView {
         }
     }
 
-    func beginPath(){
+    func beginPath() {
         path = CGMutablePath()
         shapeLayers.removeAll()
     }
 
-    func closePath(){
+    func closePath() {
         path.closeSubpath()
     }
 
-    func lineTo(point: CGPoint){
+    func lineTo(point: CGPoint) {
         path.addLine(to: point)
     }
 
-    func moveTo(point: CGPoint){
+    func moveTo(point: CGPoint) {
         path.move(to: point)
     }
 
@@ -337,8 +337,8 @@ class DrawingCanvasView: UIView {
     }
 
     func fillText(text: String, x: CGFloat, y: CGFloat, fill: Bool = true) {
-        var attrs = [NSAttributedString.Key.font: currentState.font] as [NSAttributedString.Key : Any]
-        if(fill) {
+        var attrs = [NSAttributedString.Key.font: currentState.font] as [NSAttributedString.Key: Any]
+        if fill {
             attrs[ NSAttributedString.Key.foregroundColor ] = currentState.fillStyle
         } else {
             attrs[ NSAttributedString.Key.foregroundColor ] = UIColor.clear
@@ -348,7 +348,7 @@ class DrawingCanvasView: UIView {
         let attrString = NSAttributedString(string: text, attributes: attrs)
         let textWidth = attrString.size().width + currentState.lineWidth
         let textHeight = attrString.size().height
-        var offsetX = CGFloat(0) //default value for textAlign left (so not needed in switch case)
+        var offsetX = CGFloat(0) // default value for textAlign left (so not needed in switch case)
         let offsetY = -1 * textHeight
         switch currentState.textAlign {
         case NSTextAlignment.right:
@@ -356,7 +356,7 @@ class DrawingCanvasView: UIView {
         case NSTextAlignment.center:
             offsetX = -1 * textWidth/2.0
         default:
-            offsetX = 0 //this is a duplicate of what is already stored in offsetX, but switch case must be exhaustive and each case must have at least one executable statement?
+            offsetX = 0 // this is a duplicate of what is already stored in offsetX, but switch case must be exhaustive and each case must have at least one executable statement?
         }
         let frame = CGRect(x: x + offsetX, y: y + offsetY, width: textWidth, height: textHeight)
         let newLayer = TextLayerData(text: attrString, transform: currentState.transform, frame: frame)
@@ -391,7 +391,7 @@ class DrawingCanvasView: UIView {
             contentsImage = image.getBitmap()
         }
         var frame: CGRect
-        if(dWidth != -1 && dHeight != -1) {
+        if dWidth != -1 && dHeight != -1 {
             frame = CGRect(x: dx, y: dy, width: dWidth, height: dHeight)
         } else {
             frame = CGRect(x: dx, y: dy, width: CGFloat(image.getWidth()), height: CGFloat(image.getHeight()))
@@ -414,8 +414,7 @@ class DrawingCanvasView: UIView {
                 // case, we want the image data come from the view layer.
                 if sublayers.isEmpty {
                     self.layer.render(in: rendererContext.cgContext)
-                }
-                else {
+                } else {
                     let rootLayer = CALayer()
                     self.renderLayers(allLayerData: sublayers, layer: rootLayer)
                     rootLayer.render(in: rendererContext.cgContext)
@@ -425,15 +424,14 @@ class DrawingCanvasView: UIView {
         return ImageData(width: sw, height: sh, data: [UInt8](data))
     }
 
-    func putImageData(imageData: ImageData, sx: CGFloat, sy: CGFloat) throws -> Void {
+    func putImageData(imageData: ImageData, sx: CGFloat, sy: CGFloat) throws {
         let data = Data(imageData.data)
         let frame = CGRect(x: sx, y: sy, width: imageData.width, height: imageData.height)
         let uiImage = UIImage(data: data)
         if let cgImage = uiImage?.cgImage {
             let newLayer = ImageLayerData(image: cgImage, transform: currentState.transform, frame: frame)
             sublayers.append(newLayer)
-        }
-        else {
+        } else {
             throw CanvasError.UnableToCreateBitmap
         }
     }
@@ -456,8 +454,7 @@ class DrawingCanvasView: UIView {
         func pop() -> CanvasState? {
             if stateArray.last != nil {
                 return stateArray.removeLast()
-            }
-            else {
+            } else {
                 return nil
             }
         }

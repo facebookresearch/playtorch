@@ -23,7 +23,7 @@ struct ShapeLayer {
 
     outerCirclePath.append(innerCirclePath)
     outerCirclePath.addClip()
-    outerCirclePath.usesEvenOddFillRule = true;
+    outerCirclePath.usesEvenOddFillRule = true
 
     hollowCircleLayer.path = outerCirclePath.cgPath
     hollowCircleLayer.fillColor = UIColor.white.cgColor
@@ -39,7 +39,6 @@ struct ShapeLayer {
     let radius = rect.width / 2
     let circleLayer = CAShapeLayer()
     let circlePath = UIBezierPath(arcCenter: CGPoint(x: rect.midX, y: rect.midY), radius: radius, startAngle: -CGFloat(Double.pi * 0.5), endAngle: CGFloat(Double.pi * 1.5), clockwise: true)
-
 
     circleLayer.path = circlePath.cgPath
     circleLayer.fillColor = fillColor

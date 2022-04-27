@@ -60,7 +60,7 @@ public class Image: IImage {
         return self.image.getBitmap()
     }
 
-    public func close() throws -> Void {
+    public func close() throws {
         self.closed = true
     }
 

@@ -10,8 +10,8 @@ import Foundation
 public class BitmapImage: IImage {
     private var mBitmap: CGImage?
     private var ciImage: CIImage?
-    public var width: CGFloat;
-    public var height: CGFloat;
+    public var width: CGFloat
+    public var height: CGFloat
 
     init(image: CGImage) {
         self.mBitmap = image
@@ -63,7 +63,7 @@ public class BitmapImage: IImage {
         }
     }
 
-    public func close() throws -> Void {
+    public func close() throws {
         // TODO(T94684939)
     }
 }

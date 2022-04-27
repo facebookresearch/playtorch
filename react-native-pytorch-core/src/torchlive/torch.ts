@@ -78,13 +78,13 @@ export interface Module {
    *
    * @param input Module input.
    */
-  forward(...input: IValue[]): Promise<IValue>;
+  forward(...input: Tensor[]): Promise<IValue>;
   /**
    * Synchronous module forward function.
    *
    * @param input Module input.
    */
-  forwardSync(...input: IValue[]): IValue;
+  forwardSync(...input: Tensor[]): IValue;
 }
 
 interface JIT {
@@ -120,7 +120,7 @@ export type TensorOptions = {
 // Adopt the notion of a Scalar
 export type Scalar = number;
 
-export interface Tensor extends IValue {
+export interface Tensor {
   /**
    * Computes the absolute value of each element in input.
    *
@@ -133,8 +133,9 @@ export interface Tensor extends IValue {
    * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.add.html}
    *
    * @param other Scalar or tensor to be added to each element in this tensor.
+   * @param options.alpha The multiplier for `other`. Default: `1`.
    */
-  add(other: Scalar | Tensor): Tensor;
+  add(other: Scalar | Tensor, options?: {alpha?: Number}): Tensor;
   /**
    * Returns the indices of the maximum value of all elements in the input
    * tensor.
@@ -173,11 +174,11 @@ export interface Tensor extends IValue {
    * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.div.html}
    *
    * @param other Scalar or tensor that divides each element in this tensor.
-   * @param options Tensor options.
+   * @param options.rounding_mode Type of rounding applied to the result
    */
   div(
     other: Scalar | Tensor,
-    options?: TensorOptions & {rounding_mode: 'trunc' | 'floor'},
+    options?: {rounding_mode?: 'trunc' | 'floor'},
   ): Tensor;
   /**
    * A dtype is an string that represents the data type of a torch.Tensor.
@@ -245,8 +246,9 @@ export interface Tensor extends IValue {
    * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.sub.html}
    *
    * @param other The scalar or tensor to subtract from input.
+   * @param options.alpha The multiplier for `other`. Default: `1`.
    */
-  sub(other: Scalar | Tensor): Tensor;
+  sub(other: Scalar | Tensor, options?: {alpha?: Number}): Tensor;
   /**
    * Returns the k largest elements of the given input tensor along a given
    * dimension.
@@ -256,19 +258,6 @@ export interface Tensor extends IValue {
    * @param k The k in "top-k"
    */
   topk(k: number): [Tensor, Tensor];
-  /**
-   * Returns a string representation of the tensor including all items, the
-   * shape, and the dtype.
-   *
-   * :::note
-   *
-   * The function only exists in JavaScript.
-   *
-   * :::
-   *
-   * @experimental
-   */
-  toString(): string;
   /**
    * Returns a new tensor with a dimension of size one inserted at the
    * specified position.
@@ -300,31 +289,39 @@ export interface Torch {
    * {@link https://pytorch.org/docs/1.11/generated/torch.arange.html}
    *
    * @param end The ending value for the set of points.
+   * @param options
    */
-  arange(end: number): Tensor;
+  arange(end: number, options?: TensorOptions): Tensor;
   /**
    * Returns a 1-D tensor of size `(end - start) / 1` with values from the
-   * interval `[start, end)` taken with common difference step beginning from
-   * start.
+   * interval `[start, end)` taken with common difference 1 beginning from
+   * `start`.
    *
    * {@link https://pytorch.org/docs/1.11/generated/torch.arange.html}
    *
    * @param start The starting value for the set of points.
    * @param end The ending value for the set of points.
+   * @param options
    */
-  arange(start: number, end: number): Tensor;
+  arange(start: number, end: number, options?: TensorOptions): Tensor;
   /**
    * Returns a 1-D tensor of size `(end - start) / step` with values from the
-   * interval `[start, end)` taken with common difference step beginning from
-   * start.
+   * interval `[start, end)` taken with common difference `step` beginning from
+   * `start`.
    *
    * {@link https://pytorch.org/docs/1.11/generated/torch.arange.html}
    *
    * @param start The starting value for the set of points.
    * @param end The ending value for the set of points.
    * @param step The gap between each pair of adjacent points.
+   * @param options
    */
-  arange(start: number, end: number, step: number): Tensor;
+  arange(
+    start: number,
+    end: number,
+    step: number,
+    options?: TensorOptions,
+  ): Tensor;
   /**
    * Returns a tensor filled with uninitialized data. The shape of the tensor
    * is defined by the variable argument size.

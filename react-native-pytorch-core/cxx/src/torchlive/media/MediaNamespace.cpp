@@ -6,6 +6,7 @@
  */
 
 #include "MediaNamespace.h"
+#include "../torch/TensorHostObject.h"
 #include "../torch/utils/helpers.h"
 #include "BlobHostObject.h"
 #include "NativeJSRefBridge.h"
@@ -24,23 +25,33 @@ jsi::Value toBlobImpl(
     throw jsi::JSError(runtime, "function requires 1 argument");
   }
   if (!arguments[0].isObject()) {
-    throw jsi::JSError(runtime, "argument must be a NativeJSRef");
+    throw jsi::JSError(runtime, "argument must be an object");
   }
-
-  const auto ID_PROP = jsi::PropNameID::forUtf8(runtime, std::string("ID"));
 
   auto obj = arguments[0].asObject(runtime);
-  if (!obj.hasProperty(runtime, ID_PROP)) {
-    throw jsi::JSError(runtime, "object must have ID property");
-  }
 
-  auto idValue = obj.getProperty(runtime, ID_PROP);
-  if (!idValue.isString()) {
-    throw jsi::JSError(runtime, "ID property must be a string");
-  }
+  std::unique_ptr<torchlive::media::Blob> blob;
+  if (obj.isHostObject<torchlive::torch::TensorHostObject>(runtime)) {
+    auto tensor =
+        obj.asHostObject<torchlive::torch::TensorHostObject>(runtime)->tensor;
+    auto size = tensor.numel();
+    auto data = std::make_unique<uint8_t[]>(size);
+    std::memcpy(data.get(), tensor.data_ptr(), size);
+    blob = std::make_unique<torchlive::media::Blob>(std::move(data), size);
+  } else {
+    const auto ID_PROP = jsi::PropNameID::forUtf8(runtime, std::string("ID"));
+    if (!obj.hasProperty(runtime, ID_PROP)) {
+      throw jsi::JSError(runtime, "object must have ID property");
+    }
 
-  auto id = idValue.asString(runtime).utf8(runtime);
-  auto blob = torchlive::media::toBlob(id);
+    auto idValue = obj.getProperty(runtime, ID_PROP);
+    if (!idValue.isString()) {
+      throw jsi::JSError(runtime, "ID property must be a string");
+    }
+
+    auto id = idValue.asString(runtime).utf8(runtime);
+    blob = torchlive::media::toBlob(id);
+  }
   auto blobHostObject = std::make_shared<torchlive::media::BlobHostObject>(
       runtime, std::move(blob));
   return jsi::Object::createFromHostObject(runtime, std::move(blobHostObject));

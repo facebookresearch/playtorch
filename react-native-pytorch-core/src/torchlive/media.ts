@@ -7,18 +7,20 @@
  * @format
  */
 
-import type {Image} from '../ImageModule';
+import type {Tensor} from 'react-native-pytorch-core';
+import type {NativeJSRef} from '../NativeJSRef';
 
 export interface Blob {}
 
 interface Media {
   /**
-   * Converts an [[Image]] into a [[Blob]]. The blob can be used to create a
-   * [[Tensor]] object.
+   * Converts a [[Tensor]] or [[NativeJSRef]] into a [[Blob]]. The blob can be
+   * used to create a [[Tensor]] object or convert into a [[NativeJSRef]] like
+   * an image or audio.
    *
-   * @param image Image used to retrieve a [[Blob]].
+   * @param obj Object to turn into a [[Blob]].
    */
-  toBlob(image: Image): Blob;
+  toBlob(obj: Tensor | NativeJSRef): Blob;
 }
 
 type Torchlive = {

@@ -15,7 +15,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[torchlive/torch.ts:406](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L406)
+[torchlive/torch.ts:403](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L403)
 
 ___
 
@@ -25,7 +25,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:407](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L407)
+[torchlive/torch.ts:404](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L404)
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:408](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L408)
+[torchlive/torch.ts:405](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L405)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:409](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L409)
+[torchlive/torch.ts:406](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L406)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:410](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L410)
+[torchlive/torch.ts:407](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L407)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:411](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L411)
+[torchlive/torch.ts:408](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L408)
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:412](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L412)
+[torchlive/torch.ts:409](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L409)
 
 ___
 
@@ -85,7 +85,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:413](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L413)
+[torchlive/torch.ts:410](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L410)
 
 ___
 
@@ -95,7 +95,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:414](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L414)
+[torchlive/torch.ts:411](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L411)
 
 ___
 
@@ -107,7 +107,7 @@ JIT module
 
 #### Defined in
 
-[torchlive/torch.ts:403](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L403)
+[torchlive/torch.ts:400](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L400)
 
 ___
 
@@ -117,7 +117,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:415](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L415)
+[torchlive/torch.ts:412](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L412)
 
 ___
 
@@ -127,7 +127,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:416](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L416)
+[torchlive/torch.ts:413](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L413)
 
 ___
 
@@ -137,13 +137,13 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:417](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L417)
+[torchlive/torch.ts:414](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L414)
 
 ## Methods
 
 ### arange
 
-▸ **arange**(`end`): [Tensor](torchlive_torch.tensor.md)
+▸ **arange**(`end`, `options?`): [Tensor](torchlive_torch.tensor.md)
 
 Returns a 1-D tensor of size `(end - 0) / 1` with values from the interval
 `[0, end)` taken with common difference step beginning from start.
@@ -155,6 +155,7 @@ Returns a 1-D tensor of size `(end - 0) / 1` with values from the interval
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `end` | `number` | The ending value for the set of points. |
+| `options?` | [TensorOptions](../modules/torchlive_torch.md#tensoroptions) |  |
 
 #### Returns
 
@@ -162,13 +163,13 @@ Returns a 1-D tensor of size `(end - 0) / 1` with values from the interval
 
 #### Defined in
 
-[torchlive/torch.ts:304](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L304)
+[torchlive/torch.ts:294](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L294)
 
-▸ **arange**(`start`, `end`): [Tensor](torchlive_torch.tensor.md)
+▸ **arange**(`start`, `end`, `options?`): [Tensor](torchlive_torch.tensor.md)
 
 Returns a 1-D tensor of size `(end - start) / 1` with values from the
-interval `[start, end)` taken with common difference step beginning from
-start.
+interval `[start, end)` taken with common difference 1 beginning from
+`start`.
 
 [https://pytorch.org/docs/1.11/generated/torch.arange.html](https://pytorch.org/docs/1.11/generated/torch.arange.html)
 
@@ -178,6 +179,7 @@ start.
 | :------ | :------ | :------ |
 | `start` | `number` | The starting value for the set of points. |
 | `end` | `number` | The ending value for the set of points. |
+| `options?` | [TensorOptions](../modules/torchlive_torch.md#tensoroptions) |  |
 
 #### Returns
 
@@ -185,13 +187,13 @@ start.
 
 #### Defined in
 
-[torchlive/torch.ts:315](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L315)
+[torchlive/torch.ts:306](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L306)
 
-▸ **arange**(`start`, `end`, `step`): [Tensor](torchlive_torch.tensor.md)
+▸ **arange**(`start`, `end`, `step`, `options?`): [Tensor](torchlive_torch.tensor.md)
 
 Returns a 1-D tensor of size `(end - start) / step` with values from the
-interval `[start, end)` taken with common difference step beginning from
-start.
+interval `[start, end)` taken with common difference `step` beginning from
+`start`.
 
 [https://pytorch.org/docs/1.11/generated/torch.arange.html](https://pytorch.org/docs/1.11/generated/torch.arange.html)
 
@@ -202,6 +204,7 @@ start.
 | `start` | `number` | The starting value for the set of points. |
 | `end` | `number` | The ending value for the set of points. |
 | `step` | `number` | The gap between each pair of adjacent points. |
+| `options?` | [TensorOptions](../modules/torchlive_torch.md#tensoroptions) |  |
 
 #### Returns
 
@@ -209,7 +212,7 @@ start.
 
 #### Defined in
 
-[torchlive/torch.ts:327](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L327)
+[torchlive/torch.ts:319](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L319)
 
 ___
 
@@ -235,7 +238,7 @@ is defined by the variable argument size.
 
 #### Defined in
 
-[torchlive/torch.ts:337](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L337)
+[torchlive/torch.ts:334](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L334)
 
 ___
 
@@ -262,7 +265,7 @@ The shape of the tensor is defined by the arguments n and m.
 
 #### Defined in
 
-[torchlive/torch.ts:347](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L347)
+[torchlive/torch.ts:344](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L344)
 
 ___
 
@@ -292,7 +295,7 @@ The function exists in JavaScript and C++ (torch::from_blob).
 
 #### Defined in
 
-[torchlive/torch.ts:362](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L362)
+[torchlive/torch.ts:359](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L359)
 
 ___
 
@@ -316,7 +319,7 @@ the interval `[0, 1)`.
 
 #### Defined in
 
-[torchlive/torch.ts:370](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L370)
+[torchlive/torch.ts:367](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L367)
 
 ___
 
@@ -342,7 +345,7 @@ Returns a tensor filled with random integers generated uniformly between
 
 #### Defined in
 
-[torchlive/torch.ts:380](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L380)
+[torchlive/torch.ts:377](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L377)
 
 ▸ **randint**(`low`, `high`, `size`): [Tensor](torchlive_torch.tensor.md)
 
@@ -365,7 +368,7 @@ Returns a tensor filled with random integers generated uniformly between
 
 #### Defined in
 
-[torchlive/torch.ts:391](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L391)
+[torchlive/torch.ts:388](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L388)
 
 ___
 
@@ -388,4 +391,4 @@ Constructs a tensor with no autograd history.
 
 #### Defined in
 
-[torchlive/torch.ts:398](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L398)
+[torchlive/torch.ts:395](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L395)

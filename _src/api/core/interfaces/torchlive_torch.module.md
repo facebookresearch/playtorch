@@ -19,7 +19,7 @@ Module forward function.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `...input` | [IValue](torchlive_torch.ivalue.md)[] | Module input. |
+| `...input` | [Tensor](torchlive_torch.tensor.md)[] | Module input. |
 
 #### Returns
 
@@ -27,7 +27,7 @@ Module forward function.
 
 #### Defined in
 
-[torchlive/torch.ts:81](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L81)
+[torchlive/torch.ts:81](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L81)
 
 ___
 
@@ -41,7 +41,7 @@ Synchronous module forward function.
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `...input` | [IValue](torchlive_torch.ivalue.md)[] | Module input. |
+| `...input` | [Tensor](torchlive_torch.tensor.md)[] | Module input. |
 
 #### Returns
 
@@ -49,4 +49,4 @@ Synchronous module forward function.
 
 #### Defined in
 
-[torchlive/torch.ts:87](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L87)
+[torchlive/torch.ts:87](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L87)

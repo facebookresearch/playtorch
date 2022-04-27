@@ -12,12 +12,6 @@ TorchScript interpreter.
 
 [https://pytorch.org/cppdocs/api/structc10_1_1_i_value.html#struct-documentation](https://pytorch.org/cppdocs/api/structc10_1_1_i_value.html#struct-documentation)
 
-## Hierarchy
-
-- **IValue**
-
-  ↳ [Tensor](torchlive_torch.tensor.md)
-
 ## Methods
 
 ### toGenericDict
@@ -35,7 +29,7 @@ Returns a generic dict of key value pairs of strings as keys and
 
 #### Defined in
 
-[torchlive/torch.ts:66](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L66)
+[torchlive/torch.ts:66](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L66)
 
 ___
 
@@ -53,7 +47,7 @@ Returns a list of [IValue](torchlive_torch.ivalue.md).
 
 #### Defined in
 
-[torchlive/torch.ts:53](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L53)
+[torchlive/torch.ts:53](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L53)
 
 ___
 
@@ -71,7 +65,7 @@ Returns a [Tensor](torchlive_torch.tensor.md).
 
 #### Defined in
 
-[torchlive/torch.ts:59](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L59)
+[torchlive/torch.ts:59](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L59)
 
 ___
 
@@ -89,4 +83,4 @@ Returns a tuple of [IValue](torchlive_torch.ivalue.md).
 
 #### Defined in
 
-[torchlive/torch.ts:72](https://github.com/pytorch/live/blob/a4fabda/react-native-pytorch-core/src/torchlive/torch.ts#L72)
+[torchlive/torch.ts:72](https://github.com/pytorch/live/blob/94e4e2e/react-native-pytorch-core/src/torchlive/torch.ts#L72)

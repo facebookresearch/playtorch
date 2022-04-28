@@ -42,6 +42,7 @@ class AsyncTask {
 
   using ResolveFunctionType = std::function<facebook::jsi::Value(
       facebook::jsi::Runtime& runtime,
+      RuntimeExecutor runtimeExecutor,
       WorkResultType&& inputs)>;
 
   AsyncTask(
@@ -50,7 +51,7 @@ class AsyncTask {
       ResolveFunctionType resolveFunc)
       : setupFunc_(setupFunc), workFunc_(workFunc), resolveFunc_(resolveFunc) {}
 
-  facebook::jsi::HostFunctionType syncFunc();
+  facebook::jsi::HostFunctionType syncFunc(RuntimeExecutor runtimeExecutor);
 
   facebook::jsi::HostFunctionType asyncPromiseFunc(
       RuntimeExecutor runtimeExecutor) {
@@ -72,14 +73,15 @@ class AsyncTask {
 
 template <class TSetupResultType, class TWorkResultType>
 facebook::jsi::HostFunctionType
-AsyncTask<TSetupResultType, TWorkResultType>::syncFunc() {
+AsyncTask<TSetupResultType, TWorkResultType>::syncFunc(
+    RuntimeExecutor runtimeExecutor) {
   return [=](facebook::jsi::Runtime& runtime,
              const facebook::jsi::Value& thisValue,
              const facebook::jsi::Value* arguments,
              size_t count) -> facebook::jsi::Value {
     auto setupResult = setupFunc_(runtime, thisValue, arguments, count);
     auto workResult = workFunc_(std::move(setupResult));
-    return resolveFunc_(runtime, std::move(workResult));
+    return resolveFunc_(runtime, runtimeExecutor, std::move(workResult));
   };
 }
 
@@ -119,18 +121,16 @@ AsyncTask<TSetupResultType, TWorkResultType>::createPromiseFunction(
 
         // Report the error on the JavaScript thread.
         runtimeExecutor(
-            [=, m = e.what()](facebook::jsi::Runtime& executorRuntime) {
-              promise->reject(m);
-            });
+            [=, m = e.what()](facebook::jsi::Runtime&) { promise->reject(m); });
       }
 
       if (!error) {
         // Resolve promise on the JavaScript thread.
         runtimeExecutor([=, workResult = std::move(workResult)](
-                            facebook::jsi::Runtime& executorRuntime) mutable {
+                            facebook::jsi::Runtime& runtime) mutable {
           try {
             auto resolveResult =
-                resolveFunc(executorRuntime, std::move(workResult));
+                resolveFunc(runtime, runtimeExecutor, std::move(workResult));
             promise->resolve(std::move(resolveResult));
           } catch (std::exception& e) {
             promise->reject(e.what());

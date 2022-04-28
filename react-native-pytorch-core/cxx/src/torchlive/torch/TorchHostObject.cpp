@@ -5,6 +5,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <jsi/jsi.h>
+
 #include <memory>
 #include <vector>
 
@@ -13,8 +15,7 @@
 #include "ATen/core/TensorBody.h"
 #include "TensorHostObject.h"
 #include "TorchHostObject.h"
-#include "jit/JITHostObject.h"
-#include "jsi/jsi.h"
+#include "jit/JITNamespace.h"
 #include "utils/constants.h"
 #include "utils/helpers.h"
 
@@ -102,7 +103,8 @@ TorchHostObject::TorchHostObject(
           {utils::constants::INT64, utils::constants::INT64},
           {utils::constants::LONG, utils::constants::INT64},
           {utils::constants::UINT8, utils::constants::UINT8},
-      } {}
+      },
+      jit_(torchlive::torch::jit::buildNamespace(runtime, runtimeExecutor)) {}
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(
     jsi::Runtime& rt) {
@@ -133,10 +135,7 @@ jsi::Value TorchHostObject::get(
   }
 
   if (name == JIT) {
-    return jsi::Object::createFromHostObject(
-        runtime,
-        std::make_shared<torchlive::torch::jit::JITHostObject>(
-            runtime, runtimeExecutor_));
+    return jsi::Value(runtime, jit_);
   }
 
   return jsi::Value::undefined();

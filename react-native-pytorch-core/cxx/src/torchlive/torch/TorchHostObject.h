@@ -51,6 +51,7 @@ class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
   static facebook::jsi::Function createZeros(facebook::jsi::Runtime& runtime);
   std::map<std::string, facebook::jsi::Function*> methods;
   std::map<std::string, std::string> properties;
+  facebook::jsi::Object jit_;
 };
 
 } // namespace torch

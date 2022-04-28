@@ -8,6 +8,7 @@
 #include <torch/csrc/jit/mobile/module.h>
 #include <utility>
 
+#include "../../../../torchlive.h"
 #include "../../../common/AsyncTask.h"
 #include "../../IValueHostObject.h"
 #include "../../TensorHostObject.h"
@@ -70,7 +71,9 @@ ForwardAsyncTask forwardImpl(
       return mobileModule.forward(std::move(tensors));
     },
 
-    [](jsi::Runtime& runtime, torch_::jit::IValue&& value) -> jsi::Value {
+    [](jsi::Runtime& runtime,
+       torchlive::RuntimeExecutor,
+       torch_::jit::IValue&& value) -> jsi::Value {
       auto valueHostObject =
           std::make_shared<IValueHostObject>(runtime, std::move(value));
       return jsi::Object::createFromHostObject(runtime, valueHostObject);
@@ -82,7 +85,7 @@ ModuleHostObject::ModuleHostObject(
     torch_::jit::mobile::Module m)
     : BaseHostObject(rt), mobileModule(m) {
   setPropertyHostFunction(rt, "forward", 1, forwardImpl.asyncPromiseFunc(rte));
-  setPropertyHostFunction(rt, "forwardSync", 1, forwardImpl.syncFunc());
+  setPropertyHostFunction(rt, "forwardSync", 1, forwardImpl.syncFunc(rte));
 }
 
 } // namespace mobile

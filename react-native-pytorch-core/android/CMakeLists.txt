@@ -27,7 +27,7 @@ add_library(
         ../cxx/src/torchlive/ThreadPool.cpp
         ../cxx/src/torchlive/torch/DictHostObject.cpp
         ../cxx/src/torchlive/torch/IValueHostObject.cpp
-        ../cxx/src/torchlive/torch/jit/JITHostObject.cpp
+        ../cxx/src/torchlive/torch/jit/JITNamespace.cpp
         ../cxx/src/torchlive/torch/jit/mobile/ModuleHostObject.cpp
         ../cxx/src/torchlive/torch/TensorHostObject.cpp
         ../cxx/src/torchlive/torch/TorchHostObject.cpp

@@ -23,5 +23,4 @@ custom_edit_url: null
 - [torchlive/media](modules/torchlive_media.md)
 - [torchlive/torch](modules/torchlive_torch.md)
 - [torchlive/torchvision](modules/torchlive_torchvision.md)
-- [torchlive/vision](modules/torchlive_vision.md)
 - [utils/CSSFontUtils](modules/utils_cssfontutils.md)

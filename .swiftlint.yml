@@ -1,2 +1,5 @@
 disabled_rules:
   - todo
+
+identifier_name:
+  min_length: 1 # only min_length

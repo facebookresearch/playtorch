@@ -53,9 +53,8 @@ jsi::Value absImpl(
     size_t count) {
   utils::ArgumentParser args(runtime, thisValue, arguments, count);
   auto result = args.thisAsHostObject<TensorHostObject>()->tensor.abs();
-  auto tensorHostObject =
-      std::make_shared<TensorHostObject>(runtime, std::move(result));
-  return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, std::move(result));
 }
 
 jsi::Value addImpl(
@@ -80,9 +79,9 @@ jsi::Value addImpl(
     auto otherTensor = args.asHostObject<TensorHostObject>(0)->tensor;
     result = thiz->tensor.add(otherTensor, alphaScalar);
   }
-  auto tensorHostObject =
-      std::make_shared<TensorHostObject>(runtime, std::move(result));
-  return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, std::move(result));
 }
 
 jsi::Value argmaxImpl(

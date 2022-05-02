@@ -95,6 +95,19 @@ void setPropertyHostFunction(
     size_t paramCount,
     facebook::jsi::HostFunctionType hostFunc);
 
+/**
+ * A helper method for the common pattern of creating and wrapping a HostObject
+ * instance to return as a jsi::Value.
+ */
+template <typename T, typename... Args>
+inline facebook::jsi::Object createFromHostObject(
+    facebook::jsi::Runtime& runtime,
+    Args&&... args) {
+  auto hostObject = std::make_shared<T>(runtime, std::forward<Args>(args)...);
+  return facebook::jsi::Object::createFromHostObject(
+      runtime, std::move(hostObject));
+}
+
 } // namespace helpers
 } // namespace utils
 } // namespace torchlive

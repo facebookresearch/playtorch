@@ -11,7 +11,7 @@ declare var performance: any;
 
 import * as React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Platform} from 'react-native';
-import {Tensor, torch, torchvision, vision} from 'react-native-pytorch-core';
+import {Tensor, torch, torchvision} from 'react-native-pytorch-core';
 
 function argmax(array: number[]): number {
   let max = -Number.MAX_VALUE;
@@ -32,8 +32,8 @@ export default function JSIPlayground() {
   const [cxxElapse, setcxxElapse] = React.useState(0);
   const testFunc = async () => {
     console.log('---Test torchlive---');
-    console.log(vision);
-    console.log(vision.transforms);
+    console.log(torchvision);
+    console.log(torchvision.transforms);
 
     console.log('------------');
     console.log(Platform.OS);

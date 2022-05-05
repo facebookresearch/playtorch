@@ -10,7 +10,9 @@
 import type {Tensor} from 'react-native-pytorch-core';
 import type {NativeJSRef} from '../NativeJSRef';
 
-export interface Blob {}
+export interface Blob {
+  arrayBuffer(): Uint8Array;
+}
 
 interface Media {
   /**

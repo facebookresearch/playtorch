@@ -8,9 +8,10 @@
  */
 
 import {useEffect, useState} from 'react';
+import type {ImageRequireSource} from 'react-native';
 import {Image, ImageUtil} from 'react-native-pytorch-core';
 
-export default function useImageFromBundle(uri: number) {
+export default function useImageFromBundle(uri: ImageRequireSource) {
   const [image, setImage] = useState<Image>();
   useEffect(() => {
     (async () => {

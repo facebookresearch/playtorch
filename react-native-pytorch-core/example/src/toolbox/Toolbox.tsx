@@ -53,6 +53,7 @@ import CameraFlip from './apiTest/camera/CameraFlip';
 import JSIPlayground from './JSIPlayground';
 import AudioExample from './apiTest/audio/AudioExample';
 import AudioSaveLoadExample from './apiTest/audio/AudioSaveLoadExample';
+import BlobExample from './apiTest/blob/BlobExample';
 
 export type Tool = {
   icon?: React.ReactNode;
@@ -335,6 +336,18 @@ const tools: ToolSection = [
         subtitle: 'Record an audio and save to a file on device.',
         apiTest: true,
         component: AudioSaveLoadExample,
+      },
+    ],
+  },
+  {
+    title: 'Blob API Test',
+    data: [
+      {
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
+        title: 'Blob APIs',
+        subtitle: 'Transform between media and blob',
+        apiTest: true,
+        component: BlobExample,
       },
     ],
   },

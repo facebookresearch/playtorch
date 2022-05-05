@@ -17,7 +17,10 @@ public func torchlive_media_beginReadData(cRefId: UnsafePointer<CChar>) -> Unsaf
                 print("error unwrapping object")
                 return nil
             }
-            let str = MediaToBlobCache.begin(img: img)
+             guard let str = MediaToBlobCache.begin(img: img) else {
+                print("error reading image data")
+                return nil
+            }
             let newString = strdup(str)
             return UnsafePointer(newString)
         }

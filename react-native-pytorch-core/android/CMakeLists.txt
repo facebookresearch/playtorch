@@ -33,6 +33,7 @@ add_library(
         ../cxx/src/torchlive/torch/TorchHostObject.cpp
         ../cxx/src/torchlive/torch/utils/ArgumentParser.cpp
         ../cxx/src/torchlive/torch/utils/constants.cpp
+        ../cxx/src/torchlive/torch/utils/converter.cpp
         ../cxx/src/torchlive/torch/utils/helpers.cpp
         ../cxx/src/torchlive/torchvision/AbstractScriptModule.cpp
         ../cxx/src/torchlive/torchvision/CenterCropModule.cpp

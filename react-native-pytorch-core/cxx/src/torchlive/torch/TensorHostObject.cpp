@@ -396,7 +396,7 @@ jsi::Function TensorHostObject::createDiv(jsi::Runtime& runtime) {
     }
 
     auto roundingModeValue = utils::helpers::parseKeywordArgument(
-        runtime, arguments, 1, count, "rounding_mode");
+        runtime, arguments, 1, count, "roundingMode");
 
     c10::optional<c10::string_view> roundingMode;
     if (!roundingModeValue.isUndefined()) {

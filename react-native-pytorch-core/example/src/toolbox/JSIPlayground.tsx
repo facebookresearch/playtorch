@@ -202,12 +202,12 @@ export default function JSIPlayground() {
     console.log(divTensor.toString());
     tensor2 = divTensor.div(2);
     console.log(tensor2.toString());
-    tensor3 = divTensor.div(2, {rounding_mode: 'floor'});
+    tensor3 = divTensor.div(2, {roundingMode: 'floor'});
     console.log(tensor3.toString());
     tensor4 = divTensor.div(divTensor);
     console.log(tensor4.toString());
     console.log(tensor2.toString());
-    tensor3 = divTensor.div(divTensor, {rounding_mode: 'floor'});
+    tensor3 = divTensor.div(divTensor, {roundingMode: 'floor'});
     console.log(tensor3.toString());
 
     console.log('---Test tensor.abs---');

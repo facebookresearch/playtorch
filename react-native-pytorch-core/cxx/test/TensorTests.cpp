@@ -243,7 +243,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
     std::string tensorDivWithNumberFloor = fmt::format(
         R"(
           const tensor = torch.arange(1, 5);
-          const result = tensor.div(2, {{rounding_mode: 'floor'}});
+          const result = tensor.div(2, {{roundingMode: 'floor'}});
           result.data[{}] == Math.floor(tensor.data[{}] / 2);
         )",
         i,
@@ -272,7 +272,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
           const tensor2 = torch.arange(3, 7);
           const result = tensor1.div(
             tensor2,
-            {{rounding_mode: 'trunc'}});
+            {{roundingMode: 'trunc'}});
           result.data[{}] == Math.trunc(tensor1.data[{}] / tensor2.data[{}]);
         )",
         i,
@@ -286,7 +286,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
           const tensor2 = torch.arange(3, 7);
           const result = tensor1.div(
             tensor2,
-            {{rounding_mode: 'random_val'}});
+            {{roundingMode: 'random_val'}});
         )";
   EXPECT_THROW(
       eval(tensorDivRoundingModeRandomVal.c_str()), facebook::jsi::JSError);
@@ -296,7 +296,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
           const tensor2 = torch.arange(3, 7);
           const result = tensor1.div(
             tensor2,
-            {{rounding_mode: 1}});
+            {{roundingMode: 1}});
         )";
   EXPECT_THROW(
       eval(tensorDivInvalidTypeRoundingMode.c_str()), facebook::jsi::JSError);

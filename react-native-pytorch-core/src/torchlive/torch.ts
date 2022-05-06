@@ -148,6 +148,28 @@ export interface Tensor {
    */
   argmax(options?: {dim?: number; keepdim?: boolean}): Tensor;
   /**
+   * Clamps all elements in input into the range `[ min, max ]`.
+   *
+   * If `min` is `undefined`, there is no lower bound. Or, if `max` is `undefined` there is no upper bound.
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.clamp.html}
+   *
+   * @param min Lower-bound of the range to be clamped to
+   * @param max Upper-bound of the range to be clamped to
+   */
+  clamp(min: Scalar | Tensor, max?: Scalar | Tensor): Tensor;
+  /**
+   * Clamps all elements in input into the range `[ min, max ]`.
+   *
+   * If `min` is `undefined`, there is no lower bound. Or, if `max` is `undefined` there is no upper bound.
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.clamp.html}
+   *
+   * @param options.min Lower-bound of the range to be clamped to
+   * @param options.max Upper-bound of the range to be clamped to
+   */
+  clamp(options: {min?: Scalar | Tensor; max?: Scalar | Tensor}): Tensor;
+  /**
    * Returns the tensor data as [[TypedArray]] buffer.
    *
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray}
@@ -249,6 +271,14 @@ export interface Tensor {
    * @param options.alpha The multiplier for `other`. Default: `1`.
    */
   sub(other: Scalar | Tensor, options?: {alpha?: Number}): Tensor;
+  /**
+   * Performs Tensor conversion.
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.to.html}
+   *
+   * @param options Tensor options.
+   */
+  to(options: TensorOptions): Tensor;
   /**
    * Returns the k largest elements of the given input tensor along a given
    * dimension.
@@ -358,6 +388,16 @@ export interface Torch {
    */
   fromBlob(blob: any, sizes?: number[]): Tensor;
   /**
+   * Returns a tensor filled with the scalar value 1, with the shape defined
+   * by the argument `size`.
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.ones.html}
+   *
+   * @param size A sequence of integers defining the shape of the output tensor.
+   * @param options Tensor options.
+   */
+  ones(size: number[], options?: TensorOptions): Tensor;
+  /**
    * Returns a tensor filled with random numbers from a uniform distribution on
    * the interval `[0, 1)`.
    *
@@ -393,6 +433,16 @@ export interface Torch {
    * @param options Tensor options.
    */
   tensor(data: Scalar | ItemArray, options?: TensorOptions): Tensor;
+  /**
+   * Returns a tensor filled with the scalar value 0, with the shape defined
+   * by the argument `size`.
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.zeros.html}
+   *
+   * @param size A sequence of integers defining the shape of the output tensor.
+   * @param options Tensor options.
+   */
+  zeros(size: number[], options?: TensorOptions): Tensor;
 
   /**
    * JIT module

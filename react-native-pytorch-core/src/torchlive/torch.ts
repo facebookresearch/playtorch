@@ -38,6 +38,15 @@ type TypedArray =
   | Float32Array
   | Float64Array;
 
+type ModuleValue =
+  | null
+  | string
+  | number
+  | boolean
+  | Tensor
+  | {[key: string]: ModuleValue}
+  | ModuleValue[];
+
 /**
  * IValue (Interpreter Value) is a tagged union over the types supported by the
  * TorchScript interpreter.
@@ -78,13 +87,13 @@ export interface Module {
    *
    * @param input Module input.
    */
-  forward(...input: Tensor[]): Promise<IValue>;
+  forward(...input: Tensor[]): Promise<ModuleValue>;
   /**
    * Synchronous module forward function.
    *
    * @param input Module input.
    */
-  forwardSync(...input: Tensor[]): IValue;
+  forwardSync(...input: Tensor[]): ModuleValue;
 }
 
 interface JIT {

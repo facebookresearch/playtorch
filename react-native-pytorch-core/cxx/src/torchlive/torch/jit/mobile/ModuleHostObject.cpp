@@ -12,6 +12,7 @@
 #include "../../../common/AsyncTask.h"
 #include "../../IValueHostObject.h"
 #include "../../TensorHostObject.h"
+#include "../../utils/converter.h"
 #include "../../utils/helpers.h"
 #include "ModuleHostObject.h"
 
@@ -74,9 +75,7 @@ ForwardAsyncTask forwardImpl(
     [](jsi::Runtime& runtime,
        torchlive::RuntimeExecutor,
        torch_::jit::IValue&& value) -> jsi::Value {
-      auto valueHostObject =
-          std::make_shared<IValueHostObject>(runtime, std::move(value));
-      return jsi::Object::createFromHostObject(runtime, valueHostObject);
+      return utils::converter::ivalueToJSIValue(runtime, value);
     });
 
 ModuleHostObject::ModuleHostObject(

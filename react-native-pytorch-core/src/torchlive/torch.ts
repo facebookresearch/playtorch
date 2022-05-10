@@ -38,7 +38,11 @@ type TypedArray =
   | Float32Array
   | Float64Array;
 
-type ModuleValue =
+/**
+ * The [[ModuleValue]] type is a convenient type representative of all possible
+ * module output values.
+ */
+export type ModuleValue =
   | null
   | string
   | number

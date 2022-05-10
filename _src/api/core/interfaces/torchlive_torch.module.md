@@ -11,7 +11,7 @@ custom_edit_url: null
 
 ### forward
 
-▸ **forward**(...`input`): `Promise`<ModuleValue\>
+▸ **forward**(...`input`): `Promise`<[ModuleValue](../modules/torchlive_torch.md#modulevalue)\>
 
 Module forward function.
 
@@ -23,17 +23,17 @@ Module forward function.
 
 #### Returns
 
-`Promise`<ModuleValue\>
+`Promise`<[ModuleValue](../modules/torchlive_torch.md#modulevalue)\>
 
 #### Defined in
 
-[torchlive/torch.ts:90](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/torchlive/torch.ts#L90)
+[torchlive/torch.ts:60](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/torchlive/torch.ts#L60)
 
 ___
 
 ### forwardSync
 
-▸ **forwardSync**(...`input`): `ModuleValue`
+▸ **forwardSync**(...`input`): [ModuleValue](../modules/torchlive_torch.md#modulevalue)
 
 Synchronous module forward function.
 
@@ -45,8 +45,8 @@ Synchronous module forward function.
 
 #### Returns
 
-`ModuleValue`
+[ModuleValue](../modules/torchlive_torch.md#modulevalue)
 
 #### Defined in
 
-[torchlive/torch.ts:96](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/torchlive/torch.ts#L96)
+[torchlive/torch.ts:66](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/torchlive/torch.ts#L66)

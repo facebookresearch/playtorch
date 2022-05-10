@@ -29,7 +29,7 @@ same path as a result.
 
 #### Defined in
 
-[MobileModelModule.ts:70](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/MobileModelModule.ts#L70)
+[MobileModelModule.ts:70](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/MobileModelModule.ts#L70)
 
 ___
 
@@ -77,7 +77,7 @@ const topClass = ImageClasses(scores);
 
 #### Defined in
 
-[MobileModelModule.ts:113](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/MobileModelModule.ts#L113)
+[MobileModelModule.ts:113](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/MobileModelModule.ts#L113)
 
 ___
 
@@ -102,7 +102,7 @@ of time before running the first inference.
 
 #### Defined in
 
-[MobileModelModule.ts:79](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/MobileModelModule.ts#L79)
+[MobileModelModule.ts:79](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/MobileModelModule.ts#L79)
 
 ___
 
@@ -120,4 +120,4 @@ app.
 
 #### Defined in
 
-[MobileModelModule.ts:86](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/MobileModelModule.ts#L86)
+[MobileModelModule.ts:86](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/MobileModelModule.ts#L86)

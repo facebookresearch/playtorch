@@ -8,12 +8,24 @@ custom_edit_url: null
 
 ## Interfaces
 
-- [IValue](../interfaces/torchlive_torch.ivalue.md)
 - [Module](../interfaces/torchlive_torch.module.md)
 - [Tensor](../interfaces/torchlive_torch.tensor.md)
 - [Torch](../interfaces/torchlive_torch.torch.md)
 
 ## Type aliases
+
+### ModuleValue
+
+Ƭ **ModuleValue**: ``null`` \| `string` \| `number` \| `boolean` \| [Tensor](../interfaces/torchlive_torch.tensor.md) \| { [key: string]: [ModuleValue](torchlive_torch.md#modulevalue);  } \| [ModuleValue](torchlive_torch.md#modulevalue)[]
+
+The [ModuleValue](torchlive_torch.md#modulevalue) type is a convenient type representative of all possible
+module output values.
+
+#### Defined in
+
+[torchlive/torch.ts:45](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/torchlive/torch.ts#L45)
+
+___
 
 ### Scalar
 
@@ -21,7 +33,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[torchlive/torch.ts:130](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/torchlive/torch.ts#L130)
+[torchlive/torch.ts:100](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/torchlive/torch.ts#L100)
 
 ___
 
@@ -37,7 +49,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:108](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/torchlive/torch.ts#L108)
+[torchlive/torch.ts:78](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/torchlive/torch.ts#L78)
 
 ## Variables
 
@@ -47,4 +59,4 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:482](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/torchlive/torch.ts#L482)
+[torchlive/torch.ts:452](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/torchlive/torch.ts#L452)

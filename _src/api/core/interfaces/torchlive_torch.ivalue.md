@@ -29,7 +29,7 @@ Returns a generic dict of key value pairs of strings as keys and
 
 #### Defined in
 
-[torchlive/torch.ts:66](https://github.com/pytorch/live/blob/b3ca600/react-native-pytorch-core/src/torchlive/torch.ts#L66)
+[torchlive/torch.ts:75](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/torchlive/torch.ts#L75)
 
 ___
 
@@ -47,7 +47,7 @@ Returns a list of [IValue](torchlive_torch.ivalue.md).
 
 #### Defined in
 
-[torchlive/torch.ts:53](https://github.com/pytorch/live/blob/b3ca600/react-native-pytorch-core/src/torchlive/torch.ts#L53)
+[torchlive/torch.ts:62](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/torchlive/torch.ts#L62)
 
 ___
 
@@ -65,7 +65,7 @@ Returns a [Tensor](torchlive_torch.tensor.md).
 
 #### Defined in
 
-[torchlive/torch.ts:59](https://github.com/pytorch/live/blob/b3ca600/react-native-pytorch-core/src/torchlive/torch.ts#L59)
+[torchlive/torch.ts:68](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/torchlive/torch.ts#L68)
 
 ___
 
@@ -83,4 +83,4 @@ Returns a tuple of [IValue](torchlive_torch.ivalue.md).
 
 #### Defined in
 
-[torchlive/torch.ts:72](https://github.com/pytorch/live/blob/b3ca600/react-native-pytorch-core/src/torchlive/torch.ts#L72)
+[torchlive/torch.ts:81](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/torchlive/torch.ts#L81)

@@ -37,7 +37,7 @@ and then center cropped.
 
 #### Defined in
 
-[torchlive/torchvision.ts:42](https://github.com/pytorch/live/blob/b3ca600/react-native-pytorch-core/src/torchlive/torchvision.ts#L42)
+[torchlive/torchvision.ts:42](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/torchlive/torchvision.ts#L42)
 
 ___
 
@@ -62,7 +62,7 @@ where … means an arbitrary number of leading dimensions.
 
 #### Defined in
 
-[torchlive/torchvision.ts:52](https://github.com/pytorch/live/blob/b3ca600/react-native-pytorch-core/src/torchlive/torchvision.ts#L52)
+[torchlive/torchvision.ts:52](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/torchlive/torchvision.ts#L52)
 
 ___
 
@@ -92,7 +92,7 @@ Tensor i.e., `output[channel] = (input[channel] - mean[channel]) / std[channel]`
 
 #### Defined in
 
-[torchlive/torchvision.ts:67](https://github.com/pytorch/live/blob/b3ca600/react-native-pytorch-core/src/torchlive/torchvision.ts#L67)
+[torchlive/torchvision.ts:67](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/torchlive/torchvision.ts#L67)
 
 ___
 
@@ -121,4 +121,4 @@ dimensions.
 
 #### Defined in
 
-[torchlive/torchvision.ts:86](https://github.com/pytorch/live/blob/b3ca600/react-native-pytorch-core/src/torchlive/torchvision.ts#L86)
+[torchlive/torchvision.ts:86](https://github.com/pytorch/live/blob/edbdb85/react-native-pytorch-core/src/torchlive/torchvision.ts#L86)

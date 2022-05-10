@@ -51,40 +51,6 @@ export type ModuleValue =
   | {[key: string]: ModuleValue}
   | ModuleValue[];
 
-/**
- * IValue (Interpreter Value) is a tagged union over the types supported by the
- * TorchScript interpreter.
- *
- * {@link https://pytorch.org/cppdocs/api/structc10_1_1_i_value.html#struct-documentation}
- */
-export interface IValue {
-  /**
-   * Returns a list of [[IValue]].
-   *
-   * @experimental This function is subject to change.
-   */
-  toList(): Array<IValue>;
-  /**
-   * Returns a [[Tensor]].
-   *
-   * @experimental This function is subject to change.
-   */
-  toTensor(): Tensor;
-  /**
-   * Returns a generic dict of key value pairs of strings as keys and
-   * [[IValue]] as values.
-   *
-   * @experimental This function is subject to change.
-   */
-  toGenericDict(): {[key: string]: IValue};
-  /**
-   * Returns a tuple of [[IValue]].
-   *
-   * @experimental This function is subject to change.
-   */
-  toTuple(): Array<IValue>;
-}
-
 export interface Module {
   /**
    * Module forward function.

@@ -278,13 +278,6 @@ html[data-theme='dark'] .docusaurus-highlight-code-line {
   font-weight: 500;
 }
 
-
-/* Right side nav */
-
-ul.table-of-contents li:first-child {
-  display: none;
-}
-
 /* Docs markdown */
 
 /* Heading for docs */
@@ -348,7 +341,8 @@ ul.table-of-contents li:first-child {
 }
 
 
-.markdown .tutorial-page h3 {
+.markdown .tutorial-page h3,
+.markdown .tutorial-page .tutorial-oneliner {
   --ifm-h3-font-size: 1.5rem;
   font-weight: 400;
   letter-spacing: 0.02rem;
@@ -358,7 +352,10 @@ ul.table-of-contents li:first-child {
   background-color: transparent;
 }
 
-.markdown .tutorial-page h3:first-child {
+.markdown .tutorial-page .tutorial-oneliner {
+  font-size: var(--ifm-h3-font-size);
+  line-height: var(--ifm-heading-line-height);
+
   /* fix the top margin of the heading sentence, because we now wrap it inside tutorial-page class */
   margin-top: 0;
 }

@@ -42,20 +42,18 @@ public class BlobUtils {
   @DoNotStrip
   @Keep
   public static byte[] bitmapToRGB(final Bitmap bitmap) {
-    final int pixelLength = bitmap.getWidth() * bitmap.getHeight();
-    final byte[] bytes = new byte[pixelLength * 3];
+    final int[] pixels = new int[bitmap.getWidth() * bitmap.getHeight()];
+    final byte[] bytes = new byte[pixels.length * 3];
+    bitmap.getPixels(pixels, 0, bitmap.getWidth(), 0, 0, bitmap.getWidth(), bitmap.getHeight());
     int i = 0;
-    for (int y = 0; y < bitmap.getHeight(); y++) {
-      for (int x = 0; x < bitmap.getWidth(); x++) {
-        int pixel = bitmap.getPixel(x, y);
-        // Get components assuming is ARGB
-        int R = (pixel >> 16) & 0xff;
-        int G = (pixel >> 8) & 0xff;
-        int B = pixel & 0xff;
-        bytes[i++] = (byte) R;
-        bytes[i++] = (byte) G;
-        bytes[i++] = (byte) B;
-      }
+    for (int pixel : pixels) {
+      // Get components assuming is ARGB
+      int R = (pixel >> 16) & 0xff;
+      int G = (pixel >> 8) & 0xff;
+      int B = pixel & 0xff;
+      bytes[i++] = (byte) R;
+      bytes[i++] = (byte) G;
+      bytes[i++] = (byte) B;
     }
     return bytes;
   }

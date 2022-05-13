@@ -23,7 +23,7 @@ module output values.
 
 #### Defined in
 
-[torchlive/torch.ts:45](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/torchlive/torch.ts#L45)
+[torchlive/torch.ts:45](https://github.com/pytorch/live/blob/6d01cb0/react-native-pytorch-core/src/torchlive/torch.ts#L45)
 
 ___
 
@@ -33,7 +33,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:100](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/torchlive/torch.ts#L100)
+[torchlive/torch.ts:100](https://github.com/pytorch/live/blob/6d01cb0/react-native-pytorch-core/src/torchlive/torch.ts#L100)
 
 ___
 
@@ -49,7 +49,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:78](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/torchlive/torch.ts#L78)
+[torchlive/torch.ts:78](https://github.com/pytorch/live/blob/6d01cb0/react-native-pytorch-core/src/torchlive/torch.ts#L78)
 
 ## Variables
 
@@ -59,4 +59,4 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:452](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/torchlive/torch.ts#L452)
+[torchlive/torch.ts:452](https://github.com/pytorch/live/blob/6d01cb0/react-native-pytorch-core/src/torchlive/torch.ts#L452)

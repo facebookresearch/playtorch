@@ -18,10 +18,11 @@ custom_edit_url: null
 | :------ | :------ |
 | `model` | [ModelPath](models.md#modelpath) |
 | `name` | `string` |
+| `vocab?` | `string` |
 
 #### Defined in
 
-[Models.ts:28](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/Models.ts#L28)
+[Models.ts:28](https://github.com/pytorch/live/blob/6d01cb0/react-native-pytorch-core/src/Models.ts#L28)
 
 ___
 
@@ -38,7 +39,7 @@ the following options:
 
 #### Defined in
 
-[Models.ts:26](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/Models.ts#L26)
+[Models.ts:26](https://github.com/pytorch/live/blob/6d01cb0/react-native-pytorch-core/src/Models.ts#L26)
 
 ## Functions
 
@@ -64,4 +65,4 @@ A URI to resolve the model.
 
 #### Defined in
 
-[Models.ts:64](https://github.com/pytorch/live/blob/58996af/react-native-pytorch-core/src/Models.ts#L64)
+[Models.ts:65](https://github.com/pytorch/live/blob/6d01cb0/react-native-pytorch-core/src/Models.ts#L65)

@@ -14,26 +14,13 @@ custom_edit_url: null
 
 ## Type aliases
 
-### ModuleValue
-
-Ƭ **ModuleValue**: ``null`` \| `string` \| `number` \| `boolean` \| [Tensor](../interfaces/torchlive_torch.tensor.md) \| { [key: string]: [ModuleValue](torchlive_torch.md#modulevalue);  } \| [ModuleValue](torchlive_torch.md#modulevalue)[]
-
-The [ModuleValue](torchlive_torch.md#modulevalue) type is a convenient type representative of all possible
-module output values.
-
-#### Defined in
-
-[torchlive/torch.ts:45](https://github.com/pytorch/live/blob/6d01cb0/react-native-pytorch-core/src/torchlive/torch.ts#L45)
-
-___
-
 ### Scalar
 
 Ƭ **Scalar**: `number`
 
 #### Defined in
 
-[torchlive/torch.ts:100](https://github.com/pytorch/live/blob/6d01cb0/react-native-pytorch-core/src/torchlive/torch.ts#L100)
+[torchlive/torch.ts:108](https://github.com/pytorch/live/blob/b5096e9/react-native-pytorch-core/src/torchlive/torch.ts#L108)
 
 ___
 
@@ -49,7 +36,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:78](https://github.com/pytorch/live/blob/6d01cb0/react-native-pytorch-core/src/torchlive/torch.ts#L78)
+[torchlive/torch.ts:86](https://github.com/pytorch/live/blob/b5096e9/react-native-pytorch-core/src/torchlive/torch.ts#L86)
 
 ## Variables
 
@@ -59,4 +46,4 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:452](https://github.com/pytorch/live/blob/6d01cb0/react-native-pytorch-core/src/torchlive/torch.ts#L452)
+[torchlive/torch.ts:460](https://github.com/pytorch/live/blob/b5096e9/react-native-pytorch-core/src/torchlive/torch.ts#L460)

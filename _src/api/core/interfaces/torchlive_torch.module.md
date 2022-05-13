@@ -11,42 +11,62 @@ custom_edit_url: null
 
 ### forward
 
-▸ **forward**(...`input`): `Promise`<[ModuleValue](../modules/torchlive_torch.md#modulevalue)\>
+▸ **forward**<In, Out\>(...`inputs`): `Promise`<Out\>
 
 Module forward function.
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `In` | `In`: [Tensor](torchlive_torch.tensor.md) |
+| `Out` | `Out`: `ModuleValue` |
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `...input` | [Tensor](torchlive_torch.tensor.md)[] | Module input. |
+| `...inputs` | `In`[] | Module inputs. It currently only supports [Tensor](torchlive_torch.tensor.md) as inputs. |
 
 #### Returns
 
-`Promise`<[ModuleValue](../modules/torchlive_torch.md#modulevalue)\>
+`Promise`<Out\>
+
+Module output, which is particular to the model and can be any of
+the [[ModuleValue]] union types.
 
 #### Defined in
 
-[torchlive/torch.ts:60](https://github.com/pytorch/live/blob/6d01cb0/react-native-pytorch-core/src/torchlive/torch.ts#L60)
+[torchlive/torch.ts:63](https://github.com/pytorch/live/blob/b5096e9/react-native-pytorch-core/src/torchlive/torch.ts#L63)
 
 ___
 
 ### forwardSync
 
-▸ **forwardSync**(...`input`): [ModuleValue](../modules/torchlive_torch.md#modulevalue)
+▸ **forwardSync**<In, Out\>(...`inputs`): `Out`
 
 Synchronous module forward function.
+
+#### Type parameters
+
+| Name | Type |
+| :------ | :------ |
+| `In` | `In`: [Tensor](torchlive_torch.tensor.md) |
+| `Out` | `Out`: `ModuleValue` |
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `...input` | [Tensor](torchlive_torch.tensor.md)[] | Module input. |
+| `...inputs` | `In`[] | Module inputs. It currently only supports [Tensor](torchlive_torch.tensor.md) as inputs. |
 
 #### Returns
 
-[ModuleValue](../modules/torchlive_torch.md#modulevalue)
+`Out`
+
+Module output, which is particular to the model and can be any of
+the [[ModuleValue]] union types.
 
 #### Defined in
 
-[torchlive/torch.ts:66](https://github.com/pytorch/live/blob/6d01cb0/react-native-pytorch-core/src/torchlive/torch.ts#L66)
+[torchlive/torch.ts:74](https://github.com/pytorch/live/blob/b5096e9/react-native-pytorch-core/src/torchlive/torch.ts#L74)

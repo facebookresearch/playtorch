@@ -42,7 +42,7 @@ type TypedArray =
  * The [[ModuleValue]] type is a convenient type representative of all possible
  * module output values.
  */
-export type ModuleValue =
+type ModuleValue =
   | null
   | string
   | number
@@ -55,15 +55,23 @@ export interface Module {
   /**
    * Module forward function.
    *
-   * @param input Module input.
+   * @param inputs Module inputs. It currently only supports [[Tensor]] as
+   * inputs.
+   * @returns Module output, which is particular to the model and can be any of
+   * the [[ModuleValue]] union types.
    */
-  forward(...input: Tensor[]): Promise<ModuleValue>;
+  forward<In extends Tensor, Out extends ModuleValue>(
+    ...inputs: In[]
+  ): Promise<Out>;
   /**
    * Synchronous module forward function.
    *
-   * @param input Module input.
+   * @param inputs Module inputs. It currently only supports [[Tensor]] as
+   * inputs.
+   * @returns Module output, which is particular to the model and can be any of
+   * the [[ModuleValue]] union types.
    */
-  forwardSync(...input: Tensor[]): ModuleValue;
+  forwardSync<In extends Tensor, Out extends ModuleValue>(...inputs: In[]): Out;
 }
 
 interface JIT {

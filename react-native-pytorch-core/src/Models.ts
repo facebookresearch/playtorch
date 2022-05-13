@@ -28,6 +28,7 @@ export type ModelPath = string | ImageRequireSource;
 export type ModelInfo = {
   name: string;
   model: ModelPath;
+  vocab?: string;
 };
 
 /**

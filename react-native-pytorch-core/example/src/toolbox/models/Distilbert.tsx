@@ -7,6 +7,7 @@
  * @format
  */
 
+import {NLPModels} from '../../Models';
 import * as React from 'react';
 import {useState} from 'react';
 import {
@@ -17,7 +18,6 @@ import {
   Text,
   ActivityIndicator,
 } from 'react-native';
-import {NLPModels} from '../../Models';
 import {ScrollView} from 'react-native-gesture-handler';
 import useNLPQAModelInference from '../../useNLPQAModelInference';
 
@@ -26,9 +26,8 @@ export default function NLPExample() {
     'PyTorch Live is an open source playground for everyone to discover, build, test and share on-device AI demos built on PyTorch. The PyTorch Live monorepo includes the PyTorch Live command line interface (i.e., torchlive), a React Native package to interface with PyTorch Mobile, and a React Native template with examples ready to be deployed on mobile devices.',
   );
   const [question, setQuestion] = useState('What is PyTorch Live?');
-  const {answer, metrics, isProcessing, processQA} = useNLPQAModelInference(
-    NLPModels[0],
-  );
+  const {answer, metrics, isProcessing, isReady, processQA} =
+    useNLPQAModelInference(NLPModels[0]);
 
   return (
     <ScrollView style={styles.container}>
@@ -43,29 +42,35 @@ export default function NLPExample() {
           value={text}
         />
       </View>
-      <View style={styles.row}>
-        <Text style={styles.label}>Question</Text>
-        <View style={styles.askBox}>
-          <TextInput
-            style={styles.askInput}
-            onChangeText={setQuestion}
-            placeholder="Ask a question..."
-            autoCorrect={false}
-            value={question}
-          />
+      {isReady ? (
+        <View style={styles.row}>
+          <Text style={styles.label}>Question</Text>
+          <View style={styles.askBox}>
+            <TextInput
+              style={styles.askInput}
+              onChangeText={setQuestion}
+              placeholder="Ask a question..."
+              autoCorrect={false}
+              value={question}
+            />
 
-          <TouchableOpacity
-            disabled={isProcessing}
-            onPress={() => processQA(text, question)}>
-            <View
-              style={
-                isProcessing ? styles.askButtonDisabled : styles.askButton
-              }>
-              <Text style={styles.askButtonText}>Ask</Text>
-            </View>
-          </TouchableOpacity>
+            <TouchableOpacity
+              disabled={isProcessing}
+              onPress={() => processQA(text, question)}>
+              <View
+                style={
+                  isProcessing ? styles.askButtonDisabled : styles.askButton
+                }>
+                <Text style={styles.askButtonText}>Ask</Text>
+              </View>
+            </TouchableOpacity>
+          </View>
         </View>
-      </View>
+      ) : (
+        <View style={styles.row}>
+          <Text style={styles.label}>Loading Model... </Text>
+        </View>
+      )}
       <View style={[styles.row, !answer && !isProcessing && styles.rowHidden]}>
         <Text style={styles.label}>Answer</Text>
         <Text style={styles.answer}>

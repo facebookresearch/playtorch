@@ -8,5 +8,4 @@
  */
 
 import {WordPieceTokenizer} from './WordpieceTokenizer';
-
 export const text = {WordPieceTokenizer};

@@ -47,6 +47,8 @@ export const NLPModels: ModelInfo[] = [
     name: 'DistilBertQA',
     model:
       'https://github.com/pytorch/live/releases/download/v0.1.0/bert_qa.ptl',
+    vocab:
+      'https://github.com/pytorch/live/releases/download/v0.1.0/BERTVocab.json',
   },
 ];
 

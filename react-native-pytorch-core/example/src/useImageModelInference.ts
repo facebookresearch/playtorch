@@ -11,7 +11,6 @@ import {useCallback, useRef, useState} from 'react';
 
 import {
   Image,
-  IValue,
   media,
   MobileModel,
   ModelResultMetrics,
@@ -70,14 +69,13 @@ const packFn = async (image: Image): Promise<Tensor> => {
   return tensor.unsqueeze(0);
 };
 
-const inferenceFn = async (model: Module, tensor: Tensor): Promise<IValue> => {
+const inferenceFn = async (model: Module, tensor: Tensor): Promise<Tensor> => {
   return await model.forward(tensor);
 };
 
-const unpackFn = async (output: IValue): Promise<ImageClassificationResult> => {
-  // Get the inference result as a tensor
-  let resultTensor = output.toTensor();
-
+const unpackFn = async (
+  resultTensor: Tensor,
+): Promise<ImageClassificationResult> => {
   // Process the result for the single image input
   resultTensor = resultTensor.squeeze(0);
 

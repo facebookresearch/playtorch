@@ -10,7 +10,6 @@
 import {useCallback, useRef, useState} from 'react';
 import {
   Image,
-  IValue,
   media,
   MobileModel,
   ModelInfo,
@@ -33,6 +32,11 @@ type Bounds = [number, number, number, number];
 type BoundingBox = {
   objectClass: string;
   bounds: Bounds;
+};
+
+type ObjectDetectionInferenceResult = {
+  pred_logits: Tensor;
+  pred_boxes: Tensor;
 };
 
 const packFn = async (image: Image): Promise<Tensor> => {
@@ -66,21 +70,20 @@ const packFn = async (image: Image): Promise<Tensor> => {
   return tensor.unsqueeze(0);
 };
 
-const inferenceFn = async (model: Module, tensor: Tensor): Promise<any> => {
+const inferenceFn = async (
+  model: Module,
+  tensor: Tensor,
+): Promise<ObjectDetectionInferenceResult> => {
   return await model.forward(tensor);
 };
 
 const unpackFn = async (
-  output: IValue,
+  output: ObjectDetectionInferenceResult,
   image: Image,
   probabilityThreshold: number = 0.7,
 ): Promise<BoundingBox[]> => {
-  const dict = output.toGenericDict();
-  const predLogits = dict.pred_logits;
-  const predBoxes = dict.pred_boxes;
-
-  const predLogitsTensor = predLogits.toTensor().squeeze(0);
-  const predBoxesTensor = predBoxes.toTensor().squeeze(0);
+  const predLogitsTensor = output.pred_logits.squeeze(0);
+  const predBoxesTensor = output.pred_boxes.squeeze(0);
   const numPredictions = predLogitsTensor.shape[0];
 
   const resultBoxes: BoundingBox[] = [];

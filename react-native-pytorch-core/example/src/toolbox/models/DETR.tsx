@@ -18,19 +18,20 @@ import {ObjectDetectionModels} from '../../Models';
 export default function DETR() {
   const contextRef = React.useRef<CanvasRenderingContext2D | null>();
   const [layout, setLayout] = React.useState<LayoutRectangle>();
-  const {processImage} = useObjectDetection(ObjectDetectionModels[0]);
+  const {detectObjects} = useObjectDetection(ObjectDetectionModels[0]);
 
   const handleImage = React.useCallback(
     async function handleImage(image: Image) {
       const ctx = contextRef.current;
       if (ctx != null && layout != null) {
         ctx.clearRect(0, 0, layout.width, layout.height);
+        ctx.fillStyle = 'white';
         ctx.font = '20px sans-serif';
         ctx.fillText('Processing...', 20, 40);
         ctx.invalidate();
       }
 
-      const {boundingBoxes} = await processImage(image);
+      const {boundingBoxes} = await detectObjects(image);
 
       if (ctx != null && layout != null) {
         ctx.clearRect(0, 0, layout.width, layout.height);
@@ -66,7 +67,7 @@ export default function DETR() {
         image.release();
       }, 0);
     },
-    [layout, processImage],
+    [layout, detectObjects],
   );
 
   function handleContext2D(ctx: CanvasRenderingContext2D) {

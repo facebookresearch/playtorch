@@ -31,7 +31,7 @@ functions on the JavaScript object.
 
 #### Defined in
 
-[NativeJSRef.ts:64](https://github.com/pytorch/live/blob/b5096e9/react-native-pytorch-core/src/NativeJSRef.ts#L64)
+[NativeJSRef.ts:64](https://github.com/pytorch/live/blob/5394069/react-native-pytorch-core/src/NativeJSRef.ts#L64)
 
 ## Methods
 
@@ -47,7 +47,7 @@ Get the duration of an audio in ms.
 
 #### Defined in
 
-[audio/AudioModule.ts:36](https://github.com/pytorch/live/blob/b5096e9/react-native-pytorch-core/src/audio/AudioModule.ts#L36)
+[audio/AudioModule.ts:36](https://github.com/pytorch/live/blob/5394069/react-native-pytorch-core/src/audio/AudioModule.ts#L36)
 
 ___
 
@@ -63,7 +63,7 @@ Pause an audio.
 
 #### Defined in
 
-[audio/AudioModule.ts:26](https://github.com/pytorch/live/blob/b5096e9/react-native-pytorch-core/src/audio/AudioModule.ts#L26)
+[audio/AudioModule.ts:26](https://github.com/pytorch/live/blob/5394069/react-native-pytorch-core/src/audio/AudioModule.ts#L26)
 
 ___
 
@@ -79,7 +79,7 @@ Play an audio.
 
 #### Defined in
 
-[audio/AudioModule.ts:21](https://github.com/pytorch/live/blob/b5096e9/react-native-pytorch-core/src/audio/AudioModule.ts#L21)
+[audio/AudioModule.ts:21](https://github.com/pytorch/live/blob/5394069/react-native-pytorch-core/src/audio/AudioModule.ts#L21)
 
 ___
 
@@ -104,7 +104,7 @@ example, the `GC` on Android will eventually free the allocated memory.
 
 #### Defined in
 
-[audio/AudioModule.ts:50](https://github.com/pytorch/live/blob/b5096e9/react-native-pytorch-core/src/audio/AudioModule.ts#L50)
+[audio/AudioModule.ts:50](https://github.com/pytorch/live/blob/5394069/react-native-pytorch-core/src/audio/AudioModule.ts#L50)
 
 ___
 
@@ -120,4 +120,4 @@ Stop the current playing audio.
 
 #### Defined in
 
-[audio/AudioModule.ts:31](https://github.com/pytorch/live/blob/b5096e9/react-native-pytorch-core/src/audio/AudioModule.ts#L31)
+[audio/AudioModule.ts:31](https://github.com/pytorch/live/blob/5394069/react-native-pytorch-core/src/audio/AudioModule.ts#L31)

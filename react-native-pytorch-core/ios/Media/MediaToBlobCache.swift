@@ -10,46 +10,37 @@ import Foundation
 public class MediaToBlobCache {
     private static var refs: [String: MediaData] = [:]
 
-    public static func begin(img: IImage) -> String? {
-        guard let cgImage = img.getBitmap(),
-            let provider = cgImage.dataProvider,
-            let providerData = provider.data,
-            let data = CFDataGetBytePtr(providerData) else {
-                return nil
-            }
+     public static func begin(img: IImage) -> String? {
+        let idRef = UUID().uuidString
 
-        let numberOfComponents = cgImage.bitsPerPixel / cgImage.bitsPerComponent
-        var buffer: [UInt8] = [UInt8](repeating: 0, count: cgImage.width * cgImage.height * 3)
-        for y in 0 ..< cgImage.height {
-            for x in 0 ..< cgImage.width {
-                // Assuming RGBA or RGBX
-                let pixelIndex = ((Int(cgImage.width) * y) + x) * numberOfComponents
-                var red = data[pixelIndex]
-                var green = data[pixelIndex + 1]
-                var blue = data[pixelIndex + 2]
-                let alpha = data[pixelIndex + 3]
-
-                if cgImage.alphaInfo == .premultipliedLast {
-                    if alpha == 0 {
-                        red = 0
-                        green = 0
-                        blue = 0
-                    } else {
-                        red = UInt8(((CGFloat(red) / CGFloat(alpha)) * 255).rounded())
-                        green = UInt8(((CGFloat(green) / CGFloat(alpha)) * 255).rounded())
-                        blue = UInt8(((CGFloat(blue) / CGFloat(alpha)) * 255).rounded())
-                    }
-                }
-
-                let bufferIndex = ((Int(cgImage.width) * y) + x) * 3
-                buffer[bufferIndex + 0] = red
-                buffer[bufferIndex + 1] = green
-                buffer[bufferIndex + 2] = blue
+        let bitmap = img.getBitmap()!
+        let width = bitmap.width
+        let height = bitmap.height
+        let bytesPerPixel = 4
+        let bytesPerRow = bytesPerPixel * width
+        let bitsPerComponent = 8
+        var rawBytes: [UInt8] = [UInt8](repeating: 0, count: width * height * 4)
+        rawBytes.withUnsafeMutableBytes { ptr in
+            if let context = CGContext(data: ptr.baseAddress,
+                                       width: width,
+                                       height: height,
+                                       bitsPerComponent: bitsPerComponent,
+                                       bytesPerRow: bytesPerRow,
+                                       space: CGColorSpaceCreateDeviceRGB(),
+                                       bitmapInfo: CGImageAlphaInfo.premultipliedLast.rawValue) {
+                let rect = CGRect(x: 0, y: 0, width: width, height: height)
+                context.draw(bitmap, in: rect)
             }
         }
 
+        var buffer: [UInt8] = [UInt8](repeating: 0, count: width * height * 3)
+        for idx in 0 ..< width * height {
+            buffer[idx * 3 + 0] = rawBytes[idx * 4 + 0] // R
+            buffer[idx * 3 + 1] = rawBytes[idx * 4 + 1] // G
+            buffer[idx * 3 + 2] = rawBytes[idx * 4 + 2] // B
+        }
+
         let mediaData = MediaData(buffer: buffer, size: buffer.count)
-        let idRef = UUID().uuidString
         MediaToBlobCache.refs[idRef] = mediaData
         return idRef
     }

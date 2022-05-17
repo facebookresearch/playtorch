@@ -109,10 +109,10 @@ TEST_F(TorchliveRuntimeTest, TorchEyeTest) {
 }
 
 TEST_F(TorchliveRuntimeTest, TensorDataTest) {
-  EXPECT_TRUE(eval("torch.rand([5]).data instanceof Float32Array").getBool());
+  EXPECT_TRUE(eval("torch.rand([5]).data() instanceof Float32Array").getBool());
   EXPECT_TRUE(
       eval(
-          "torch.rand([5], {dtype: torch.double}).data instanceof Float64Array")
+          "torch.rand([5], {dtype: torch.double}).data() instanceof Float64Array")
           .getBool());
 }
 
@@ -123,8 +123,8 @@ TEST_F(TorchliveRuntimeTest, TensorToStringTest) {
 TEST_F(TorchliveRuntimeTest, TorchArangeTest) {
   for (auto i = 0; i < 4; i++) {
     std::string withDtype =
-        fmt::format("torch.arange(4, {{dtype:'float64'}}).data[{}]", i);
-    std::string withoutDtype = fmt::format("torch.arange(4).data[{}]", i);
+        fmt::format("torch.arange(4, {{dtype:'float64'}})[{}].item()", i);
+    std::string withoutDtype = fmt::format("torch.arange(4)[{}].item()", i);
     EXPECT_EQ(eval(withDtype.c_str()).getNumber(), i);
     EXPECT_EQ(eval(withoutDtype.c_str()).getNumber(), i);
   }
@@ -135,8 +135,8 @@ TEST_F(TorchliveRuntimeTest, TorchArangeTest) {
 
   for (auto i = 0; i < 3; i++) {
     std::string withDtype =
-        fmt::format("torch.arange(2, 5, {{dtype:'float64'}}).data[{}]", i);
-    std::string withoutDtype = fmt::format("torch.arange(2, 5).data[{}]", i);
+        fmt::format("torch.arange(2, 5, {{dtype:'float64'}})[{}].item()", i);
+    std::string withoutDtype = fmt::format("torch.arange(2, 5)[{}].item()", i);
     int expectedVal = i + 2;
     EXPECT_EQ(eval(withDtype.c_str()).getNumber(), expectedVal);
     EXPECT_EQ(eval(withoutDtype.c_str()).getNumber(), expectedVal);
@@ -150,9 +150,9 @@ TEST_F(TorchliveRuntimeTest, TorchArangeTest) {
 
   for (auto i = 0; i < 5; i++) {
     std::string withDtype = fmt::format(
-        "torch.arange(1, 3.5, 0.5, {{dtype:'float64'}}).data[{}]", i);
+        "torch.arange(1, 3.5, 0.5, {{dtype:'float64'}})[{}].item()", i);
     std::string withoutDtype =
-        fmt::format("torch.arange(1, 3.5, 0.5).data[{}]", i);
+        fmt::format("torch.arange(1, 3.5, 0.5)[{}].item()", i);
     double expectedVal = 1 + (i * 0.5);
     EXPECT_EQ(eval(withDtype.c_str()).getNumber(), expectedVal);
     EXPECT_EQ(eval(withoutDtype.c_str()).getNumber(), expectedVal);
@@ -170,14 +170,19 @@ TEST_F(TorchliveRuntimeTest, TorchRandintTest) {
   EXPECT_EQ(eval("torch.randint(10, [2, 2]).shape[1]").getNumber(), 2);
 
   // Test randint with parameters high and size.
-  for (auto i = 0; i < 4; i++) {
-    std::string s = fmt::format("torch.randint(10, [2, 2]).data[{}]", i);
-    std::string sWithDtype = fmt::format(
-        "torch.randint(10, [2, 2], {{dtype:'float64'}}).data[{}]", i);
-    EXPECT_GE(eval(s.c_str()).getNumber(), 0);
-    EXPECT_LT(eval(s.c_str()).getNumber(), 10);
-    EXPECT_GE(eval(sWithDtype.c_str()).getNumber(), 0);
-    EXPECT_LT(eval(sWithDtype.c_str()).getNumber(), 10);
+  for (auto i = 0; i < 2; i++) {
+    for (auto j = 0; j < 2; j++) {
+      std::string s =
+          fmt::format("torch.randint(10, [2, 2])[{}][{}].item()", i, j);
+      std::string sWithDtype = fmt::format(
+          "torch.randint(10, [2, 2], {{dtype:'float64'}})[{}][{}].item()",
+          i,
+          j);
+      EXPECT_GE(eval(s.c_str()).getNumber(), 0);
+      EXPECT_LT(eval(s.c_str()).getNumber(), 10);
+      EXPECT_GE(eval(sWithDtype.c_str()).getNumber(), 0);
+      EXPECT_LT(eval(sWithDtype.c_str()).getNumber(), 10);
+    }
   }
   EXPECT_EQ(
       eval("torch.randint(10, [2, 2], {dtype:'float64'}).dtype")
@@ -188,9 +193,9 @@ TEST_F(TorchliveRuntimeTest, TorchRandintTest) {
   // Test randint with parameters low, high, and size.
   EXPECT_EQ(eval("torch.randint(3, 5, [3]).shape[0]").getNumber(), 3);
   for (auto i = 0; i < 3; i++) {
-    std::string s = fmt::format("torch.randint(3, 5, [3]).data[{}]", i);
+    std::string s = fmt::format("torch.randint(3, 5, [3])[{}].item()", i);
     std::string sWithDtype = fmt::format(
-        "torch.randint(3, 5, [3], {{dtype:'float64'}}).data[{}]", i);
+        "torch.randint(3, 5, [3], {{dtype:'float64'}})[{}].item()", i);
     EXPECT_GE(eval(s.c_str()).getNumber(), 3);
     EXPECT_LT(eval(s.c_str()).getNumber(), 5);
     EXPECT_GE(eval(sWithDtype.c_str()).getNumber(), 3);
@@ -203,10 +208,15 @@ TEST_F(TorchliveRuntimeTest, TorchRandintTest) {
       "float64");
 
   EXPECT_EQ(eval("torch.randint(3, 7, [3, 3, 4]).shape[2]").getNumber(), 4);
-  for (auto i = 0; i < 36; i++) {
-    std::string s = fmt::format("torch.randint(3, 7, [3, 3, 4]).data[{}]", i);
-    EXPECT_GE(eval(s.c_str()).getNumber(), 3);
-    EXPECT_LT(eval(s.c_str()).getNumber(), 7);
+  for (auto i = 0; i < 3; i++) {
+    for (auto j = 0; j < 3; j++) {
+      for (auto k = 0; k < 4; k++) {
+        std::string s = fmt::format(
+            "torch.randint(3, 7, [3, 3, 4])[{}][{}][{}].item()", i, j, k);
+        EXPECT_GE(eval(s.c_str()).getNumber(), 3);
+        EXPECT_LT(eval(s.c_str()).getNumber(), 7);
+      }
+    }
   }
 
   EXPECT_THROW(eval("torch.randint(1)"), facebook::jsi::JSError);
@@ -261,7 +271,8 @@ TEST_F(TorchliveRuntimeTest, TorchTensorTest) {
   std::string torchCreateTensorFromArrayData =
       R"(
           const tensor = torch.tensor([[[1, 2, 3], [3, 4, 5]], [[1, 2, 3], [3, 4, 5]]]);
-          tensor.data[0] == 1 && tensor.data[1] == 2 && tensor.data[2] == 3 && tensor.data[3] == 3;
+          const data = tensor.data();
+          data[0] == 1 && data[1] == 2 && data[2] == 3 && data[3] == 3;
         )";
   EXPECT_TRUE(eval(torchCreateTensorFromArrayData.c_str()).getBool());
   std::string torchCreateTensorFromArrayDtype =
@@ -269,7 +280,7 @@ TEST_F(TorchliveRuntimeTest, TorchTensorTest) {
           const tensor = torch.tensor([[[1, 2, 3], [3, 4, 5]], [[1, 2, 3], [3, 4, 5]]]);
           const tensor2 = torch.tensor([[[1.1, 2, 3], [3, 4, 5]], [[1, 2, 3], [3, 4, 5]]], {dtype: torch.int});
           const tensor3 = torch.tensor([[[1.1, 2, 3], [3, 4, 5]], [[1, 2, 3], [3, 4, 5]]], {dtype: torch.int64});
-          tensor.dtype == torch.float32 && tensor2.dtype == torch.int && tensor2.data[0] == 1 && tensor3.dtype == torch.int64;
+          tensor.dtype == torch.float32 && tensor2.dtype == torch.int && tensor2[0][0][0].item() == 1 && tensor3.dtype == torch.int64;
         )";
   EXPECT_TRUE(eval(torchCreateTensorFromArrayDtype.c_str()).getBool());
   // there must be at least one argument
@@ -299,7 +310,7 @@ TEST_F(TorchliveRuntimeTest, TorchZerosTest) {
 
   EXPECT_EQ(eval("torch.zeros(4).shape[0]").getNumber(), 4);
   for (auto i = 0; i < 4; i++) {
-    std::string val_s = fmt::format("torch.zeros(4).data[{}]", i);
+    std::string val_s = fmt::format("torch.zeros(4)[{}].item()", i);
     EXPECT_EQ(eval(val_s.c_str()).getNumber(), 0);
   }
 
@@ -309,9 +320,11 @@ TEST_F(TorchliveRuntimeTest, TorchZerosTest) {
 
   EXPECT_EQ(eval("torch.zeros(2, 3).shape[0]").getNumber(), 2);
   EXPECT_EQ(eval("torch.zeros(2, 3).shape[1]").getNumber(), 3);
-  for (auto i = 0; i < 6; i++) {
-    std::string val_s = fmt::format("torch.zeros(2, 3).data[{}]", i);
-    EXPECT_EQ(eval(val_s.c_str()).getNumber(), 0);
+  for (auto i = 0; i < 2; i++) {
+    for (auto j = 0; j < 3; j++) {
+      std::string val_s = fmt::format("torch.zeros(2, 3)[{}][{}].item()", i, j);
+      EXPECT_EQ(eval(val_s.c_str()).getNumber(), 0);
+    }
   }
 
   // Test zeros with array parameters.
@@ -320,9 +333,12 @@ TEST_F(TorchliveRuntimeTest, TorchZerosTest) {
 
   EXPECT_EQ(eval("torch.zeros([3, 2]).shape[0]").getNumber(), 3);
   EXPECT_EQ(eval("torch.zeros([3, 2]).shape[1]").getNumber(), 2);
-  for (auto i = 0; i < 6; i++) {
-    std::string val_s = fmt::format("torch.zeros([3, 2]).data[{}]", i);
-    EXPECT_EQ(eval(val_s.c_str()).getNumber(), 0);
+  for (auto i = 0; i < 3; i++) {
+    for (auto j = 0; j < 2; j++) {
+      std::string val_s =
+          fmt::format("torch.zeros([3, 2])[{}][{}].item()", i, j);
+      EXPECT_EQ(eval(val_s.c_str()).getNumber(), 0);
+    }
   }
 
   // Test zeros with no parameters (invalid).
@@ -333,26 +349,30 @@ TEST_F(TorchliveRuntimeTest, TorchOnesTest) {
   // Test ones with single integer parameters.
   EXPECT_EQ(eval("torch.ones(3).shape[0]").getNumber(), 3);
   for (auto i = 0; i < 3; i++) {
-    std::string tensorDataAtToEval = fmt::format("torch.ones(3).data[{}]", i);
+    std::string tensorDataAtToEval = fmt::format("torch.ones(3)[{}].item()", i);
     EXPECT_EQ(eval(tensorDataAtToEval.c_str()).getNumber(), 1);
   }
 
   // Test ones with multiple integer parameters.
   EXPECT_EQ(eval("torch.ones(2, 3).shape[0]").getNumber(), 2);
   EXPECT_EQ(eval("torch.ones(2, 3).shape[1]").getNumber(), 3);
-  for (auto i = 0; i < 6; i++) {
-    std::string tensorDataAtToEval =
-        fmt::format("torch.ones(2, 3).data[{}]", i);
-    EXPECT_EQ(eval(tensorDataAtToEval.c_str()).getNumber(), 1);
+  for (auto i = 0; i < 2; i++) {
+    for (auto j = 0; j < 3; j++) {
+      std::string tensorDataAtToEval =
+          fmt::format("torch.ones(2, 3)[{}][{}].item()", i, j);
+      EXPECT_EQ(eval(tensorDataAtToEval.c_str()).getNumber(), 1);
+    }
   }
 
   // Test ones with array parameters.
   EXPECT_EQ(eval("torch.ones([2, 3]).shape[0]").getNumber(), 2);
   EXPECT_EQ(eval("torch.ones([2, 3]).shape[1]").getNumber(), 3);
-  for (auto i = 0; i < 6; i++) {
-    std::string tensorDataAtToEval =
-        fmt::format("torch.ones([2, 3]).data[{}]", i);
-    EXPECT_EQ(eval(tensorDataAtToEval.c_str()).getNumber(), 1);
+  for (auto i = 0; i < 2; i++) {
+    for (auto j = 0; j < 3; j++) {
+      std::string tensorDataAtToEval =
+          fmt::format("torch.ones([2, 3])[{}][{}].item()", i, j);
+      EXPECT_EQ(eval(tensorDataAtToEval.c_str()).getNumber(), 1);
+    }
   }
 
   // Test data type parameter.

@@ -218,6 +218,55 @@ jsi::Value clampImp(
       runtime, std::move(tensorHostObject));
 }
 
+jsi::Value dataImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  const auto& tensor = args.thisAsHostObject<TensorHostObject>()->tensor;
+
+  int byteLength = tensor.nbytes();
+  auto type = tensor.dtype();
+
+  // TODO(T113480543): enable BigInt data view once Hermes support the
+  // BigIntArray
+  if (type == torch_::kInt64) {
+    throw jsi::JSError(
+        runtime, "the property 'data' of BigInt Tensor is not supported.");
+  }
+
+  std::string typedArrayName;
+  if (type == torch_::kUInt8) {
+    typedArrayName = "Uint8Array";
+  } else if (type == torch_::kInt8) {
+    typedArrayName = "Int8Array";
+  } else if (type == torch_::kInt16) {
+    typedArrayName = "Int16Array";
+  } else if (type == torch_::kInt32) {
+    typedArrayName = "Int32Array";
+  } else if (type == torch_::kFloat32) {
+    typedArrayName = "Float32Array";
+  } else if (type == torch_::kFloat64) {
+    typedArrayName = "Float64Array";
+  } else {
+    throw jsi::JSError(runtime, "tensor data dtype is not supported");
+  }
+
+  jsi::ArrayBuffer buffer = runtime.global()
+                                .getPropertyAsFunction(runtime, "ArrayBuffer")
+                                .callAsConstructor(runtime, byteLength)
+                                .asObject(runtime)
+                                .getArrayBuffer(runtime);
+
+  std::memcpy(buffer.data(runtime), tensor.data_ptr(), byteLength);
+
+  return runtime.global()
+      .getPropertyAsFunction(runtime, typedArrayName.c_str())
+      .callAsConstructor(runtime, buffer)
+      .asObject(runtime);
+}
+
 jsi::Value itemImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -254,6 +303,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "add", 1, addImpl);
   setPropertyHostFunction(runtime, "argmax", 0, argmaxImpl);
   setPropertyHostFunction(runtime, "clamp", 1, clampImp);
+  setPropertyHostFunction(runtime, "data", 0, dataImpl);
   setPropertyHostFunction(runtime, "item", 0, itemImpl);
   setPropertyHostFunction(runtime, "to", 1, toImpl);
 }
@@ -277,48 +327,7 @@ jsi::Value TensorHostObject::get(
     const jsi::PropNameID& propNameId) {
   auto name = propNameId.utf8(runtime);
 
-  if (name == DATA) {
-    auto tensor = this->tensor;
-    int byteLength = tensor.nbytes();
-    auto type = tensor.dtype();
-
-    // TODO(T113480543): enable BigInt data view once Hermes support the
-    // BigIntArray
-    if (type == torch_::kInt64) {
-      throw jsi::JSError(
-          runtime, "the property 'data' of BigInt Tensor is not supported.");
-    }
-
-    jsi::ArrayBuffer buffer = runtime.global()
-                                  .getPropertyAsFunction(runtime, "ArrayBuffer")
-                                  .callAsConstructor(runtime, byteLength)
-                                  .asObject(runtime)
-                                  .getArrayBuffer(runtime);
-
-    std::memcpy(buffer.data(runtime), tensor.data_ptr(), byteLength);
-
-    std::string typedArrayName;
-    if (type == torch_::kUInt8) {
-      typedArrayName = "Uint8Array";
-    } else if (type == torch_::kInt8) {
-      typedArrayName = "Int8Array";
-    } else if (type == torch_::kInt16) {
-      typedArrayName = "Int16Array";
-    } else if (type == torch_::kInt32) {
-      typedArrayName = "Int32Array";
-    } else if (type == torch_::kFloat32) {
-      typedArrayName = "Float32Array";
-    } else if (type == torch_::kFloat64) {
-      typedArrayName = "Float64Array";
-    } else {
-      throw jsi::JSError(runtime, "tensor data dtype is not supported");
-    }
-
-    return runtime.global()
-        .getPropertyAsFunction(runtime, typedArrayName.c_str())
-        .callAsConstructor(runtime, buffer)
-        .asObject(runtime);
-  } else if (name == DIV) {
+  if (name == DIV) {
     return jsi::Value(runtime, div_);
   } else if (name == DTYPE) {
     return jsi::String::createFromUtf8(

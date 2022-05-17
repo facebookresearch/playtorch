@@ -35,8 +35,8 @@ TEST_F(TorchliveMediaRuntimeTest, TensorToBlobTest) {
           const tensor1 = torch.tensor([2, 3, 4], {dtype: torch.uint8});
           const blob = media.toBlob(tensor1);
           const tensor2 = torch.fromBlob(blob, [3]);
-          const data1 = tensor1.data;
-          const data2 = tensor2.data;
+          const data1 = tensor1.data();
+          const data2 = tensor2.data();
           data1.every((value, i) => value === data2[i]);
         )";
   EXPECT_TRUE(eval(tensorToBlob).getBool());

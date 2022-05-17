@@ -157,14 +157,14 @@ export interface Tensor {
    */
   clamp(options: {min?: Scalar | Tensor; max?: Scalar | Tensor}): Tensor;
   /**
-   * Returns the tensor data as [[TypedArray]] buffer.
+   * Returns the tensor data as `TypedArray` buffer.
    *
    * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray}
    *
    * A valid TypeScript expression is as follows:
    *
    * ```typescript
-   * torch.rand([2, 3]).data[3];
+   * torch.rand([2, 3]).data()[3];
    * ```
    *
    * :::note
@@ -175,7 +175,7 @@ export interface Tensor {
    *
    * @experimental
    */
-  data: TypedArray;
+  data(): TypedArray;
   /**
    * Divides each element of the input input by the corresponding element of
    * other.

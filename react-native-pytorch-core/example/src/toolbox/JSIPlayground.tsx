@@ -42,11 +42,11 @@ export default function JSIPlayground() {
     let tensor = torch.rand(size, {dtype: torch.float64});
     const tensorStr = tensor.toString();
     console.log(tensorStr);
-    let data = new Float32Array(tensor.data);
+    let data = new Float32Array(tensor.data());
     console.log(data);
 
     if (data.length < 20) {
-      console.log('tensor data', tensor.data);
+      console.log('tensor data', tensor.data());
     }
 
     let startTime = performance.now();
@@ -78,7 +78,7 @@ export default function JSIPlayground() {
     function printTensor(t: Tensor) {
       console.log(t.toString());
       console.log(t.shape);
-      console.log(t.data);
+      console.log(t.data());
     }
     printTensor(torch.eye(0));
     printTensor(torch.eye(3));
@@ -89,34 +89,34 @@ export default function JSIPlayground() {
     console.log('---Test torch.arange---');
     tensor = torch.arange(5);
     console.log(tensor.toString());
-    data = new Float32Array(tensor.data);
+    data = new Float32Array(tensor.data());
     console.log(data);
     tensor = torch.arange(1, 4);
     console.log(tensor.toString());
-    data = new Float32Array(tensor.data);
+    data = new Float32Array(tensor.data());
     console.log(data);
     tensor = torch.arange(1, 2.5, 0.5);
     console.log(tensor.toString());
-    data = new Float32Array(tensor.data);
+    data = new Float32Array(tensor.data());
     console.log(data);
 
     console.log('---Test torch.randint---');
     tensor = torch.randint(3, 5, [3]);
     console.log(tensor.toString());
     console.log(tensor.shape);
-    console.log(tensor.data);
+    console.log(tensor.data());
     tensor = torch.randint(10, [2, 2]);
     console.log(tensor.toString());
     console.log(tensor.shape);
-    console.log(tensor.data);
+    console.log(tensor.data());
     tensor = torch.randint(3, 10, [2, 2]);
     console.log(tensor.toString());
     console.log(tensor.shape);
-    console.log(tensor.data);
+    console.log(tensor.data());
     tensor = torch.randint(3, 10, [2, 2, 2]);
     console.log(tensor.toString());
     console.log(tensor.shape);
-    console.log(tensor.data);
+    console.log(tensor.data());
 
     console.log('---Test squeeze and unsqueeze---');
     tensor = torch.rand([4]);
@@ -170,7 +170,7 @@ export default function JSIPlayground() {
       ],
     ]);
     console.log(tensor5.shape);
-    console.log(tensor5.data);
+    console.log(tensor5.data());
     console.log(tensor5.toString());
     console.log(tensor.dtype);
     tensor5 = torch.tensor(
@@ -187,13 +187,13 @@ export default function JSIPlayground() {
       {dtype: torch.int},
     );
     console.log(tensor5.shape);
-    console.log(tensor5.data);
+    console.log(tensor5.data());
     console.log(tensor5.toString());
     console.log(tensor5.dtype);
 
     tensor5 = torch.tensor(1, {dtype: torch.int});
     console.log(tensor5.shape);
-    console.log(tensor5.data);
+    console.log(tensor5.data());
     console.log(tensor5.toString());
     console.log(tensor5.dtype);
 
@@ -229,10 +229,10 @@ export default function JSIPlayground() {
 
     console.log('---Test tensor.topk---');
     let topkTensor = torch.arange(10, 20);
-    console.log(topkTensor.data);
+    console.log(topkTensor.data());
     let [values, indices] = topkTensor.topk(3);
-    console.log(values.data);
-    console.log(indices.data);
+    console.log(values.data());
+    console.log(indices.data());
     console.log('---test torchvision.resize---');
     let tensor8 = torch.rand([1, 3, 100, 100]);
     let resize = torchvision.transforms.resize(20);
@@ -262,7 +262,7 @@ export default function JSIPlayground() {
 
     console.log('---test async function that returns HostObject---');
     const asyncResult = await (async () => torch.rand([3]))();
-    console.log(asyncResult && asyncResult.data);
+    console.log(asyncResult && asyncResult.data());
   };
 
   return (

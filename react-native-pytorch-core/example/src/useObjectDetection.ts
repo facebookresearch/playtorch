@@ -102,7 +102,7 @@ const unpackFn = async (
     }
 
     const boxTensor = predBoxesTensor[i];
-    const [centerX, centerY, width, height] = boxTensor.data;
+    const [centerX, centerY, width, height] = boxTensor.data();
     const x = centerX - width / 2;
     const y = centerY - height / 2;
 

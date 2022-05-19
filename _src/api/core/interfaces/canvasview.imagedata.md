@@ -31,7 +31,7 @@ functions on the JavaScript object.
 
 #### Defined in
 
-[NativeJSRef.ts:64](https://github.com/pytorch/live/blob/5394069/react-native-pytorch-core/src/NativeJSRef.ts#L64)
+[NativeJSRef.ts:64](https://github.com/pytorch/live/blob/2cd4674/react-native-pytorch-core/src/NativeJSRef.ts#L64)
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 #### Defined in
 
-[CanvasView.tsx:30](https://github.com/pytorch/live/blob/5394069/react-native-pytorch-core/src/CanvasView.tsx#L30)
+[CanvasView.tsx:30](https://github.com/pytorch/live/blob/2cd4674/react-native-pytorch-core/src/CanvasView.tsx#L30)
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 #### Defined in
 
-[CanvasView.tsx:29](https://github.com/pytorch/live/blob/5394069/react-native-pytorch-core/src/CanvasView.tsx#L29)
+[CanvasView.tsx:29](https://github.com/pytorch/live/blob/2cd4674/react-native-pytorch-core/src/CanvasView.tsx#L29)
 
 ___
 
@@ -61,7 +61,7 @@ ___
 
 #### Defined in
 
-[CanvasView.tsx:28](https://github.com/pytorch/live/blob/5394069/react-native-pytorch-core/src/CanvasView.tsx#L28)
+[CanvasView.tsx:28](https://github.com/pytorch/live/blob/2cd4674/react-native-pytorch-core/src/CanvasView.tsx#L28)
 
 ## Methods
 
@@ -75,4 +75,4 @@ ___
 
 #### Defined in
 
-[CanvasView.tsx:31](https://github.com/pytorch/live/blob/5394069/react-native-pytorch-core/src/CanvasView.tsx#L31)
+[CanvasView.tsx:31](https://github.com/pytorch/live/blob/2cd4674/react-native-pytorch-core/src/CanvasView.tsx#L31)

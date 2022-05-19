@@ -54,6 +54,13 @@ export default function BlobExample() {
       } else {
         setTestState('Test Failed');
       }
+
+      const convertedImage = media.imageFromBlob(
+        blob,
+        wbrgbImage.getWidth(),
+        wbrgbImage.getHeight(),
+      );
+      console.log(convertedImage.getWidth());
     }
   }, [wbrgbImage, testState]);
 

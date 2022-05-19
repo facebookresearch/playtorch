@@ -7,7 +7,10 @@
 
 #include <string>
 
+#include "../../cxx/src/torchlive/media/Blob.h"
 #include "../../cxx/src/torchlive/media/NativeJSRefBridge.h"
+#include "../../cxx/src/torchlive/media/image/Image.h"
+#include "../../cxx/src/torchlive/media/image/ImageHostObject.h"
 
 extern "C" const char* torchlive_media_beginReadData(const char*);
 extern "C" void torchlive_media_endReadData(const char*);
@@ -22,7 +25,11 @@ facebook::jsi::Object imageFromBlob(
     const Blob& blob,
     double width,
     double height) {
-  return facebook::jsi::Object::createFromHostObject(runtime, nullptr);
+  // TODO(T116845603): convert blob to Image
+  auto imageObject =
+      std::make_shared<torchlive::media::ImageHostObject>(runtime, Image());
+  return facebook::jsi::Object::createFromHostObject(
+      runtime, std::move(imageObject));
 }
 
 std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {

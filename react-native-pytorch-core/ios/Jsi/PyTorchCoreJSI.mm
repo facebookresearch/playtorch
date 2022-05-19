@@ -11,16 +11,13 @@
 #import <ReactCommon/RuntimeExecutor.h>
 #import <jsi/jsi.h>
 #import <sys/utsname.h>
+#import <cxx/src/torchlive.h>
 
 #import "PyTorchCoreJSI.h"
 
 @interface RCTCxxBridge ()
 - (void)invokeAsync:(std::function<void()> &&)func;
 @end
-
-namespace torchlive {
-void install(facebook::jsi::Runtime &runtime, facebook::react::RuntimeExecutor runtimeExecutor);
-}
 
 @implementation PyTorchCoreJSI
 

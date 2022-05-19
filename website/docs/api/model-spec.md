@@ -3,7 +3,13 @@ id: model-spec
 sidebar_position: 5
 ---
 
-# Model Specification
+# Model Specification (Deprecated)
+
+:::caution
+
+The model specification will be deprecated and replaced by the PyTorch Live API for JavaScript Interface (JSI).
+
+:::
 
 <div className="tutorial-page">
 

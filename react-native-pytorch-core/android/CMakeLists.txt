@@ -22,6 +22,8 @@ add_library(
         ../cxx/src/torchlive/common/BaseHostObject.cpp
         ../cxx/src/torchlive/media/Blob.cpp
         ../cxx/src/torchlive/media/BlobHostObject.cpp
+        ../cxx/src/torchlive/media/image/ImageHostObject.cpp
+        ../cxx/src/torchlive/media/image/ImageCxx.cpp
         ../cxx/src/torchlive/media/MediaNamespace.cpp
         ../cxx/src/torchlive/Promise.cpp
         ../cxx/src/torchlive/ThreadPool.cpp

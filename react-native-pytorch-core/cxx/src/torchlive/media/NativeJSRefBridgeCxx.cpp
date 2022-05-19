@@ -14,6 +14,14 @@
 namespace torchlive {
 namespace media {
 
+facebook::jsi::Object imageFromBlob(
+    facebook::jsi::Runtime& runtime,
+    const Blob& blob,
+    double width,
+    double height) {
+  return facebook::jsi::Object::createFromHostObject(runtime, nullptr);
+}
+
 std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
   size_t const size = 0;
   auto data = std::unique_ptr<uint8_t[]>(0);

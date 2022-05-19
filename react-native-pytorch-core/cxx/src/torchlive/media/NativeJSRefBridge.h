@@ -7,12 +7,19 @@
 
 #pragma once
 
+#include <jsi/jsi.h>
 #include <string>
 
 #include "Blob.h"
 
 namespace torchlive {
 namespace media {
+
+facebook::jsi::Object imageFromBlob(
+    facebook::jsi::Runtime& runtime,
+    const Blob& blob,
+    double width,
+    double height);
 
 std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId);
 

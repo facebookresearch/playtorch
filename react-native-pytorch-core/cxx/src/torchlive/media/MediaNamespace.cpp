@@ -7,6 +7,7 @@
 
 #include "MediaNamespace.h"
 #include "../torch/TensorHostObject.h"
+#include "../torch/utils/ArgumentParser.h"
 #include "../torch/utils/helpers.h"
 #include "BlobHostObject.h"
 #include "NativeJSRefBridge.h"
@@ -15,6 +16,22 @@ namespace torchlive {
 namespace media {
 
 using namespace facebook;
+
+namespace {
+
+jsi::Value imageFromBlobImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(3);
+  const auto& blob = args.asHostObject<BlobHostObject>(0)->blob;
+  auto width = args[1].asNumber();
+  auto height = args[2].asNumber();
+
+  return torchlive::media::imageFromBlob(runtime, *blob, width, height);
+}
 
 jsi::Value toBlobImpl(
     jsi::Runtime& runtime,
@@ -28,7 +45,7 @@ jsi::Value toBlobImpl(
     throw jsi::JSError(runtime, "argument must be an object");
   }
 
-  auto obj = arguments[0].asObject(runtime);
+  const auto& obj = arguments[0].asObject(runtime);
 
   std::unique_ptr<torchlive::media::Blob> blob;
   if (obj.isHostObject<torchlive::torch::TensorHostObject>(runtime)) {
@@ -57,10 +74,13 @@ jsi::Value toBlobImpl(
   return jsi::Object::createFromHostObject(runtime, std::move(blobHostObject));
 }
 
+} // namespace
+
 jsi::Object buildNamespace(jsi::Runtime& rt, RuntimeExecutor rte) {
   using utils::helpers::setPropertyHostFunction;
 
   jsi::Object ns(rt);
+  setPropertyHostFunction(rt, ns, "imageFromBlob", 3, imageFromBlobImpl);
   setPropertyHostFunction(rt, ns, "toBlob", 1, toBlobImpl);
   return ns;
 }

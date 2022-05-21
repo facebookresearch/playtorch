@@ -47,21 +47,20 @@ export default function BlobExample() {
   useEffect(() => {
     if (wbrgbImage !== undefined && testState === loadingState) {
       const blob = media.toBlob(wbrgbImage as Image);
-      const jsonData = require('./wbrgbImageUint8Array.json');
-      let arrayData = Uint8Array.from(Object.values(jsonData));
-      if (arrayEqual(blob.arrayBuffer(), arrayData)) {
-        setTestState('Test Passed');
-      } else {
-        setTestState('Test Failed');
-      }
 
       const convertedImage = media.imageFromBlob(
         blob,
         wbrgbImage.getWidth(),
         wbrgbImage.getHeight(),
       );
-      console.log(wbrgbImage.ID);
-      console.log(convertedImage.ID);
+
+      const convertedBlob = media.toBlob(convertedImage);
+
+      if (arrayEqual(blob.arrayBuffer(), convertedBlob.arrayBuffer())) {
+        setTestState('Test Passed');
+      } else {
+        setTestState('Test Failed');
+      }
     }
   }, [wbrgbImage, testState]);
 

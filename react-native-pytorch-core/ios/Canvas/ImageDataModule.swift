@@ -10,11 +10,9 @@ import Foundation
 @objc(ImageDataModule)
 public class ImageDataModule: NSObject {
 
-    static let REACT_MODULE = "PyTorchCoreImageDataModule"
-
     @objc
     public func getName() -> String {
-        return ImageModule.REACT_MODULE
+        return "PyTorchCoreImageDataModule"
     }
 
     @objc(release:resolver:rejecter:)

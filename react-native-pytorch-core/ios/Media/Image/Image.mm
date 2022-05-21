@@ -13,7 +13,14 @@
 namespace torchlive {
 namespace media {
 
-Image::Image(UIImage *image) noexcept : image_(image) {}
+Image::Image(UIImage *image) noexcept : image_(image) {
+  NSString *refId = [ImageModule wrapImage:image];
+  id_ = std::string([refId UTF8String]);
+}
+
+std::string Image::getId() const {
+  return id_;
+}
 
 double Image::getWidth() const noexcept {
   return image_.size.width;

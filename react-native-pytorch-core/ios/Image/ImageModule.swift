@@ -6,11 +6,10 @@
  */
 
 import Foundation
+import UIKit
 
 @objc(ImageModule)
 public class ImageModule: NSObject {
-
-    static let REACT_MODULE = "PyTorchCoreImageModule"
 
     enum ImageModuleError: Error {
         case castingObject
@@ -19,7 +18,7 @@ public class ImageModule: NSObject {
 
     @objc
     public func getName() -> String {
-        return ImageModule.REACT_MODULE
+        return "PyTorchCoreImageModule"
     }
 
     @objc(fromURL:resolver:rejecter:)
@@ -168,5 +167,16 @@ public class ImageModule: NSObject {
         } catch {
             reject(RCTErrorUnspecified, "Invalid image reference in release: \(error)", error)
         }
+    }
+
+    @objc(wrapImage:)
+    public static func wrapImage(_ image: UIImage) -> NSString? {
+      if let cgImage = image.cgImage {
+        let bitmapImage = Image(image: cgImage)
+        let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
+        return ref["ID"]! as NSString
+      } else {
+        return nil
+      }
     }
 }

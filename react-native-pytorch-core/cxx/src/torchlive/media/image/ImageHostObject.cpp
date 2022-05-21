@@ -119,6 +119,8 @@ ImageHostObject::ImageHostObject(
     jsi::Runtime& runtime,
     std::shared_ptr<IImage> image)
     : BaseHostObject(runtime), image_(std::move(image)) {
+  setProperty(
+      runtime, "ID", jsi::String::createFromUtf8(runtime, image_->getId()));
   setPropertyHostFunction(runtime, "getWidth", 0, getWidthImpl);
   setPropertyHostFunction(runtime, "getHeight", 0, getHeightImpl);
   setPropertyHostFunction(runtime, "getNaturalWidth", 0, getNaturalWidthImpl);

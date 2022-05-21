@@ -14,7 +14,6 @@ var audioRecorder: AVAudioRecorder!
 @objc(AudioModule)
 public class AudioModule: NSObject, AVAudioRecorderDelegate {
 
-    static let NAME = "PyTorchCoreAudioModule"
     var promiseResolve: RCTPromiseResolveBlock!
     var promiseReject: RCTPromiseRejectBlock!
 
@@ -28,7 +27,7 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
 
     @objc
     public func getName() -> String {
-        return AudioModule.NAME
+        return "PyTorchCoreAudioModule"
     }
 
      public static func unwrapAudio(_ audioRef: NSDictionary) throws -> IAudio {

@@ -9,6 +9,7 @@
 
 #import <Foundation/Foundation.h>
 #import "cxx/src/torchlive/media/image/IImage.h"
+#import <string>
 
 namespace torchlive {
 namespace media {
@@ -17,6 +18,8 @@ class Image : public IImage {
 public:
   Image(UIImage *image) noexcept;
   ~Image() override = default;
+
+  std::string getId() const override;
 
   double getWidth() const noexcept override;
 
@@ -34,6 +37,7 @@ public:
 
 private:
   UIImage *image_;
+  std::string id_;
 };
 
 } // namespace media

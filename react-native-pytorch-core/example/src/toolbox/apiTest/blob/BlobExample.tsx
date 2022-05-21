@@ -60,8 +60,8 @@ export default function BlobExample() {
         wbrgbImage.getWidth(),
         wbrgbImage.getHeight(),
       );
-      console.log(wbrgbImage.getWidth());
-      console.log(convertedImage.getWidth());
+      console.log(wbrgbImage.ID);
+      console.log(convertedImage.ID);
     }
   }, [wbrgbImage, testState]);
 

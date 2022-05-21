@@ -16,6 +16,11 @@ class IImage {
  public:
   virtual ~IImage() = default;
 
+  // ID is needed and that it is a temp solution until NativeJSRef is
+  // deprecated.
+  // TODO(T120733560): Remove ID for IImage once NativeJSRef is deprecated
+  virtual std::string getId() const = 0;
+
   virtual double getWidth() const noexcept = 0;
 
   virtual double getHeight() const noexcept = 0;

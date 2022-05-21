@@ -33,7 +33,7 @@ public:
   void close() const override;
 
 private:
-  UIImage *_image;
+  UIImage *image_;
 };
 
 } // namespace media

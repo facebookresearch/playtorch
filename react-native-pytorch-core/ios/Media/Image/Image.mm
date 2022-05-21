@@ -10,32 +10,47 @@
 namespace torchlive {
 namespace media {
 
-//TODO(T116845603): update these with real image data
-
-Image::Image(UIImage *image) noexcept {}
+Image::Image(UIImage *image) noexcept : image_(image) {}
 
 double Image::getWidth() const noexcept {
-  return 11;
+  return image_.size.width;
 }
 
 double Image::getHeight() const noexcept {
-  return 10;
+  return image_.size.height;
 }
 
 double Image::getNaturalWidth() const noexcept {
-  return 10;
+  // Note: on Android, returns the width in device pixels so that it can be properly redrawn back to the canvas
+  // Since iOS always uses points (density independent), this will return the same as getWidth so that it can be
+  // properly redrawn back to the canvas
+  return image_.size.width;
 }
 
 double Image::getNaturalHeight() const noexcept {
-  return 10;
+  // Note: on Android, returns the width in device pixels so that it can be properly redrawn back to the canvas
+  // Since iOS always uses points (density independent), this will return the same as getWidth so that it can be
+  // properly redrawn back to the canvas
+  return image_.size.height;
 }
 
 double Image::getPixelDensity() const noexcept {
-  return 1;
+  return 1.0;
 }
 
 std::shared_ptr<IImage> Image::scale(double sx, double sy) const {
-  return nullptr;
+  CGFloat width = image_.size.width * sx;
+  CGFloat height = image_.size.height * sy;
+
+  CGSize size = CGSizeMake(NSUInteger(width), NSUInteger(height));
+  CGRect rect = CGRectMake(0, 0, size.width, size.height);
+
+  UIGraphicsBeginImageContextWithOptions(size, NO, 1);
+  [image_ drawInRect:rect];
+  UIImage *scaledImage = UIGraphicsGetImageFromCurrentImageContext();
+  UIGraphicsEndImageContext();
+
+  return std::make_shared<Image>(scaledImage);
 }
 
 void Image::close() const {

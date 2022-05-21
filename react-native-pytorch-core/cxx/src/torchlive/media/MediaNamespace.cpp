@@ -19,6 +19,13 @@ using namespace facebook;
 
 namespace {
 
+std::unique_ptr<Blob> tensorToBlob(const ::torch::Tensor& tensor) {
+  auto size = tensor.numel();
+  auto data = std::make_unique<uint8_t[]>(size);
+  std::memcpy(data.get(), tensor.data_ptr(), size);
+  return std::make_unique<torchlive::media::Blob>(std::move(data), size);
+}
+
 jsi::Value imageFromBlobImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -30,6 +37,22 @@ jsi::Value imageFromBlobImpl(
   auto width = args[1].asNumber();
   auto height = args[2].asNumber();
 
+  return torchlive::media::imageFromBlob(runtime, *blob, width, height);
+}
+
+jsi::Value imageFromTensorImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+
+  const auto& tensor = args.asHostObject<torch::TensorHostObject>(0)->tensor;
+  // Assuming format: CHW (channels, height, width), uint8
+  auto width = tensor.size(2);
+  auto height = tensor.size(1);
+  auto blob = tensorToBlob(tensor);
   return torchlive::media::imageFromBlob(runtime, *blob, width, height);
 }
 
@@ -49,12 +72,9 @@ jsi::Value toBlobImpl(
 
   std::unique_ptr<torchlive::media::Blob> blob;
   if (obj.isHostObject<torchlive::torch::TensorHostObject>(runtime)) {
-    auto tensor =
+    const auto& tensor =
         obj.asHostObject<torchlive::torch::TensorHostObject>(runtime)->tensor;
-    auto size = tensor.numel();
-    auto data = std::make_unique<uint8_t[]>(size);
-    std::memcpy(data.get(), tensor.data_ptr(), size);
-    blob = std::make_unique<torchlive::media::Blob>(std::move(data), size);
+    blob = tensorToBlob(tensor);
   } else {
     const auto ID_PROP = jsi::PropNameID::forUtf8(runtime, std::string("ID"));
     if (!obj.hasProperty(runtime, ID_PROP)) {
@@ -81,6 +101,7 @@ jsi::Object buildNamespace(jsi::Runtime& rt, RuntimeExecutor rte) {
 
   jsi::Object ns(rt);
   setPropertyHostFunction(rt, ns, "imageFromBlob", 3, imageFromBlobImpl);
+  setPropertyHostFunction(rt, ns, "imageFromTensor", 1, imageFromTensorImpl);
   setPropertyHostFunction(rt, ns, "toBlob", 1, toBlobImpl);
   return ns;
 }

@@ -26,7 +26,7 @@ jsi::Value getWidthImpl(
   const auto& image = thisValue.asObject(runtime)
                           .asHostObject<ImageHostObject>(runtime)
                           ->getImage();
-  return image.getWidth();
+  return image->getWidth();
 };
 
 jsi::Value getHeightImpl(
@@ -37,7 +37,7 @@ jsi::Value getHeightImpl(
   const auto& image = thisValue.asObject(runtime)
                           .asHostObject<ImageHostObject>(runtime)
                           ->getImage();
-  return image.getHeight();
+  return image->getHeight();
 };
 
 jsi::Value getNaturalWidthImpl(
@@ -48,7 +48,7 @@ jsi::Value getNaturalWidthImpl(
   const auto& image = thisValue.asObject(runtime)
                           .asHostObject<ImageHostObject>(runtime)
                           ->getImage();
-  return image.getNaturalWidth();
+  return image->getNaturalWidth();
 };
 
 jsi::Value getNaturalHeightImpl(
@@ -59,7 +59,7 @@ jsi::Value getNaturalHeightImpl(
   const auto& image = thisValue.asObject(runtime)
                           .asHostObject<ImageHostObject>(runtime)
                           ->getImage();
-  return image.getNaturalHeight();
+  return image->getNaturalHeight();
 };
 
 jsi::Value getPixelDensityImpl(
@@ -70,7 +70,7 @@ jsi::Value getPixelDensityImpl(
   const auto& image = thisValue.asObject(runtime)
                           .asHostObject<ImageHostObject>(runtime)
                           ->getImage();
-  return image.getPixelDensity();
+  return image->getPixelDensity();
 };
 
 jsi::Value scaleImpl(
@@ -85,7 +85,7 @@ jsi::Value scaleImpl(
       runtime,
       [&image, sx = args[0].asNumber(), sy = args[1].asNumber()](
           jsi::Runtime& rt, std::shared_ptr<torchlive::Promise> promise) {
-        auto scaledImage = image.scale(sx, sy);
+        auto scaledImage = image->scale(sx, sy);
         auto imageObject =
             utils::helpers::createFromHostObject<ImageHostObject>(
                 rt, std::move(scaledImage));
@@ -99,15 +99,15 @@ jsi::Value releaseImpl(
     const jsi::Value& thisValue,
     const jsi::Value* arguments,
     size_t count) {
-  auto& image = thisValue.asObject(runtime)
-                    .asHostObject<ImageHostObject>(runtime)
-                    ->getImage();
+  auto image = thisValue.asObject(runtime)
+                   .asHostObject<ImageHostObject>(runtime)
+                   ->getImage();
   auto promiseValue = torchlive::createPromiseAsJSIValue(
       runtime,
-      [&image](
+      [image](
           jsi::Runtime& rt,
           std::shared_ptr<torchlive::Promise> promise) mutable {
-        image.close();
+        image->close();
         promise->resolve(jsi::Value());
       });
   return promiseValue;
@@ -115,7 +115,9 @@ jsi::Value releaseImpl(
 
 } // namespace
 
-ImageHostObject::ImageHostObject(jsi::Runtime& runtime, Image image)
+ImageHostObject::ImageHostObject(
+    jsi::Runtime& runtime,
+    std::shared_ptr<IImage> image)
     : BaseHostObject(runtime), image_(std::move(image)) {
   setPropertyHostFunction(runtime, "getWidth", 0, getWidthImpl);
   setPropertyHostFunction(runtime, "getHeight", 0, getHeightImpl);
@@ -126,7 +128,7 @@ ImageHostObject::ImageHostObject(jsi::Runtime& runtime, Image image)
   setPropertyHostFunction(runtime, "release", 0, releaseImpl);
 }
 
-const Image& ImageHostObject::getImage() const noexcept {
+std::shared_ptr<IImage> ImageHostObject::getImage() const noexcept {
   return image_;
 }
 

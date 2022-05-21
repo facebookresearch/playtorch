@@ -5,12 +5,14 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "cxx/src/torchlive/media/image/Image.h"
+#import "Image.h"
 
 namespace torchlive {
 namespace media {
 
 //TODO(T116845603): update these with real image data
+
+Image::Image(UIImage *image) noexcept {}
 
 double Image::getWidth() const noexcept {
   return 11;
@@ -32,8 +34,8 @@ double Image::getPixelDensity() const noexcept {
   return 1;
 }
 
-Image Image::scale(double sx, double sy) const {
-  return Image();
+std::shared_ptr<IImage> Image::scale(double sx, double sy) const {
+  return nullptr;
 }
 
 void Image::close() const {

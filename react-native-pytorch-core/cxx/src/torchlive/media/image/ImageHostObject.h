@@ -9,19 +9,21 @@
 
 #include <jsi/jsi.h>
 #include "../../common/BaseHostObject.h"
-#include "Image.h"
+#include "IImage.h"
 
 namespace torchlive {
 namespace media {
 
 class JSI_EXPORT ImageHostObject : public common::BaseHostObject {
  public:
-  explicit ImageHostObject(facebook::jsi::Runtime& runtime, Image image);
+  explicit ImageHostObject(
+      facebook::jsi::Runtime& runtime,
+      std::shared_ptr<IImage> image);
 
-  const Image& getImage() const noexcept;
+  std::shared_ptr<IImage> getImage() const noexcept;
 
  private:
-  Image image_;
+  std::shared_ptr<IImage> image_;
 };
 
 } // namespace media

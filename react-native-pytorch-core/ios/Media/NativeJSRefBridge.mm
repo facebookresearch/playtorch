@@ -5,12 +5,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include <string>
+#import <memory>
+#import <string>
 
-#include "../../cxx/src/torchlive/media/Blob.h"
-#include "../../cxx/src/torchlive/media/NativeJSRefBridge.h"
-#include "../../cxx/src/torchlive/media/image/Image.h"
-#include "../../cxx/src/torchlive/media/image/ImageHostObject.h"
+#import "../../cxx/src/torchlive/media/Blob.h"
+#import "../../cxx/src/torchlive/media/NativeJSRefBridge.h"
+#import "../../cxx/src/torchlive/media/image/ImageHostObject.h"
+#import "Image/Image.h"
 
 extern "C" const char* torchlive_media_beginReadData(const char*);
 extern "C" void torchlive_media_endReadData(const char*);
@@ -26,8 +27,8 @@ facebook::jsi::Object imageFromBlob(
     double width,
     double height) {
   // TODO(T116845603): convert blob to Image
-  auto imageObject =
-      std::make_shared<torchlive::media::ImageHostObject>(runtime, Image());
+  auto imageObject = std::make_shared<torchlive::media::ImageHostObject>(
+      runtime, std::make_shared<Image>(nullptr));
   return facebook::jsi::Object::createFromHostObject(
       runtime, std::move(imageObject));
 }

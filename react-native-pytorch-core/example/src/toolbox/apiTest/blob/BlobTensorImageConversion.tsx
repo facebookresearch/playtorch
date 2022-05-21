@@ -9,7 +9,7 @@
 
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, Text} from 'react-native';
-import {Image, media} from 'react-native-pytorch-core';
+import {torch, Image, media} from 'react-native-pytorch-core';
 import useImageFromBundle from '../../../utils/useImageFromBundle';
 
 function arrayEqual(array1: Uint8Array, array2: Uint8Array) {
@@ -36,7 +36,7 @@ function arrayEqual(array1: Uint8Array, array2: Uint8Array) {
   return true;
 }
 
-export default function BlobExample() {
+export default function BlobTensorImageConversion() {
   const loadingState = 'Loading';
   const [testState, setTestState] = useState<string>(loadingState);
 
@@ -48,11 +48,15 @@ export default function BlobExample() {
     if (wbrgbImage !== undefined && testState === loadingState) {
       const blob = media.toBlob(wbrgbImage as Image);
 
-      const convertedImage = media.imageFromBlob(
-        blob,
-        wbrgbImage.getWidth(),
-        wbrgbImage.getHeight(),
-      );
+      const width = wbrgbImage.getWidth();
+      const height = wbrgbImage.getHeight();
+
+      let tensor = torch.fromBlob(blob, [height, width, 3]);
+
+      // Rearrange the tensor shape to be [CHW]
+      tensor = tensor.permute([2, 0, 1]);
+
+      const convertedImage = media.imageFromTensor(tensor);
 
       const convertedBlob = media.toBlob(convertedImage);
 

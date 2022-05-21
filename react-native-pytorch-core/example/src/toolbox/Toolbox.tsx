@@ -53,7 +53,8 @@ import CameraFlip from './apiTest/camera/CameraFlip';
 import JSIPlayground from './JSIPlayground';
 import AudioExample from './apiTest/audio/AudioExample';
 import AudioSaveLoadExample from './apiTest/audio/AudioSaveLoadExample';
-import BlobExample from './apiTest/blob/BlobExample';
+import BlobImageConversion from './apiTest/blob/BlobImageConversion';
+import BlobTensorImageConversion from './apiTest/blob/BlobTensorImageConversion';
 
 export type Tool = {
   icon?: React.ReactNode;
@@ -340,14 +341,21 @@ const tools: ToolSection = [
     ],
   },
   {
-    title: 'Blob API Test',
+    title: 'Blob API Tests',
     data: [
       {
         icon: <Icon name="clipboard-text" size={32} color="white" />,
-        title: 'Blob APIs',
-        subtitle: 'Transform between media and blob',
+        title: 'Blob <> Image',
+        subtitle: 'Transform between blob and image',
         apiTest: true,
-        component: BlobExample,
+        component: BlobImageConversion,
+      },
+      {
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
+        title: 'Blob <> Tensor <> Image',
+        subtitle: 'Transform among blob, tensor and image',
+        apiTest: true,
+        component: BlobTensorImageConversion,
       },
     ],
   },

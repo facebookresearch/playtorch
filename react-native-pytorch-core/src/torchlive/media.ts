@@ -36,6 +36,8 @@ interface Media {
    * @returns An [[Image]] object created from the [[Blob]].
    */
   imageFromBlob(blob: Blob, width: number, height: number): Image;
+
+  imageFromTensor(tensor: Tensor): Image;
 }
 
 type Torchlive = {

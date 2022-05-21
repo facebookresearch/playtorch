@@ -12,6 +12,7 @@
 #import "../../cxx/src/torchlive/media/NativeJSRefBridge.h"
 #import "../../cxx/src/torchlive/media/image/ImageHostObject.h"
 #import "Image/Image.h"
+#import "MediaUtils.h"
 
 extern "C" const char* torchlive_media_beginReadData(const char*);
 extern "C" void torchlive_media_endReadData(const char*);
@@ -26,9 +27,9 @@ facebook::jsi::Object imageFromBlob(
     const Blob& blob,
     double width,
     double height) {
-  // TODO(T116845603): convert blob to Image
+  auto image = MediaUtilsImageFromBlob(blob, width, height);
   auto imageObject = std::make_shared<torchlive::media::ImageHostObject>(
-      runtime, std::make_shared<Image>(nullptr));
+      runtime, std::make_shared<Image>(image));
   return facebook::jsi::Object::createFromHostObject(
       runtime, std::move(imageObject));
 }

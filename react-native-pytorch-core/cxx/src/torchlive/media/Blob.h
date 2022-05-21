@@ -16,8 +16,8 @@ class Blob {
  public:
   Blob(std::unique_ptr<uint8_t[]>&& b, size_t bl);
 
-  uint8_t* const getDirectBytes();
-  size_t getDirectSize();
+  uint8_t* const getDirectBytes() const;
+  size_t getDirectSize() const;
 
  private:
   std::unique_ptr<uint8_t[]> buffer;

@@ -13,11 +13,11 @@ namespace media {
 Blob::Blob(std::unique_ptr<uint8_t[]>&& b, size_t bl)
     : buffer(std::move(b)), byteLength(bl) {}
 
-uint8_t* const Blob::getDirectBytes() {
+uint8_t* const Blob::getDirectBytes() const {
   return this->buffer.get();
 }
 
-size_t Blob::getDirectSize() {
+size_t Blob::getDirectSize() const {
   return this->byteLength;
 }
 

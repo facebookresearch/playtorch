@@ -22,8 +22,8 @@ public class MobileModelModule: NSObject {
     @objc(execute:params:resolver:rejecter:)
     public func execute(_ modelPath: NSString,
                         params: NSDictionary,
-                        resolver resolve: @escaping RCTPromiseResolveBlock,
-                        rejecter reject: @escaping RCTPromiseRejectBlock) {
+                        resolver resolve: @escaping InternalRCTPromiseResolveBlock,
+                        rejecter reject: @escaping InternalRCTPromiseRejectBlock) {
         let modelKey = getKey(path: modelPath as String)
         if let moduleHolder = mModulesAndSpecs[modelKey] {
             guard let packer = moduleHolder.packer else {
@@ -69,8 +69,8 @@ public class MobileModelModule: NSObject {
 
     @objc(preload:resolver:rejecter:)
     public func preload(_ modelUri: NSString,
-                        resolver resolve: @escaping RCTPromiseResolveBlock,
-                        rejecter reject: @escaping RCTPromiseRejectBlock) {
+                        resolver resolve: @escaping InternalRCTPromiseResolveBlock,
+                        rejecter reject: @escaping InternalRCTPromiseRejectBlock) {
         let completionHandler: (String?) -> Void  = { error in
             if let error = error {
                 reject(RCTErrorUnspecified, error, nil)
@@ -82,8 +82,8 @@ public class MobileModelModule: NSObject {
     }
 
     @objc(unload:rejecter:)
-    public func unload(_ resolve: @escaping RCTPromiseResolveBlock,
-                       rejecter reject: @escaping RCTPromiseRejectBlock) {
+    public func unload(_ resolve: @escaping InternalRCTPromiseResolveBlock,
+                       rejecter reject: @escaping InternalRCTPromiseRejectBlock) {
         mModulesAndSpecs.removeAll()
         resolve(nil)
     }

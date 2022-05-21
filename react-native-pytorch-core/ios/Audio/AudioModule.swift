@@ -45,8 +45,8 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
     }
 
     @objc(isRecording:rejecter:)
-    public func isRecording(_ resolve: @escaping RCTPromiseResolveBlock,
-                            rejecter reject: @escaping RCTPromiseRejectBlock) {
+    public func isRecording(_ resolve: @escaping InternalRCTPromiseResolveBlock,
+                            rejecter reject: @escaping InternalRCTPromiseRejectBlock) {
         resolve(audioRecorder?.isRecording)
     }
 
@@ -87,8 +87,8 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
     }
 
     @objc(stopRecord:rejecter:)
-    public func stopRecord(_ resolve: @escaping RCTPromiseResolveBlock,
-                           rejecter reject: @escaping RCTPromiseRejectBlock) {
+    public func stopRecord(_ resolve: @escaping InternalRCTPromiseResolveBlock,
+                           rejecter reject: @escaping InternalRCTPromiseRejectBlock) {
         promiseResolve = resolve
         promiseReject = reject
         if audioRecorder.isRecording {
@@ -185,8 +185,8 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
     }
 
     @objc(fromBundle:resolver:rejecter:)
-    public func fromBundle(_ assetAudio: NSString, resolve: @escaping RCTPromiseResolveBlock,
-                           reject: @escaping RCTPromiseRejectBlock) {
+    public func fromBundle(_ assetAudio: NSString, resolve: @escaping InternalRCTPromiseResolveBlock,
+                           reject: @escaping InternalRCTPromiseRejectBlock) {
         let audioUrl = URL(string: assetAudio as String)
         let sessionConfig = URLSessionConfiguration.default
         let session = URLSession(configuration: sessionConfig)

@@ -17,15 +17,6 @@ export interface Blob {
 
 interface Media {
   /**
-   * Converts a [[Tensor]] or [[NativeJSRef]] into a [[Blob]]. The blob can be
-   * used to create a [[Tensor]] object or convert into a [[NativeJSRef]] like
-   * an image or audio.
-   *
-   * @param obj Object to turn into a [[Blob]].
-   */
-  toBlob(obj: Tensor | NativeJSRef): Blob;
-
-  /**
    * Converts a [[Blob]] into an [[Image]]. The blob should be in RGB format.
    * The width and height input should match the blob size.
    * i.e. `blob.getDirectSize()` equals `width * height * 3`.
@@ -37,7 +28,23 @@ interface Media {
    */
   imageFromBlob(blob: Blob, width: number, height: number): Image;
 
+  /**
+   * Converts a [[Tensor]] into an [[Image]]. The tensor should be in CHW (channels,
+   * height, width) format, with uint8 type.
+   *
+   * @param tensor [[Tensor]] to turn into an [[Image]].
+   * @returns An [[Image]] object created from the [[Tensor]].
+   */
   imageFromTensor(tensor: Tensor): Image;
+
+  /**
+   * Converts a [[Tensor]] or [[NativeJSRef]] into a [[Blob]]. The blob can be
+   * used to create a [[Tensor]] object or convert into a [[NativeJSRef]] like
+   * an image or audio.
+   *
+   * @param obj Object to turn into a [[Blob]].
+   */
+  toBlob(obj: Tensor | NativeJSRef): Blob;
 }
 
 type Torchlive = {

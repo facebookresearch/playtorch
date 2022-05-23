@@ -22,16 +22,12 @@ extern "C" size_t torchlive_media_getDirectSize(const char*);
 namespace torchlive {
 namespace media {
 
-facebook::jsi::Object imageFromBlob(
-    facebook::jsi::Runtime& runtime,
+std::shared_ptr<IImage> imageFromBlob(
     const Blob& blob,
     double width,
     double height) {
   auto image = MediaUtilsImageFromBlob(blob, width, height);
-  auto imageObject = std::make_shared<torchlive::media::ImageHostObject>(
-      runtime, std::make_shared<Image>(image));
-  return facebook::jsi::Object::createFromHostObject(
-      runtime, std::move(imageObject));
+  return std::make_shared<Image>(image);
 }
 
 std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {

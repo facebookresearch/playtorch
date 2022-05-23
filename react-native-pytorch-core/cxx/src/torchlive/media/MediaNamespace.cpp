@@ -11,6 +11,7 @@
 #include "../torch/utils/helpers.h"
 #include "BlobHostObject.h"
 #include "NativeJSRefBridge.h"
+#include "image/ImageHostObject.h"
 
 namespace torchlive {
 namespace media {
@@ -33,11 +34,14 @@ jsi::Value imageFromBlobImpl(
     size_t count) {
   auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
   args.requireNumArguments(3);
+
   const auto& blob = args.asHostObject<BlobHostObject>(0)->blob;
   auto width = args[1].asNumber();
   auto height = args[2].asNumber();
 
-  return torchlive::media::imageFromBlob(runtime, *blob, width, height);
+  auto image = torchlive::media::imageFromBlob(*blob, width, height);
+  return utils::helpers::createFromHostObject<ImageHostObject>(
+      runtime, std::move(image));
 }
 
 jsi::Value imageFromTensorImpl(
@@ -53,7 +57,10 @@ jsi::Value imageFromTensorImpl(
   auto width = tensor.size(2);
   auto height = tensor.size(1);
   auto blob = tensorToBlob(tensor);
-  return torchlive::media::imageFromBlob(runtime, *blob, width, height);
+
+  auto image = torchlive::media::imageFromBlob(*blob, width, height);
+  return utils::helpers::createFromHostObject<ImageHostObject>(
+      runtime, std::move(image));
 }
 
 jsi::Value toBlobImpl(

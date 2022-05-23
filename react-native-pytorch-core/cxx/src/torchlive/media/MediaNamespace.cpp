@@ -40,6 +40,12 @@ jsi::Value imageFromBlobImpl(
   auto height = args[2].asNumber();
 
   auto image = torchlive::media::imageFromBlob(*blob, width, height);
+  if (image == nullptr) {
+    throw jsi::JSError(
+        runtime,
+        "error on converting blob to image with width: " +
+            std::to_string(width) + ", height: " + std::to_string(height));
+  }
   return utils::helpers::createFromHostObject<ImageHostObject>(
       runtime, std::move(image));
 }
@@ -66,6 +72,12 @@ jsi::Value imageFromTensorImpl(
   auto blob = tensorToBlob(updatedTensor);
 
   auto image = torchlive::media::imageFromBlob(*blob, width, height);
+  if (image == nullptr) {
+    throw jsi::JSError(
+        runtime,
+        "error on converting tensor to image with width: " +
+            std::to_string(width) + ", height: " + std::to_string(height));
+  }
   return utils::helpers::createFromHostObject<ImageHostObject>(
       runtime, std::move(image));
 }

@@ -27,6 +27,9 @@ std::shared_ptr<IImage> imageFromBlob(
     double width,
     double height) {
   auto image = MediaUtilsImageFromBlob(blob, width, height);
+  if (image == nil) {
+    return nullptr;
+  }
   return std::make_shared<Image>(image);
 }
 

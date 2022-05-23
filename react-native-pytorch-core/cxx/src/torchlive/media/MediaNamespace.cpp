@@ -56,7 +56,14 @@ jsi::Value imageFromTensorImpl(
   // Assuming format: CHW (channels, height, width), uint8
   auto width = tensor.size(2);
   auto height = tensor.size(1);
-  auto blob = tensorToBlob(tensor);
+
+  // Switch to MemoryFormat::ChannelsLast, it requires a rank 4 tensor to work
+  // https://pytorch.org/tutorials/intermediate/memory_format_tutorial.html#what-is-channels-last
+  auto tensorOptions = torch_::TensorOptions()
+                           .dtype(tensor.dtype())
+                           .memory_format(c10::MemoryFormat::ChannelsLast);
+  auto updatedTensor = tensor.unsqueeze(0).to(tensorOptions).squeeze(0);
+  auto blob = tensorToBlob(updatedTensor);
 
   auto image = torchlive::media::imageFromBlob(*blob, width, height);
   return utils::helpers::createFromHostObject<ImageHostObject>(

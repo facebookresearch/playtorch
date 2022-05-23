@@ -28,4 +28,4 @@ The parsed [[CSSFont]] or null.
 
 #### Defined in
 
-[utils/CSSFontUtils.ts:65](https://github.com/pytorch/live/blob/e37f751/react-native-pytorch-core/src/utils/CSSFontUtils.ts#L65)
+[utils/CSSFontUtils.ts:65](https://github.com/pytorch/live/blob/b7d7bd8/react-native-pytorch-core/src/utils/CSSFontUtils.ts#L65)

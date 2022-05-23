@@ -37,7 +37,7 @@ the [[ModuleValue]] union types.
 
 #### Defined in
 
-[torchlive/torch.ts:63](https://github.com/pytorch/live/blob/e37f751/react-native-pytorch-core/src/torchlive/torch.ts#L63)
+[torchlive/torch.ts:63](https://github.com/pytorch/live/blob/b7d7bd8/react-native-pytorch-core/src/torchlive/torch.ts#L63)
 
 ___
 
@@ -69,4 +69,4 @@ the [[ModuleValue]] union types.
 
 #### Defined in
 
-[torchlive/torch.ts:74](https://github.com/pytorch/live/blob/e37f751/react-native-pytorch-core/src/torchlive/torch.ts#L74)
+[torchlive/torch.ts:74](https://github.com/pytorch/live/blob/b7d7bd8/react-native-pytorch-core/src/torchlive/torch.ts#L74)

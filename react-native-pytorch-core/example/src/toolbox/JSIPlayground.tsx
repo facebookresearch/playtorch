@@ -13,6 +13,8 @@ import * as React from 'react';
 import {StyleSheet, View, Text, TouchableOpacity, Platform} from 'react-native';
 import {Tensor, torch, torchvision} from 'react-native-pytorch-core';
 
+const PRINTABLE_LENGTH = 20;
+
 function argmax(array: number[]): number {
   let max = -Number.MAX_VALUE;
   let ret = -1;
@@ -23,6 +25,24 @@ function argmax(array: number[]): number {
     }
   }
   return ret;
+}
+
+function printTensor(tensor: Tensor, options: string[] = []) {
+  const tensorData = tensor.data();
+  const logArray = [];
+
+  if (options.includes('shape')) {
+    logArray.push(`Shape: ${tensor.shape}`);
+  }
+  if (options.includes('dtype')) {
+    logArray.push(`Data Type: ${tensor.dtype}`);
+  }
+
+  const tensorDataStr =
+    tensorData.length > PRINTABLE_LENGTH ? tensor.toString() : `${tensorData}`;
+  logArray.push(tensorDataStr);
+  const logText = logArray.join(', ');
+  console.log(logText);
 }
 
 export default function JSIPlayground() {
@@ -40,16 +60,11 @@ export default function JSIPlayground() {
     console.log(torch);
     const size = [3, 3, 3];
     let tensor = torch.rand(size, {dtype: torch.float64});
-    const tensorStr = tensor.toString();
-    console.log(tensorStr);
-    let data = new Float32Array(tensor.data());
-    console.log(data);
-
-    if (data.length < 20) {
-      console.log('tensor data', tensor.data());
-    }
+    let printOptions = ['data'];
+    printTensor(tensor, printOptions);
 
     let startTime = performance.now();
+    let data = new Float32Array(tensor.data());
     let result = argmax(Array.from(data));
     let delta = performance.now() - startTime;
     setJsResult(result);
@@ -64,59 +79,31 @@ export default function JSIPlayground() {
     setcxxElapse(delta);
     console.log('argmax (c++)', result);
     console.log('elapsed time (c++)', delta, 'ms');
-    console.log(tensor.toString());
-    console.log(tensor.size());
-    console.log(tensor.shape);
-    console.log(tensor.dtype);
+    printTensor(tensor, ['shape', 'dtype']);
 
-    let testTensor = torch.empty([1, 2]);
-    console.log(testTensor.toString());
-    testTensor = torch.empty([1, 2], {dtype: torch.float64});
-    console.log(testTensor.toString());
+    printTensor(torch.empty([1, 2]));
+    printTensor(torch.empty([1, 2], {dtype: torch.float64}));
 
     console.log('---Test torch.eye---');
-    function printTensor(t: Tensor) {
-      console.log(t.toString());
-      console.log(t.shape);
-      console.log(t.data());
-    }
-    printTensor(torch.eye(0));
-    printTensor(torch.eye(3));
-    printTensor(torch.eye(0, 3));
-    printTensor(torch.eye(3, 0));
-    printTensor(torch.eye(3, 3, {dtype: 'int32'}));
+    printOptions = ['shape', 'data'];
+    printTensor(torch.eye(0), printOptions);
+    printTensor(torch.eye(3), printOptions);
+    printTensor(torch.eye(0, 3), printOptions);
+    printTensor(torch.eye(3, 0), printOptions);
+    printTensor(torch.eye(3, 3, {dtype: 'int32'}), printOptions);
 
     console.log('---Test torch.arange---');
-    tensor = torch.arange(5);
-    console.log(tensor.toString());
-    data = new Float32Array(tensor.data());
-    console.log(data);
-    tensor = torch.arange(1, 4);
-    console.log(tensor.toString());
-    data = new Float32Array(tensor.data());
-    console.log(data);
-    tensor = torch.arange(1, 2.5, 0.5);
-    console.log(tensor.toString());
-    data = new Float32Array(tensor.data());
-    console.log(data);
+    printOptions = ['data'];
+    printTensor(torch.arange(5), printOptions);
+    printTensor(torch.arange(1, 4), printOptions);
+    printTensor(torch.arange(1, 2.5, 0.5), printOptions);
 
     console.log('---Test torch.randint---');
-    tensor = torch.randint(3, 5, [3]);
-    console.log(tensor.toString());
-    console.log(tensor.shape);
-    console.log(tensor.data());
-    tensor = torch.randint(10, [2, 2]);
-    console.log(tensor.toString());
-    console.log(tensor.shape);
-    console.log(tensor.data());
-    tensor = torch.randint(3, 10, [2, 2]);
-    console.log(tensor.toString());
-    console.log(tensor.shape);
-    console.log(tensor.data());
-    tensor = torch.randint(3, 10, [2, 2, 2]);
-    console.log(tensor.toString());
-    console.log(tensor.shape);
-    console.log(tensor.data());
+    printOptions = ['shape', 'data'];
+    printTensor(torch.randint(3, 5, [3]), printOptions);
+    printTensor(torch.randint(10, [2, 2]), printOptions);
+    printTensor(torch.randint(3, 10, [2, 2]), printOptions);
+    printTensor(torch.randint(3, 10, [2, 2, 2]), printOptions);
 
     console.log('---Test squeeze and unsqueeze---');
     tensor = torch.rand([4]);
@@ -130,36 +117,34 @@ export default function JSIPlayground() {
     console.log(tensor4.shape); //  [4]
 
     console.log('---Test tensor.add---');
-    let addTensor1 = torch.rand([1, 2]);
-    console.log(addTensor1.toString());
-    let addTensor2 = addTensor1.add(2);
-    console.log(addTensor2.toString());
-    let addTensor3 = addTensor1.add(addTensor2);
-    console.log(addTensor3.toString());
+    const addTensor1 = torch.rand([1, 2]);
+    printTensor(addTensor1);
+    const addTensor2 = addTensor1.add(2);
+    printTensor(addTensor2);
+    printTensor(addTensor1.add(addTensor2));
 
     console.log('---Test tensor.sub---');
-    let subTensor1 = torch.arange(2);
-    console.log(subTensor1.toString());
-    let subTensor2 = subTensor1.sub(2);
-    console.log(subTensor2.toString());
-    let subTensor3 = subTensor1.sub(subTensor2);
-    console.log(subTensor3.toString());
+    const subTensor1 = torch.arange(2);
+    printTensor(subTensor1);
+    const subTensor2 = subTensor1.sub(2);
+    printTensor(subTensor2);
+    printTensor(subTensor1.sub(subTensor2));
 
     console.log('---Test tensor.mul---');
     let tensor1 = torch.arange(10);
-    console.log(tensor1.toString());
+    printTensor(tensor1);
     tensor2 = tensor1.mul(2);
-    console.log(tensor2.toString());
-    tensor3 = tensor2.mul(tensor1);
-    console.log(tensor3.toString());
+    printTensor(tensor2);
+    printTensor(tensor2.mul(tensor1));
+
     console.log('---Test tensor.softmax---');
     let softmaxTensor1 = torch.arange(2);
-    console.log(softmaxTensor1.toString());
-    let softmaxTensor2 = softmaxTensor1.softmax(0);
-    console.log(softmaxTensor2.toString());
+    printTensor(softmaxTensor1);
+    printTensor(softmaxTensor1.softmax(0));
 
     console.log('---Test torch.tensor---');
-    let tensor5 = torch.tensor([
+    printOptions = ['shape', 'data', 'dtype'];
+    tensor1 = torch.tensor([
       [
         [1, 2, 3],
         [4, 5, 6],
@@ -169,11 +154,8 @@ export default function JSIPlayground() {
         [10, 11, 12],
       ],
     ]);
-    console.log(tensor5.shape);
-    console.log(tensor5.data());
-    console.log(tensor5.toString());
-    console.log(tensor.dtype);
-    tensor5 = torch.tensor(
+    printTensor(tensor1, printOptions);
+    tensor2 = torch.tensor(
       [
         [
           [1.1, 2.1, 3],
@@ -186,46 +168,33 @@ export default function JSIPlayground() {
       ],
       {dtype: torch.int},
     );
-    console.log(tensor5.shape);
-    console.log(tensor5.data());
-    console.log(tensor5.toString());
-    console.log(tensor5.dtype);
-
-    tensor5 = torch.tensor(1, {dtype: torch.int});
-    console.log(tensor5.shape);
-    console.log(tensor5.data());
-    console.log(tensor5.toString());
-    console.log(tensor5.dtype);
+    printTensor(tensor2, printOptions);
+    printTensor(torch.tensor(1, {dtype: torch.int}), printOptions);
 
     console.log('---Test tensor.div---');
     let divTensor = torch.arange(1, 10);
-    console.log(divTensor.toString());
-    tensor2 = divTensor.div(2);
-    console.log(tensor2.toString());
-    tensor3 = divTensor.div(2, {roundingMode: 'floor'});
-    console.log(tensor3.toString());
-    tensor4 = divTensor.div(divTensor);
-    console.log(tensor4.toString());
-    console.log(tensor2.toString());
-    tensor3 = divTensor.div(divTensor, {roundingMode: 'floor'});
-    console.log(tensor3.toString());
+    printTensor(divTensor);
+    printTensor(divTensor.div(2));
+    printTensor(divTensor.div(2, {roundingMode: 'floor'}));
+    printTensor(divTensor.div(divTensor));
+    printTensor(divTensor.div(divTensor, {roundingMode: 'floor'}));
 
     console.log('---Test tensor.abs---');
     let absTensor = torch.tensor([
       [-2, -1],
       [0, 1],
     ]);
-    console.log(absTensor.toString());
+    printTensor(absTensor);
     let tensorAbsOutput = absTensor.abs();
-    console.log(tensorAbsOutput.toString());
+    printTensor(tensorAbsOutput);
 
-    console.log('---test torchvision.centercrop---');
+    console.log('---Test torchvision.centercrop---');
     console.log(torchvision);
     let tensor6 = torch.rand([1, 3, 5, 5]);
     let centerCrop = torchvision.transforms.centerCrop(3);
     let tensor7 = centerCrop.forward(tensor6);
     console.log('original shape: ', tensor6.shape);
-    console.log('transfomred shape: ', tensor7.shape);
+    console.log('transformed shape: ', tensor7.shape);
 
     console.log('---Test tensor.topk---');
     let topkTensor = torch.arange(10, 20);
@@ -233,15 +202,16 @@ export default function JSIPlayground() {
     let [values, indices] = topkTensor.topk(3);
     console.log(values.data());
     console.log(indices.data());
-    console.log('---test torchvision.resize---');
+
+    console.log('---Test torchvision.resize---');
     let tensor8 = torch.rand([1, 3, 100, 100]);
     let resize = torchvision.transforms.resize(20);
     console.log('log resize: ', resize.forward);
-    let tenosr9 = resize.forward(tensor8);
+    let tensor9 = resize.forward(tensor8);
     console.log('original shape: ', tensor8.shape);
-    console.log('transfomred shape: ', tenosr9.shape);
+    console.log('transformed shape: ', tensor9.shape);
 
-    console.log('---test torchvision.normalize---');
+    console.log('---Test torchvision.normalize---');
     const tensor10 = torch.rand([1, 3, 5, 5]);
     const normalize = torchvision.transforms.normalize(
       [0.2, 0.2, 0.2],
@@ -250,17 +220,17 @@ export default function JSIPlayground() {
     console.log('log normalize: ', normalize.forward);
     const normalized = normalize(tensor10);
     const normalizeForwarded = normalize.forward(tensor10);
-    console.log(normalized.toString());
-    console.log(normalizeForwarded.toString());
+    printTensor(normalized);
+    printTensor(normalizeForwarded);
 
-    console.log('---test torchvision.grayscale---');
+    console.log('---Test torchvision.grayscale---');
     const tensor11 = torch.rand([1, 3, 5, 5]);
     const grayscale = torchvision.transforms.grayscale();
     console.log('log grayscale: ', grayscale.forward);
     const grayscaled = grayscale(tensor11);
-    console.log(grayscaled.toString());
+    printTensor(grayscaled);
 
-    console.log('---test async function that returns HostObject---');
+    console.log('---Test async function that returns HostObject---');
     const asyncResult = await (async () => torch.rand([3]))();
     console.log(asyncResult && asyncResult.data());
   };

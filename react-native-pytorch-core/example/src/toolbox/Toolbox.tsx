@@ -14,47 +14,46 @@ import {
 import * as React from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-
-import ImageScale from './apiTest/ImageScale';
-import CanvasArc from './apiTest/CanvasArc';
-import CanvasClearRect from './apiTest/CanvasClearRect';
-import CanvasFillRect from './apiTest/CanvasFillRect';
-import CanvasRect from './apiTest/CanvasRect';
-import CanvasAnimation from './apiTest/CanvasAnimation';
-import CanvasRotate from './apiTest/CanvasRotate';
-import CanvasSaveRestore from './apiTest/CanvasSaveRestore';
-import CanvasSetTransform from './apiTest/CanvasSetTransform';
-import CanvasScale from './apiTest/CanvasScale';
-import CanvasTranslate from './apiTest/CanvasTranslate';
-import CanvasLineCap from './apiTest/CanvasLineCap';
-import CanvasLineJoin from './apiTest/CanvasLineJoin';
-import CanvasClosePath from './apiTest/CanvasClosePath';
-import CanvasMiterLimit from './apiTest/CanvasMiterLimit';
-import CanvasMoveTo from './apiTest/CanvasMoveTo';
-import CanvasDrawImage from './apiTest/CanvasDrawImage';
-import CanvasText from './apiTest/CanvasText';
-import CanvasTextAlign from './apiTest/CanvasTextAlign';
-import CanvasArcMatrix from './apiTest/CanvasArcMatrix';
-
-import ToolboxContext, {useToolboxContext} from './ToolboxContext';
-import ToolboxList from './ToolboxList';
-import CanvasGetImageData from './apiTest/CanvasGetImageData';
-import Playground from './Playground';
-import CanvasImageSprite from './apiTest/CanvasImageSprite';
 import AstroBirdExample from './apiTest/AstroBirdExample';
-import MNIST from './models/MNIST';
-import Distilbert from './models/Distilbert';
-import DETR from './models/DETR';
-import Wav2Vec2 from './models/Wav2Vec2';
-import FastNeuralStyle from './models/FastNeuralStyle';
-import MobileNetV3 from './models/MobileNetV3';
-import CameraTakePicture from './apiTest/camera/CameraTakePicture';
-import CameraFlip from './apiTest/camera/CameraFlip';
-import JSIPlayground from './JSIPlayground';
 import AudioExample from './apiTest/audio/AudioExample';
 import AudioSaveLoadExample from './apiTest/audio/AudioSaveLoadExample';
 import BlobImageConversion from './apiTest/blob/BlobImageConversion';
 import BlobTensorImageConversion from './apiTest/blob/BlobTensorImageConversion';
+import CameraFlip from './apiTest/camera/CameraFlip';
+import CameraTakePicture from './apiTest/camera/CameraTakePicture';
+import CanvasAnimation from './apiTest/CanvasAnimation';
+import CanvasArc from './apiTest/CanvasArc';
+import CanvasArcMatrix from './apiTest/CanvasArcMatrix';
+import CanvasClearRect from './apiTest/CanvasClearRect';
+import CanvasClosePath from './apiTest/CanvasClosePath';
+import CanvasDrawImage from './apiTest/CanvasDrawImage';
+import CanvasFillRect from './apiTest/CanvasFillRect';
+import CanvasGetImageData from './apiTest/CanvasGetImageData';
+import CanvasImageSprite from './apiTest/CanvasImageSprite';
+import CanvasLineCap from './apiTest/CanvasLineCap';
+import CanvasLineJoin from './apiTest/CanvasLineJoin';
+import CanvasMiterLimit from './apiTest/CanvasMiterLimit';
+import CanvasMoveTo from './apiTest/CanvasMoveTo';
+import CanvasRect from './apiTest/CanvasRect';
+import CanvasRotate from './apiTest/CanvasRotate';
+import CanvasSaveRestore from './apiTest/CanvasSaveRestore';
+import CanvasScale from './apiTest/CanvasScale';
+import CanvasSetTransform from './apiTest/CanvasSetTransform';
+import CanvasText from './apiTest/CanvasText';
+import CanvasTextAlign from './apiTest/CanvasTextAlign';
+import CanvasTranslate from './apiTest/CanvasTranslate';
+import ImageScale from './apiTest/ImageScale';
+import JSIPlayground from './JSIPlayground';
+import AnimeGANv2 from './models/AnimeGANv2';
+import DETR from './models/DETR';
+import Distilbert from './models/Distilbert';
+import FastNeuralStyle from './models/FastNeuralStyle';
+import MNIST from './models/MNIST';
+import MobileNetV3 from './models/MobileNetV3';
+import Wav2Vec2 from './models/Wav2Vec2';
+import Playground from './Playground';
+import ToolboxContext, {useToolboxContext} from './ToolboxContext';
+import ToolboxList from './ToolboxList';
 
 export type Tool = {
   icon?: React.ReactNode;
@@ -140,6 +139,13 @@ const tools: ToolSection = [
         subtitle: 'Example to test the Wav2Vec2 model',
         apiTest: false,
         component: Wav2Vec2,
+      },
+      {
+        icon: <Icon name="clipboard-text" size={32} color="white" />,
+        title: 'AnimeGANv2',
+        subtitle: 'Example to test the AnimeGANv2 model',
+        apiTest: false,
+        component: AnimeGANv2,
       },
     ],
   },

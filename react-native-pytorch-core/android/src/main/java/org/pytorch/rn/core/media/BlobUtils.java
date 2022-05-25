@@ -12,6 +12,7 @@ import androidx.annotation.Keep;
 import com.facebook.proguard.annotations.DoNotStrip;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import org.pytorch.rn.core.audio.IAudio;
 import org.pytorch.rn.core.image.IImage;
 import org.pytorch.rn.core.javascript.JSContext;
 
@@ -24,6 +25,9 @@ public class BlobUtils {
       final IImage image = (IImage) obj;
       final Bitmap bitmap = image.getBitmap();
       return bitmapToByteBuffer(bitmap);
+    } else if (obj instanceof IAudio) {
+      final IAudio audio = (IAudio) obj;
+      return shortToByteBuffer(audio.getData());
     }
     throw new UnsupportedOperationException(
         "Cannot create ByteBuffer for type " + obj.getClass().getName());
@@ -56,5 +60,16 @@ public class BlobUtils {
       bytes[i++] = (byte) B;
     }
     return bytes;
+  }
+
+  @DoNotStrip
+  @Keep
+  public static ByteBuffer shortToByteBuffer(final short[] data) {
+    ByteBuffer byteBuffer = ByteBuffer.allocateDirect(data.length * 2); // 1 short = 2 bytes
+    byteBuffer.order(ByteOrder.nativeOrder());
+    for (short s : data) {
+      byteBuffer.putShort(s);
+    }
+    return byteBuffer;
   }
 }

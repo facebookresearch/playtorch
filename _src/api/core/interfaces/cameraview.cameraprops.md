@@ -34,7 +34,7 @@ Direction the camera faces relative to the device's screen.
 
 #### Defined in
 
-[CameraView.tsx:89](https://github.com/pytorch/live/blob/b7d7bd8/react-native-pytorch-core/src/CameraView.tsx#L89)
+[CameraView.tsx:89](https://github.com/pytorch/live/blob/96ac3b6/react-native-pytorch-core/src/CameraView.tsx#L89)
 
 ___
 
@@ -47,7 +47,7 @@ a capture button.
 
 #### Defined in
 
-[CameraView.tsx:70](https://github.com/pytorch/live/blob/b7d7bd8/react-native-pytorch-core/src/CameraView.tsx#L70)
+[CameraView.tsx:70](https://github.com/pytorch/live/blob/96ac3b6/react-native-pytorch-core/src/CameraView.tsx#L70)
 
 ___
 
@@ -60,7 +60,7 @@ a flip button.
 
 #### Defined in
 
-[CameraView.tsx:76](https://github.com/pytorch/live/blob/b7d7bd8/react-native-pytorch-core/src/CameraView.tsx#L76)
+[CameraView.tsx:76](https://github.com/pytorch/live/blob/96ac3b6/react-native-pytorch-core/src/CameraView.tsx#L76)
 
 ___
 
@@ -75,7 +75,7 @@ set target resolution, and it might pick the closest available resolution.
 
 #### Defined in
 
-[CameraView.tsx:84](https://github.com/pytorch/live/blob/b7d7bd8/react-native-pytorch-core/src/CameraView.tsx#L84)
+[CameraView.tsx:84](https://github.com/pytorch/live/blob/96ac3b6/react-native-pytorch-core/src/CameraView.tsx#L84)
 
 ## Methods
 
@@ -97,7 +97,7 @@ Callback with an [Image](imagemodule.image.md) after capture button was pressed.
 
 #### Defined in
 
-[CameraView.tsx:96](https://github.com/pytorch/live/blob/b7d7bd8/react-native-pytorch-core/src/CameraView.tsx#L96)
+[CameraView.tsx:96](https://github.com/pytorch/live/blob/96ac3b6/react-native-pytorch-core/src/CameraView.tsx#L96)
 
 ___
 
@@ -127,4 +127,4 @@ omitted until [Image.release](imagemodule.image.md#release) is called.
 
 #### Defined in
 
-[CameraView.tsx:111](https://github.com/pytorch/live/blob/b7d7bd8/react-native-pytorch-core/src/CameraView.tsx#L111)
+[CameraView.tsx:111](https://github.com/pytorch/live/blob/96ac3b6/react-native-pytorch-core/src/CameraView.tsx#L111)

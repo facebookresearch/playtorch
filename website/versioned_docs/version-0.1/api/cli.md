@@ -98,9 +98,7 @@ npx torchlive-cli run-android
 
 If you want to deploy the app on your own device, you have to put it into developer mode.
 
->On Android 4.1 and lower, the Developer options screen is available by default. On Android 4.2 and higher, you must enable this screen. To enable developer options, tap the Build Number option 7 times.
-
-More details are on the Android [configure on-device developer options](https://developer.android.com/studio/debug/dev-options).
+>On Android 4.1 and lower, the Developer options screen is available by default. On Android 4.2 and higher, you must enable this screen. To enable developer options follow the instructions from the Android Developers docs: [Enable developer options and USB debugging](https://developer.android.com/studio/debug/dev-options).
 
 :::
 

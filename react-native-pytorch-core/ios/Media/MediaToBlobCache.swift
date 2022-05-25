@@ -10,7 +10,24 @@ import Foundation
 public class MediaToBlobCache {
     private static var refs: [String: MediaData] = [:]
 
-     public static func begin(img: IImage) -> String? {
+    public static func begin(obj: Any) -> String? {
+        if obj is IImage {
+            guard let image = obj as? IImage else {
+                print("error unwrapping object")
+                return nil
+            }
+            return beginImg(img: image)
+        } else if obj is IAudio {
+            guard let audio = obj as? IAudio else {
+                print("error unwrapping object")
+                return nil
+            }
+            return beginAudio(audio: audio)
+        }
+        return nil
+    }
+
+    public static func beginImg(img: IImage) -> String? {
         let idRef = UUID().uuidString
 
         let bitmap = img.getBitmap()!
@@ -41,6 +58,14 @@ public class MediaToBlobCache {
         }
 
         let mediaData = MediaData(buffer: buffer, size: buffer.count)
+        MediaToBlobCache.refs[idRef] = mediaData
+        return idRef
+    }
+
+    public static func beginAudio(audio: IAudio) -> String? {
+        let buffer = [UInt8](audio.getData())
+        let mediaData = MediaData(buffer: buffer, size: buffer.count)
+        let idRef = UUID().uuidString
         MediaToBlobCache.refs[idRef] = mediaData
         return idRef
     }

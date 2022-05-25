@@ -13,14 +13,11 @@ public func torchlive_media_beginReadData(cRefId: UnsafePointer<CChar>) -> Unsaf
     do {
         let obj = try JSContext.unwrapObject(jsRef: ["ID": refId])
         if obj is IImage {
-            guard let img = obj as? IImage else {
-                print("error unwrapping object")
-                return nil
-            }
-             guard let str = MediaToBlobCache.begin(img: img) else {
-                print("error reading image data")
-                return nil
-            }
+            let str = unwrapObject(mediaObject: obj, targetType: IImage.self)
+            let newString = strdup(str)
+            return UnsafePointer(newString)
+        } else if obj is IAudio {
+            let str = unwrapObject(mediaObject: obj, targetType: IAudio.self)
             let newString = strdup(str)
             return UnsafePointer(newString)
         }
@@ -48,4 +45,16 @@ public func torchlive_media_getDirectSize(cRefId: UnsafePointer<CChar>) -> size_
     let refId = String(cString: cRefId)
     let mediaData = MediaToBlobCache.get(idRef: refId)
     return mediaData.getDirectSize()
+}
+
+public func unwrapObject<T>(mediaObject: Any, targetType: T.Type) -> String? {
+    guard let obj = mediaObject as? T else {
+        print("error unwrapping object")
+        return nil
+    }
+    guard let str = MediaToBlobCache.begin(obj: obj) else {
+       print("error reading object data")
+       return nil
+    }
+    return str
 }

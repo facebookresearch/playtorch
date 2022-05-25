@@ -371,9 +371,10 @@ export interface Torch {
    *
    * @param blob The blob holding the data.
    * @param sizes Should specify the shape of the tensor, strides the stride
+   * @param options Tensor options
    * in each dimension.
    */
-  fromBlob(blob: any, sizes?: number[]): Tensor;
+  fromBlob(blob: any, sizes?: number[], options?: TensorOptions): Tensor;
   /**
    * Returns a tensor filled with the scalar value 1, with the shape defined
    * by the argument `size`.

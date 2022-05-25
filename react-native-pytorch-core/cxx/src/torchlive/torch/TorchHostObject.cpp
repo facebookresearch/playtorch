@@ -313,21 +313,22 @@ jsi::Function TorchHostObject::createFromBlob(jsi::Runtime& runtime) {
       }
     }
 
-    torch_::TensorOptions tensorOptions =
-        torch_::TensorOptions().dtype(torch_::kUInt8);
-
     auto hostObject = arguments[0].asObject(runtime).asHostObject(runtime);
     auto blobHostObject =
         dynamic_cast<torchlive::media::BlobHostObject*>(hostObject.get());
     if (blobHostObject != nullptr) {
+      torch_::TensorOptions tensorOptions =
+          utils::helpers::parseTensorOptions(runtime, arguments, 2, count);
       auto blob = blobHostObject->blob.get();
-      uint8_t* const buffer = blob->getDirectBytes();
       auto size = blob->getDirectSize();
-
-      auto options = torch_::TensorOptions().dtype(torch_::kUInt8);
+      uint8_t* const buffer = blob->getDirectBytes();
+      if (!tensorOptions.has_dtype()) {
+        // explicitly set to default uint8 dtype
+        tensorOptions = torch_::TensorOptions().dtype(torch_::kUInt8);
+      }
       // TODO(T111718110) Check if blob sizes exceed buffer size and if so throw
       // an error
-      auto tensor = torch_::from_blob(buffer, sizes, options).clone();
+      auto tensor = torch_::from_blob(buffer, sizes, tensorOptions).clone();
       auto tensorHostObject =
           std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
       return jsi::Object::createFromHostObject(runtime, tensorHostObject);

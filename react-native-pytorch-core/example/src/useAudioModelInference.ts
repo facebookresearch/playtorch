@@ -15,7 +15,6 @@ import {
   MobileModel,
   ModelResultMetrics,
   ModelInfo,
-  ModelPath,
   Module,
   Tensor,
   torch,
@@ -54,20 +53,14 @@ const unpackFn = async (resultTensor: string): Promise<Wav2Vec2Result> => {
 export default function useAudioModelInference(modelInfo: ModelInfo) {
   const [metrics, setMetrics] = useState<ModelResultMetrics>();
   const [translatedText, setTranslatedText] = useState<string>();
-  const modelRef = useRef<{path: ModelPath; module: Module} | null>(null);
+  const modelRef = useRef<Module | null>(null);
 
   const processAudio = useCallback(
     async (audio: Audio | null) => {
       if (audio != null) {
-        if (
-          modelRef.current == null ||
-          modelRef.current.path !== modelInfo.model
-        ) {
+        if (modelRef.current == null) {
           const filePath = await MobileModel.download(modelInfo.model);
-          modelRef.current = {
-            path: modelInfo.model,
-            module: await torch.jit._loadForMobile(filePath),
-          };
+          modelRef.current = await torch.jit._loadForMobile(filePath);
         }
 
         Measurement.mark('pack');
@@ -75,7 +68,7 @@ export default function useAudioModelInference(modelInfo: ModelInfo) {
         Measurement.measure('pack');
 
         Measurement.mark('inference');
-        const output = await inferenceFn(modelRef.current.module, inputs);
+        const output = await inferenceFn(modelRef.current, inputs);
         Measurement.measure('inference');
 
         Measurement.mark('unpack');

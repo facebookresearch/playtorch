@@ -7,37 +7,84 @@
  * @format
  */
 
-import {useCallback, useState} from 'react';
+import {useCallback, useRef, useState} from 'react';
 
 import {
   Audio,
+  media,
   MobileModel,
   ModelResultMetrics,
   ModelInfo,
+  ModelPath,
+  Module,
+  Tensor,
+  torch,
 } from 'react-native-pytorch-core';
+
+import Measurement from './utils/Measurement';
 
 type Wav2Vec2Result = {
   answer: string;
 };
 
+const packFn = (audio: Audio): Tensor => {
+  // Convert audio to a blob, which is a byte representation of the audio
+  // in the format of an array of bytes
+  const blob = media.toBlob(audio);
+
+  // Get a tensor of shorts (int16) for the audio data
+  const tensor = torch.fromBlob(blob, [1, blob.arrayBuffer().length / 2], {
+    dtype: 'int16',
+  });
+
+  // Convert the tensor to a float32 format since the model expects the tensor
+  // in a float format
+  const floatTensor = tensor.to({dtype: 'float32'});
+  return floatTensor;
+};
+
+const inferenceFn = async (model: Module, tensor: Tensor): Promise<string> => {
+  return await model.forward(tensor);
+};
+
+const unpackFn = async (resultTensor: string): Promise<Wav2Vec2Result> => {
+  return {answer: resultTensor};
+};
+
 export default function useAudioModelInference(modelInfo: ModelInfo) {
   const [metrics, setMetrics] = useState<ModelResultMetrics>();
   const [translatedText, setTranslatedText] = useState<string>();
+  const modelRef = useRef<{path: ModelPath; module: Module} | null>(null);
 
   const processAudio = useCallback(
     async (audio: Audio | null) => {
       if (audio != null) {
-        const {
-          result: {answer},
-          metrics: m,
-        } = await MobileModel.execute<Wav2Vec2Result>(modelInfo.model, {
-          audio,
-        });
-        setMetrics(m);
+        if (
+          modelRef.current == null ||
+          modelRef.current.path !== modelInfo.model
+        ) {
+          const filePath = await MobileModel.download(modelInfo.model);
+          modelRef.current = {
+            path: modelInfo.model,
+            module: await torch.jit._loadForMobile(filePath),
+          };
+        }
+
+        Measurement.mark('pack');
+        const inputs = await packFn(audio);
+        Measurement.measure('pack');
+
+        Measurement.mark('inference');
+        const output = await inferenceFn(modelRef.current.module, inputs);
+        Measurement.measure('inference');
+
+        Measurement.mark('unpack');
+        const {answer} = await unpackFn(output);
+        Measurement.measure('unpack');
+
+        const m = Measurement.getMetrics();
         setTranslatedText(answer);
-      } else {
-        setMetrics(undefined);
-        setTranslatedText(undefined);
+        setMetrics(m);
       }
     },
     [modelInfo.model, setTranslatedText, setMetrics],

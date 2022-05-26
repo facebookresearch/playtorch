@@ -37,12 +37,10 @@ export default function Wav2Vec2() {
 
       <View style={styles.center}>
         <Text style={styles.small}>{translatedText}</Text>
-        {metrics && (
-          <Text style={styles.small}>
-            Time taken: {metrics?.totalTime}ms (p={metrics?.packTime}/i=
-            {metrics?.inferenceTime}/u={metrics?.unpackTime}
-          </Text>
-        )}
+        <Text style={styles.small}>
+          Time taken: {metrics?.totalTime}ms (p={metrics?.packTime}/i=
+          {metrics?.inferenceTime}/u={metrics?.unpackTime})
+        </Text>
       </View>
     </>
   );

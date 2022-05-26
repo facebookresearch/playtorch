@@ -242,6 +242,20 @@ export interface Tensor {
    */
   softmax(dim: number): Tensor;
   /**
+   * Returns the stride of the tensor.
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.stride.html}
+   */
+  stride(): number[];
+  /**
+   * Returns the stride of the tensor.
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.stride.html}
+   *
+   * @param dim The desired dimension in which stride is required.
+   */
+  stride(dim: number): number;
+  /**
    * Returns a tensor with all the dimensions of input of size 1 removed.
    *
    * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.squeeze.html}

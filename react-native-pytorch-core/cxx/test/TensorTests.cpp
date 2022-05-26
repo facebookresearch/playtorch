@@ -368,6 +368,34 @@ TEST_F(TorchliveTensorRuntimeTest, TensorSoftmaxTest) {
   EXPECT_THROW(eval("torch.empty(1, 2).softmax([1])"), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorStrideTest) {
+  std::string tensorStrides =
+      R"(
+          const tensor = torch.rand([2, 3]);
+          const result = tensor.permute([1, 0]);
+          JSON.stringify(tensor.stride()) == '[3,1]' && JSON.stringify(result.stride()) == '[1,3]';
+        )";
+  EXPECT_TRUE(eval(tensorStrides).getBool());
+
+  std::string tensorStrideWithDim =
+      R"(
+          const tensor = torch.rand([2, 3]);
+          const result = tensor.permute([1, 0]);
+          tensor.stride(0) == 3 && tensor.stride(1) == 1 && result.stride(0) == 1 && result.stride(1) == 3;
+        )";
+  EXPECT_TRUE(eval(tensorStrideWithDim).getBool());
+
+  std::string tensorStrideWithNegativeDim =
+      R"(
+          const tensor = torch.rand([2, 3]);
+          tensor.stride(-2) == 3 && tensor.stride(-1) == 1;
+        )";
+  EXPECT_TRUE(eval(tensorStrideWithNegativeDim).getBool());
+
+  // dimension must be an integer
+  EXPECT_THROW(eval("torch.tensor().stride(0.2)"), facebook::jsi::JSError);
+}
+
 TEST_F(TorchliveTensorRuntimeTest, tensorSubTest) {
   std::string tensorSubCodeWithNumber =
       R"(

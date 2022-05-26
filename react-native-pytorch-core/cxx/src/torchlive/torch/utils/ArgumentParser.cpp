@@ -5,8 +5,10 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-#include "ArgumentParser.h"
+#include <cmath>
+
 #include "../TensorHostObject.h"
+#include "ArgumentParser.h"
 #include "helpers.h"
 
 namespace torchlive {
@@ -30,6 +32,16 @@ const jsi::Value& ArgumentParser::operator[](size_t idx) const {
 
 size_t ArgumentParser::count() const {
   return count_;
+}
+
+int ArgumentParser::asInteger(size_t idx) const {
+  double numberValue = safeArg_(idx).asNumber();
+  if (fmod(numberValue, 1) != 0) {
+    throw jsi::JSError(
+        runtime_,
+        "parameter at index " + std::to_string(idx) + " must be an integer");
+  }
+  return static_cast<int>(numberValue);
 }
 
 std::vector<int64_t> ArgumentParser::dimsVarArgs(size_t idx, size_t* nextArgIdx)

@@ -117,6 +117,29 @@ jsi::Value argmaxImpl(
       runtime, std::move(tensorHostObject));
 };
 
+jsi::Value strideImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  const auto& tensor = args.thisAsHostObject<TensorHostObject>()->tensor;
+
+  if (count > 0) {
+    // Return stride of the specified dimension
+    auto dim = args.asInteger(0);
+    return static_cast<int>(tensor.stride(dim));
+  } else {
+    // Return strides of all dimensions
+    const torch_::IntArrayRef strides = tensor.strides();
+    jsi::Array jsStrides{runtime, strides.size()};
+    for (auto i = 0; i < strides.size(); i++) {
+      jsStrides.setValueAtIndex(runtime, i, static_cast<int>(strides[i]));
+    }
+    return jsStrides;
+  }
+}
+
 jsi::Value toImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -305,6 +328,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "clamp", 1, clampImp);
   setPropertyHostFunction(runtime, "data", 0, dataImpl);
   setPropertyHostFunction(runtime, "item", 0, itemImpl);
+  setPropertyHostFunction(runtime, "stride", 0, strideImpl);
   setPropertyHostFunction(runtime, "to", 1, toImpl);
 }
 

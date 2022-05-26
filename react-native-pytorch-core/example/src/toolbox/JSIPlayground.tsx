@@ -34,6 +34,9 @@ function printTensor(tensor: Tensor, options: string[] = []) {
   if (options.includes('shape')) {
     logArray.push(`Shape: ${tensor.shape}`);
   }
+  if (options.includes('stride')) {
+    logArray.push(`Stride: ${tensor.stride()}`);
+  }
   if (options.includes('dtype')) {
     logArray.push(`Data Type: ${tensor.dtype}`);
   }
@@ -79,13 +82,13 @@ export default function JSIPlayground() {
     setcxxElapse(delta);
     console.log('argmax (c++)', result);
     console.log('elapsed time (c++)', delta, 'ms');
-    printTensor(tensor, ['shape', 'dtype']);
+    printTensor(tensor, ['shape', 'stride', 'dtype']);
 
     printTensor(torch.empty([1, 2]));
     printTensor(torch.empty([1, 2], {dtype: torch.float64}));
 
     console.log('---Test torch.eye---');
-    printOptions = ['shape', 'data'];
+    printOptions = ['shape', 'stride', 'data'];
     printTensor(torch.eye(0), printOptions);
     printTensor(torch.eye(3), printOptions);
     printTensor(torch.eye(0, 3), printOptions);

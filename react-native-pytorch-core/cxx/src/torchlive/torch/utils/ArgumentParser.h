@@ -37,6 +37,9 @@ class ArgumentParser {
     return safeArg_(idx).asObject(runtime_).asHostObject<T>(runtime_);
   }
 
+  // Ensure this argument's asNumber is integral or throw an error
+  int asInteger(size_t idx) const;
+
   // See helpers::parseSize()
   std::vector<int64_t> dimsVarArgs(size_t idx, size_t* nextArgIdx = nullptr)
       const;

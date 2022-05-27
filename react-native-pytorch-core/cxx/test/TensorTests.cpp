@@ -631,4 +631,22 @@ TEST_F(TorchliveTensorRuntimeTest, TensorItemTest) {
   EXPECT_THROW(eval(tensorItemForMultiElementTensor), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorSqrtTest) {
+  std::string tensorSqrtForNegative =
+      R"(
+          const tensor = torch.tensor([-1]);
+          const output = tensor.sqrt();
+          isNaN(output[0].item());
+        )";
+  EXPECT_TRUE(eval(tensorSqrtForNegative).getBool());
+  std::string tensorSqrtForMultiElement =
+      R"(
+          const tensor = torch.tensor([[-2.0755,  1.0226],  [0.0831,  0.4806]]);
+          const output = tensor.sqrt();
+          const epsilon = 0.0001;
+          isNaN(output[0][0].item()) && Math.abs(output[0][1].item() - 1.0112) < epsilon && Math.abs(output[1][0].item() - 0.2883) < epsilon && Math.abs(output[1][1].item() - 0.6933) < epsilon;
+      )";
+  EXPECT_TRUE(eval(tensorSqrtForMultiElement).getBool());
+}
+
 } // namespace

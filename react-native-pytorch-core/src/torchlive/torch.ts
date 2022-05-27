@@ -242,6 +242,20 @@ export interface Tensor {
    */
   softmax(dim: number): Tensor;
   /**
+   * Computes the square-root value of each element in input.
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.sqrt.html}
+   */
+  sqrt(): Tensor;
+  /**
+   * Returns a tensor with all the dimensions of input of size 1 removed.
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.squeeze.html}
+   *
+   * @param dim If given, the input will be squeezed only in this dimension.
+   */
+  squeeze(dim?: number): Tensor;
+  /**
    * Returns the stride of the tensor.
    *
    * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.stride.html}
@@ -255,14 +269,6 @@ export interface Tensor {
    * @param dim The desired dimension in which stride is required.
    */
   stride(dim: number): number;
-  /**
-   * Returns a tensor with all the dimensions of input of size 1 removed.
-   *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.squeeze.html}
-   *
-   * @param dim If given, the input will be squeezed only in this dimension.
-   */
-  squeeze(dim?: number): Tensor;
   /**
    * Subtracts other from input.
    *

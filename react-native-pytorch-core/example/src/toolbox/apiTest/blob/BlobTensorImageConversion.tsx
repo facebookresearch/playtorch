@@ -45,28 +45,36 @@ export default function BlobTensorImageConversion() {
   );
 
   useEffect(() => {
-    if (wbrgbImage !== undefined && testState === loadingState) {
-      const blob = media.toBlob(wbrgbImage as Image);
+    async function execute() {
+      if (wbrgbImage !== undefined && testState === loadingState) {
+        const blob = media.toBlob(wbrgbImage as Image);
 
-      const width = wbrgbImage.getWidth();
-      const height = wbrgbImage.getHeight();
+        const width = wbrgbImage.getWidth();
+        const height = wbrgbImage.getHeight();
 
-      let tensor = torch.fromBlob(blob, [height, width, 3]);
+        let tensor = torch.fromBlob(blob, [height, width, 3]);
 
-      // Rearrange the tensor shape to be [CHW]
-      tensor = tensor.permute([2, 0, 1]);
+        // Rearrange the tensor shape to be [CHW]
+        tensor = tensor.permute([2, 0, 1]);
 
-      const convertedImage = media.imageFromTensor(tensor);
+        const convertedImage = media.imageFromTensor(tensor);
 
-      const convertedBlob = media.toBlob(convertedImage);
+        const convertedBlob = media.toBlob(convertedImage);
 
-      if (arrayEqual(blob.arrayBuffer(), convertedBlob.arrayBuffer())) {
-        setTestState('Test Passed');
-      } else {
-        setTestState('Test Failed');
+        if (
+          arrayEqual(
+            await blob.arrayBuffer(),
+            await convertedBlob.arrayBuffer(),
+          )
+        ) {
+          setTestState('Test Passed');
+        } else {
+          setTestState('Test Failed');
+        }
       }
     }
-  }, [wbrgbImage, testState]);
+    execute();
+  }, [setTestState, testState, wbrgbImage]);
 
   return <Text style={styles.textArea}>{testState}</Text>;
 }

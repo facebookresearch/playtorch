@@ -26,13 +26,13 @@ type Wav2Vec2Result = {
   answer: string;
 };
 
-const packFn = (audio: Audio): Tensor => {
+const packFn = async (audio: Audio): Promise<Tensor> => {
   // Convert audio to a blob, which is a byte representation of the audio
   // in the format of an array of bytes
   const blob = media.toBlob(audio);
 
   // Get a tensor of shorts (int16) for the audio data
-  const tensor = torch.fromBlob(blob, [1, blob.arrayBuffer().length / 2], {
+  const tensor = torch.fromBlob(blob, [1, blob.size / 2], {
     dtype: 'int16',
   });
 

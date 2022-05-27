@@ -12,7 +12,15 @@ import type {NativeJSRef} from '../NativeJSRef';
 import type {Image} from '../ImageModule';
 
 export interface Blob {
-  arrayBuffer(): Uint8Array;
+  /**
+   * The `arrayBuffer()` function returns a `Promise` that resolves with the
+   * contents of the blob as binary data contained in an ArrayBuffer.
+   */
+  arrayBuffer(): Promise<Uint8Array>;
+  /**
+   * The Blob interface's size property returns the size of the Blob in bytes.
+   */
+  readonly size: number;
 }
 
 interface Media {

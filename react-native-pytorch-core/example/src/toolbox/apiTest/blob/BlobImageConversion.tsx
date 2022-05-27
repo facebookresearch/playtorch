@@ -45,24 +45,32 @@ export default function BlobImageConversion() {
   );
 
   useEffect(() => {
-    if (wbrgbImage !== undefined && testState === loadingState) {
-      const blob = media.toBlob(wbrgbImage as Image);
+    async function execute() {
+      if (wbrgbImage !== undefined && testState === loadingState) {
+        const blob = media.toBlob(wbrgbImage as Image);
 
-      const convertedImage = media.imageFromBlob(
-        blob,
-        wbrgbImage.getWidth(),
-        wbrgbImage.getHeight(),
-      );
+        const convertedImage = media.imageFromBlob(
+          blob,
+          wbrgbImage.getWidth(),
+          wbrgbImage.getHeight(),
+        );
 
-      const convertedBlob = media.toBlob(convertedImage);
+        const convertedBlob = media.toBlob(convertedImage);
 
-      if (arrayEqual(blob.arrayBuffer(), convertedBlob.arrayBuffer())) {
-        setTestState('Test Passed');
-      } else {
-        setTestState('Test Failed');
+        if (
+          arrayEqual(
+            await blob.arrayBuffer(),
+            await convertedBlob.arrayBuffer(),
+          )
+        ) {
+          setTestState('Test Passed');
+        } else {
+          setTestState('Test Failed');
+        }
       }
     }
-  }, [wbrgbImage, testState]);
+    execute();
+  }, [setTestState, testState, wbrgbImage]);
 
   return <Text style={styles.textArea}>{testState}</Text>;
 }

@@ -6,80 +6,52 @@
  */
 
 #include "BlobHostObject.h"
+#include "../Promise.h"
+#include "../torch/utils/ArgumentParser.h"
+#include "../torch/utils/helpers.h"
 
 namespace torchlive {
 namespace media {
 
 using namespace facebook;
 
-// BlobHostObject Method Name
-static const std::string ARRAY_BUFFER = "arrayBuffer";
-
-// BlobHostObject Property Names
-// empty
-
-// BlobHostObject Properties
-static const std::vector<std::string> PROPERTIES = {};
-
-// BlobHostObject Methods
-const std::vector<std::string> METHODS = {ARRAY_BUFFER};
+jsi::Value arrayBufferImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  const auto& blob = args.thisAsHostObject<BlobHostObject>()->blob;
+  auto promiseValue = torchlive::createPromiseAsJSIValue(
+      runtime,
+      [&blob](jsi::Runtime& rt, std::shared_ptr<torchlive::Promise> promise) {
+        auto buffer = blob->getDirectBytes();
+        auto size = blob->getDirectSize();
+        jsi::ArrayBuffer arrayBuffer =
+            rt.global()
+                .getPropertyAsFunction(rt, "ArrayBuffer")
+                .callAsConstructor(rt, static_cast<int>(size))
+                .asObject(rt)
+                .getArrayBuffer(rt);
+        std::memcpy(arrayBuffer.data(rt), buffer, size);
+        auto typedArray = rt.global()
+                              .getPropertyAsFunction(rt, "Uint8Array")
+                              .callAsConstructor(rt, std::move(arrayBuffer))
+                              .asObject(rt);
+        promise->resolve(std::move(typedArray));
+      });
+  return promiseValue;
+}
 
 BlobHostObject::BlobHostObject(
     jsi::Runtime& runtime,
     std::unique_ptr<torchlive::media::Blob>&& b)
-    : arrayBuffer_(createArrayBuffer(runtime)), blob(std::move(b)) {}
+    : BaseHostObject(runtime), blob(std::move(b)) {
+  // Functions
+  setPropertyHostFunction(runtime, "arrayBuffer", 0, arrayBufferImpl);
 
-std::vector<jsi::PropNameID> BlobHostObject::getPropertyNames(
-    jsi::Runtime& runtime) {
-  std::vector<jsi::PropNameID> result;
-  for (const auto& property : PROPERTIES) {
-    result.push_back(jsi::PropNameID::forUtf8(runtime, property));
-  }
-  for (const auto& method : METHODS) {
-    result.push_back(jsi::PropNameID::forUtf8(runtime, method));
-  }
-  return result;
-}
-
-jsi::Value BlobHostObject::get(
-    jsi::Runtime& runtime,
-    const jsi::PropNameID& propName) {
-  auto name = propName.utf8(runtime);
-  if (name == ARRAY_BUFFER) {
-    return jsi::Value(runtime, arrayBuffer_);
-  }
-  return jsi::Value::undefined();
-}
-
-jsi::Function BlobHostObject::createArrayBuffer(jsi::Runtime& runtime) {
-  auto arrayBufferFunc = [this](
-                             jsi::Runtime& runtime,
-                             const jsi::Value& thisValue,
-                             const jsi::Value* arguments,
-                             size_t count) -> jsi::Value {
-    auto blob = this->blob.get();
-    auto buffer = blob->getDirectBytes();
-    auto size = blob->getDirectSize();
-
-    jsi::ArrayBuffer arrayBuffer =
-        runtime.global()
-            .getPropertyAsFunction(runtime, "ArrayBuffer")
-            .callAsConstructor(runtime, static_cast<int>(size))
-            .asObject(runtime)
-            .getArrayBuffer(runtime);
-
-    std::memcpy(arrayBuffer.data(runtime), buffer, size);
-
-    return runtime.global()
-        .getPropertyAsFunction(runtime, "Uint8Array")
-        .callAsConstructor(runtime, std::move(arrayBuffer))
-        .asObject(runtime);
-  };
-  return jsi::Function::createFromHostFunction(
-      runtime,
-      jsi::PropNameID::forUtf8(runtime, ARRAY_BUFFER),
-      0,
-      std::move(arrayBufferFunc));
+  // Properties
+  setProperty(runtime, "size", static_cast<int>(blob->getDirectSize()));
 }
 
 } // namespace media

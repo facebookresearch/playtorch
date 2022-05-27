@@ -10,12 +10,6 @@ import UIKit
 
 @objc(ImageModule)
 public class ImageModule: NSObject {
-
-    enum ImageModuleError: Error {
-        case castingObject
-        case castingDict
-    }
-
     @objc
     public func getName() -> String {
         return "PyTorchCoreImageModule"
@@ -74,7 +68,7 @@ public class ImageModule: NSObject {
             let pixelDensity = UIScreen.main.scale
 
             do {
-                let imageData = try CanvasRenderingContext2D.unwrapImageData(imageDataRef)
+                let imageData = try JSContextUtils.unwrapObject(imageDataRef, ImageData.self)
                 let image = Image(imageData: imageData, pixelDensity: pixelDensity)
                 let ref = JSContext.wrapObject(object: image).getJSRef()
                 resolve(ref)
@@ -87,7 +81,7 @@ public class ImageModule: NSObject {
     @objc(toFile:resolver:rejecter:)
     public func toFile(_ imageRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let image = try ImageModule.unwrapImage(imageRef)
+            let image = try JSContextUtils.unwrapObject(imageRef, IImage.self)
             guard let bitmap = image.getBitmap() else {
                 print("Could not get bitmap from image")
                 return
@@ -110,23 +104,10 @@ public class ImageModule: NSObject {
         return paths[0]
     }
 
-    public static func unwrapImage(_ imageRef: NSDictionary) throws -> IImage {
-        guard let ref = imageRef["ID"] as? String else { throw ImageModuleError.castingDict }
-        let castedImage = try JSContext.unwrapObject(jsRef: ["ID": ref]) as? IImage
-        guard let image = castedImage else { throw ImageModuleError.castingObject }
-        return image
-    }
-
-    public static func unwrapImage(_ imageRef: String) throws -> IImage {
-        let castedImage = try JSContext.unwrapObject(jsRef: ["ID": imageRef]) as? IImage
-        guard let image = castedImage else { throw ImageModuleError.castingObject }
-        return image
-    }
-
     @objc
     public func getWidth(_ imageRef: NSDictionary) -> Any {
         do {
-            let image = try ImageModule.unwrapImage(imageRef)
+            let image = try JSContextUtils.unwrapObject(imageRef, IImage.self)
             return NSNumber(value: Float(image.getWidth()))
         } catch {
             print("Invalid image reference in getWidth")
@@ -137,7 +118,7 @@ public class ImageModule: NSObject {
     @objc
     public func getHeight(_ imageRef: NSDictionary) -> Any {
         do {
-            let image = try ImageModule.unwrapImage(imageRef)
+            let image = try JSContextUtils.unwrapObject(imageRef, IImage.self)
             return NSNumber(value: Float(image.getHeight()))
         } catch {
             print("Invalid image reference in getHeight")
@@ -148,7 +129,7 @@ public class ImageModule: NSObject {
     @objc(scale:sx:sy:resolver:rejecter:)
     public func scale(_ imageRef: NSDictionary, sx: NSNumber, sy: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let image = try ImageModule.unwrapImage(imageRef)
+            let image = try JSContextUtils.unwrapObject(imageRef, IImage.self)
             let scaledImage = try image.scale(sx: CGFloat(truncating: sx), sy: CGFloat(truncating: sy))
             let ref = JSContext.wrapObject(object: scaledImage).getJSRef()
             resolve(ref)

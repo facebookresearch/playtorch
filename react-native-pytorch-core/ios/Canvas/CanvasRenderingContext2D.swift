@@ -16,10 +16,19 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func fillRect(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func fillRect(_ canvasRef: NSDictionary,
+                  x: NSNumber,
+                  y: NSNumber,
+                  width: NSNumber,
+                  height: NSNumber,
+                  resolver resolve: RCTPromiseResolveBlock,
+                  rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.fillRect(x: CGFloat(truncating: x), y: CGFloat(truncating: y), width: CGFloat(truncating: width), height: CGFloat(truncating: height))
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
+            canvasView.fillRect(x: CGFloat(truncating: x),
+                                y: CGFloat(truncating: y),
+                                width: CGFloat(truncating: width),
+                                height: CGFloat(truncating: height))
             resolve(nil)
         } catch {
             reject(RCTErrorUnspecified, "Could not perform fillRect: \(error)", error)
@@ -27,10 +36,19 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func strokeRect(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func strokeRect(_ canvasRef: NSDictionary,
+                    x: NSNumber,
+                    y: NSNumber,
+                    width: NSNumber,
+                    height: NSNumber,
+                    resolver resolve: RCTPromiseResolveBlock,
+                    rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.strokeRect(x: CGFloat(truncating: x), y: CGFloat(truncating: y), width: CGFloat(truncating: width), height: CGFloat(truncating: height))
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
+            canvasView.strokeRect(x: CGFloat(truncating: x),
+                                  y: CGFloat(truncating: y),
+                                  width: CGFloat(truncating: width),
+                                  height: CGFloat(truncating: height))
             resolve(nil)
         } catch {
             reject(RCTErrorUnspecified, "Could not perform strokeRect: \(error)", error)
@@ -38,10 +56,19 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func rect(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func rect(_ canvasRef: NSDictionary,
+              x: NSNumber,
+              y: NSNumber,
+              width: NSNumber,
+              height: NSNumber,
+              resolver resolve: RCTPromiseResolveBlock,
+              rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.rect(x: CGFloat(truncating: x), y: CGFloat(truncating: y), width: CGFloat(truncating: width), height: CGFloat(truncating: height))
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
+            canvasView.rect(x: CGFloat(truncating: x),
+                            y: CGFloat(truncating: y),
+                            width: CGFloat(truncating: width),
+                            height: CGFloat(truncating: height))
             resolve(nil)
         } catch {
             reject(RCTErrorUnspecified, "Could not perform rect: \(error)", error)
@@ -49,10 +76,23 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func arc(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, radius: NSNumber, startAngle: NSNumber, endAngle: NSNumber, counterclockwise: Bool, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func arc(_ canvasRef: NSDictionary,
+             x: NSNumber,
+             y: NSNumber,
+             radius: NSNumber,
+             startAngle: NSNumber,
+             endAngle: NSNumber,
+             counterclockwise: Bool,
+             resolver resolve: RCTPromiseResolveBlock,
+             rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.arc(x: CGFloat(truncating: x), y: CGFloat(truncating: y), radius: CGFloat(truncating: radius), startAngle: CGFloat(truncating: startAngle), endAngle: CGFloat(truncating: endAngle), counterclockwise: counterclockwise)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
+            canvasView.arc(x: CGFloat(truncating: x),
+                           y: CGFloat(truncating: y),
+                           radius: CGFloat(truncating: radius),
+                           startAngle: CGFloat(truncating: startAngle),
+                           endAngle: CGFloat(truncating: endAngle),
+                           counterclockwise: counterclockwise)
             resolve(nil)
         } catch {
             reject(RCTErrorUnspecified, "Could not perform arc: \(error)", error)
@@ -60,10 +100,19 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func clearRect(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, width: NSNumber, height: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func clearRect(_ canvasRef: NSDictionary,
+                   x: NSNumber,
+                   y: NSNumber,
+                   width: NSNumber,
+                   height: NSNumber,
+                   resolver resolve: RCTPromiseResolveBlock,
+                   rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.clearRect(x: CGFloat(truncating: x), y: CGFloat(truncating: y), width: CGFloat(truncating: width), height: CGFloat(truncating: height))
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
+            canvasView.clearRect(x: CGFloat(truncating: x),
+                                 y: CGFloat(truncating: y),
+                                 width: CGFloat(truncating: width),
+                                 height: CGFloat(truncating: height))
             resolve(nil)
         } catch {
             reject(RCTErrorUnspecified, "Could not perform clearRect: \(error)", error)
@@ -71,9 +120,11 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func clear(_ canvasRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func clear(_ canvasRef: NSDictionary,
+               resolver resolve: RCTPromiseResolveBlock,
+               rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.clear()
             resolve(nil)
         } catch {
@@ -82,9 +133,11 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func invalidate(_ canvasRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func invalidate(_ canvasRef: NSDictionary,
+                    resolver resolve: RCTPromiseResolveBlock,
+                    rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.invalidate()
             resolve(nil)
         } catch {
@@ -93,9 +146,11 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func stroke(_ canvasRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func stroke(_ canvasRef: NSDictionary,
+                resolver resolve: RCTPromiseResolveBlock,
+                rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.stroke()
             resolve(nil)
         } catch {
@@ -104,9 +159,11 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func fill(_ canvasRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func fill(_ canvasRef: NSDictionary,
+              resolver resolve: RCTPromiseResolveBlock,
+              rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.fill()
             resolve(nil)
         } catch {
@@ -114,32 +171,14 @@ class CanvasRenderingContext2D: NSObject {
         }
     }
 
-    func unwrapCanvas(_ canvasRef: NSDictionary) throws -> DrawingCanvasView {
-        let castedCanvasRef = canvasRef as? [ String: String ]
-        guard let ref =  castedCanvasRef else { throw CanvasRenderingContext2DError.castingDict }
-        let castedCanvasView = try JSContext.unwrapObject(jsRef: ref) as? DrawingCanvasView
-        guard let canvasView = castedCanvasView else { throw CanvasRenderingContext2DError.castingObject }
-        return canvasView
-    }
-
-    func unwrapImage(_ imageRef: NSDictionary) throws -> IImage {
-        guard let ref = imageRef["ID"] as? String else { throw CanvasRenderingContext2DError.castingDict }
-        let castedImage = try JSContext.unwrapObject(jsRef: ["ID": ref]) as? IImage
-        guard let image = castedImage else { throw CanvasRenderingContext2DError.castingObject }
-        return image
-    }
-
-    public static func unwrapImageData(_ imageDataRef: NSDictionary) throws -> ImageData {
-        guard let ref = imageDataRef["ID"] as? String else { throw CanvasRenderingContext2DError.castingDict }
-        let castedImageData = try JSContext.unwrapObject(jsRef: ["ID": ref]) as? ImageData
-        guard let imageData = castedImageData else { throw CanvasRenderingContext2DError.castingObject }
-        return imageData
-    }
-
     @objc
-    func scale(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func scale(_ canvasRef: NSDictionary,
+               x: NSNumber,
+               y: NSNumber,
+               resolver resolve: RCTPromiseResolveBlock,
+               rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.scale(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
             resolve(nil)
         } catch {
@@ -148,9 +187,12 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func rotate(_ canvasRef: NSDictionary, angle: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func rotate(_ canvasRef: NSDictionary,
+                angle: NSNumber,
+                resolver resolve: RCTPromiseResolveBlock,
+                rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.rotate(angle: CGFloat(truncating: angle))
             resolve(nil)
         } catch {
@@ -159,9 +201,13 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func translate(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func translate(_ canvasRef: NSDictionary,
+                   x: NSNumber,
+                   y: NSNumber,
+                   resolver resolve: RCTPromiseResolveBlock,
+                   rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.translate(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
             resolve(nil)
         } catch {
@@ -170,10 +216,23 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func setTransform(_ canvasRef: NSDictionary, a: NSNumber, b: NSNumber, c: NSNumber, d: NSNumber, e: NSNumber, f: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func setTransform(_ canvasRef: NSDictionary,
+                      a: NSNumber,
+                      b: NSNumber,
+                      c: NSNumber,
+                      d: NSNumber,
+                      e: NSNumber,
+                      f: NSNumber,
+                      resolver resolve: RCTPromiseResolveBlock,
+                      rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.setTransform(a: CGFloat(truncating: a), b: CGFloat(truncating: b), c: CGFloat(truncating: c), d: CGFloat(truncating: d), e: CGFloat(truncating: e), f: CGFloat(truncating: f))
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
+            canvasView.setTransform(a: CGFloat(truncating: a),
+                                    b: CGFloat(truncating: b),
+                                    c: CGFloat(truncating: c),
+                                    d: CGFloat(truncating: d),
+                                    e: CGFloat(truncating: e),
+                                    f: CGFloat(truncating: f))
             resolve(nil)
         } catch {
             reject(RCTErrorUnspecified, "Could not perform setTransform: \(error)", error)
@@ -181,9 +240,11 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func save(_ canvasRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func save(_ canvasRef: NSDictionary,
+              resolver resolve: RCTPromiseResolveBlock,
+              rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.save()
             resolve(nil)
         } catch {
@@ -192,9 +253,11 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func restore(_ canvasRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func restore(_ canvasRef: NSDictionary,
+                 resolver resolve: RCTPromiseResolveBlock,
+                 rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.restore()
             resolve(nil)
         } catch {
@@ -203,9 +266,12 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func setFillStyle(_ canvasRef: NSDictionary, color: CGColor, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func setFillStyle(_ canvasRef: NSDictionary,
+                      color: CGColor,
+                      resolver resolve: RCTPromiseResolveBlock,
+                      rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.setFillStyle(color: color)
             resolve(nil)
         } catch {
@@ -214,9 +280,12 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func setStrokeStyle(_ canvasRef: NSDictionary, color: CGColor, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func setStrokeStyle(_ canvasRef: NSDictionary,
+                        color: CGColor,
+                        resolver resolve: RCTPromiseResolveBlock,
+                        rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.setStrokeStyle(color: color)
             resolve(nil)
         } catch {
@@ -225,9 +294,12 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func setLineWidth(_ canvasRef: NSDictionary, lineWidth: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func setLineWidth(_ canvasRef: NSDictionary,
+                      lineWidth: NSNumber,
+                      resolver resolve: RCTPromiseResolveBlock,
+                      rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.setLineWidth(lineWidth: CGFloat(truncating: lineWidth))
             resolve(nil)
         } catch {
@@ -236,9 +308,12 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func setLineCap(_ canvasRef: NSDictionary, lineCap: NSString, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func setLineCap(_ canvasRef: NSDictionary,
+                    lineCap: NSString,
+                    resolver resolve: RCTPromiseResolveBlock,
+                    rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             try canvasView.setLineCap(lineCap: lineCap as String)
             resolve(nil)
         } catch {
@@ -247,9 +322,12 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func setLineJoin(_ canvasRef: NSDictionary, lineJoin: NSString, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func setLineJoin(_ canvasRef: NSDictionary,
+                     lineJoin: NSString,
+                     resolver resolve: RCTPromiseResolveBlock,
+                     rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             try canvasView.setLineJoin(lineJoin: lineJoin as String)
             resolve(nil)
         } catch {
@@ -258,9 +336,12 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func setMiterLimit(_ canvasRef: NSDictionary, miterLimit: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func setMiterLimit(_ canvasRef: NSDictionary,
+                       miterLimit: NSNumber,
+                       resolver resolve: RCTPromiseResolveBlock,
+                       rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.setMiterLimit(miterLimit: CGFloat(truncating: miterLimit))
             resolve(nil)
         } catch {
@@ -269,9 +350,12 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func setFont(_ canvasRef: NSDictionary, font: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func setFont(_ canvasRef: NSDictionary,
+                 font: NSDictionary,
+                 resolver resolve: RCTPromiseResolveBlock,
+                 rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             try canvasView.setFont(font: font)
             resolve(nil)
         } catch {
@@ -280,9 +364,11 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func beginPath(_ canvasRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func beginPath(_ canvasRef: NSDictionary,
+                   resolver resolve: RCTPromiseResolveBlock,
+                   rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.beginPath()
             resolve(nil)
         } catch {
@@ -291,9 +377,11 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func closePath(_ canvasRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func closePath(_ canvasRef: NSDictionary,
+                   resolver resolve: RCTPromiseResolveBlock,
+                   rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.closePath()
             resolve(nil)
         } catch {
@@ -302,9 +390,13 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func lineTo(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func lineTo(_ canvasRef: NSDictionary,
+                x: NSNumber,
+                y: NSNumber,
+                resolver resolve: RCTPromiseResolveBlock,
+                rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             let point = CGPoint(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
             canvasView.lineTo(point: point)
             resolve(nil)
@@ -314,9 +406,13 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func moveTo(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func moveTo(_ canvasRef: NSDictionary,
+                x: NSNumber,
+                y: NSNumber,
+                resolver resolve: RCTPromiseResolveBlock,
+                rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             let point = CGPoint(x: CGFloat(truncating: x), y: CGFloat(truncating: y))
             canvasView.moveTo(point: point)
             resolve(nil)
@@ -326,10 +422,17 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func drawCircle(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, radius: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func drawCircle(_ canvasRef: NSDictionary,
+                    x: NSNumber,
+                    y: NSNumber,
+                    radius: NSNumber,
+                    resolver resolve: RCTPromiseResolveBlock,
+                    rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.drawCircle(x: CGFloat(truncating: x), y: CGFloat(truncating: y), radius: CGFloat(truncating: radius))
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
+            canvasView.drawCircle(x: CGFloat(truncating: x),
+                                  y: CGFloat(truncating: y),
+                                  radius: CGFloat(truncating: radius))
             resolve(nil)
         } catch {
             reject(RCTErrorUnspecified, "Could not perform drawCircle: \(error)", error)
@@ -337,10 +440,18 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func fillCircle(_ canvasRef: NSDictionary, x: NSNumber, y: NSNumber, radius: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func fillCircle(_ canvasRef: NSDictionary,
+                    x: NSNumber,
+                    y: NSNumber,
+                    radius: NSNumber,
+                    resolver resolve: RCTPromiseResolveBlock,
+                    rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
-            canvasView.drawCircle(x: CGFloat(truncating: x), y: CGFloat(truncating: y), radius: CGFloat(truncating: radius), fill: true)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
+            canvasView.drawCircle(x: CGFloat(truncating: x),
+                                  y: CGFloat(truncating: y),
+                                  radius: CGFloat(truncating: radius),
+                                  fill: true)
             resolve(nil)
         } catch {
             reject(RCTErrorUnspecified, "Could not perform fillCircle: \(error)", error)
@@ -348,9 +459,14 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func fillText(_ canvasRef: NSDictionary, text: NSString, x: NSNumber, y: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func fillText(_ canvasRef: NSDictionary,
+                  text: NSString,
+                  x: NSNumber,
+                  y: NSNumber,
+                  resolver resolve: RCTPromiseResolveBlock,
+                  rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.fillText(text: text as String, x: CGFloat(truncating: x), y: CGFloat(truncating: y))
             resolve(nil)
         } catch {
@@ -359,9 +475,14 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func strokeText(_ canvasRef: NSDictionary, text: NSString, x: NSNumber, y: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func strokeText(_ canvasRef: NSDictionary,
+                    text: NSString,
+                    x: NSNumber,
+                    y: NSNumber,
+                    resolver resolve: RCTPromiseResolveBlock,
+                    rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.fillText(text: text as String, x: CGFloat(truncating: x), y: CGFloat(truncating: y), fill: false)
             resolve(nil)
         } catch {
@@ -370,9 +491,12 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func setTextAlign(_ canvasRef: NSDictionary, textAlign: NSString, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func setTextAlign(_ canvasRef: NSDictionary,
+                      textAlign: NSString,
+                      resolver resolve: RCTPromiseResolveBlock,
+                      rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
             canvasView.setTextAlign(textAlign: textAlign as String)
             resolve(nil)
         } catch {
@@ -381,16 +505,39 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func drawImage(_ canvasRef: NSDictionary, image: NSDictionary, sx: NSNumber, sy: NSNumber, sWidth: NSNumber, sHeight: NSNumber, dx: NSNumber, dy: NSNumber, dWidth: NSNumber, dHeight: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func drawImage(_ canvasRef: NSDictionary,
+                   image: NSDictionary,
+                   sx: NSNumber,
+                   sy: NSNumber,
+                   sWidth: NSNumber,
+                   sHeight: NSNumber,
+                   dx: NSNumber,
+                   dy: NSNumber,
+                   dWidth: NSNumber,
+                   dHeight: NSNumber,
+                   resolver resolve: RCTPromiseResolveBlock,
+                   rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
-            let image = try unwrapImage(image)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
+            let image = try JSContextUtils.unwrapObject(image, IImage.self)
             if dWidth == -1 && sWidth == -1 {
                 try canvasView.drawImage(image: image, dx: CGFloat(truncating: sx), dy: CGFloat(truncating: sy))
             } else if dx == -1 {
-                try canvasView.drawImage(image: image, dx: CGFloat(truncating: sx), dy: CGFloat(truncating: sy), dWidth: CGFloat(truncating: sWidth), dHeight: CGFloat(truncating: sHeight))
+                try canvasView.drawImage(image: image,
+                                         dx: CGFloat(truncating: sx),
+                                         dy: CGFloat(truncating: sy),
+                                         dWidth: CGFloat(truncating: sWidth),
+                                         dHeight: CGFloat(truncating: sHeight))
             } else {
-                try canvasView.drawImage(image: image, sx: CGFloat(truncating: sx), sy: CGFloat(truncating: sy), sWidth: CGFloat(truncating: sWidth), sHeight: CGFloat(truncating: sHeight), dx: CGFloat(truncating: dx), dy: CGFloat(truncating: dy), dWidth: CGFloat(truncating: dWidth), dHeight: CGFloat(truncating: dHeight))
+                try canvasView.drawImage(image: image,
+                                         sx: CGFloat(truncating: sx),
+                                         sy: CGFloat(truncating: sy),
+                                         sWidth: CGFloat(truncating: sWidth),
+                                         sHeight: CGFloat(truncating: sHeight),
+                                         dx: CGFloat(truncating: dx),
+                                         dy: CGFloat(truncating: dy),
+                                         dWidth: CGFloat(truncating: dWidth),
+                                         dHeight: CGFloat(truncating: dHeight))
             }
             resolve(nil)
         } catch {
@@ -399,10 +546,19 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func getImageData(_ canvasRef: NSDictionary, sx: NSNumber, sy: NSNumber, sw: NSNumber, sh: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func getImageData(_ canvasRef: NSDictionary,
+                      sx: NSNumber,
+                      sy: NSNumber,
+                      sw: NSNumber,
+                      sh: NSNumber,
+                      resolver resolve: RCTPromiseResolveBlock,
+                      rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
-            let imageData = try canvasView.getImageData(sx: CGFloat(truncating: sx), sy: CGFloat(truncating: sy), sw: CGFloat(truncating: sw), sh: CGFloat(truncating: sh))
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
+            let imageData = try canvasView.getImageData(sx: CGFloat(truncating: sx),
+                                                        sy: CGFloat(truncating: sy),
+                                                        sw: CGFloat(truncating: sw),
+                                                        sh: CGFloat(truncating: sh))
             let ref = JSContext.wrapObject(object: imageData).getJSRef()
             resolve(ref)
         } catch {
@@ -411,10 +567,15 @@ class CanvasRenderingContext2D: NSObject {
     }
 
     @objc
-    func putImageData(_ canvasRef: NSDictionary, imageDataRef: NSDictionary, sx: NSNumber, sy: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    func putImageData(_ canvasRef: NSDictionary,
+                      imageDataRef: NSDictionary,
+                      sx: NSNumber,
+                      sy: NSNumber,
+                      resolver resolve: RCTPromiseResolveBlock,
+                      rejecter reject: RCTPromiseRejectBlock) {
         do {
-            let canvasView = try unwrapCanvas(canvasRef)
-            let imageData = try CanvasRenderingContext2D.unwrapImageData(imageDataRef)
+            let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
+            let imageData = try JSContextUtils.unwrapObject(imageDataRef, ImageData.self)
             try canvasView.putImageData(imageData: imageData, sx: CGFloat(truncating: sx), sy: CGFloat(truncating: sy))
             resolve(nil)
         } catch {

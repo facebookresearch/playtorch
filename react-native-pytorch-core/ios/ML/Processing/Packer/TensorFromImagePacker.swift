@@ -19,7 +19,7 @@ class TensorFromImagePacker: Packer {
     func pack(modelSpec: JSON, params: NSDictionary, packerContext: PackerContext) throws -> IValue? {
         do {
             if let imageId = (params["image"] as? NSDictionary)?["ID"] as? String,
-               let image = try ImageModule.unwrapImage(imageId).getBitmap() {
+               let image = try JSContextUtils.unwrapObject(imageId, IImage.self).getBitmap() {
                 let transforms: JSON = modelSpec["pack"]["transforms"]
                 guard let tensor = try doImageTransforms(transforms: transforms.arrayValue, image: image) else {
                   throw TensorFromImageError.imageUnwrapError

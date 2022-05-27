@@ -1,5 +1,7 @@
 disabled_rules:
+  - function_parameter_count
   - todo
+  - type_body_length
 
 identifier_name:
   min_length: 1 # only min_length

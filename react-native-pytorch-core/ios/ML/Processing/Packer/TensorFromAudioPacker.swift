@@ -12,7 +12,7 @@ class TensorFromAudioPacker: Packer {
     func pack(modelSpec: JSON, params: NSDictionary, packerContext: PackerContext) throws -> IValue? {
         do {
             if let audioId = (params["audio"] as? NSDictionary)?["ID"] as? String {
-                let audio = try AudioModule.unwrapAudio(audioId)
+                let audio = try JSContextUtils.unwrapObject(audioId, IAudio.self)
                 let intArray = audio.getData().withUnsafeBytes { (pointer: UnsafeRawBufferPointer) -> [Int16] in
                     let buffer = UnsafeBufferPointer<Int16>(start: UnsafeRawPointer(pointer.baseAddress!)
                                                                 .bindMemory(to: Int16.self, capacity: 1),

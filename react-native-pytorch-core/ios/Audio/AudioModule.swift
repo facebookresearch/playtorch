@@ -30,19 +30,6 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
         return "PyTorchCoreAudioModule"
     }
 
-     public static func unwrapAudio(_ audioRef: NSDictionary) throws -> IAudio {
-         guard let ref = audioRef["ID"] as? String else { throw AudioModuleError.castingDict }
-         let castedAudio = try JSContext.unwrapObject(jsRef: ["ID": ref]) as? IAudio
-         guard let audio = castedAudio else { throw AudioModuleError.castingObject }
-         return audio
-     }
-
-    public static func unwrapAudio(_ audioRef: String) throws -> IAudio {
-        let castedAudio = try JSContext.unwrapObject(jsRef: ["ID": audioRef]) as? IAudio
-        guard let audio = castedAudio else { throw AudioModuleError.castingObject }
-        return audio
-    }
-
     @objc(isRecording:rejecter:)
     public func isRecording(_ resolve: @escaping InternalRCTPromiseResolveBlock,
                             rejecter reject: @escaping InternalRCTPromiseRejectBlock) {
@@ -118,7 +105,7 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
     @objc
     public func play(_ audioRef: NSDictionary) {
         do {
-            let audio = try AudioModule.unwrapAudio(audioRef)
+            let audio = try JSContextUtils.unwrapObject(audioRef, IAudio.self)
             audio.play()
         } catch {
             print("Invalid audio reference sent. \(error)")
@@ -128,7 +115,7 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
     @objc
     public func pause(_ audioRef: NSDictionary) {
         do {
-            let audio = try AudioModule.unwrapAudio(audioRef)
+            let audio = try JSContextUtils.unwrapObject(audioRef, IAudio.self)
             audio.pause()
         } catch {
             print("Invalid audio reference sent. \(error)")
@@ -138,7 +125,7 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
     @objc
     public func stop(_ audioRef: NSDictionary) {
         do {
-            let audio = try AudioModule.unwrapAudio(audioRef)
+            let audio = try JSContextUtils.unwrapObject(audioRef, IAudio.self)
             audio.stop()
         } catch {
             print("Invalid audio reference sent. \(error)")
@@ -148,7 +135,7 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
     @objc
     public func getDuration(_ audioRef: NSDictionary) -> Any {
         do {
-            let audio = try AudioModule.unwrapAudio(audioRef)
+            let audio = try JSContextUtils.unwrapObject(audioRef, IAudio.self)
             return audio.getDuration()
         } catch {
             print("Invalid audio reference sent. \(error)")
@@ -160,7 +147,7 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
     public func toFile(_ audioRef: NSDictionary, resolve: RCTPromiseResolveBlock, reject: RCTPromiseRejectBlock) {
         let uuid = NSUUID().uuidString
         do {
-            let audio = try AudioModule.unwrapAudio(audioRef)
+            let audio = try JSContextUtils.unwrapObject(audioRef, IAudio.self)
             let filename = NSURL.fileURL(withPathComponents: [NSTemporaryDirectory()])!.appendingPathComponent(
                             AudioModule.PREFIX + uuid + AudioModule.EXTENSION)
             try? audio.getData().write(to: filename)

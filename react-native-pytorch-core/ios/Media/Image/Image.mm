@@ -13,8 +13,11 @@
 namespace torchlive {
 namespace media {
 
-Image::Image(UIImage *image) noexcept : image_(image) {
+Image::Image(UIImage *image) : image_(image) {
   NSString *refId = [ImageModule wrapImage:image];
+  if (refId == nil) {
+    throw "error on wrapImage";
+  }
   id_ = std::string([refId UTF8String]);
 }
 

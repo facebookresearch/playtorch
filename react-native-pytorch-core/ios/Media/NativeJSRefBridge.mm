@@ -30,7 +30,12 @@ std::shared_ptr<IImage> imageFromBlob(
   if (image == nil) {
     return nullptr;
   }
-  return std::make_shared<Image>(image);
+  
+  try {
+    return std::make_shared<Image>(image);
+  } catch (...) {
+    return nullptr;
+  }
 }
 
 std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {

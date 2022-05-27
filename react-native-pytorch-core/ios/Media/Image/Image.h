@@ -16,7 +16,7 @@ namespace media {
 
 class Image : public IImage {
 public:
-  Image(UIImage *image) noexcept;
+  Image(UIImage *image);
   ~Image() override = default;
 
   std::string getId() const override;

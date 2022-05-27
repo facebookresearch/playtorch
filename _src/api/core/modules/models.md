@@ -22,7 +22,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[Models.ts:28](https://github.com/pytorch/live/blob/cf5b455/react-native-pytorch-core/src/Models.ts#L28)
+[Models.ts:28](https://github.com/pytorch/live/blob/571060e/react-native-pytorch-core/src/Models.ts#L28)
 
 ___
 
@@ -39,7 +39,7 @@ the following options:
 
 #### Defined in
 
-[Models.ts:26](https://github.com/pytorch/live/blob/cf5b455/react-native-pytorch-core/src/Models.ts#L26)
+[Models.ts:26](https://github.com/pytorch/live/blob/571060e/react-native-pytorch-core/src/Models.ts#L26)
 
 ## Functions
 
@@ -65,4 +65,4 @@ A URI to resolve the model.
 
 #### Defined in
 
-[Models.ts:65](https://github.com/pytorch/live/blob/cf5b455/react-native-pytorch-core/src/Models.ts#L65)
+[Models.ts:65](https://github.com/pytorch/live/blob/571060e/react-native-pytorch-core/src/Models.ts#L65)

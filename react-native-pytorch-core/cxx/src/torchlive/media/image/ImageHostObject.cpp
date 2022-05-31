@@ -104,11 +104,9 @@ jsi::Value releaseImpl(
                    ->getImage();
   auto promiseValue = torchlive::createPromiseAsJSIValue(
       runtime,
-      [image](
-          jsi::Runtime& rt,
-          std::shared_ptr<torchlive::Promise> promise) mutable {
+      [image](jsi::Runtime& rt, std::shared_ptr<torchlive::Promise> promise) {
         image->close();
-        promise->resolve(jsi::Value());
+        promise->resolve(jsi::Value::undefined());
       });
   return promiseValue;
 };

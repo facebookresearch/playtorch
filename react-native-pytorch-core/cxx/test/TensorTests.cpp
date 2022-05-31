@@ -23,7 +23,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorAbsTest) {
           let output = tensor.abs().data();
           output[0] == 2 && output[1] == 1 && output[2] == 0 && output[3] == 1
         )";
-  EXPECT_TRUE(eval(tensorAbs.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorAbs).getBool());
 }
 
 TEST_F(TorchliveTensorRuntimeTest, TensorAddTest) {
@@ -33,7 +33,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorAddTest) {
           const result = tensor.add(2);
           result[0].item() == tensor[0].item() + 2;
         )";
-  EXPECT_TRUE(eval(tensorAddCodeWithNumber.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorAddCodeWithNumber).getBool());
 
   std::string tensorAddCodeWithTensor =
       R"(
@@ -42,7 +42,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorAddTest) {
           const result = tensor1.add(tensor2);
           result[0].item() == tensor1[0].item() + tensor2[0].item();
         )";
-  EXPECT_TRUE(eval(tensorAddCodeWithTensor.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorAddCodeWithTensor).getBool());
 
   std::string tensorAddCodeWithNumberAlpha =
       R"(
@@ -50,7 +50,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorAddTest) {
           const result = tensor1.add(2, {alpha: 2});
           (result[0].item() == tensor1[0].item() + 2 * 2) && (result[1].item() == tensor1[1].item() + 2 * 2);
         )";
-  EXPECT_TRUE(eval(tensorAddCodeWithNumberAlpha.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorAddCodeWithNumberAlpha).getBool());
 
   std::string tensorAddCodeWithTensorAlpha =
       R"(
@@ -59,7 +59,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorAddTest) {
           const result = tensor1.add(tensor2, {alpha: 2});
           (result[0].item() == tensor1[0].item() + 2 * tensor2[0].item()) && (result[1].item() == tensor1[1].item() + 2 * tensor2[1].item());
         )";
-  EXPECT_TRUE(eval(tensorAddCodeWithTensorAlpha.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorAddCodeWithTensorAlpha).getBool());
 
   EXPECT_THROW(eval("torch.arange(2).add()"), facebook::jsi::JSError);
   EXPECT_THROW(
@@ -71,8 +71,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorAddTest) {
           const tensor2 = torch.arange(2);
           const result = tensor1.add(tensor2, {alpha: 'random_string'});
         )";
-  EXPECT_THROW(
-      eval(tensorAddCodeWithInvalidAlpha.c_str()), facebook::jsi::JSError);
+  EXPECT_THROW(eval(tensorAddCodeWithInvalidAlpha), facebook::jsi::JSError);
 }
 
 TEST_F(TorchliveTensorRuntimeTest, TensorArgmaxTest) {
@@ -82,7 +81,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorArgmaxTest) {
           const result = tensor.argmax();
           result.item() === 0;
         )";
-  EXPECT_TRUE(eval(tensorArgmaxWithMultipleMaxValue.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorArgmaxWithMultipleMaxValue).getBool());
 
   std::string tensorArgmaxReturnIndexOnFlattenArray =
       R"(
@@ -90,7 +89,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorArgmaxTest) {
           const result = tensor.argmax();
           result.item() === 5;
         )";
-  EXPECT_TRUE(eval(tensorArgmaxReturnIndexOnFlattenArray.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorArgmaxReturnIndexOnFlattenArray).getBool());
 
   std::string tensorArgmaxWithDimOption =
       R"(
@@ -100,7 +99,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorArgmaxTest) {
       expectedData = [1, 1, 1, 1, 1, 1];
       result.shape.length == expectedShape.length && result.shape.every((v, i) => v == expectedShape[i]) && result.data().every((v, i) => v == expectedData[i]);
     )";
-  EXPECT_TRUE(eval(tensorArgmaxWithDimOption.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorArgmaxWithDimOption).getBool());
 
   std::string tensorArgmaxWithDimOptionAndKeepdimOption =
       R"(
@@ -110,16 +109,14 @@ TEST_F(TorchliveTensorRuntimeTest, TensorArgmaxTest) {
       expectedData = [2, 2, 2, 2];
       result.shape.length == expectedShape.length && result.shape.every((v, i) => v == expectedShape[i]) && result.data().every((v, i) => v == expectedData[i]);
     )";
-  EXPECT_TRUE(
-      eval(tensorArgmaxWithDimOptionAndKeepdimOption.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorArgmaxWithDimOptionAndKeepdimOption).getBool());
 
   std::string tensorArgmaxWtihNonEmptyTensor =
       R"(
           const tensor = torch.tensor([]);
           tensor.argmax();
         )";
-  EXPECT_THROW(
-      eval(tensorArgmaxWtihNonEmptyTensor.c_str()), facebook::jsi::JSError);
+  EXPECT_THROW(eval(tensorArgmaxWtihNonEmptyTensor), facebook::jsi::JSError);
 
   std::string tensorArgmaxWtihDimOptionNotExistd =
       R"(
@@ -127,7 +124,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorArgmaxTest) {
           tensor.argmax({dim: 5});
         )";
   EXPECT_THROW(
-      eval(tensorArgmaxWtihDimOptionNotExistd.c_str()), facebook::jsi::JSError);
+      eval(tensorArgmaxWtihDimOptionNotExistd), facebook::jsi::JSError);
 
   std::string tensorArgmaxWtihInvalidKeepdimOption =
       R"(
@@ -135,8 +132,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorArgmaxTest) {
           tensor.argmax({keepdim: 1});
         )";
   EXPECT_THROW(
-      eval(tensorArgmaxWtihInvalidKeepdimOption.c_str()),
-      facebook::jsi::JSError);
+      eval(tensorArgmaxWtihInvalidKeepdimOption), facebook::jsi::JSError);
 }
 
 TEST_F(TorchliveTensorRuntimeTest, TensorDataTest) {
@@ -225,7 +221,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
         const result = tensor.div(255);
         result[0].item() == 0 && result[1].item() == 1
       )";
-  EXPECT_TRUE(eval(tensorDivWithNumber.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorDivWithNumber).getBool());
 
   for (auto i = 0; i < 4; i++) {
     std::string tensorDivWithNumber = fmt::format(
@@ -236,7 +232,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
         )",
         i,
         i);
-    EXPECT_TRUE(eval(tensorDivWithNumber.c_str()).getBool());
+    EXPECT_TRUE(eval(tensorDivWithNumber).getBool());
   }
 
   for (auto i = 0; i < 4; i++) {
@@ -248,7 +244,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
         )",
         i,
         i);
-    EXPECT_TRUE(eval(tensorDivWithNumberFloor.c_str()).getBool());
+    EXPECT_TRUE(eval(tensorDivWithNumberFloor).getBool());
   }
 
   for (auto i = 0; i < 4; i++) {
@@ -262,7 +258,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
         i,
         i,
         i);
-    EXPECT_TRUE(eval(tensorDivWithTensor.c_str()).getBool());
+    EXPECT_TRUE(eval(tensorDivWithTensor).getBool());
   }
 
   for (auto i = 0; i < 4; i++) {
@@ -278,7 +274,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
         i,
         i,
         i);
-    EXPECT_TRUE(eval(tensorDivWithTensorTrunc.c_str()).getBool());
+    EXPECT_TRUE(eval(tensorDivWithTensorTrunc).getBool());
   }
 
   std::string tensorDivRoundingModeRandomVal = R"(
@@ -288,8 +284,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
             tensor2,
             {{roundingMode: 'random_val'}});
         )";
-  EXPECT_THROW(
-      eval(tensorDivRoundingModeRandomVal.c_str()), facebook::jsi::JSError);
+  EXPECT_THROW(eval(tensorDivRoundingModeRandomVal), facebook::jsi::JSError);
 
   std::string tensorDivInvalidTypeRoundingMode = R"(
           const tensor1 = torch.arange(1, 5);
@@ -298,8 +293,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
             tensor2,
             {{roundingMode: 1}});
         )";
-  EXPECT_THROW(
-      eval(tensorDivInvalidTypeRoundingMode.c_str()), facebook::jsi::JSError);
+  EXPECT_THROW(eval(tensorDivInvalidTypeRoundingMode), facebook::jsi::JSError);
 
   EXPECT_THROW(eval("torch.arange(1, 5).div()"), facebook::jsi::JSError);
   EXPECT_THROW(eval("torch.arange(3, 4).div('foo')"), facebook::jsi::JSError);
@@ -315,7 +309,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorMulTest) {
           const result = tensor.mul(10);
           result[0].item() == tensor[0].item() * 10;
         )";
-  EXPECT_TRUE(eval(tensorMulWithNumber.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorMulWithNumber).getBool());
 
   std::string tensorMulWithTensor =
       R"(
@@ -324,7 +318,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorMulTest) {
           const result = tensor1.mul(tensor2);
           result[0].item() == tensor1[0].item() * tensor2[0].item();
         )";
-  EXPECT_TRUE(eval(tensorMulWithTensor.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorMulWithTensor).getBool());
 
   EXPECT_THROW(eval("torch.arange(2).mul()"), facebook::jsi::JSError);
   EXPECT_THROW(eval("torch.arrange(3, 4).mul('foo')"), facebook::jsi::JSError);
@@ -338,7 +332,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorPermuteTest) {
           const shape = result.shape;
           shape[0] === 1 && shape[1] === 2 && shape[2] === 3;
         )";
-  EXPECT_TRUE(eval(tensorPermute.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorPermute).getBool());
 
   // Incorrect number of dims
   EXPECT_THROW(
@@ -354,7 +348,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorSoftmaxTest) {
           const result = tensor.softmax(0);
           (result[0].item() <= 1 && result[0].item() >= 0) && (result[1].item() <= 1 && result[1].item() >= 0);
         )";
-  EXPECT_TRUE(eval(tensorSoftmaxEachValueLessThanOne.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorSoftmaxEachValueLessThanOne).getBool());
 
   std::string tensorSoftmaxSumOfValuesEqualToOne =
       R"(
@@ -362,7 +356,7 @@ TEST_F(TorchliveTensorRuntimeTest, TensorSoftmaxTest) {
           const result = tensor.softmax(0);
           Math.round(result[0].item() + result[1].item());
         )";
-  EXPECT_EQ(eval(tensorSoftmaxSumOfValuesEqualToOne.c_str()).getNumber(), 1);
+  EXPECT_EQ(eval(tensorSoftmaxSumOfValuesEqualToOne).getNumber(), 1);
 
   EXPECT_THROW(eval("torch.arange(2).softmax()"), facebook::jsi::JSError);
   EXPECT_THROW(eval("torch.empty(1, 2).softmax([1])"), facebook::jsi::JSError);
@@ -403,7 +397,7 @@ TEST_F(TorchliveTensorRuntimeTest, tensorSubTest) {
           const result = tensor.sub(2);
           result[0].item() == tensor[0].item() - 2;
         )";
-  EXPECT_TRUE(eval(tensorSubCodeWithNumber.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorSubCodeWithNumber).getBool());
 
   std::string tensorSubCodeWithTensor =
       R"(
@@ -412,7 +406,7 @@ TEST_F(TorchliveTensorRuntimeTest, tensorSubTest) {
           const result = tensor1.sub(tensor2);
           result[0].item() == tensor1[0].item() - tensor2[0].item();
         )";
-  EXPECT_TRUE(eval(tensorSubCodeWithTensor.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorSubCodeWithTensor).getBool());
 
   std::string tensorSubCodeWithNumberAlpha =
       R"(
@@ -420,7 +414,7 @@ TEST_F(TorchliveTensorRuntimeTest, tensorSubTest) {
           const result = tensor1.sub(2, {alpha: 2});
           (result[0].item() == tensor1[0].item() - 2 * 2) && (result[1].item() == tensor1[1].item() - 2 * 2);
         )";
-  EXPECT_TRUE(eval(tensorSubCodeWithNumberAlpha.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorSubCodeWithNumberAlpha).getBool());
 
   std::string tensorSubCodeWithTensorAlpha =
       R"(
@@ -429,7 +423,7 @@ TEST_F(TorchliveTensorRuntimeTest, tensorSubTest) {
           const result = tensor1.sub(tensor2, {alpha: 2});
           (result[0].item() == tensor1[0].item() - 2 * tensor2[0].item()) && (result[1].item() == tensor1[1].item() - 2 * tensor2[1].item());
         )";
-  EXPECT_TRUE(eval(tensorSubCodeWithTensorAlpha.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorSubCodeWithTensorAlpha).getBool());
 
   EXPECT_THROW(eval("torch.arange(2).sub()"), facebook::jsi::JSError);
   EXPECT_THROW(
@@ -441,8 +435,7 @@ TEST_F(TorchliveTensorRuntimeTest, tensorSubTest) {
           const tensor2 = torch.arange(2);
           const result = tensor1.sub(tensor2, {alpha: 'random_string'});
         )";
-  EXPECT_THROW(
-      eval(tensorSubCodeWithInvalidAlpha.c_str()), facebook::jsi::JSError);
+  EXPECT_THROW(eval(tensorSubCodeWithInvalidAlpha), facebook::jsi::JSError);
 }
 
 TEST_F(TorchliveTensorRuntimeTest, TorchTopkTest) {
@@ -452,7 +445,7 @@ TEST_F(TorchliveTensorRuntimeTest, TorchTopkTest) {
           const [values, indices] = tensor.topk(3);
           (values[0].item() == 19 && values[1].item() == 18 && values[2].item() == 17) && (indices[0].item() == 9 && indices[1].item() == 8 && indices[2].item() == 7);
         )";
-  EXPECT_TRUE(eval(tensorTopkValid.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorTopkValid).getBool());
 
   EXPECT_THROW(eval("torch.arange(10, 20).topk()"), facebook::jsi::JSError);
   EXPECT_THROW(eval("torch.empty(1, 2).topk([1])"), facebook::jsi::JSError);
@@ -466,7 +459,7 @@ TEST_F(TorchliveTensorRuntimeTest, TorchToTest) {
           const outputTensor2 = outputTensor.to({dtype: torch.float});
           tensor[0].item() === 1.5 && outputTensor[0].item() === 1 && outputTensor2[0].item() === 1;
         )";
-  EXPECT_TRUE(eval(tensorToAnotherDtypeCreateNewTensor.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorToAnotherDtypeCreateNewTensor).getBool());
   EXPECT_THROW(eval("torch.tensor([1.5]).to()"), facebook::jsi::JSError);
   EXPECT_THROW(
       eval("torch.tensor([1.5]).to({dtype: 'xyz'})"), facebook::jsi::JSError);
@@ -515,7 +508,7 @@ TEST_F(TorchliveTensorRuntimeTest, TorchClampTest) {
           tensor = tensor.clamp(3, 4);
           tensor[0].item() == 3 && tensor[1].item() == 3 && tensor[2].item() == 3 && tensor[3].item() == 4 && tensor[4].item() == 4;
         )";
-  EXPECT_TRUE(eval(tensorClampWithMinAndMaxNumbers.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorClampWithMinAndMaxNumbers).getBool());
 
   std::string tensorClampWithMinNumber =
       R"(
@@ -523,7 +516,7 @@ TEST_F(TorchliveTensorRuntimeTest, TorchClampTest) {
           tensor = tensor.clamp(3);
           tensor[0].item() == 3 && tensor[1].item() == 3 && tensor[2].item() == 3 && tensor[3].item() == 4 && tensor[4].item() == 5;
         )";
-  EXPECT_TRUE(eval(tensorClampWithMinNumber.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorClampWithMinNumber).getBool());
 
   // TensorArgument
   std::string tensorClampWithMinAndMaxTensor =
@@ -534,7 +527,7 @@ TEST_F(TorchliveTensorRuntimeTest, TorchClampTest) {
           tensor = tensor.clamp(minTensor, maxTensor);
           tensor[0].item() == 3 && tensor[1].item() == 3 && tensor[2].item() == 3 && tensor[3].item() == 4 && tensor[4].item() == 4;
         )";
-  EXPECT_TRUE(eval(tensorClampWithMinAndMaxTensor.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorClampWithMinAndMaxTensor).getBool());
 
   std::string tensorClampWithMinTensor =
       R"(
@@ -543,7 +536,7 @@ TEST_F(TorchliveTensorRuntimeTest, TorchClampTest) {
           tensor = tensor.clamp(minTensor);
           tensor[0].item() == 3 && tensor[1].item() == 3 && tensor[2].item() == 3 && tensor[3].item() == 4 && tensor[4].item() == 5;
         )";
-  EXPECT_TRUE(eval(tensorClampWithMinTensor.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorClampWithMinTensor).getBool());
 
   // ScalarWithKeywordArgument
   tensorClampWithMinAndMaxNumbers =
@@ -552,7 +545,7 @@ TEST_F(TorchliveTensorRuntimeTest, TorchClampTest) {
           tensor = tensor.clamp({min: 3, max: 4});
           tensor[0].item() == 3 && tensor[1].item() == 3 && tensor[2].item() == 3 && tensor[3].item() == 4 && tensor[4].item() == 4;
         )";
-  EXPECT_TRUE(eval(tensorClampWithMinAndMaxNumbers.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorClampWithMinAndMaxNumbers).getBool());
 
   tensorClampWithMinNumber =
       R"(
@@ -560,7 +553,7 @@ TEST_F(TorchliveTensorRuntimeTest, TorchClampTest) {
           tensor = tensor.clamp({min: 3});
           tensor[0].item() == 3 && tensor[1].item() == 3 && tensor[2].item() == 3 && tensor[3].item() == 4 && tensor[4].item() == 5;
         )";
-  EXPECT_TRUE(eval(tensorClampWithMinNumber.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorClampWithMinNumber).getBool());
 
   std::string tensorClampWithMaxNumber =
       R"(
@@ -568,7 +561,7 @@ TEST_F(TorchliveTensorRuntimeTest, TorchClampTest) {
           tensor = tensor.clamp({max: 4});
           tensor[0].item() == 1 && tensor[1].item() == 2 && tensor[2].item() == 3 && tensor[3].item() == 4 && tensor[4].item() == 4;
         )";
-  EXPECT_TRUE(eval(tensorClampWithMaxNumber.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorClampWithMaxNumber).getBool());
 
   // TensorWithKeywordArgument
   std::string tensorClampWithMinAndMaxTensors =
@@ -579,7 +572,7 @@ TEST_F(TorchliveTensorRuntimeTest, TorchClampTest) {
           tensor = tensor.clamp({min: minTensor, max: maxTensor});
           tensor[0].item() == 3 && tensor[1].item() == 3 && tensor[2].item() == 3 && tensor[3].item() == 4 && tensor[4].item() == 4;
         )";
-  EXPECT_TRUE(eval(tensorClampWithMinAndMaxTensors.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorClampWithMinAndMaxTensors).getBool());
 
   tensorClampWithMinTensor =
       R"(
@@ -588,7 +581,7 @@ TEST_F(TorchliveTensorRuntimeTest, TorchClampTest) {
           tensor = tensor.clamp({min: minTensor});
           tensor[0].item() == 3 && tensor[1].item() == 3 && tensor[2].item() == 3 && tensor[3].item() == 4 && tensor[4].item() == 5;
         )";
-  EXPECT_TRUE(eval(tensorClampWithMinTensor.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorClampWithMinTensor).getBool());
 
   std::string tensorClampWithMaxTensor =
       R"(
@@ -597,7 +590,7 @@ TEST_F(TorchliveTensorRuntimeTest, TorchClampTest) {
           tensor = tensor.clamp({max: maxTensor});
           tensor[0].item() == 1 && tensor[1].item() == 2 && tensor[2].item() == 3 && tensor[3].item() == 4 && tensor[4].item() == 4;
         )";
-  EXPECT_TRUE(eval(tensorClampWithMaxTensor.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorClampWithMaxTensor).getBool());
 }
 
 TEST_F(TorchliveTensorRuntimeTest, TensorItemTest) {
@@ -605,18 +598,18 @@ TEST_F(TorchliveTensorRuntimeTest, TensorItemTest) {
     const tensor = torch.tensor(1);
     tensor.item() === 1;
   )";
-  EXPECT_TRUE(eval(tensorItemForZeroDimTensorInteger.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorItemForZeroDimTensorInteger).getBool());
   std::string tensorItemForSingleElementTensorInteger = R"(
     const tensor = torch.tensor([[1]]);
     tensor.item() === 1;
   )";
-  EXPECT_TRUE(eval(tensorItemForSingleElementTensorInteger.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorItemForSingleElementTensorInteger).getBool());
 
   std::string tensorItemForSingleElementTensorFloat = R"(
     const tensor = torch.tensor([[1.5]]);
     tensor.item() === 1.5;
   )";
-  EXPECT_TRUE(eval(tensorItemForSingleElementTensorFloat.c_str()).getBool());
+  EXPECT_TRUE(eval(tensorItemForSingleElementTensorFloat).getBool());
 
   std::string tensorItemForMultiElementTensor = R"(
     const tensor = torch.tensor([[1.5, 2.5]]);

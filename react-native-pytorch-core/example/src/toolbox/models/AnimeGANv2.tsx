@@ -59,6 +59,7 @@ export default function AnimeGANv2() {
       }
 
       image.release();
+      animeImage.release();
     },
     [layout, processImage],
   );

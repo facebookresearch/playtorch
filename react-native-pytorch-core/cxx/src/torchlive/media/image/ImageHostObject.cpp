@@ -105,7 +105,13 @@ jsi::Value releaseImpl(
   auto promiseValue = torchlive::createPromiseAsJSIValue(
       runtime,
       [image](jsi::Runtime& rt, std::shared_ptr<torchlive::Promise> promise) {
-        image->close();
+        try {
+          image->close();
+        } catch (const char* error) {
+          throw jsi::JSError(rt, "error on release: " + std::string(error));
+        } catch (...) {
+          throw jsi::JSError(rt, "error on release");
+        }
         promise->resolve(jsi::Value::undefined());
       });
   return promiseValue;

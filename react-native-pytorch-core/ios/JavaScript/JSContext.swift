@@ -7,7 +7,8 @@
 
 import Foundation
 
-class JSContext {
+@objc(JSContext)
+public class JSContext: NSObject {
 
     enum JSContextError: Error {
         case invalidParam
@@ -36,6 +37,7 @@ class JSContext {
         return try JSContext.getRef(refId: refId)
     }
 
+    @objc
     public static func release(jsRef: [ String: String ]) throws {
         guard let refId = jsRef[ID_KEY] else { throw JSContextError.invalidParam }
         let removedJSRef = refs.removeValue(forKey: refId)
@@ -52,7 +54,7 @@ class JSContext {
         return ref.getObject()
     }
 
-    class NativeJSRef {
+    public class NativeJSRef {
         // initialized mId and mJSRef to empty values to allow self to be used to set id in init()
         private var mId: String? = ""
         private var mObject: Any?

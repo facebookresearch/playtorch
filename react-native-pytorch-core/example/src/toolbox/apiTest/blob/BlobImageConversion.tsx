@@ -67,6 +67,9 @@ export default function BlobImageConversion() {
         } else {
           setTestState('Test Failed');
         }
+
+        wbrgbImage.release();
+        convertedImage.release();
       }
     }
     execute();

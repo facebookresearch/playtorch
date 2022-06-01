@@ -71,6 +71,9 @@ export default function BlobTensorImageConversion() {
         } else {
           setTestState('Test Failed');
         }
+
+        wbrgbImage.release();
+        convertedImage.release();
       }
     }
     execute();

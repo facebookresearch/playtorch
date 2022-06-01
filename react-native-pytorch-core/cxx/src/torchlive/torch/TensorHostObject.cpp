@@ -307,6 +307,20 @@ jsi::Value itemImpl(
   }
 }
 
+jsi::Value reshapeImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto shape = args.dimsVarArgs(0);
+  auto tensor =
+      args.thisAsHostObject<TensorHostObject>()->tensor.reshape(shape);
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, std::move(tensor));
+}
+
 jsi::Value sqrtImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -339,6 +353,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "clamp", 1, clampImp);
   setPropertyHostFunction(runtime, "data", 0, dataImpl);
   setPropertyHostFunction(runtime, "item", 0, itemImpl);
+  setPropertyHostFunction(runtime, "reshape", 1, reshapeImpl);
   setPropertyHostFunction(runtime, "sqrt", 0, sqrtImpl);
   setPropertyHostFunction(runtime, "stride", 0, strideImpl);
   setPropertyHostFunction(runtime, "to", 1, toImpl);

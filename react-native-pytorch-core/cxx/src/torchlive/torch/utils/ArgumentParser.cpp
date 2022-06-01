@@ -48,7 +48,6 @@ std::vector<int64_t> ArgumentParser::dimsVarArgs(size_t idx, size_t* nextArgIdx)
     const {
   std::vector<int64_t> dims;
   auto numParsed = helpers::parseSize(runtime_, args_, idx, count_, &dims);
-  assert(numParsed == dims.size());
   if (nextArgIdx != nullptr) {
     *nextArgIdx = idx + numParsed;
   }

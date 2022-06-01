@@ -627,19 +627,48 @@ TEST_F(TorchliveTensorRuntimeTest, TensorItemTest) {
 TEST_F(TorchliveTensorRuntimeTest, TensorSqrtTest) {
   std::string tensorSqrtForNegative =
       R"(
-          const tensor = torch.tensor([-1]);
-          const output = tensor.sqrt();
-          isNaN(output[0].item());
-        )";
+        const tensor = torch.tensor([-1]);
+        const output = tensor.sqrt();
+        isNaN(output[0].item());
+      )";
   EXPECT_TRUE(eval(tensorSqrtForNegative).getBool());
+
   std::string tensorSqrtForMultiElement =
       R"(
-          const tensor = torch.tensor([[-2.0755,  1.0226],  [0.0831,  0.4806]]);
-          const output = tensor.sqrt();
-          const epsilon = 0.0001;
-          isNaN(output[0][0].item()) && Math.abs(output[0][1].item() - 1.0112) < epsilon && Math.abs(output[1][0].item() - 0.2883) < epsilon && Math.abs(output[1][1].item() - 0.6933) < epsilon;
+        const tensor = torch.tensor([[-2.0755,  1.0226],  [0.0831,  0.4806]]);
+        const output = tensor.sqrt();
+        const epsilon = 0.0001;
+        isNaN(output[0][0].item()) && Math.abs(output[0][1].item() - 1.0112) < epsilon && Math.abs(output[1][0].item() - 0.2883) < epsilon && Math.abs(output[1][1].item() - 0.6933) < epsilon;
       )";
   EXPECT_TRUE(eval(tensorSqrtForMultiElement).getBool());
+}
+
+TEST_F(TorchliveTensorRuntimeTest, TensorReshapeTest) {
+  std::string tensorReshapeForNegative =
+      R"(
+        const tensor = torch.tensor([[0, 1], [2, 3]], {dtype: torch.uint8});
+        const output = tensor.reshape([-1]);
+        [0, 1, 2, 3].every((v, i) => v === output[i].item());
+      )";
+  EXPECT_TRUE(eval(tensorReshapeForNegative).getBool());
+
+  std::string tensorReshapeFor2x2 =
+      R"(
+        const tensor = torch.tensor([0, 1, 2, 3], {dtype: torch.uint8});
+        const output = tensor.reshape([2, 2]);
+        [0, 1].every((v, i) => v === output[0][i].item()) &&
+        [2, 3].every((v, i) => v === output[1][i].item());
+      )";
+  EXPECT_TRUE(eval(tensorReshapeFor2x2).getBool());
+
+  // Error: Exception in HostFunction: shape '[2, 3]' is invalid for input of
+  // size 4
+  std::string tensorReshapeFor2x3 =
+      R"(
+        const tensor = torch.tensor([0, 1, 2, 3], {dtype: torch.uint8});
+        const output = tensor.reshape([2, 3]);
+      )";
+  EXPECT_THROW(eval(tensorReshapeFor2x3), facebook::jsi::JSError);
 }
 
 } // namespace

@@ -200,9 +200,17 @@ export interface Tensor {
    * tensors with one element.
    *
    * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.item.html}
-   *
    */
   item(): number;
+  /**
+   * Returns a tensor with the same data and number of elements as input, but
+   * with the specified shape.
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.reshape.html}
+   *
+   * @param shape The new shape.
+   */
+  reshape(shape: number[]): Tensor;
   /**
    * Multiplies input by other scalar or tensor.
    *

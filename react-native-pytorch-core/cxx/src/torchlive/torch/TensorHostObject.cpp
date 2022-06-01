@@ -19,7 +19,6 @@ namespace torchlive {
 namespace torch {
 
 // TensorHostObject Method Names
-static const std::string DIV = "div";
 static const std::string MUL = "mul";
 static const std::string PERMUTE = "permute";
 static const std::string SIZE = "size";
@@ -40,7 +39,7 @@ static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
 
 // TensorHostObject Methods
 static const std::vector<std::string> METHODS =
-    {DIV, MUL, PERMUTE, SIZE, SOFTMAX, SQUEEZE, SUB, TOPK, TOSTRING, UNSQUEEZE};
+    {MUL, PERMUTE, SIZE, SOFTMAX, SQUEEZE, SUB, TOPK, TOSTRING, UNSQUEEZE};
 
 using namespace facebook;
 
@@ -115,50 +114,6 @@ jsi::Value argmaxImpl(
       std::make_shared<TensorHostObject>(runtime, std::move(maxIdx));
   return jsi::Object::createFromHostObject(
       runtime, std::move(tensorHostObject));
-};
-
-jsi::Value strideImpl(
-    jsi::Runtime& runtime,
-    const jsi::Value& thisValue,
-    const jsi::Value* arguments,
-    size_t count) {
-  utils::ArgumentParser args(runtime, thisValue, arguments, count);
-  const auto& tensor = args.thisAsHostObject<TensorHostObject>()->tensor;
-
-  if (count > 0) {
-    // Return stride of the specified dimension
-    auto dim = args.asInteger(0);
-    return static_cast<int>(tensor.stride(dim));
-  } else {
-    // Return strides of all dimensions
-    const torch_::IntArrayRef strides = tensor.strides();
-    jsi::Array jsStrides{runtime, strides.size()};
-    for (auto i = 0; i < strides.size(); i++) {
-      jsStrides.setValueAtIndex(runtime, i, static_cast<int>(strides[i]));
-    }
-    return jsStrides;
-  }
-}
-
-jsi::Value toImpl(
-    jsi::Runtime& runtime,
-    const jsi::Value& thisValue,
-    const jsi::Value* arguments,
-    size_t count) {
-  if (count < 1) {
-    throw jsi::JSError(
-        runtime,
-        "1 argument is expected but " + std::to_string(count) + " are given.");
-  }
-  auto thiz =
-      thisValue.asObject(runtime).asHostObject<TensorHostObject>(runtime);
-  auto tensorOptions =
-      utils::helpers::parseTensorOptions(runtime, arguments, 0, count);
-  auto outputTensor = thiz->tensor.to(tensorOptions);
-  auto tensorHostObject =
-      std::make_shared<TensorHostObject>(runtime, std::move(outputTensor));
-
-  return jsi::Object::createFromHostObject(runtime, tensorHostObject);
 };
 
 jsi::Value clampImp(
@@ -290,6 +245,34 @@ jsi::Value dataImpl(
       .asObject(runtime);
 }
 
+jsi::Value divImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto thiz = args.thisAsHostObject<TensorHostObject>();
+
+  auto roundingModeValue = args.keywordValue(1, "roundingMode");
+
+  c10::optional<c10::string_view> roundingMode;
+  if (!roundingModeValue.isUndefined()) {
+    roundingMode = roundingModeValue.asString(runtime).utf8(runtime);
+  }
+
+  torch_::Tensor result;
+  if (args[0].isNumber()) {
+    auto scalar = arguments[0].asNumber();
+    result = thiz->tensor.div(scalar, roundingMode);
+  } else {
+    auto otherTensor = args.asHostObject<TensorHostObject>(0)->tensor;
+    result = thiz->tensor.div(otherTensor, roundingMode);
+  }
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, std::move(result));
+}
+
 jsi::Value itemImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -332,11 +315,54 @@ jsi::Value sqrtImpl(
       runtime, std::move(result));
 }
 
+jsi::Value strideImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  const auto& tensor = args.thisAsHostObject<TensorHostObject>()->tensor;
+
+  if (count > 0) {
+    // Return stride of the specified dimension
+    auto dim = args.asInteger(0);
+    return static_cast<int>(tensor.stride(dim));
+  } else {
+    // Return strides of all dimensions
+    const torch_::IntArrayRef strides = tensor.strides();
+    jsi::Array jsStrides{runtime, strides.size()};
+    for (auto i = 0; i < strides.size(); i++) {
+      jsStrides.setValueAtIndex(runtime, i, static_cast<int>(strides[i]));
+    }
+    return jsStrides;
+  }
+}
+
+jsi::Value toImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  if (count < 1) {
+    throw jsi::JSError(
+        runtime,
+        "1 argument is expected but " + std::to_string(count) + " are given.");
+  }
+  auto thiz =
+      thisValue.asObject(runtime).asHostObject<TensorHostObject>(runtime);
+  auto tensorOptions =
+      utils::helpers::parseTensorOptions(runtime, arguments, 0, count);
+  auto outputTensor = thiz->tensor.to(tensorOptions);
+  auto tensorHostObject =
+      std::make_shared<TensorHostObject>(runtime, std::move(outputTensor));
+
+  return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+};
+
 } // namespace
 
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
     : BaseHostObject(runtime),
-      div_(createDiv(runtime)),
       mul_(createMul(runtime)),
       permute_(createPermute(runtime)),
       size_(createSize(runtime)),
@@ -352,6 +378,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "argmax", 0, argmaxImpl);
   setPropertyHostFunction(runtime, "clamp", 1, clampImp);
   setPropertyHostFunction(runtime, "data", 0, dataImpl);
+  setPropertyHostFunction(runtime, "div", 1, divImpl);
   setPropertyHostFunction(runtime, "item", 0, itemImpl);
   setPropertyHostFunction(runtime, "reshape", 1, reshapeImpl);
   setPropertyHostFunction(runtime, "sqrt", 0, sqrtImpl);
@@ -378,9 +405,7 @@ jsi::Value TensorHostObject::get(
     const jsi::PropNameID& propNameId) {
   auto name = propNameId.utf8(runtime);
 
-  if (name == DIV) {
-    return jsi::Value(runtime, div_);
-  } else if (name == DTYPE) {
+  if (name == DTYPE) {
     return jsi::String::createFromUtf8(
         runtime,
         utils::constants::getStringFromDtype(
@@ -443,42 +468,6 @@ jsi::Function TensorHostObject::createToString(jsi::Runtime& runtime) {
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, TOSTRING), 0, toStringFunc);
-}
-
-jsi::Function TensorHostObject::createDiv(jsi::Runtime& runtime) {
-  auto divFunc = [this](
-                     jsi::Runtime& runtime,
-                     const jsi::Value& thisValue,
-                     const jsi::Value* arguments,
-                     size_t count) -> jsi::Value {
-    if (count < 1) {
-      throw jsi::JSError(runtime, "At least 1 arg required");
-    }
-
-    auto roundingModeValue = utils::helpers::parseKeywordArgument(
-        runtime, arguments, 1, count, "roundingMode");
-
-    c10::optional<c10::string_view> roundingMode;
-    if (!roundingModeValue.isUndefined()) {
-      roundingMode = roundingModeValue.asString(runtime).utf8(runtime);
-    }
-
-    auto tensor = this->tensor;
-    if (arguments[0].isNumber()) {
-      auto value = arguments[0].asNumber();
-      tensor = tensor.div(value, roundingMode);
-    } else {
-      auto otherTensorHostObject =
-          utils::helpers::parseTensor(runtime, &arguments[0]);
-      auto otherTensor = otherTensorHostObject->tensor;
-      tensor = tensor.div(otherTensor, roundingMode);
-    }
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, DIV), 1, divFunc);
 }
 
 jsi::Function TensorHostObject::createMul(jsi::Runtime& runtime) {

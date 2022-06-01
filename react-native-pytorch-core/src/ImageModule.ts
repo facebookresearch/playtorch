@@ -14,7 +14,7 @@ import {
   NativeModules,
 } from 'react-native';
 import type {ImageData} from './CanvasView';
-import type {NativeJSRef} from './NativeJSRef';
+import {NativeJSRef, toPlainNativeJSRef} from './NativeJSRef';
 
 const {resolveAssetSource} = RNImage;
 
@@ -247,6 +247,15 @@ export const ImageUtil = {
    * @returns path Path to image file.
    */
   async toFile(image: Image): Promise<string> {
-    return await ImageModule.toFile(image);
+    // TODO(T122223365) Temporary solution to make the toFile function work
+    // with either NativeJSRef images or true native images (see IImage.h).
+    //
+    // Without this reassignment of just the image ID, the bridge will
+    // eventually throw an error because it can't serialize the the native
+    // image.
+    //
+    // {@link https://github.com/pytorch/live/blob/main/react-native-pytorch-core/cxx/src/torchlive/media/image/IImage.h#L15}
+    const imageRef = toPlainNativeJSRef(image);
+    return await ImageModule.toFile(imageRef);
   },
 };

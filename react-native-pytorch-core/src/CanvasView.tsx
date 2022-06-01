@@ -16,7 +16,7 @@ import {
   ViewProps,
 } from 'react-native';
 import type {Image} from './ImageModule';
-import type {NativeJSRef} from './NativeJSRef';
+import {NativeJSRef, toPlainNativeJSRef} from './NativeJSRef';
 import * as CSSFontUtils from './utils/CSSFontUtils';
 
 const {
@@ -802,9 +802,19 @@ const wrapRef = (ref: NativeJSRef): CanvasRenderingContext2D => {
       dWidth: number = INVALID_VALUE_NULLABLE,
       dHeight: number = INVALID_VALUE_NULLABLE,
     ): void {
+      // TODO(T122223365) Temporary solution to make the drawImage function
+      // work with either NativeJSRef images or true native images (see
+      // IImage.h).
+      //
+      // Without this reassignment of just the image ID, the bridge will
+      // eventually throw an error because it can't serialize the the native
+      // image.
+      //
+      // {@link https://github.com/pytorch/live/blob/main/react-native-pytorch-core/cxx/src/torchlive/media/image/IImage.h#L15}
+      const imageRef = toPlainNativeJSRef(image);
       CanvasRenderingContext2DModule.drawImage(
         ref,
-        image,
+        imageRef,
         dx_sx,
         dy_sy,
         dWidth_sWidth,

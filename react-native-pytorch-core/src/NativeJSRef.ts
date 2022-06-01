@@ -63,3 +63,30 @@ export interface NativeJSRef {
    */
   ID: string;
 }
+
+/**
+ * TODO(T122223365) Temporary solution to make new JSI-based native media
+ * objects work with the old React Native architecture. For example, the
+ * drawImage of the canvas expects a NativeJSRef, which itself only needs to
+ * have an ID property with a UUID that resolves to an object on the native
+ * side.
+ *
+ * The new JSI-based native media objects have this ID too to make them
+ * compatible with current approach of sending objects between native and
+ * the JS thread. However, a JSI-based native media object might have other
+ * properties and functions that aren't serializable by the bridge.
+ *
+ * This helper function only selects the ID property of the ref, which
+ * guarantees that the resulting NativeJSRef object is serializable.
+ *
+ * This function can be removed once all callsites have been migrated to use
+ * the new React Native architecture.
+ *
+ * @param ref A NativeJSRef or a native media object.
+ * @returns A Plain NativeJSRef object with only the ID property.
+ */
+export function toPlainNativeJSRef(ref: NativeJSRef): NativeJSRef {
+  return {
+    ID: ref.ID,
+  };
+}

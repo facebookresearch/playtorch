@@ -8,7 +8,7 @@
  */
 
 import {NativeModules} from 'react-native';
-import type {NativeJSRef} from '../NativeJSRef';
+import {NativeJSRef, toPlainNativeJSRef} from '../NativeJSRef';
 
 const resolveAssetSource = require('react-native/Libraries/Image/resolveAssetSource');
 
@@ -120,7 +120,14 @@ export const AudioUtil = {
    * @returns path Path to the audio file.
    */
   async toFile(audio: Audio): Promise<string> {
-    return await AudioModule.toFile(audio);
+    // TODO(T122223365) Temporary solution to make the toFile function work
+    // with either NativeJSRef audio or true native audio.
+    //
+    // Without this reassignment of just the image ID, the bridge will
+    // eventually throw an error because it can't serialize the the native
+    // audio.
+    const audioRef = toPlainNativeJSRef(audio);
+    return await AudioModule.toFile(audioRef);
   },
 
   /**

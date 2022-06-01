@@ -13,11 +13,16 @@
 #include <torchlive/media/Blob.h>
 #include <torchlive/media/NativeJSRefBridge.h>
 
+#include "./image/Image.h"
+#include "./image/JIImage.h"
+
 namespace torchlive {
 namespace media {
 
 using namespace facebook;
 using namespace jni;
+
+namespace {
 
 alias_ref<JClass> getJBlobUtilsClass() {
   static const auto JBlobUtilsClass =
@@ -25,9 +30,27 @@ alias_ref<JClass> getJBlobUtilsClass() {
   return JBlobUtilsClass;
 }
 
+alias_ref<JClass> getMediaUtilsClass() {
+  static const auto MediaUtilsClass =
+      findClassStatic("org/pytorch/rn/core/media/MediaUtils");
+  return MediaUtilsClass;
+}
+
+} // namespace
+
 std::shared_ptr<IImage>
 imageFromBlob(const Blob& blob, double width, double height) {
-  return nullptr;
+  auto mediaUtilsClass = getMediaUtilsClass();
+  auto imageFromBlobMethod =
+      mediaUtilsClass->getStaticMethod<local_ref<JIImage>(
+          alias_ref<JByteBuffer>, jdouble, jdouble)>("imageFromBlob");
+  uint8_t* const data = blob.getDirectBytes();
+  size_t const size = blob.getDirectSize();
+  local_ref<JByteBuffer> buffer = JByteBuffer::allocateDirect(size);
+  std::memcpy(buffer->getDirectBytes(), data, size);
+  local_ref<JIImage> image =
+      imageFromBlobMethod(mediaUtilsClass, buffer, width, height);
+  return std::make_shared<Image>(make_global(image));
 }
 
 std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {

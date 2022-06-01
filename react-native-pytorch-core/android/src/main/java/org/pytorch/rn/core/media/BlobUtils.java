@@ -18,6 +18,8 @@ import org.pytorch.rn.core.javascript.JSContext;
 
 public class BlobUtils {
 
+  @DoNotStrip
+  @Keep
   public static ByteBuffer nativeJSRefToByteBuffer(final String refId) {
     final JSContext.NativeJSRef nativeJSRef = JSContext.getRef(refId);
     final Object obj = nativeJSRef.getObject();

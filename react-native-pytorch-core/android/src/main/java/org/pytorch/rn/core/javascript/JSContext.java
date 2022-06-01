@@ -34,10 +34,15 @@ public class JSContext {
     return JSContext.getRef(id);
   }
 
-  public static void release(ReadableMap jsRef) throws Exception {
-    String id = jsRef.getString(ID_KEY);
+  public static void release(String id) throws Exception {
     NativeJSRef ref = JSContext.getRef(id);
     ref.release();
+    JSContext.refs.remove(id);
+  }
+
+  public static void release(ReadableMap jsRef) throws Exception {
+    String id = jsRef.getString(ID_KEY);
+    JSContext.release(id);
   }
 
   public static NativeJSRef wrapObject(Object object) {

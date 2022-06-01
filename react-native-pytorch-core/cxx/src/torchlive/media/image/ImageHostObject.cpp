@@ -107,12 +107,14 @@ jsi::Value releaseImpl(
       [image](jsi::Runtime& rt, std::shared_ptr<torchlive::Promise> promise) {
         try {
           image->close();
+          promise->resolve(jsi::Value::undefined());
+        } catch (std::exception& e) {
+          promise->reject("error on release: " + std::string(e.what()));
         } catch (const char* error) {
-          throw jsi::JSError(rt, "error on release: " + std::string(error));
+          promise->reject("error on release: " + std::string(error));
         } catch (...) {
-          throw jsi::JSError(rt, "error on release");
+          promise->reject("error on release");
         }
-        promise->resolve(jsi::Value::undefined());
       });
   return promiseValue;
 };
@@ -123,15 +125,18 @@ ImageHostObject::ImageHostObject(
     jsi::Runtime& runtime,
     std::shared_ptr<IImage> image)
     : BaseHostObject(runtime), image_(std::move(image)) {
+  // Properties
   setProperty(
       runtime, "ID", jsi::String::createFromUtf8(runtime, image_->getId()));
-  setPropertyHostFunction(runtime, "getWidth", 0, getWidthImpl);
+
+  // Functions
   setPropertyHostFunction(runtime, "getHeight", 0, getHeightImpl);
-  setPropertyHostFunction(runtime, "getNaturalWidth", 0, getNaturalWidthImpl);
   setPropertyHostFunction(runtime, "getNaturalHeight", 0, getNaturalHeightImpl);
+  setPropertyHostFunction(runtime, "getNaturalWidth", 0, getNaturalWidthImpl);
   setPropertyHostFunction(runtime, "getPixelDensity", 0, getPixelDensityImpl);
-  setPropertyHostFunction(runtime, "scale", 2, scaleImpl);
+  setPropertyHostFunction(runtime, "getWidth", 0, getWidthImpl);
   setPropertyHostFunction(runtime, "release", 0, releaseImpl);
+  setPropertyHostFunction(runtime, "scale", 2, scaleImpl);
 }
 
 std::shared_ptr<IImage> ImageHostObject::getImage() const noexcept {

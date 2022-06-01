@@ -68,8 +68,8 @@ export default function BlobImageConversion() {
           setTestState('Test Failed');
         }
 
-        wbrgbImage.release();
-        convertedImage.release();
+        await wbrgbImage.release();
+        await convertedImage.release();
       }
     }
     execute();

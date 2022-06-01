@@ -47,6 +47,8 @@ add_library(
         ../cxx/src/torchlive/vision/VisionHostObject.cpp
         src/main/cpp/OnLoad.cpp
         src/main/cpp/torchlive/media/NativeJSRefBridge.cpp
+        src/main/cpp/torchlive/media/image/Image.cpp
+        src/main/cpp/torchlive/media/image/JIImage.cpp
 )
 
 # includes

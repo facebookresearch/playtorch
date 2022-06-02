@@ -16,7 +16,6 @@ public class ImageDataImage extends AbstractImage {
 
   private final ImageData mImageData;
   private final float mPixelDensity;
-  private Bitmap mBitmap;
 
   public ImageDataImage(ImageData imageData, float pixelDensity) {
     mImageData = imageData;
@@ -40,18 +39,12 @@ public class ImageDataImage extends AbstractImage {
 
   @Override
   public Bitmap getBitmap() {
-    if (mBitmap != null) {
-      return mBitmap;
-    }
-    mBitmap =
-        ImageUtils.bitmapFromRGBA(
-            mImageData.getWidth(), mImageData.getHeight(), mImageData.getData());
-    return mBitmap;
+    return mImageData.getBitmap();
   }
 
   @Override
   public void close() throws Exception {
-    mBitmap.recycle();
+    mImageData.getBitmap().recycle();
   }
 
   @Nullable

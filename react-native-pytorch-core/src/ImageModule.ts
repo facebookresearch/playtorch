@@ -182,7 +182,10 @@ export const ImageUtil = {
   async fromImageData(imageData: ImageData): Promise<Image> {
     // Only send NativeJSRef ID to native and omit other fields
     const imageDataRef: NativeJSRef = {ID: imageData.ID};
-    const ref: NativeJSRef = await ImageModule.fromImageData(imageDataRef);
+    const ref: NativeJSRef = await ImageModule.fromImageData(
+      imageDataRef,
+      true,
+    );
     return wrapRef(ref);
   },
 

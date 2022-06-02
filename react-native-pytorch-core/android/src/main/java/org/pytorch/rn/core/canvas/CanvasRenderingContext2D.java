@@ -24,7 +24,6 @@ import com.facebook.react.uimanager.PixelUtil;
 import com.facebook.react.uimanager.ReactInvalidPropertyException;
 import java.util.Stack;
 import org.pytorch.rn.core.image.IImage;
-import org.pytorch.rn.core.image.ImageUtils;
 
 public class CanvasRenderingContext2D {
   private final CanvasView mCanvasView;
@@ -347,20 +346,17 @@ public class CanvasRenderingContext2D {
   public ImageData getImageData(float sx, float sy, float sw, float sh) {
     int x = (int) PixelUtil.toPixelFromDIP(sx);
     int y = (int) PixelUtil.toPixelFromDIP(sy);
-    int width = (int) PixelUtil.toPixelFromDIP(sw);
-    int height = (int) PixelUtil.toPixelFromDIP(sh);
-
-    Bitmap bitmap = Bitmap.createBitmap(mBitmap, x, y, width, height);
-    byte[] data = ImageUtils.bitmapToRGBA(bitmap);
-    return new ImageData(width, height, data);
+    int pixelWidth = (int) PixelUtil.toPixelFromDIP(sw);
+    int pixelHeight = (int) PixelUtil.toPixelFromDIP(sh);
+    Bitmap bitmap = Bitmap.createBitmap(mBitmap, x, y, pixelWidth, pixelHeight);
+    return new ImageData(bitmap, (int) sw, (int) sh);
   }
 
   public void putImageData(ImageData imageData, float dx, float dy) {
     // This method is not affected by the canvas transformation matrix. We save the canvas transform
     // and restore it afterwards.
     mCanvas.save();
-    Bitmap bitmap =
-        ImageUtils.bitmapFromRGBA(imageData.getWidth(), imageData.getHeight(), imageData.getData());
+    Bitmap bitmap = imageData.getBitmap();
     mCanvas.drawBitmap(bitmap, PixelUtil.toPixelFromDIP(dx), PixelUtil.toPixelFromDIP(dy), null);
     mCanvas.restore();
   }

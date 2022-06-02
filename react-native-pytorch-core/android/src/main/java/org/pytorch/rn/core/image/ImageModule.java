@@ -168,10 +168,21 @@ public class ImageModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void fromImageData(final ReadableMap imageDataRef, Promise promise) {
+  public void fromImageData(final ReadableMap imageDataRef, final boolean scaled, Promise promise) {
     ImageData imageData = JSContext.unwrapObject(imageDataRef);
-    float pixelDensity = mReactContext.getResources().getDisplayMetrics().density;
-    IImage image = new Image(imageData, pixelDensity);
+    IImage image;
+    if (scaled) {
+      Bitmap bitmap = imageData.getScaledBitmap();
+      image = new Image(bitmap);
+    } else {
+      // Create a copy of the bitmap to allow developers to independently
+      // release the image data and this new image. Without a copy, the image
+      // will have an invalid bitmap when the image data is released and vice
+      // versa.
+      Bitmap bitmap = imageData.getBitmap();
+      Bitmap bitmapCopy = bitmap.copy(bitmap.getConfig(), bitmap.isMutable());
+      image = new Image(bitmapCopy);
+    }
     JSContext.NativeJSRef ref = JSContext.wrapObject(image);
     promise.resolve(ref.getJSRef());
   }

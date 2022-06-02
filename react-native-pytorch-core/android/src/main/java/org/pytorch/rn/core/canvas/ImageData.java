@@ -7,27 +7,33 @@
 
 package org.pytorch.rn.core.canvas;
 
+import android.graphics.Bitmap;
+
 public class ImageData {
 
-  private final int mWidth;
-  private final int mHeight;
-  private final byte[] mData;
+  private final int mScaledWidth;
+  private final int mScaledHeight;
+  private final Bitmap mBitmap;
 
-  public ImageData(int width, int height, byte[] data) {
-    mWidth = width;
-    mHeight = height;
-    mData = data;
+  public ImageData(Bitmap bitmap, int scaledWidth, int scaledHeight) {
+    mBitmap = bitmap;
+    mScaledWidth = scaledWidth;
+    mScaledHeight = scaledHeight;
   }
 
   public int getWidth() {
-    return mWidth;
+    return mBitmap.getWidth();
   }
 
   public int getHeight() {
-    return mHeight;
+    return mBitmap.getHeight();
   }
 
-  public byte[] getData() {
-    return mData;
+  public Bitmap getBitmap() {
+    return mBitmap;
+  }
+
+  public Bitmap getScaledBitmap() {
+    return Bitmap.createScaledBitmap(mBitmap, mScaledWidth, mScaledHeight, false);
   }
 }

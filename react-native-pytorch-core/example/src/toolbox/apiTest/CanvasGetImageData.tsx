@@ -13,7 +13,6 @@ import {StyleSheet} from 'react-native';
 import {
   Canvas,
   CanvasRenderingContext2D,
-  Image,
   ImageUtil,
 } from 'react-native-pytorch-core';
 import useLayoutEffectAsync from '../../utils/useLayoutEffectAsync';
@@ -64,7 +63,7 @@ export default function CanvasGetImageData() {
 
       ctx.putImageData(imageData, 200, 25);
 
-      const image: Image = await ImageUtil.fromImageData(imageData);
+      const image = await ImageUtil.fromImageData(imageData);
       ctx.drawImage(image, 200, 225);
 
       ctx.invalidate();

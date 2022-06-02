@@ -8,67 +8,62 @@
  */
 
 import {useIsFocused} from '@react-navigation/native';
-import * as React from 'react';
-import {useCallback} from 'react';
+import React, {useCallback, useState} from 'react';
 import {
+  Camera,
   CameraFacing,
+  Canvas,
   CanvasRenderingContext2D,
-  ImageUtil,
+  Image,
   ModelResultMetrics,
+  ModelInfo,
 } from 'react-native-pytorch-core';
-import {Camera, Canvas, Image, MobileModel} from 'react-native-pytorch-core';
 import {LayoutRectangle, StyleSheet, View} from 'react-native';
 import ImageClass from '../../components/ImageClass';
+import useFastNeuralStyle from '../../useFastNeuralStyle';
 
-const model = 'https://fb.me/ptl/fast_neural_style_candy.ptl';
-
-type StyleTransferResult = {
-  image: Image;
+const model: ModelInfo = {
+  name: 'FastNeuralStyle',
+  model: 'https://fb.me/ptl/fast_neural_style_candy.ptl',
 };
 
 const pictureSize = 100;
 
 export default function FastNeuralStyle() {
-  const [metrics, setMetrics] = React.useState<ModelResultMetrics>();
-  const [layout, setLayout] = React.useState<LayoutRectangle>();
-  const [context2d, setContext2d] = React.useState<CanvasRenderingContext2D>();
+  const [metrics, setMetrics] = useState<ModelResultMetrics>();
+  const [layout, setLayout] = useState<LayoutRectangle>();
+  const [context2d, setContext2d] = useState<CanvasRenderingContext2D>();
   const isFocused = useIsFocused();
+
+  const {processImage} = useFastNeuralStyle(model);
 
   const handleCapture = useCallback(
     async (image: Image) => {
-      const width = image.getWidth();
-      const height = image.getHeight();
-      const size = Math.min(width, height);
-      const {result, metrics: m} =
-        await MobileModel.execute<StyleTransferResult>(model, {
-          image,
-          cropWidth: size,
-          cropHeight: size,
-          scaleWidth: pictureSize,
-          scaleHeight: pictureSize,
-        });
+      const {metrics: m, image: resultImage} = await processImage(
+        image,
+        pictureSize,
+      );
       setMetrics(m);
 
-      if (layout != null) {
-        context2d?.clearRect(0, 0, layout?.width, layout?.height);
-        context2d?.drawImage(
-          result.image,
+      if (layout != null && context2d != null) {
+        context2d.clearRect(0, 0, layout.width, layout.height);
+        context2d.drawImage(
+          resultImage,
           0,
           0,
           pictureSize,
           pictureSize,
           0,
-          layout?.height / 2 - layout?.width / 2,
-          layout?.width,
-          layout?.width,
+          layout.height / 2 - layout.width / 2,
+          layout.width,
+          layout.width,
         );
-        await context2d?.invalidate();
-        ImageUtil.release(result.image);
+        await context2d.invalidate();
       }
-
+      resultImage.release();
       image.release();
     },
-    [setMetrics, layout, context2d],
+    [layout, context2d, setMetrics, processImage],
   );
 
   if (!isFocused) {

@@ -125,10 +125,10 @@ TEST_F(TorchliveConverterRuntimeTest, ListConversion) {
   c10::List<int64_t> a3 = {5, 6};
   c10::List<int64_t> a4 = {7, 8};
 
-  c10::List b1 = {a1, a2};
-  c10::List b2 = {a3, a4};
+  c10::List<c10::List<int64_t>> b1 = {a1, a2};
+  c10::List<c10::List<int64_t>> b2 = {a3, a4};
 
-  c10::List c1 = {b1, b2};
+  c10::List<c10::List<c10::List<int64_t>>> c1 = {b1, b2};
 
   // the IValue Constructor will recusively construct the original data as
   // IValue e.g c10::List<c10::List<double>> will be constructed as

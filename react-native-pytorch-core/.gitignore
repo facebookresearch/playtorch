@@ -71,3 +71,5 @@ example/ios/detox-build/
 
 # JSI and C++
 android/.cxx
+cxx/test/build
+cxx/test/CMakeFiles

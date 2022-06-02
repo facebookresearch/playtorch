@@ -9,8 +9,8 @@
 
 #include <jsi/jsi.h>
 
-#include "../../torchlive.h"
 #include "../common/BaseHostObject.h"
+#include "../torchlive.h"
 #include "Blob.h"
 
 namespace torchlive {

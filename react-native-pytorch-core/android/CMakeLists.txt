@@ -18,7 +18,7 @@ set (RN_SO_DIR ${NODE_MODULES_DIR}/react-native/ReactAndroid/src/main/jni/first-
 add_library(
         ${PACKAGE_NAME}
         SHARED
-        ../cxx/src/torchlive.cpp
+        ../cxx/src/torchlive/torchlive.cpp
         ../cxx/src/torchlive/common/BaseHostObject.cpp
         ../cxx/src/torchlive/media/Blob.cpp
         ../cxx/src/torchlive/media/BlobHostObject.cpp

@@ -7,11 +7,11 @@
 
 #include <jsi/jsi.h>
 
+#include "media/MediaNamespace.h"
+#include "torch/TorchHostObject.h"
 #include "torchlive.h"
-#include "torchlive/media/MediaNamespace.h"
-#include "torchlive/torch/TorchHostObject.h"
-#include "torchlive/torchvision/TorchvisionHostObject.h"
-#include "torchlive/vision/VisionHostObject.h"
+#include "torchvision/TorchvisionHostObject.h"
+#include "vision/VisionHostObject.h"
 
 namespace torchlive {
 

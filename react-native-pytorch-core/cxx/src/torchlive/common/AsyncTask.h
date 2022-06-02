@@ -11,9 +11,9 @@
 
 #include <functional>
 
-#include "../../torchlive.h"
 #include "../Promise.h"
 #include "../ThreadPool.h"
+#include "../torchlive.h"
 
 namespace torchlive {
 namespace common {

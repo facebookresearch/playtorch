@@ -10,7 +10,7 @@
 #include <jsi/jsi.h>
 #include <map>
 
-#include "../../torchlive.h"
+#include "../torchlive.h"
 
 namespace torchlive {
 namespace torch {

@@ -11,8 +11,8 @@
 
 #include <torch/csrc/jit/mobile/module.h>
 
-#include "../../../../torchlive.h"
 #include "../../../common/BaseHostObject.h"
+#include "../../../torchlive.h"
 
 // Namespace alias for torch to avoid namespace conflicts with torchlive::torch
 namespace torch_ = torch;

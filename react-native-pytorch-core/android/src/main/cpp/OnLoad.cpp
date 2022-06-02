@@ -14,7 +14,7 @@
 #include <jni.h>
 #include <react/jni/JRuntimeExecutor.h>
 
-#include "torchlive.h"
+#include "torchlive/torchlive.h"
 
 using namespace facebook;
 

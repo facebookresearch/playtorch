@@ -11,7 +11,7 @@
 #import <ReactCommon/RuntimeExecutor.h>
 #import <jsi/jsi.h>
 #import <sys/utsname.h>
-#import <cxx/src/torchlive.h>
+#import <cxx/src/torchlive/torchlive.h>
 
 #import "PyTorchCoreJSI.h"
 

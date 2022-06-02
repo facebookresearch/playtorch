@@ -9,7 +9,7 @@
 
 #include <jsi/jsi.h>
 
-#include "../../torchlive.h"
+#include "../torchlive.h"
 
 namespace torchlive {
 namespace media {

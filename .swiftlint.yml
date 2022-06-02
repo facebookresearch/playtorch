@@ -5,3 +5,6 @@ disabled_rules:
 
 identifier_name:
   min_length: 1 # only min_length
+
+file_length:
+  warning: 800 # default 400

@@ -9,7 +9,7 @@ import Foundation
 
 struct ShapeLayer {
 
-  static func HollowCircleLayer(rect: CGRect, innerRingFactor: CGFloat, lineWidth: CGFloat) -> CAShapeLayer {
+  static func hollowCircleLayer(rect: CGRect, innerRingFactor: CGFloat, lineWidth: CGFloat) -> CAShapeLayer {
     precondition(rect.width == rect.height, "rectangle need to be a square")
 
     let hollowCircleLayer = CAShapeLayer()
@@ -32,36 +32,34 @@ struct ShapeLayer {
     return hollowCircleLayer
   }
 
-  // the layer's stroke begins at 12 o'clock
-  static func StrokeAnimatableCircleLayer(rect: CGRect, fillColor: CGColor, strokeColor: CGColor = UIColor.clear.cgColor, lineWidth: CGFloat = 0) -> CAShapeLayer {
-    precondition(rect.width == rect.height, "rectangle need to be a square")
-
-    let radius = rect.width / 2
-    let circleLayer = CAShapeLayer()
-    let circlePath = UIBezierPath(arcCenter: CGPoint(x: rect.midX, y: rect.midY), radius: radius, startAngle: -CGFloat(Double.pi * 0.5), endAngle: CGFloat(Double.pi * 1.5), clockwise: true)
-
-    circleLayer.path = circlePath.cgPath
-    circleLayer.fillColor = fillColor
-    circleLayer.strokeColor = strokeColor
-    circleLayer.lineWidth = lineWidth
-    circleLayer.strokeStart = 0
-    circleLayer.strokeEnd = 0
-
-    return circleLayer
-  }
-
   // this path is animatable to a square
-  static func SquareAnimatableCircleLayer(rect: CGRect, fillColor: CGColor) -> CAShapeLayer {
+  static func squareAnimatableCircleLayer(rect: CGRect, fillColor: CGColor) -> CAShapeLayer {
     precondition(rect.width == rect.height, "rectangle need to be a square")
     let radius = rect.width / 2
     let center = CGPoint(x: rect.midX, y: rect.midY)
     let circleLayer = CAShapeLayer()
 
     let circlePath = UIBezierPath()
-    circlePath.addArc(withCenter: center, radius: radius, startAngle: -CGFloat(Double.pi), endAngle: -CGFloat(Double.pi/2), clockwise: true)
-    circlePath.addArc(withCenter: center, radius: radius, startAngle: -CGFloat(Double.pi/2), endAngle: 0, clockwise: true)
-    circlePath.addArc(withCenter: center, radius: radius, startAngle: 0, endAngle: CGFloat(Double.pi/2), clockwise: true)
-    circlePath.addArc(withCenter: center, radius: radius, startAngle: CGFloat(Double.pi/2), endAngle: CGFloat(Double.pi), clockwise: true)
+    circlePath.addArc(withCenter: center,
+                      radius: radius,
+                      startAngle: -CGFloat(Double.pi),
+                      endAngle: -CGFloat(Double.pi/2),
+                      clockwise: true)
+    circlePath.addArc(withCenter: center,
+                      radius: radius,
+                      startAngle: -CGFloat(Double.pi/2),
+                      endAngle: 0,
+                      clockwise: true)
+    circlePath.addArc(withCenter: center,
+                      radius: radius,
+                      startAngle: 0,
+                      endAngle: CGFloat(Double.pi/2),
+                      clockwise: true)
+    circlePath.addArc(withCenter: center,
+                      radius: radius,
+                      startAngle: CGFloat(Double.pi/2),
+                      endAngle: CGFloat(Double.pi),
+                      clockwise: true)
     circlePath.close()
 
     circleLayer.path = circlePath.cgPath

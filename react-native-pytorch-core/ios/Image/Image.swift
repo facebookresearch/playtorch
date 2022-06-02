@@ -42,13 +42,15 @@ public class Image: IImage {
 
     public func getNaturalWidth() -> Int {
         // Note: on Android, returns the width in device pixels so that it can be properly redrawn back to the canvas
-        // Since iOS always uses points (density independent), this will return the same as getWidth so that it can be properly redrawn back to the canvas
+        // Since iOS always uses points (density independent), this will return the same as getWidth so that it can
+        // be properly redrawn back to the canvas
         return self.image.getNaturalWidth()
     }
 
     public func getNaturalHeight() -> Int {
         // Note: on Android, returns the height in device pixels so that it can be properly redrawn back to the canvas
-        // Since iOS always uses points (density independent), this will return the same as getHeight so that it can be properly redrawn back to the canvas
+        // Since iOS always uses points (density independent), this will return the same as getHeight so that it can
+        // be properly redrawn back to the canvas
         return self.image.getNaturalHeight()
     }
 

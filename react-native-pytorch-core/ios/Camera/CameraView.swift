@@ -158,7 +158,9 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
 
     func setupInput() {
         if #available(iOS 10.2, *) {
-            if let device = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInDualCamera, .builtInWideAngleCamera], mediaType: .video, position: .back).devices.first {
+            if let device = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInDualCamera, .builtInWideAngleCamera],
+                                                             mediaType: .video,
+                                                             position: .back).devices.first {
                 backCamera = device
                 if let bInput = try? AVCaptureDeviceInput(device: backCamera) {
                     backInput = bInput
@@ -254,7 +256,8 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
     }
 
     @objc func captureImage() {
-        let photoSettings = AVCapturePhotoSettings(format: [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)])
+        let photoSettings =
+            AVCapturePhotoSettings(format: [kCVPixelBufferPixelFormatTypeKey as String: Int(kCVPixelFormatType_32BGRA)])
         self.photoOutput.capturePhoto(with: photoSettings, delegate: self)
     }
 
@@ -285,7 +288,8 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
         }
         context.translateBy(x: CGFloat(image.width)/2, y: CGFloat(image.height)/2)
         context.rotate(by: -CGFloat.pi/2)
-        context.translateBy(x: CGFloat(image.height)/(-2) - (CGFloat(image.width - image.height)), y: CGFloat(image.width)/(-2))
+        context.translateBy(x: CGFloat(image.height)/(-2) - (CGFloat(image.width - image.height)),
+                            y: CGFloat(image.width)/(-2))
         context.draw(image, in: CGRect(origin: .zero, size: CGSize(width: image.width, height: image.height)))
         if let rotatedImage = context.makeImage() {
             let bitmapImage = Image(image: rotatedImage)
@@ -298,7 +302,9 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
         }
     }
 
-    func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
+    func captureOutput(_ output: AVCaptureOutput,
+                       didOutput sampleBuffer: CMSampleBuffer,
+                       from connection: AVCaptureConnection) {
         // Check if the previous image frame was released in JavaScript. If the
         // image was not released, then the closed flag in the image frame is
         // false and the current frame will be skipped to avoid the data

@@ -46,7 +46,9 @@ class CaptureButton: UIButton {
     if let hollowCircleLayer = hollowCircleLayer {
       hollowCircleLayer.frame = self.bounds
     } else {
-      hollowCircleLayer = ShapeLayer.HollowCircleLayer(rect: self.bounds, innerRingFactor: ViewConstants.innerRingScaleFactor, lineWidth: ViewConstants.ringLineWidth)
+      hollowCircleLayer = ShapeLayer.hollowCircleLayer(rect: self.bounds,
+                                                       innerRingFactor: ViewConstants.innerRingScaleFactor,
+                                                       lineWidth: ViewConstants.ringLineWidth)
       layer.addSublayer(hollowCircleLayer!)
       hollowCircleLayer!.frame = self.bounds
     }
@@ -58,7 +60,8 @@ class CaptureButton: UIButton {
       innerCircleLayer.bounds = innerCircleBounds
       innerCircleLayer.position = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
     } else {
-      innerCircleLayer = ShapeLayer.SquareAnimatableCircleLayer(rect: innerCircleBounds, fillColor: UIColor.white.cgColor)
+      innerCircleLayer = ShapeLayer.squareAnimatableCircleLayer(rect: innerCircleBounds,
+                                                                fillColor: UIColor.white.cgColor)
       layer.addSublayer(innerCircleLayer!)
       innerCircleLayer!.bounds = innerCircleBounds
         innerCircleLayer!.position = CGPoint(x: self.bounds.midX, y: self.bounds.midY)

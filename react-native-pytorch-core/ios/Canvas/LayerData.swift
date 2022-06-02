@@ -8,9 +8,9 @@
 import Foundation
 
 enum LayerType {
-    case TextLayer
-    case ShapeLayer
-    case ImageLayer
+    case textLayer
+    case shapeLayer
+    case imageLayer
 }
 
 class LayerData {
@@ -31,7 +31,7 @@ class TextLayerData: LayerData {
     init(text: NSAttributedString, transform: CATransform3D, frame: CGRect) {
         self.text = text
         self.frame = frame
-        super.init(layerType: LayerType.TextLayer, transform: transform)
+        super.init(layerType: LayerType.textLayer, transform: transform)
     }
 }
 
@@ -42,7 +42,7 @@ class ShapeLayerData: LayerData {
     init(path: CGPath, state: CanvasState) {
         self.path = path
         self.state = state
-        super.init(layerType: LayerType.ShapeLayer, transform: state.transform)
+        super.init(layerType: LayerType.shapeLayer, transform: state.transform)
     }
 }
 
@@ -53,6 +53,6 @@ class ImageLayerData: LayerData {
     init(image: CGImage, transform: CATransform3D, frame: CGRect) {
         self.image = image
         self.frame = frame
-        super.init(layerType: LayerType.ImageLayer, transform: transform)
+        super.init(layerType: LayerType.imageLayer, transform: transform)
     }
 }

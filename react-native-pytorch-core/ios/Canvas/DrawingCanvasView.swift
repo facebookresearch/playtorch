@@ -47,17 +47,15 @@ class DrawingCanvasView: UIView {
 
     override func didSetProps(_ changedProps: [String]!) {
         guard let unwrappedOnContext2D = onContext2D else { return }
-        unwrappedOnContext2D(["ID": ref[JSContext.ID_KEY]])
+        unwrappedOnContext2D(["ID": ref[JSContext.ID_KEY] as Any])
     }
 
     func arc(x: CGFloat, y: CGFloat, radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat, counterclockwise: Bool) {
+        // seems counterintuitve to set clockwise to counterclockwise, but is the only way to get it to match web canvas
         path.addArc(center: CGPoint(x: x, y: y),
                     radius: radius,
                     startAngle: startAngle,
                     endAngle: endAngle,
-                    // seems counterintuitve to set clockwise to
-                    // counterclockwise, but is the only way to get it to match
-                    // web canvas
                     clockwise: counterclockwise)
     }
 
@@ -92,7 +90,7 @@ class DrawingCanvasView: UIView {
             let baseLayer = CALayer()
             baseLayer.transform = layerData.transform
             switch layerData.type {
-            case .ShapeLayer:
+            case .shapeLayer:
                 guard let data = layerData as? ShapeLayerData else {
                     continue
                 }
@@ -101,7 +99,7 @@ class DrawingCanvasView: UIView {
                 baseLayer.transform = data.state.transform
                 newLayer.path = data.path
                 baseLayer.addSublayer(newLayer)
-            case .TextLayer:
+            case .textLayer:
                 guard let data = layerData as? TextLayerData else {
                     continue
                 }
@@ -110,7 +108,7 @@ class DrawingCanvasView: UIView {
                 newLayer.string = data.text
                 newLayer.contentsScale = self.scaleText
                 baseLayer.addSublayer(newLayer)
-            case .ImageLayer:
+            case .imageLayer:
                 guard let data = layerData as? ImageLayerData else {
                     continue
                 }
@@ -262,6 +260,7 @@ class DrawingCanvasView: UIView {
         currentState.miterLimit = miterLimit
     }
 
+    // swiftlint:disable cyclomatic_complexity
     func setFont(font: NSDictionary) throws {
         if let fr = currentState.fontRepresentation, fr.isEqual(font) {
             return
@@ -532,11 +531,8 @@ struct CanvasState {
         self.lineCap = CAShapeLayerLineCap(rawValue: state.lineCap.rawValue)
         self.lineJoin =  CAShapeLayerLineJoin(rawValue: state.lineJoin.rawValue)
         self.miterLimit = CGFloat(state.miterLimit)
-        if let font = state.font.copy() as? UIFont {
-            self.font = font
-        } else {
-            self.font = UIFont.systemFont(ofSize: state.font.pointSize)
-        }
+        // swiftlint:disable:next force_cast
+        self.font = state.font.copy() as! UIFont
         self.textAlign = state.textAlign
         self.fontRepresentation = state.fontRepresentation
     }

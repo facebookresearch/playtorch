@@ -16,7 +16,9 @@ public class ImageDataModule: NSObject {
     }
 
     @objc(release:resolver:rejecter:)
-    public func release(_ imageDataRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    public func release(_ imageDataRef: NSDictionary,
+                        resolver resolve: RCTPromiseResolveBlock,
+                        rejecter reject: RCTPromiseRejectBlock) {
         do {
             if let imageDataRef = imageDataRef as? [ String: String] {
                 try JSContext.release(jsRef: imageDataRef)

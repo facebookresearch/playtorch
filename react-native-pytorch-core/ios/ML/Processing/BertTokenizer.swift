@@ -92,7 +92,7 @@ class BertTokenizer {
                 let range = match.range(at: 1)
                 if let swiftRange = Range(range, in: questionOrText) {
                     let token = questionOrText[swiftRange].lowercased()
-                    if let _ = token2id[token] {
+                    if token2id[token] != nil {
                         tokenIds.append(token2id[token]!)
                     } else {
                         for tIdx in 0 ..< token.count {

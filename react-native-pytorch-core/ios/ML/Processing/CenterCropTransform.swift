@@ -28,6 +28,7 @@ class CenterCropTransform: IImageTransform {
         // If no width or height is defined, it will fallback to a default crop
         // ratio, which means it will center crop to the min dimension of the
         // input image.
+        // swiftlint:disable:next empty_enum_arguments
         if !transform["width"].exists() || !transform["height"].exists() {
             return CenterCropTransform(outWidth: -1, outHeight: -1)
         }
@@ -67,7 +68,10 @@ class CenterCropTransform: IImageTransform {
         let offsetX = (width - cropWidth) / 2
         let offsetY = (height - cropHeight) / 2
 
-        if let croppedBitmap = bitmap.cropping(to: CGRect(x: Int(offsetX), y: Int(offsetY), width: Int(cropWidth), height: Int(cropHeight))) {
+        if let croppedBitmap = bitmap.cropping(to: CGRect(x: Int(offsetX),
+                                                          y: Int(offsetY),
+                                                          width: Int(cropWidth),
+                                                          height: Int(cropHeight))) {
             return croppedBitmap
         } else {
             throw CenterCropTransformError.unwrappingOptional

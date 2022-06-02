@@ -24,6 +24,7 @@ class ScaleTransform: IImageTransform {
     }
 
     public static func parse(transform: JSON) throws -> ScaleTransform {
+        // swiftlint:disable:next empty_enum_arguments
         if !transform["width"].exists() || !transform["height"].exists() {
             throw ScaleTranformError.noDimensProvided
         }

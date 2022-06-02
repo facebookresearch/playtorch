@@ -15,10 +15,15 @@ import {
   CanvasRenderingContext2D,
   Image,
   ImageUtil,
+  media,
   MobileModel,
+  Module,
+  Tensor,
+  torch,
+  torchvision,
 } from 'react-native-pytorch-core';
 
-const COLOR_CANVAS_BACKGROUND = '#4F25C6';
+const COLOR_CANVAS_BACKGROUND = '#000000';
 const COLOR_TRAIL_STROKE = '#FFFFFF';
 
 type TrailPoint = {
@@ -31,32 +36,52 @@ type MNISTResult = {
   score: number;
 };
 
+let model0: Module | null = null;
+async function getModel() {
+  if (model0 != null) {
+    return model0;
+  }
+  const filePath = await MobileModel.download(
+    MultiClassClassificationModels[0].model,
+  );
+  model0 = await torch.jit._loadForMobile(filePath);
+  return model0;
+}
+
+const grayscale = torchvision.transforms.grayscale();
+const resize = torchvision.transforms.resize(28);
+const normalize = torchvision.transforms.normalize([0.1307], [0.3081]);
+
 /**
  * The React hook provides MNIST model inference on an input image.
  */
 function useMNISTModel() {
   const processImage = useCallback(async (image: Image) => {
     // Runs model inference on input image
-    const {
-      result: {scores},
-    } = await MobileModel.execute<{scores: number[]}>(
-      MultiClassClassificationModels[0].model,
-      {
-        image,
-        crop_width: 1,
-        crop_height: 1,
-        scale_width: 28,
-        scale_height: 28,
-        colorBackground: COLOR_CANVAS_BACKGROUND,
-        colorForeground: COLOR_TRAIL_STROKE,
-      },
-    );
 
-    // Get the score of each number (index), and sort the array by the most likely first.
-    const sortedScore: MNISTResult[] = scores
-      .map((score, index) => ({score: score, num: index}))
-      .sort((a, b) => b.score - a.score);
-    return sortedScore;
+    const blob = media.toBlob(image);
+    const imageTensor = torch.fromBlob(blob, [
+      image.getHeight(),
+      image.getWidth(),
+      3,
+    ]);
+
+    let tensor = imageTensor.permute([2, 0, 1]).div(255);
+    tensor = resize(tensor);
+    tensor = grayscale(tensor);
+    tensor = normalize(tensor);
+    tensor = tensor.unsqueeze(0);
+    const model = await getModel();
+    const output = await model.forward<Tensor, Tensor[]>(tensor);
+
+    const softmax = output[0].squeeze(0).softmax(-1);
+
+    const sortedScore: MNISTResult[] = [];
+    softmax
+      .data()
+      .forEach((score, index) => sortedScore.push({score: score, num: index}));
+
+    return sortedScore.sort((a, b) => b.score - a.score);
   }, []);
 
   return {
@@ -217,7 +242,7 @@ export default function MNIST() {
 
           // Draw the trail
           ctx.strokeStyle = COLOR_TRAIL_STROKE;
-          ctx.lineWidth = 25;
+          ctx.lineWidth = 30;
           ctx.lineJoin = 'round';
           ctx.lineCap = 'round';
           ctx.miterLimit = 1;
@@ -323,7 +348,7 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
     width: '100%',
-    backgroundColor: '#180b3b',
+    backgroundColor: '#090909',
     justifyContent: 'center',
     alignItems: 'center',
   },

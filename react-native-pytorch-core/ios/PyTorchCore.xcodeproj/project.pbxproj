@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		38411DDD284081CE009E56F3 /* JSContextUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38411DDC284081CE009E56F3 /* JSContextUtils.swift */; };
 		384255BF26E17D3F00274872 /* ImageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384255BE26E17D3F00274872 /* ImageData.swift */; };
+		3861445D282A3880007990F5 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3861445C282A3880007990F5 /* UIImage+Resize.swift */; };
+		386E479527AF9DA200839701 /* NativeJSRefBridge.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 386E479427AF9DA200839701 /* NativeJSRefBridge.cpp */; };
 		386E479727AF9DCF00839701 /* MediaToBlobCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E479627AF9DCF00839701 /* MediaToBlobCache.swift */; };
 		386E479927AF9E0300839701 /* BlobUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E479827AF9E0300839701 /* BlobUtils.swift */; };
 		386E479B27B2DFFE00839701 /* ModelLoaderModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E479A27B2DFFE00839701 /* ModelLoaderModule.swift */; };
@@ -77,6 +79,8 @@
 		134814201AA4EA6300B7C361 /* libPyTorchCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPyTorchCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		38411DDC284081CE009E56F3 /* JSContextUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSContextUtils.swift; sourceTree = "<group>"; };
 		384255BE26E17D3F00274872 /* ImageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageData.swift; sourceTree = "<group>"; };
+		3861445C282A3880007990F5 /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
+		386E479427AF9DA200839701 /* NativeJSRefBridge.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = NativeJSRefBridge.cpp; sourceTree = "<group>"; };
 		386E479627AF9DCF00839701 /* MediaToBlobCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaToBlobCache.swift; sourceTree = "<group>"; };
 		386E479827AF9E0300839701 /* BlobUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlobUtils.swift; sourceTree = "<group>"; };
 		386E479A27B2DFFE00839701 /* ModelLoaderModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelLoaderModule.swift; sourceTree = "<group>"; };
@@ -244,6 +248,7 @@
 				38C0DDB326E59EDD003007B6 /* ImageUtils.swift */,
 				387E703A26E16F43003BB6F5 /* Macros.h */,
 				387E703826E16F43003BB6F5 /* Macros.m */,
+				3861445C282A3880007990F5 /* UIImage+Resize.swift */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -356,6 +361,7 @@
 				386E479727AF9DCF00839701 /* MediaToBlobCache.swift in Sources */,
 				38C0DDB426E59EDD003007B6 /* ImageUtils.swift in Sources */,
 				38DF6AF1278A8A7D00608E8E /* IValuePacker.swift in Sources */,
+				3861445D282A3880007990F5 /* UIImage+Resize.swift in Sources */,
 				387E704626E16F43003BB6F5 /* CameraView.swift in Sources */,
 				38DEE619278AB4EF000EBF1F /* TensorFromAudioPacker.swift in Sources */,
 				387E704026E16F43003BB6F5 /* LayerData.swift in Sources */,

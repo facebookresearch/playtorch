@@ -21,19 +21,19 @@ public class ImageDataImage: IImage {
     }
 
     public func getWidth() -> CGFloat {
-        return self.imageData.width// / self.getPixelDensity()
+        return CGFloat(self.imageData.bitmap.width)
     }
 
     public func getHeight() -> CGFloat {
-        return self.imageData.height// / self.getPixelDensity()
+        return CGFloat(self.imageData.bitmap.height)
     }
 
     public func getNaturalWidth() -> Int {
-        return Int(self.imageData.width)
+        return Int(self.imageData.bitmap.width)
     }
 
     public func getNaturalHeight() -> Int {
-        return Int(self.imageData.height)
+        return Int(self.imageData.bitmap.height)
     }
 
     public func scale(sx: CGFloat, sy: CGFloat) throws -> IImage {
@@ -45,9 +45,7 @@ public class ImageDataImage: IImage {
     }
 
     public func getBitmap() -> CGImage? {
-        let data = Data(self.imageData.data)
-        let uiImage = UIImage(data: data)
-        return uiImage?.cgImage
+        return self.imageData.bitmap
     }
 
     public func close() throws {

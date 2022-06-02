@@ -12,10 +12,10 @@ import UIKit
 class DrawingCanvasView: UIView {
 
     enum CanvasError: Error {
-        case InvalidLineJoinValue
-        case InvalidLineCapValue
-        case InvalidFontFamily
-        case UnableToCreateBitmap
+        case invalidLineJoinValue
+        case invalidLineCapValue
+        case invalidFontFamily
+        case unableToCreateBitmap
     }
 
     @objc public var onContext2D: RCTBubblingEventBlock?
@@ -30,11 +30,14 @@ class DrawingCanvasView: UIView {
     override public init(frame: CGRect) {
         super.init(frame: frame)
         self.clipsToBounds = true
+        self.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         ref = JSContext.wrapObject(object: self).getJSRef()
     }
 
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        self.clipsToBounds = true
+        self.autoresizingMask = [.flexibleHeight, .flexibleWidth]
         ref = JSContext.wrapObject(object: self).getJSRef()
     }
 
@@ -48,7 +51,14 @@ class DrawingCanvasView: UIView {
     }
 
     func arc(x: CGFloat, y: CGFloat, radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat, counterclockwise: Bool) {
-        path.addArc(center: CGPoint(x: x, y: y), radius: radius, startAngle: startAngle, endAngle: endAngle, clockwise: counterclockwise) // seems counterintuitve to set clockwise to counterclockwise, but is the only way to get it to match web canvas
+        path.addArc(center: CGPoint(x: x, y: y),
+                    radius: radius,
+                    startAngle: startAngle,
+                    endAngle: endAngle,
+                    // seems counterintuitve to set clockwise to
+                    // counterclockwise, but is the only way to get it to match
+                    // web canvas
+                    clockwise: counterclockwise)
     }
 
     func strokeRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) {
@@ -83,21 +93,27 @@ class DrawingCanvasView: UIView {
             baseLayer.transform = layerData.transform
             switch layerData.type {
             case .ShapeLayer:
-                let data = layerData as! ShapeLayerData
+                guard let data = layerData as? ShapeLayerData else {
+                    continue
+                }
                 let newLayer = CAShapeLayer()
                 newLayer.setStyle(state: data.state)
                 baseLayer.transform = data.state.transform
                 newLayer.path = data.path
                 baseLayer.addSublayer(newLayer)
             case .TextLayer:
-                let data = layerData as! TextLayerData
+                guard let data = layerData as? TextLayerData else {
+                    continue
+                }
                 let newLayer = CATextLayer()
                 newLayer.frame = data.frame
                 newLayer.string = data.text
                 newLayer.contentsScale = self.scaleText
                 baseLayer.addSublayer(newLayer)
             case .ImageLayer:
-                let data = layerData as! ImageLayerData
+                guard let data = layerData as? ImageLayerData else {
+                    continue
+                }
                 let newLayer = CALayer()
                 newLayer.contents = data.image
                 newLayer.frame = data.frame
@@ -183,8 +199,14 @@ class DrawingCanvasView: UIView {
         if !path.isEmpty {
             onTransformationChange()
         }
-        currentState.transform = CATransform3DMakeAffineTransform(CGAffineTransform(a: a, b: b, c: c, d: d, tx: e, ty: f))
-        // Note that the Apple CGAffineTransform matrix is the transpose of the matrix used by PyTorch Live, but so is their labeling
+        // Note that the Apple CGAffineTransform matrix is the transpose of the
+        // matrix used by PyTorch Live, but so is their labeling
+        currentState.transform = CATransform3DMakeAffineTransform(CGAffineTransform(a: a,
+                                                                                    b: b,
+                                                                                    c: c,
+                                                                                    d: d,
+                                                                                    tx: e,
+                                                                                    ty: f))
     }
 
     func setFillStyle(color: CGColor) {
@@ -219,7 +241,7 @@ class DrawingCanvasView: UIView {
         case "square":
             currentState.lineCap = CAShapeLayerLineCap.square
         default:
-            throw CanvasError.InvalidLineCapValue
+            throw CanvasError.invalidLineCapValue
         }
     }
 
@@ -232,7 +254,7 @@ class DrawingCanvasView: UIView {
         case "bevel":
             currentState.lineJoin = CAShapeLayerLineJoin.bevel
         default:
-            throw CanvasError.InvalidLineJoinValue
+            throw CanvasError.invalidLineJoinValue
         }
     }
 
@@ -260,7 +282,7 @@ class DrawingCanvasView: UIView {
             case "monospace":
                 fontName = "Menlo-"
             default:
-                throw CanvasError.InvalidFontFamily
+                throw CanvasError.invalidFontFamily
             }
         }
 
@@ -356,7 +378,7 @@ class DrawingCanvasView: UIView {
         case NSTextAlignment.center:
             offsetX = -1 * textWidth/2.0
         default:
-            offsetX = 0 // this is a duplicate of what is already stored in offsetX, but switch case must be exhaustive and each case must have at least one executable statement?
+            break
         }
         let frame = CGRect(x: x + offsetX, y: y + offsetY, width: textWidth, height: textHeight)
         let newLayer = TextLayerData(text: attrString, transform: currentState.transform, frame: frame)
@@ -369,7 +391,7 @@ class DrawingCanvasView: UIView {
             let newLayer = ImageLayerData(image: bitmap, transform: currentState.transform, frame: frame)
             sublayers.append(newLayer)
         } else {
-            throw CanvasError.UnableToCreateBitmap
+            throw CanvasError.unableToCreateBitmap
         }
     }
 
@@ -379,11 +401,19 @@ class DrawingCanvasView: UIView {
             let newLayer = ImageLayerData(image: bitmap, transform: currentState.transform, frame: frame)
             sublayers.append(newLayer)
         } else {
-            throw CanvasError.UnableToCreateBitmap
+            throw CanvasError.unableToCreateBitmap
         }
     }
 
-    func drawImage(image: IImage, sx: CGFloat, sy: CGFloat, sWidth: CGFloat, sHeight: CGFloat, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) throws {
+    func drawImage(image: IImage,
+                   sx: CGFloat,
+                   sy: CGFloat,
+                   sWidth: CGFloat,
+                   sHeight: CGFloat,
+                   dx: CGFloat,
+                   dy: CGFloat,
+                   dWidth: CGFloat,
+                   dHeight: CGFloat) throws {
         var contentsImage: CGImage?
         if let croppedImage = image.getBitmap()?.cropping(to: CGRect(x: sx, y: sy, width: sWidth, height: sHeight)) {
             contentsImage = croppedImage
@@ -400,40 +430,41 @@ class DrawingCanvasView: UIView {
             let newLayer = ImageLayerData(image: bitmap, transform: currentState.transform, frame: frame)
             sublayers.append(newLayer)
         } else {
-            throw CanvasError.UnableToCreateBitmap
+            throw CanvasError.unableToCreateBitmap
         }
     }
 
-    func getImageData(sx: CGFloat, sy: CGFloat, sw: CGFloat, sh: CGFloat) throws -> ImageData {
-        let renderer = UIGraphicsImageRenderer(bounds: CGRect(x: sx, y: sy, width: sw, height: sh))
-        var data: Data = Data()
-        let sublayers = self.sublayers
-        DispatchQueue.main.sync {
-            data = renderer.pngData { rendererContext in
+    func getImageData(sx: CGFloat,
+                      sy: CGFloat,
+                      sw: CGFloat,
+                      sh: CGFloat,
+                      completionHandler: (ImageData?) -> Void) throws {
+        let bounds = CGRect(x: sx, y: sy, width: sw, height: sh)
+        let renderer = UIGraphicsImageRenderer(bounds: bounds)
+        try DispatchQueue.main.sync {
+            let uiImage = renderer.image(actions: { rendererContext in
                 // The sublayers will be empty when the canvas invalidate is called. In that
                 // case, we want the image data come from the view layer.
                 if sublayers.isEmpty {
                     self.layer.render(in: rendererContext.cgContext)
                 } else {
                     let rootLayer = CALayer()
+                    rootLayer.bounds = self.bounds
                     self.renderLayers(allLayerData: sublayers, layer: rootLayer)
                     rootLayer.render(in: rendererContext.cgContext)
                 }
+            })
+            guard let bitmap = uiImage.cgImage else {
+                throw CanvasError.unableToCreateBitmap
             }
+            let imageData = ImageData(bitmap: bitmap, scaledWidth: sw, scaledHeight: sh)
+            completionHandler(imageData)
         }
-        return ImageData(width: sw, height: sh, data: [UInt8](data))
     }
 
     func putImageData(imageData: ImageData, sx: CGFloat, sy: CGFloat) throws {
-        let data = Data(imageData.data)
-        let frame = CGRect(x: sx, y: sy, width: imageData.width, height: imageData.height)
-        let uiImage = UIImage(data: data)
-        if let cgImage = uiImage?.cgImage {
-            let newLayer = ImageLayerData(image: cgImage, transform: currentState.transform, frame: frame)
-            sublayers.append(newLayer)
-        } else {
-            throw CanvasError.UnableToCreateBitmap
-        }
+        let newLayer = ImageLayerData(image: imageData.bitmap, transform: currentState.transform, frame: frame)
+        sublayers.append(newLayer)
     }
 
     func onTransformationChange() {
@@ -473,7 +504,15 @@ struct CanvasState {
     public var textAlign: NSTextAlignment
     public var fontRepresentation: NSDictionary?
 
-    init(transform: CATransform3D = CATransform3DIdentity, strokeStyle: CGColor = UIColor.black.cgColor, fillStyle: CGColor = UIColor.black.cgColor, lineWidth: CGFloat = 1, lineCap: CAShapeLayerLineCap = .butt, lineJoin: CAShapeLayerLineJoin = .miter, miterLimit: CGFloat = 10, font: UIFont = .systemFont(ofSize: 10), textAlign: NSTextAlignment = NSTextAlignment.left) {
+    init(transform: CATransform3D = CATransform3DIdentity,
+         strokeStyle: CGColor = UIColor.black.cgColor,
+         fillStyle: CGColor = UIColor.black.cgColor,
+         lineWidth: CGFloat = 1,
+         lineCap: CAShapeLayerLineCap = .butt,
+         lineJoin: CAShapeLayerLineJoin = .miter,
+         miterLimit: CGFloat = 10,
+         font: UIFont = .systemFont(ofSize: 10),
+         textAlign: NSTextAlignment = NSTextAlignment.left) {
         self.transform = transform
         self.strokeStyle = strokeStyle
         self.fillStyle = fillStyle
@@ -493,7 +532,11 @@ struct CanvasState {
         self.lineCap = CAShapeLayerLineCap(rawValue: state.lineCap.rawValue)
         self.lineJoin =  CAShapeLayerLineJoin(rawValue: state.lineJoin.rawValue)
         self.miterLimit = CGFloat(state.miterLimit)
-        self.font = state.font.copy() as! UIFont
+        if let font = state.font.copy() as? UIFont {
+            self.font = font
+        } else {
+            self.font = UIFont.systemFont(ofSize: state.font.pointSize)
+        }
         self.textAlign = state.textAlign
         self.fontRepresentation = state.fontRepresentation
     }

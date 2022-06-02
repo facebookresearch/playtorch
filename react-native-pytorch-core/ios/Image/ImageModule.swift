@@ -16,7 +16,9 @@ public class ImageModule: NSObject {
     }
 
     @objc(fromURL:resolver:rejecter:)
-    public func fromURL(_ urlString: NSString, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    public func fromURL(_ urlString: NSString,
+                        resolver resolve: RCTPromiseResolveBlock,
+                        rejecter reject: RCTPromiseRejectBlock) {
         if let cfURL = CFURLCreateWithString(nil, urlString, nil),
         let imageSource = CGImageSourceCreateWithURL(cfURL, nil),
         let image = CGImageSourceCreateImageAtIndex(imageSource, 0, nil) {
@@ -29,7 +31,9 @@ public class ImageModule: NSObject {
     }
 
     @objc(fromFile:resolver:rejecter:)
-    public func fromFile(_ filepath: NSString, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    public func fromFile(_ filepath: NSString,
+                         resolver resolve: RCTPromiseResolveBlock,
+                         rejecter reject: RCTPromiseRejectBlock) {
         let path = filepath as String
         let url = URL(fileURLWithPath: path)
         do {
@@ -47,7 +51,9 @@ public class ImageModule: NSObject {
     }
 
     @objc(fromBundle:resolver:rejecter:)
-    public func fromBundle(_ assetImage: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    public func fromBundle(_ assetImage: NSDictionary,
+                           resolver resolve: RCTPromiseResolveBlock,
+                           rejecter reject: RCTPromiseRejectBlock) {
         DispatchQueue.main.sync {
             if let dictionary = assetImage as? [AnyHashable: Any] {
                 let uiImage = Macros.toUIImage(dictionary)
@@ -62,14 +68,24 @@ public class ImageModule: NSObject {
         }
     }
 
-    @objc(fromImageData:resolver:rejecter:)
-    public func fromImageData(_ imageDataRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    @objc(fromImageData:scaled:resolver:rejecter:)
+    public func fromImageData(_ imageDataRef: NSDictionary,
+                              scaled: Bool,
+                              resolver resolve: RCTPromiseResolveBlock,
+                              rejecter reject: RCTPromiseRejectBlock) {
         DispatchQueue.main.sync {
-            let pixelDensity = UIScreen.main.scale
-
             do {
                 let imageData = try JSContextUtils.unwrapObject(imageDataRef, ImageData.self)
-                let image = Image(imageData: imageData, pixelDensity: pixelDensity)
+
+                var image: IImage
+                if scaled {
+                    let bitmap = try imageData.getScaledBitmap()
+                    image = Image(image: bitmap)
+                } else {
+                    let pixelDensity = UIScreen.main.scale
+                    image = Image(imageData: imageData, pixelDensity: pixelDensity)
+                }
+
                 let ref = JSContext.wrapObject(object: image).getJSRef()
                 resolve(ref)
             } catch {
@@ -79,7 +95,9 @@ public class ImageModule: NSObject {
     }
 
     @objc(toFile:resolver:rejecter:)
-    public func toFile(_ imageRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    public func toFile(_ imageRef: NSDictionary,
+                       resolver resolve: RCTPromiseResolveBlock,
+                       rejecter reject: RCTPromiseRejectBlock) {
         do {
             let image = try JSContextUtils.unwrapObject(imageRef, IImage.self)
             guard let bitmap = image.getBitmap() else {
@@ -127,7 +145,11 @@ public class ImageModule: NSObject {
     }
 
     @objc(scale:sx:sy:resolver:rejecter:)
-    public func scale(_ imageRef: NSDictionary, sx: NSNumber, sy: NSNumber, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    public func scale(_ imageRef: NSDictionary,
+                      sx: NSNumber,
+                      sy: NSNumber,
+                      resolver resolve: RCTPromiseResolveBlock,
+                      rejecter reject: RCTPromiseRejectBlock) {
         do {
             let image = try JSContextUtils.unwrapObject(imageRef, IImage.self)
             let scaledImage = try image.scale(sx: CGFloat(truncating: sx), sy: CGFloat(truncating: sy))
@@ -139,7 +161,9 @@ public class ImageModule: NSObject {
     }
 
     @objc(release:resolver:rejecter:)
-    public func release(_ imageRef: NSDictionary, resolver resolve: RCTPromiseResolveBlock, rejecter reject: RCTPromiseRejectBlock) {
+    public func release(_ imageRef: NSDictionary,
+                        resolver resolve: RCTPromiseResolveBlock,
+                        rejecter reject: RCTPromiseRejectBlock) {
         do {
             if let imageRef = imageRef as? [ String: String] {
                 try JSContext.release(jsRef: imageRef)

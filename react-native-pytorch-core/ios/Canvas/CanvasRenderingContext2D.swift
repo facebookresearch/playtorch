@@ -555,12 +555,15 @@ class CanvasRenderingContext2D: NSObject {
                       rejecter reject: RCTPromiseRejectBlock) {
         do {
             let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
-            let imageData = try canvasView.getImageData(sx: CGFloat(truncating: sx),
-                                                        sy: CGFloat(truncating: sy),
-                                                        sw: CGFloat(truncating: sw),
-                                                        sh: CGFloat(truncating: sh))
-            let ref = JSContext.wrapObject(object: imageData).getJSRef()
-            resolve(ref)
+            let completionHandler: (ImageData?) -> Void = { imageData in
+                let ref = JSContext.wrapObject(object: imageData!).getJSRef()
+                resolve(ref)
+            }
+            try canvasView.getImageData(sx: CGFloat(truncating: sx),
+                                        sy: CGFloat(truncating: sy),
+                                        sw: CGFloat(truncating: sw),
+                                        sh: CGFloat(truncating: sh),
+                                        completionHandler: completionHandler)
         } catch {
             reject(RCTErrorUnspecified, "Could not perform getImageData: \(error)", error)
         }

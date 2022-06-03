@@ -66,22 +66,26 @@ TEST_F(TorchliveRuntimeTest, TorchEmptyTest) {
 TEST_F(TorchliveRuntimeTest, TorchEyeTest) {
   // test dimensions with one int argument
   const std::vector<int> ns = {0, 1, 3};
-  for (const auto n : ns) {
+  for (const auto& n : ns) {
     EXPECT_EQ(eval(fmt::format("torch.eye({}).shape[0]", n)).getNumber(), n);
     EXPECT_EQ(eval(fmt::format("torch.eye({}).shape[1]", n)).getNumber(), n);
   }
   // test dimensions with two int arguments
   const std::vector<std::pair<int, int>> nms = {
       {0, 0}, {0, 1}, {1, 0}, {1, 1}, {1, 3}, {3, 1}, {3, 3}};
-  for (const auto [n, m] : nms) {
+  for (const auto& i : nms) {
     EXPECT_EQ(
-        eval(fmt::format("torch.eye({},{}).shape[0]", n, m)).getNumber(), n);
+        eval(fmt::format("torch.eye({},{}).shape[0]", i.first, i.second))
+            .getNumber(),
+        i.first);
     EXPECT_EQ(
-        eval(fmt::format("torch.eye({},{}).shape[1]", n, m)).getNumber(), m);
+        eval(fmt::format("torch.eye({},{}).shape[1]", i.first, i.second))
+            .getNumber(),
+        i.second);
   }
   // test with data type
   const auto dtypes = {"float64", "float32", "int64", "int32"};
-  for (const auto dtype : dtypes) {
+  for (const auto& dtype : dtypes) {
     EXPECT_EQ(
         eval(fmt::format("torch.eye(3, {{dtype:'{}'}}).dtype", dtype))
             .asString(*rt)

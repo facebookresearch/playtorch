@@ -25,6 +25,7 @@
   ],
   "scripts": {
     "test": "jest",
+    "testcxx": "cd cxx/test && cmake -S. -Bbuild && cmake --build build -j8 && (cd build && ctest -j8)",
     "typescript": "tsc --noEmit",
     "lint": "prettier --write \"**/*.{js,ts,tsx}\" && eslint \"**/*.{js,ts,tsx}\" --fix",
     "prepare": "bob build",

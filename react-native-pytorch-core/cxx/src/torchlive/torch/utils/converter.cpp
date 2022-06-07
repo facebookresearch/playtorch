@@ -89,6 +89,30 @@ jsi::Value ivalueToJSIValue(jsi::Runtime& runtime, const at::IValue& ivalue) {
       runtime, ivalue.tagKind() + " can't convert to jsi::Value.");
 }
 
+/**
+ * A helper method to pack a JSValue object into an IValue
+ */
+torch_::jit::IValue jsiValuetoIValue(
+    facebook::jsi::Runtime& runtime,
+    const jsi::Value& jsValue) {
+  torch_::jit::IValue iValue;
+  if (jsValue.isNumber()) {
+    iValue = jsValue.asNumber();
+  } else if (jsValue.isBool()) {
+    iValue = jsValue.getBool(); // jsi does not have asBool() method
+  } else if (jsValue.isString()) {
+    iValue = jsValue.asString(runtime).utf8(runtime);
+  } else {
+    auto tensorHostObject = utils::helpers::parseTensor(runtime, &jsValue);
+    if (tensorHostObject != nullptr) {
+      iValue = tensorHostObject->tensor;
+    } else {
+      throw jsi::JSError(runtime, "Unrecognized JSValue format.");
+    }
+  }
+  return iValue;
+}
+
 } // namespace converter
 } // namespace utils
 } // namespace torchlive

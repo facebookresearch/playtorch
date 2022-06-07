@@ -6,6 +6,7 @@
  */
 
 #include <gtest/gtest.h>
+#include "torchlive/torch/TensorHostObject.h"
 #include "torchlive/torch/utils/converter.h"
 #include "torchlive/torch/utils/helpers.h"
 
@@ -182,4 +183,45 @@ TEST_F(TorchliveConverterRuntimeTest, TupleConversion) {
   auto childJsArr = jsArr.getValueAtIndex(*rt, 5).asObject(*rt).asArray(*rt);
   EXPECT_EQ(childJsArr.getValueAtIndex(*rt, 0).asNumber(), 3.15);
   EXPECT_EQ(childJsArr.getValueAtIndex(*rt, 1).getBool(), false);
+}
+
+// jsi::Value to IValue conversion tests
+
+TEST_F(TorchliveConverterRuntimeTest, jsiValueNumberToIValue) {
+  // jsi explicit double value packed to a double iValue
+  auto jsiDoubleValue = facebook::jsi::Value(3.0);
+  auto iValue1 = jsiValuetoIValue(*rt, jsiDoubleValue);
+  EXPECT_EQ(iValue1, 3.0);
+
+  // jsi explicit int value packed to a double iValue
+  auto jsiIntValue = facebook::jsi::Value(3);
+  auto iValue2 = jsiValuetoIValue(*rt, jsiIntValue);
+  EXPECT_EQ(iValue2, 3.0);
+}
+
+TEST_F(TorchliveConverterRuntimeTest, jsiValueBooleanToIValue) {
+  auto jsiBooleanValue = facebook::jsi::Value(true);
+  auto iValue = jsiValuetoIValue(*rt, jsiBooleanValue);
+  EXPECT_EQ(iValue, true);
+}
+
+TEST_F(TorchliveConverterRuntimeTest, jsiValueStringToIValue) {
+  auto jsiStringValue = facebook::jsi::Value(
+      *rt, facebook::jsi::String::createFromAscii(*rt, "test"));
+  auto iValue = jsiValuetoIValue(*rt, jsiStringValue);
+  EXPECT_EQ(iValue, "test");
+}
+
+TEST_F(TorchliveConverterRuntimeTest, jsiValueTensorToIValue) {
+  at::Tensor testTensor = torch_::tensor(
+      std::vector<double>({1, 2, 3}),
+      c10::TensorOptions().dtype(torch_::kDouble));
+  auto jsiValueFromTensor = ivalueToJSIValue(*rt, testTensor);
+  auto unpackedTensor =
+      torchlive::utils::helpers::parseTensor(*rt, &jsiValueFromTensor);
+  auto iValueFromJsiValue = jsiValuetoIValue(*rt, jsiValueFromTensor);
+  auto jsiTensorFromIvalue = ivalueToJSIValue(*rt, iValueFromJsiValue);
+  auto unpackedTensorFromIvalue =
+      torchlive::utils::helpers::parseTensor(*rt, &jsiTensorFromIvalue);
+  EXPECT_TRUE(unpackedTensor->tensor.equal(unpackedTensorFromIvalue->tensor));
 }

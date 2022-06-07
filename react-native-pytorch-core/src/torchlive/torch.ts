@@ -51,27 +51,33 @@ type ModuleValue =
   | {[key: string]: ModuleValue}
   | ModuleValue[];
 
+/**
+ * The [[IValue]] type is a type representative of all supported
+ * input types to [[Module]] forward function.
+ */
+type ModuleInputValue = string | number | boolean | Tensor;
+
 export interface Module {
   /**
    * Module forward function.
    *
-   * @param inputs Module inputs. It currently only supports [[Tensor]] as
-   * inputs.
+   * @param inputs Module inputs. Input could be of type [[ModuleInputValue]]
    * @returns Module output, which is particular to the model and can be any of
    * the [[ModuleValue]] union types.
    */
-  forward<In extends Tensor, Out extends ModuleValue>(
+  forward<In extends ModuleInputValue, Out extends ModuleValue>(
     ...inputs: In[]
   ): Promise<Out>;
   /**
    * Synchronous module forward function.
    *
-   * @param inputs Module inputs. It currently only supports [[Tensor]] as
-   * inputs.
+   * @param inputs Module inputs. Input could be of type [[ModuleInputValue]]
    * @returns Module output, which is particular to the model and can be any of
    * the [[ModuleValue]] union types.
    */
-  forwardSync<In extends Tensor, Out extends ModuleValue>(...inputs: In[]): Out;
+  forwardSync<In extends ModuleInputValue, Out extends ModuleValue>(
+    ...inputs: In[]
+  ): Out;
 }
 
 interface JIT {

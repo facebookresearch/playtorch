@@ -50,17 +50,9 @@ ForwardAsyncTask forwardImpl(
 
       std::vector<torch_::jit::IValue> input;
       for (int i = 0; i < count; i++) {
-        // TODO(T111480077) Allow at::IValue more generally
-        auto tensorHostObject =
-            utils::helpers::parseTensor(runtime, &arguments[i]);
-        if (tensorHostObject == nullptr) {
-          throw jsi::JSError(runtime, "Object is not a TensorHostObject");
-        }
-
-        auto tensor = tensorHostObject->tensor;
-        input.push_back(tensor);
+        input.push_back(
+            utils::converter::jsiValuetoIValue(runtime, arguments[i]));
       }
-
       return std::make_tuple(thiz->mobileModule, input);
     },
 

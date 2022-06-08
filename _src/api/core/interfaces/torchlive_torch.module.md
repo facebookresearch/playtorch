@@ -19,14 +19,14 @@ Module forward function.
 
 | Name | Type |
 | :------ | :------ |
-| `In` | `In`: [Tensor](torchlive_torch.tensor.md) |
+| `In` | `In`: `ModuleInputValue` |
 | `Out` | `Out`: `ModuleValue` |
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `...inputs` | `In`[] | Module inputs. It currently only supports [Tensor](torchlive_torch.tensor.md) as inputs. |
+| `...inputs` | `In`[] | Module inputs. Input could be of type [[ModuleInputValue]] |
 
 #### Returns
 
@@ -37,7 +37,7 @@ the [[ModuleValue]] union types.
 
 #### Defined in
 
-[torchlive/torch.ts:63](https://github.com/pytorch/live/blob/8bff43f/react-native-pytorch-core/src/torchlive/torch.ts#L63)
+[torchlive/torch.ts:68](https://github.com/pytorch/live/blob/9d43f1c/react-native-pytorch-core/src/torchlive/torch.ts#L68)
 
 ___
 
@@ -51,14 +51,14 @@ Synchronous module forward function.
 
 | Name | Type |
 | :------ | :------ |
-| `In` | `In`: [Tensor](torchlive_torch.tensor.md) |
+| `In` | `In`: `ModuleInputValue` |
 | `Out` | `Out`: `ModuleValue` |
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `...inputs` | `In`[] | Module inputs. It currently only supports [Tensor](torchlive_torch.tensor.md) as inputs. |
+| `...inputs` | `In`[] | Module inputs. Input could be of type [[ModuleInputValue]] |
 
 #### Returns
 
@@ -69,4 +69,4 @@ the [[ModuleValue]] union types.
 
 #### Defined in
 
-[torchlive/torch.ts:74](https://github.com/pytorch/live/blob/8bff43f/react-native-pytorch-core/src/torchlive/torch.ts#L74)
+[torchlive/torch.ts:78](https://github.com/pytorch/live/blob/9d43f1c/react-native-pytorch-core/src/torchlive/torch.ts#L78)

@@ -35,7 +35,7 @@ better solution than this.
 
 #### Defined in
 
-[expo-plugin/withPyTorchCore.ts:69](https://github.com/pytorch/live/blob/9d43f1c/react-native-pytorch-core/src/expo-plugin/withPyTorchCore.ts#L69)
+[expo-plugin/withPyTorchCore.ts:69](https://github.com/pytorch/live/blob/2903c51/react-native-pytorch-core/src/expo-plugin/withPyTorchCore.ts#L69)
 
 ___
 
@@ -56,4 +56,4 @@ ___
 
 #### Defined in
 
-[expo-plugin/withPyTorchCore.ts:47](https://github.com/pytorch/live/blob/9d43f1c/react-native-pytorch-core/src/expo-plugin/withPyTorchCore.ts#L47)
+[expo-plugin/withPyTorchCore.ts:47](https://github.com/pytorch/live/blob/2903c51/react-native-pytorch-core/src/expo-plugin/withPyTorchCore.ts#L47)

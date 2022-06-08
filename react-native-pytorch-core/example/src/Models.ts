@@ -27,6 +27,14 @@ export const ImageClassificationModels: ModelInfo[] = [
   },
 ];
 
+export const ImageGenerationModels: ModelInfo[] = [
+  {
+    name: 'AnimeGANv2',
+    model:
+      'https://github.com/pytorch/live/releases/download/v0.2.0-rc.0/animegan2_face_paint_512_v2.ptl',
+  },
+];
+
 export const MultiClassClassificationModels: ModelInfo[] = [
   {
     name: 'MNIST',

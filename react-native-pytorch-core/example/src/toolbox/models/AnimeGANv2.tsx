@@ -10,20 +10,15 @@
 import * as React from 'react';
 import {LayoutRectangle, StyleSheet, View} from 'react-native';
 import type {CanvasRenderingContext2D} from 'react-native-pytorch-core';
-import {Camera, Canvas, Image, ModelInfo} from 'react-native-pytorch-core';
+import {Camera, Canvas, Image} from 'react-native-pytorch-core';
 import useAnimeGANv2 from '../../useAnimeGANv2';
+import {ImageGenerationModels} from '../../Models';
 
 export default function AnimeGANv2() {
   const contextRef = React.useRef<CanvasRenderingContext2D | null>();
   const [layout, setLayout] = React.useState<LayoutRectangle>();
 
-  const model: ModelInfo = {
-    name: 'AnimeGANv2',
-    model:
-      'https://github.com/ansonsyfang/animegan2-pytorch/raw/main/ptl/animegan2_face_paint_512_v2.ptl',
-  };
-
-  const {processImage} = useAnimeGANv2(model);
+  const {processImage} = useAnimeGANv2(ImageGenerationModels[0]);
 
   const handleImage = React.useCallback(
     async function handleImage(image: Image) {

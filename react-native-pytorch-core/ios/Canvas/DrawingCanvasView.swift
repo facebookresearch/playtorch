@@ -47,7 +47,7 @@ class DrawingCanvasView: UIView {
 
     override func didSetProps(_ changedProps: [String]!) {
         guard let unwrappedOnContext2D = onContext2D else { return }
-        unwrappedOnContext2D(["ID": ref[JSContext.ID_KEY] as Any])
+        unwrappedOnContext2D(["ID": ref[JSContext.idKey] as Any])
     }
 
     func arc(x: CGFloat, y: CGFloat, radius: CGFloat, startAngle: CGFloat, endAngle: CGFloat, counterclockwise: Bool) {

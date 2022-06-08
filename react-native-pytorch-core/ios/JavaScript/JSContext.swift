@@ -14,10 +14,7 @@ public class JSContext: NSObject {
         case invalidParam
     }
 
-    // TODO(T102924901) Change name from ID_KEY to IDKEY
-    // swiftlint:disable identifier_name
-    public static var ID_KEY = "ID"
-    // swiftlint:enable identifier_name
+    public static let idKey = "ID"
 
     public static var refs: [String: NativeJSRef] = [:]
 
@@ -33,13 +30,13 @@ public class JSContext: NSObject {
     }
 
     public static func get(jsRef: [ String: String ]) throws -> NativeJSRef {
-        guard let refId = jsRef[ID_KEY] else { throw JSContextError.invalidParam }
+        guard let refId = jsRef[idKey] else { throw JSContextError.invalidParam }
         return try JSContext.getRef(refId: refId)
     }
 
     @objc
     public static func release(jsRef: [ String: String ]) throws {
-        guard let refId = jsRef[ID_KEY] else { throw JSContextError.invalidParam }
+        guard let refId = jsRef[idKey] else { throw JSContextError.invalidParam }
         let removedJSRef = refs.removeValue(forKey: refId)
         try removedJSRef?.release()
     }
@@ -49,7 +46,7 @@ public class JSContext: NSObject {
     }
 
     public static func unwrapObject(jsRef: [ String: String ]) throws -> Any {
-        guard let refId = jsRef[ID_KEY] else { throw JSContextError.invalidParam }
+        guard let refId = jsRef[idKey] else { throw JSContextError.invalidParam }
         let ref = try JSContext.getRef(refId: refId)
         return ref.getObject()
     }
@@ -63,7 +60,7 @@ public class JSContext: NSObject {
         init(object: Any) {
             mObject = object
             mId = JSContext.setRef(ref: self)
-            mJSRef?[JSContext.ID_KEY] = mId
+            mJSRef?[JSContext.idKey] = mId
         }
 
         public func getJSRef() -> [String: String] {

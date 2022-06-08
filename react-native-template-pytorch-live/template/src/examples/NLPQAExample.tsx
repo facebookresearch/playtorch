@@ -30,9 +30,8 @@ export default function NLPExample() {
     'PyTorch Live is an open source playground for everyone to discover, build, test and share on-device AI demos built on PyTorch. The PyTorch Live monorepo includes the PyTorch Live command line interface (i.e., torchlive), a React Native package to interface with PyTorch Mobile, and a React Native template with examples ready to be deployed on mobile devices.',
   );
   const [question, setQuestion] = useState('What is PyTorch Live?');
-  const {answer, metrics, isProcessing, processQA} = useNLPQAModelInference(
-    NLPModels[0],
-  );
+  const {answer, metrics, isProcessing, isReady, processQA} =
+    useNLPQAModelInference(NLPModels[0]);
 
   return (
     <ModelPreloader modelInfos={NLPModels}>
@@ -47,23 +46,27 @@ export default function NLPExample() {
             value={text}
           />
         </DoubleLineRow>
-        <DoubleLineRow label="Question">
-          <View style={[PTLTextBoxStyle, styles.textActionOuter]}>
-            <TextInput
-              style={[PTLTextBoxStyle, {borderWidth: 0}]}
-              onChangeText={question => setQuestion(question)}
-              placeholder="Ask a question..."
-              autoCorrect={false}
-              value={question}
-            />
-            <BasicButton
-              disabled={isProcessing}
-              size="small"
-              onPress={() => processQA(text, question)}>
-              Ask
-            </BasicButton>
-          </View>
-        </DoubleLineRow>
+        {!isReady ? (
+          <DoubleLineRow label="Loading Model..." />
+        ) : (
+          <DoubleLineRow label="Question">
+            <View style={[PTLTextBoxStyle, styles.textActionOuter]}>
+              <TextInput
+                style={[PTLTextBoxStyle, {borderWidth: 0}]}
+                onChangeText={question => setQuestion(question)}
+                placeholder="Ask a question..."
+                autoCorrect={false}
+                value={question}
+              />
+              <BasicButton
+                disabled={isProcessing}
+                size="small"
+                onPress={() => processQA(text, question)}>
+                Ask
+              </BasicButton>
+            </View>
+          </DoubleLineRow>
+        )}
         <DoubleLineRow
           label="Answer"
           bold={true}

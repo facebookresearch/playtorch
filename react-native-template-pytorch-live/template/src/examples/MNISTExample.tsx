@@ -21,7 +21,12 @@ import {
   CanvasRenderingContext2D,
   Image,
   ImageUtil,
+  media,
   MobileModel,
+  Module,
+  Tensor,
+  torch,
+  torchvision,
 } from 'react-native-pytorch-core';
 import {Animator} from '../utils/Animator';
 import {
@@ -31,32 +36,58 @@ import {
 import ModelPreloader from '../components/ModelPreloader';
 import {MultiClassClassificationModels} from '../Models';
 
+// TODO(T122727861): revert back to a colorful canvas
+const COLOR_CANVAS_BACKGROUND = '#000000';
+const COLOR_TRAIL_STROKE = '#FFFFFF';
+
+let mnistModel: Module | null = null;
+async function getModel() {
+  if (mnistModel != null) {
+    return mnistModel;
+  }
+  const filePath = await MobileModel.download(
+    MultiClassClassificationModels[0].model,
+  );
+  mnistModel = await torch.jit._loadForMobile(filePath);
+  return mnistModel;
+}
+
+const grayscale = torchvision.transforms.grayscale();
+const resize = torchvision.transforms.resize(28);
+const normalize = torchvision.transforms.normalize([0.1307], [0.3081]);
+
 /**
  * The React hook provides MNIST model inference on an input image.
  */
 function useMNISTModel() {
   const processImage = useCallback(async (image: Image) => {
     // Runs model inference on input image
-    const {
-      result: {scores},
-    } = await MobileModel.execute<{scores: number[]}>(
-      MultiClassClassificationModels[0].model,
-      {
-        image,
-        crop_width: 1,
-        crop_height: 1,
-        scale_width: 28,
-        scale_height: 28,
-        colorBackground: colors.light,
-        colorForeground: colors.dark,
-      },
-    );
 
-    // Get the score of each number (index), and sort the array by the most likely first.
-    const sortedScore: number[][] = scores
-      .map((score, index) => [score, index])
-      .sort((a, b) => b[0] - a[0]);
-    return sortedScore;
+    const blob = media.toBlob(image);
+    const imageTensor = torch.fromBlob(blob, [
+      image.getHeight(),
+      image.getWidth(),
+      3,
+    ]);
+
+    let tensor = imageTensor.permute([2, 0, 1]).div(255);
+    tensor = resize(tensor);
+    tensor = grayscale(tensor);
+    tensor = normalize(tensor);
+    tensor = tensor.unsqueeze(0);
+    const model = await getModel();
+    const output = await model.forward<Tensor, Tensor[]>(tensor);
+
+    const softmax = output[0].squeeze(0).softmax(-1);
+
+    const sortedScore: number[][] = [];
+    softmax
+      .data()
+      .forEach((score: number, index: number) =>
+        sortedScore.push([score, index]),
+      );
+
+    return sortedScore.sort((a, b) => b[0] - a[0]);
   }, []);
 
   return {
@@ -223,7 +254,7 @@ export default function MNISTExample() {
           // fill background by drawing a rect
           ctx.fillStyle = theme;
           ctx.fillRect(0, 0, size[0], size[1]);
-          ctx.fillStyle = colors.light;
+          ctx.fillStyle = COLOR_CANVAS_BACKGROUND;
           ctx.fillRect(0, size[1] / 2 - size[0] / 2, size[0], size[0]);
 
           // Draw text when there's no drawing
@@ -246,9 +277,10 @@ export default function MNISTExample() {
           ctx.lineJoin = 'round';
           ctx.lineCap = 'round';
           ctx.miterLimit = 1;
+          ctx.strokeStyle = COLOR_TRAIL_STROKE;
 
           if (drawing.length > 0) {
-            ctx.strokeStyle = colors.accent2;
+            // ctx.strokeStyle = colors.accent2;
             ctx.beginPath();
             ctx.moveTo(drawing[0][0], drawing[0][1]);
             for (let i = 1; i < drawing.length; i++) {
@@ -257,7 +289,7 @@ export default function MNISTExample() {
           }
 
           if (trail.length > 0) {
-            ctx.strokeStyle = colors.dark;
+            // ctx.strokeStyle = colors.dark;
             ctx.beginPath();
             ctx.moveTo(trail[0][0], trail[0][1]);
             for (let i = 1; i < trail.length; i++) {

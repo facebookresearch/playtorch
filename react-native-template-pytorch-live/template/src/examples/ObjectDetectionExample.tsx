@@ -9,9 +9,12 @@
 
 import React, {useCallback, useState, useRef} from 'react';
 import {useIsFocused} from '@react-navigation/native';
-import type {CanvasRenderingContext2D} from 'react-native-pytorch-core';
-import {Canvas, ModelInfo} from 'react-native-pytorch-core';
-import {Camera, Image} from 'react-native-pytorch-core';
+import {
+  Camera,
+  Canvas,
+  CanvasRenderingContext2D,
+  Image,
+} from 'react-native-pytorch-core';
 import {LayoutRectangle, StyleSheet, View} from 'react-native';
 import useObjectDetection, {BoundingBox} from '../useObjectDetection';
 import {

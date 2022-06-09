@@ -59,6 +59,7 @@ module.exports = {
           'fb/wikis/install-ptl-app',
           'fb/jsi-tutorials/image-classification-jsi',
           'fb/jsi-tutorials/nlp-qa-jsi',
+          'fb/jsi-tutorials/object-detection-jsi',
         ],
       },
       external: {},

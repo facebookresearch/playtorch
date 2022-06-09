@@ -47,5 +47,5 @@ Pod::Spec.new do |s|
   s.dependency "React"
   s.dependency "React-Core"
   s.dependency "SwiftyJSON", '~> 5.0'
-  s.dependency "LibTorch-Lite", "~> 1.10.0"
+  s.dependency "LibTorch-Lite", "~> 1.11.0"
 end

@@ -1,0 +1,29 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @format
+ */
+
+.forkSnackButton {
+  padding: 1.5rem 2rem 1.5rem 2rem;
+  border-radius: 1rem;
+  border-width: 2px;
+  display: inline-block;
+  border-style: solid;
+  margin-bottom: 2rem;
+  font-weight: bold;
+  cursor: pointer;
+  background-color: var(--ifm-color-primary-contrast-foreground);
+  border-color: var(--ifm-color-primary-contrast-foreground);
+  color: var(--ifm-color-primary-contrast-background);
+  text-transform: uppercase;
+}
+
+.forkSnackButton:hover {
+  border-color: var(--ifm-color-primary);
+  color: var(--ifm-color-primary);
+  text-decoration: none;
+}

@@ -23,7 +23,6 @@ namespace torchlive {
 namespace torch {
 
 class JSI_EXPORT TensorHostObject : public common::BaseHostObject {
-  facebook::jsi::Function permute_;
   facebook::jsi::Function size_;
   facebook::jsi::Function squeeze_;
   facebook::jsi::Function topk_;
@@ -43,7 +42,6 @@ class JSI_EXPORT TensorHostObject : public common::BaseHostObject {
   torch_::Tensor tensor;
 
  private:
-  facebook::jsi::Function createPermute(facebook::jsi::Runtime& runtime);
   facebook::jsi::Function createSize(facebook::jsi::Runtime& runtime);
   facebook::jsi::Function createToString(facebook::jsi::Runtime& runtime);
   facebook::jsi::Function createSqueeze(facebook::jsi::Runtime& runtime);

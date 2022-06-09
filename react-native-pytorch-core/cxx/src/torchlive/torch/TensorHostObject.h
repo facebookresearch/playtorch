@@ -27,7 +27,6 @@ class JSI_EXPORT TensorHostObject : public common::BaseHostObject {
   facebook::jsi::Function size_;
   facebook::jsi::Function softmax_;
   facebook::jsi::Function squeeze_;
-  facebook::jsi::Function sub_;
   facebook::jsi::Function topk_;
   facebook::jsi::Function toString_;
   facebook::jsi::Function unsqueeze_;
@@ -50,7 +49,6 @@ class JSI_EXPORT TensorHostObject : public common::BaseHostObject {
   facebook::jsi::Function createSoftmax(facebook::jsi::Runtime& runtime);
   facebook::jsi::Function createToString(facebook::jsi::Runtime& runtime);
   facebook::jsi::Function createSqueeze(facebook::jsi::Runtime& runtime);
-  facebook::jsi::Function createSub(facebook::jsi::Runtime& runtime);
   facebook::jsi::Function createTopK(facebook::jsi::Runtime& runtime);
   facebook::jsi::Function createUnsqueeze(facebook::jsi::Runtime& runtime);
 };

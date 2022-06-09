@@ -23,7 +23,6 @@ static const std::string PERMUTE = "permute";
 static const std::string SIZE = "size";
 static const std::string SOFTMAX = "softmax";
 static const std::string SQUEEZE = "squeeze";
-static const std::string SUB = "sub";
 static const std::string TOPK = "topk";
 static const std::string TOSTRING = "toString";
 static const std::string UNSQUEEZE = "unsqueeze";
@@ -38,7 +37,7 @@ static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
 
 // TensorHostObject Methods
 static const std::vector<std::string> METHODS =
-    {PERMUTE, SIZE, SOFTMAX, SQUEEZE, SUB, TOPK, TOSTRING, UNSQUEEZE};
+    {PERMUTE, SIZE, SOFTMAX, SQUEEZE, TOPK, TOSTRING, UNSQUEEZE};
 
 using namespace facebook;
 
@@ -358,6 +357,33 @@ jsi::Value strideImpl(
   }
 }
 
+jsi::Value subImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto thiz = args.thisAsHostObject<TensorHostObject>();
+
+  auto alphaValue = args.keywordValue(1, "alpha");
+  auto alphaScalar = alphaValue.isUndefined()
+      ? at::Scalar(1)
+      : at::Scalar(alphaValue.asNumber());
+
+  torch_::Tensor result;
+  if (args[0].isNumber()) {
+    auto scalar = args[0].asNumber();
+    result = thiz->tensor.sub(scalar, alphaScalar);
+  } else {
+    auto otherTensor = args.asHostObject<TensorHostObject>(0)->tensor;
+    result = thiz->tensor.sub(otherTensor, alphaScalar);
+  }
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, std::move(result));
+}
+
 jsi::Value toImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -387,7 +413,6 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
       size_(createSize(runtime)),
       softmax_(createSoftmax(runtime)),
       squeeze_(createSqueeze(runtime)),
-      sub_(createSub(runtime)),
       topk_(createTopK(runtime)),
       toString_(createToString(runtime)),
       unsqueeze_(createUnsqueeze(runtime)),
@@ -403,6 +428,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "reshape", 1, reshapeImpl);
   setPropertyHostFunction(runtime, "sqrt", 0, sqrtImpl);
   setPropertyHostFunction(runtime, "stride", 0, strideImpl);
+  setPropertyHostFunction(runtime, "sub", 1, subImpl);
   setPropertyHostFunction(runtime, "to", 1, toImpl);
 }
 
@@ -440,8 +466,6 @@ jsi::Value TensorHostObject::get(
     return jsi::Value(runtime, softmax_);
   } else if (name == SQUEEZE) {
     return jsi::Value(runtime, squeeze_);
-  } else if (name == SUB) {
-    return jsi::Value(runtime, sub_);
   } else if (name == TOPK) {
     return jsi::Value(runtime, topk_);
   } else if (name == TOSTRING) {
@@ -579,40 +603,6 @@ jsi::Function TensorHostObject::createSqueeze(jsi::Runtime& runtime) {
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, SQUEEZE), 1, squeezeFunc);
-}
-
-jsi::Function TensorHostObject::createSub(jsi::Runtime& runtime) {
-  auto subFunc = [this](
-                     jsi::Runtime& runtime,
-                     const jsi::Value& thisValue,
-                     const jsi::Value* arguments,
-                     size_t count) {
-    if (count < 1) {
-      throw jsi::JSError(runtime, "At least 1 arg required");
-    }
-    auto alphaValue = utils::helpers::parseKeywordArgument(
-        runtime, arguments, 1, count, "alpha");
-    auto alphaScalar = alphaValue.isUndefined()
-        ? at::Scalar(1)
-        : at::Scalar(alphaValue.asNumber());
-    auto tensor = this->tensor;
-    if (arguments[0].isNumber()) {
-      auto value = arguments[0].asNumber();
-      tensor = tensor.sub(value, alphaScalar);
-    } else {
-      auto otherTensorHostObject =
-          utils::helpers::parseTensor(runtime, &arguments[0]);
-      auto otherTensor = otherTensorHostObject->tensor;
-      tensor = tensor.sub(otherTensor, alphaScalar);
-    }
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
-
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, SUB), 1, subFunc);
 }
 
 /**

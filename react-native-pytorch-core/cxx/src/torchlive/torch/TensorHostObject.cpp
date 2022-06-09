@@ -19,7 +19,6 @@ namespace torchlive {
 namespace torch {
 
 // TensorHostObject Method Names
-static const std::string MUL = "mul";
 static const std::string PERMUTE = "permute";
 static const std::string SIZE = "size";
 static const std::string SOFTMAX = "softmax";
@@ -39,7 +38,7 @@ static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
 
 // TensorHostObject Methods
 static const std::vector<std::string> METHODS =
-    {MUL, PERMUTE, SIZE, SOFTMAX, SQUEEZE, SUB, TOPK, TOSTRING, UNSQUEEZE};
+    {PERMUTE, SIZE, SOFTMAX, SQUEEZE, SUB, TOPK, TOSTRING, UNSQUEEZE};
 
 using namespace facebook;
 
@@ -290,6 +289,27 @@ jsi::Value itemImpl(
   }
 }
 
+jsi::Value mulImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto thiz = args.thisAsHostObject<TensorHostObject>();
+
+  torch_::Tensor result;
+  if (args[0].isNumber()) {
+    auto scalar = arguments[0].asNumber();
+    result = thiz->tensor.mul(scalar);
+  } else {
+    auto otherTensor = args.asHostObject<TensorHostObject>(0)->tensor;
+    result = thiz->tensor.mul(otherTensor);
+  }
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, std::move(result));
+}
+
 jsi::Value reshapeImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -363,7 +383,6 @@ jsi::Value toImpl(
 
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
     : BaseHostObject(runtime),
-      mul_(createMul(runtime)),
       permute_(createPermute(runtime)),
       size_(createSize(runtime)),
       softmax_(createSoftmax(runtime)),
@@ -380,6 +399,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "data", 0, dataImpl);
   setPropertyHostFunction(runtime, "div", 1, divImpl);
   setPropertyHostFunction(runtime, "item", 0, itemImpl);
+  setPropertyHostFunction(runtime, "mul", 1, mulImpl);
   setPropertyHostFunction(runtime, "reshape", 1, reshapeImpl);
   setPropertyHostFunction(runtime, "sqrt", 0, sqrtImpl);
   setPropertyHostFunction(runtime, "stride", 0, strideImpl);
@@ -410,8 +430,6 @@ jsi::Value TensorHostObject::get(
         runtime,
         utils::constants::getStringFromDtype(
             caffe2::typeMetaToScalarType(this->tensor.dtype())));
-  } else if (name == MUL) {
-    return jsi::Value(runtime, mul_);
   } else if (name == PERMUTE) {
     return jsi::Value(runtime, permute_);
   } else if (name == SHAPE) {
@@ -468,36 +486,6 @@ jsi::Function TensorHostObject::createToString(jsi::Runtime& runtime) {
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, TOSTRING), 0, toStringFunc);
-}
-
-jsi::Function TensorHostObject::createMul(jsi::Runtime& runtime) {
-  auto mulFunc = [this](
-                     jsi::Runtime& runtime,
-                     const jsi::Value& thisValue,
-                     const jsi::Value* arguments,
-                     size_t count) {
-    if (count < 1) {
-      throw jsi::JSError(runtime, "At least 1 arg required");
-    }
-
-    auto tensor = this->tensor;
-    if (arguments[0].isNumber()) {
-      auto value = arguments[0].asNumber();
-      tensor = tensor.mul(value);
-    } else {
-      auto otherTensorHostObject =
-          utils::helpers::parseTensor(runtime, &arguments[0]);
-      auto otherTensor = otherTensorHostObject->tensor;
-      tensor = tensor.mul(otherTensor);
-    }
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
-
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, MUL), 1, mulFunc);
 }
 
 jsi::Function TensorHostObject::createPermute(jsi::Runtime& runtime) {

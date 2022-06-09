@@ -20,7 +20,6 @@ namespace torch {
 
 // TensorHostObject Method Names
 static const std::string SIZE = "size";
-static const std::string SQUEEZE = "squeeze";
 static const std::string TOPK = "topk";
 static const std::string TOSTRING = "toString";
 static const std::string UNSQUEEZE = "unsqueeze";
@@ -34,8 +33,11 @@ static const std::string SHAPE = "shape";
 static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
 
 // TensorHostObject Methods
-static const std::vector<std::string> METHODS =
-    {SIZE, SQUEEZE, TOPK, TOSTRING, UNSQUEEZE};
+static const std::vector<std::string> METHODS = {
+    SIZE,
+    TOPK,
+    TOSTRING,
+    UNSQUEEZE};
 
 using namespace facebook;
 
@@ -350,6 +352,26 @@ jsi::Value softmaxImpl(
       runtime, std::move(tensor));
 };
 
+jsi::Value squeezeImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  auto thiz = args.thisAsHostObject<TensorHostObject>();
+
+  torch_::Tensor tensor;
+  if (count >= 1) {
+    auto dim = args.asInteger(0);
+    tensor = thiz->tensor.squeeze(dim);
+  } else { // count == 0
+    tensor = thiz->tensor.squeeze();
+  }
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, std::move(tensor));
+}
+
 jsi::Value sqrtImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -437,7 +459,6 @@ jsi::Value toImpl(
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
     : BaseHostObject(runtime),
       size_(createSize(runtime)),
-      squeeze_(createSqueeze(runtime)),
       topk_(createTopK(runtime)),
       toString_(createToString(runtime)),
       unsqueeze_(createUnsqueeze(runtime)),
@@ -453,6 +474,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "permute", 1, permuteImpl);
   setPropertyHostFunction(runtime, "reshape", 1, reshapeImpl);
   setPropertyHostFunction(runtime, "softmax", 1, softmaxImpl);
+  setPropertyHostFunction(runtime, "squeeze", 1, squeezeImpl);
   setPropertyHostFunction(runtime, "sqrt", 0, sqrtImpl);
   setPropertyHostFunction(runtime, "stride", 0, strideImpl);
   setPropertyHostFunction(runtime, "sub", 1, subImpl);
@@ -487,8 +509,6 @@ jsi::Value TensorHostObject::get(
     return this->size_.call(runtime);
   } else if (name == SIZE) {
     return jsi::Value(runtime, size_);
-  } else if (name == SQUEEZE) {
-    return jsi::Value(runtime, squeeze_);
   } else if (name == TOPK) {
     return jsi::Value(runtime, topk_);
   } else if (name == TOSTRING) {
@@ -552,34 +572,6 @@ jsi::Function TensorHostObject::createSize(jsi::Runtime& runtime) {
   };
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, SIZE), 0, sizeFunc);
-}
-
-jsi::Function TensorHostObject::createSqueeze(jsi::Runtime& runtime) {
-  auto squeezeFunc = [this](
-                         jsi::Runtime& runtime,
-                         const jsi::Value& thisValue,
-                         const jsi::Value* arguments,
-                         size_t count) -> jsi::Value {
-    if (!((count == 1 && arguments[0].isNumber()) || count == 0)) {
-      throw jsi::JSError(
-          runtime, "Please enter an empty argument list or a single number.");
-    }
-    auto tensor = this->tensor;
-    at::Tensor reshapedTensor;
-    if (count == 0) {
-      reshapedTensor = tensor.squeeze();
-    } else if (count == 1) {
-      int dim = arguments[0].asNumber();
-      reshapedTensor = tensor.squeeze(dim);
-    }
-
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(
-            runtime, reshapedTensor);
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, SQUEEZE), 1, squeezeFunc);
 }
 
 /**

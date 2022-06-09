@@ -239,10 +239,11 @@ TEST_F(TorchliveRuntimeTest, TensorSqueezeTest) {
   // if the spcified dim is not size 1, return a copy of the tensor
   EXPECT_TRUE(
       eval("torch.rand([1,2,1,3,1]).squeeze(1).shape.length === 5").getBool());
+  // when there are too many arguments, they should be ignored
+  EXPECT_TRUE(eval("torch.rand([1,2,1,3,1]).squeeze(1,2).shape.length === 5")
+                  .getBool());
   EXPECT_TRUE(
       eval("torch.rand([1,2,1,3,1]).squeeze().shape[1] === 3").getBool());
-  EXPECT_THROW(
-      eval("torch.rand([1,2,1,3,1]).squeeze(1,2)"), facebook::jsi::JSError);
 }
 
 TEST_F(TorchliveRuntimeTest, TensorUnsqueezeTest) {

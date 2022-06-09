@@ -158,7 +158,7 @@ export default function ObjectDetectionExample() {
             style={styles.camera}
             onCapture={handleImage}
             hideCaptureButton={false}
-            targetResolution={{width: 1920, height: 1080}}
+            targetResolution={{width: 1080, height: 1920}}
           />
         )}
 

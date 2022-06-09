@@ -26,7 +26,6 @@ class JSI_EXPORT TensorHostObject : public common::BaseHostObject {
   facebook::jsi::Function size_;
   facebook::jsi::Function topk_;
   facebook::jsi::Function toString_;
-  facebook::jsi::Function unsqueeze_;
 
  public:
   explicit TensorHostObject(facebook::jsi::Runtime& runtime, torch_::Tensor t);
@@ -44,7 +43,6 @@ class JSI_EXPORT TensorHostObject : public common::BaseHostObject {
   facebook::jsi::Function createSize(facebook::jsi::Runtime& runtime);
   facebook::jsi::Function createToString(facebook::jsi::Runtime& runtime);
   facebook::jsi::Function createTopK(facebook::jsi::Runtime& runtime);
-  facebook::jsi::Function createUnsqueeze(facebook::jsi::Runtime& runtime);
 };
 
 } // namespace torch

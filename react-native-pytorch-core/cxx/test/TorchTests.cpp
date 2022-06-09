@@ -258,9 +258,9 @@ TEST_F(TorchliveRuntimeTest, TensorUnsqueezeTest) {
       eval("torch.rand([1,2,3]).unsqueeze(1).shape[2] === 2").getBool());
   EXPECT_TRUE(
       eval("torch.rand([1,2,3]).unsqueeze(1).shape[3] === 3").getBool());
-  // wrong number of arguments
-  EXPECT_THROW(
-      eval("torch.rand([1,2,3]).unsqueeze(1,2)"), facebook::jsi::JSError);
+  // when there are too many arguments, they should be ignored
+  EXPECT_TRUE(
+      eval("torch.rand([1,2,3]).unsqueeze(1,2).shape[3] === 3").getBool());
   // argument out of range
   EXPECT_THROW(
       eval("torch.rand([1,2,3]).unsqueeze(4)"), facebook::jsi::JSError);

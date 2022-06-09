@@ -53,8 +53,8 @@ export default function AnimeGANv2() {
         await ctx.invalidate();
       }
 
-      image.release();
-      animeImage.release();
+      await image.release();
+      await animeImage.release();
     },
     [layout, processImage],
   );

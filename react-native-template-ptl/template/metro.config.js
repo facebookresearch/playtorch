@@ -21,8 +21,6 @@ module.exports = {
     }),
   },
   resolver: {
-    // We will will continue to support 'pt' file extensions for until the beta
-    // release of PyTorch Live and then deprecate the support.
-    assetExts: [...defaultAssetExts, 'ptl', 'pt', 'json'],
+    assetExts: [...defaultAssetExts, 'ptl', 'json'],
   },
 };

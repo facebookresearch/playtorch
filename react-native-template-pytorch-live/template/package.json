@@ -15,7 +15,6 @@
     "before-commit": "yarn remove react-native-pytorch-core"
   },
   "dependencies": {
-    "@babel/plugin-transform-async-to-generator": "^7.16.8",
     "@react-native-community/masked-view": "^0.1.10",
     "@react-native/assets": "^1.0.0",
     "@react-navigation/bottom-tabs": "^5.11.8",
@@ -31,6 +30,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.12.9",
+    "@babel/plugin-transform-async-to-generator": "^7.16.8",
     "@babel/runtime": "^7.12.5",
     "@react-native-community/eslint-config": "^2.0.0",
     "@types/jest": "^26.0.20",

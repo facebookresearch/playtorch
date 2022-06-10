@@ -61,6 +61,7 @@ module.exports = {
           'fb/jsi-tutorials/nlp-qa-jsi',
           'fb/jsi-tutorials/object-detection-jsi',
           'fb/jsi-tutorials/anime-gan-jsi',
+          'fb/jsi-tutorials/seq2seq-nmt-jsi',
         ],
       },
       external: {},

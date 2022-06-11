@@ -43,9 +43,9 @@ jsi::Value absImpl(
     const jsi::Value* arguments,
     size_t count) {
   utils::ArgumentParser args(runtime, thisValue, arguments, count);
-  auto result = args.thisAsHostObject<TensorHostObject>()->tensor.abs();
+  auto tensor = args.thisAsHostObject<TensorHostObject>()->tensor.abs();
   return utils::helpers::createFromHostObject<TensorHostObject>(
-      runtime, std::move(result));
+      runtime, std::move(tensor));
 }
 
 jsi::Value addImpl(
@@ -62,17 +62,17 @@ jsi::Value addImpl(
       ? at::Scalar(1)
       : at::Scalar(alphaValue.asNumber());
 
-  torch_::Tensor result;
+  torch_::Tensor tensor;
   if (args[0].isNumber()) {
     auto scalar = args[0].asNumber();
-    result = thiz->tensor.add(scalar, alphaScalar);
+    tensor = thiz->tensor.add(scalar, alphaScalar);
   } else {
     auto otherTensor = args.asHostObject<TensorHostObject>(0)->tensor;
-    result = thiz->tensor.add(otherTensor, alphaScalar);
+    tensor = thiz->tensor.add(otherTensor, alphaScalar);
   }
 
   return utils::helpers::createFromHostObject<TensorHostObject>(
-      runtime, std::move(result));
+      runtime, std::move(tensor));
 }
 
 jsi::Value argmaxImpl(
@@ -100,12 +100,10 @@ jsi::Value argmaxImpl(
 
   // transform the tensor to dtype of Int32 because Hermes doesn't support
   // BigInt yet.
-  auto maxIdx = thiz->tensor.argmax(dim, keepdim)
+  auto tensor = thiz->tensor.argmax(dim, keepdim)
                     .to(torch_::TensorOptions().dtype(torch_::kInt32));
-  auto tensorHostObject =
-      std::make_shared<TensorHostObject>(runtime, std::move(maxIdx));
-  return jsi::Object::createFromHostObject(
-      runtime, std::move(tensorHostObject));
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, std::move(tensor));
 };
 
 jsi::Value clampImp(
@@ -113,40 +111,30 @@ jsi::Value clampImp(
     const jsi::Value& thisValue,
     const jsi::Value* arguments,
     size_t count) {
-  if (count < 1) {
-    throw jsi::JSError(
-        runtime,
-        "at least 1 argument is expected but " + std::to_string(count) +
-            " are given.");
-  }
-  auto thiz =
-      thisValue.asObject(runtime).asHostObject<TensorHostObject>(runtime);
-  auto minValue =
-      utils::helpers::parseKeywordArgument(runtime, arguments, 0, count, "min");
-  auto maxValue =
-      utils::helpers::parseKeywordArgument(runtime, arguments, 0, count, "max");
-  at::Tensor outputTensor;
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+
+  auto thiz = args.thisAsHostObject<TensorHostObject>();
+  auto minValue = args.keywordValue(0, "min");
+  auto maxValue = args.keywordValue(0, "max");
+  torch_::Tensor tensor;
 
   if (minValue.isUndefined() && maxValue.isUndefined()) {
     // No keyword arguments
-    if (arguments[0].isNumber()) {
-      auto min = arguments[0].asNumber();
+    if (args[0].isNumber()) {
+      auto min = args[0].asNumber();
       c10::optional<at::Scalar> max = c10::nullopt;
       if (count > 1) {
-        max = arguments[1].asNumber();
+        max = args[1].asNumber();
       }
-      outputTensor = thiz->tensor.clamp(min, max);
+      tensor = thiz->tensor.clamp(min, max);
     } else {
-      auto minTensorHostObject =
-          utils::helpers::parseTensor(runtime, &arguments[0]);
-      auto minTensor = minTensorHostObject->tensor;
+      auto minTensor = args.asHostObject<TensorHostObject>(0)->tensor;
       c10::optional<at::Tensor> maxTensor = {};
       if (count > 1) {
-        auto maxTensorHostObject =
-            utils::helpers::parseTensor(runtime, &arguments[1]);
-        maxTensor = maxTensorHostObject->tensor;
+        maxTensor = args.asHostObject<TensorHostObject>(1)->tensor;
       }
-      outputTensor = thiz->tensor.clamp(minTensor, maxTensor);
+      tensor = thiz->tensor.clamp(minTensor, maxTensor);
     }
   } else {
     // Keyword arguments
@@ -175,17 +163,14 @@ jsi::Value clampImp(
     }
 
     if (isScalarArg) {
-      outputTensor = thiz->tensor.clamp(minScalar, maxScalar);
+      tensor = thiz->tensor.clamp(minScalar, maxScalar);
     } else {
-      outputTensor = thiz->tensor.clamp(minTensor, maxTensor);
+      tensor = thiz->tensor.clamp(minTensor, maxTensor);
     }
   }
 
-  auto tensorHostObject = std::make_shared<torchlive::torch::TensorHostObject>(
-      runtime, std::move(outputTensor));
-
-  return jsi::Object::createFromHostObject(
-      runtime, std::move(tensorHostObject));
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, std::move(tensor));
 }
 
 jsi::Value dataImpl(
@@ -253,16 +238,16 @@ jsi::Value divImpl(
     roundingMode = roundingModeValue.asString(runtime).utf8(runtime);
   }
 
-  torch_::Tensor result;
+  torch_::Tensor tensor;
   if (args[0].isNumber()) {
-    auto scalar = arguments[0].asNumber();
-    result = thiz->tensor.div(scalar, roundingMode);
+    auto scalar = args[0].asNumber();
+    tensor = thiz->tensor.div(scalar, roundingMode);
   } else {
     auto otherTensor = args.asHostObject<TensorHostObject>(0)->tensor;
-    result = thiz->tensor.div(otherTensor, roundingMode);
+    tensor = thiz->tensor.div(otherTensor, roundingMode);
   }
   return utils::helpers::createFromHostObject<TensorHostObject>(
-      runtime, std::move(result));
+      runtime, std::move(tensor));
 }
 
 jsi::Value itemImpl(
@@ -291,16 +276,16 @@ jsi::Value mulImpl(
   args.requireNumArguments(1);
   auto thiz = args.thisAsHostObject<TensorHostObject>();
 
-  torch_::Tensor result;
+  torch_::Tensor tensor;
   if (args[0].isNumber()) {
-    auto scalar = arguments[0].asNumber();
-    result = thiz->tensor.mul(scalar);
+    auto scalar = args[0].asNumber();
+    tensor = thiz->tensor.mul(scalar);
   } else {
     auto otherTensor = args.asHostObject<TensorHostObject>(0)->tensor;
-    result = thiz->tensor.mul(otherTensor);
+    tensor = thiz->tensor.mul(otherTensor);
   }
   return utils::helpers::createFromHostObject<TensorHostObject>(
-      runtime, std::move(result));
+      runtime, std::move(tensor));
 }
 
 jsi::Value permuteImpl(
@@ -337,11 +322,8 @@ jsi::Value softmaxImpl(
     size_t count) {
   utils::ArgumentParser args(runtime, thisValue, arguments, count);
   args.requireNumArguments(1);
-  auto thiz = args.thisAsHostObject<TensorHostObject>();
-
   auto dim = args.asInteger(0);
-  auto tensor = thiz->tensor.softmax(dim);
-
+  auto tensor = args.thisAsHostObject<TensorHostObject>()->tensor.softmax(dim);
   return utils::helpers::createFromHostObject<TensorHostObject>(
       runtime, std::move(tensor));
 };
@@ -372,9 +354,9 @@ jsi::Value sqrtImpl(
     const jsi::Value* arguments,
     size_t count) {
   utils::ArgumentParser args(runtime, thisValue, arguments, count);
-  auto result = args.thisAsHostObject<TensorHostObject>()->tensor.sqrt();
+  auto tensor = args.thisAsHostObject<TensorHostObject>()->tensor.sqrt();
   return utils::helpers::createFromHostObject<TensorHostObject>(
-      runtime, std::move(result));
+      runtime, std::move(tensor));
 }
 
 jsi::Value strideImpl(
@@ -414,17 +396,17 @@ jsi::Value subImpl(
       ? at::Scalar(1)
       : at::Scalar(alphaValue.asNumber());
 
-  torch_::Tensor result;
+  torch_::Tensor tensor;
   if (args[0].isNumber()) {
     auto scalar = args[0].asNumber();
-    result = thiz->tensor.sub(scalar, alphaScalar);
+    tensor = thiz->tensor.sub(scalar, alphaScalar);
   } else {
     auto otherTensor = args.asHostObject<TensorHostObject>(0)->tensor;
-    result = thiz->tensor.sub(otherTensor, alphaScalar);
+    tensor = thiz->tensor.sub(otherTensor, alphaScalar);
   }
 
   return utils::helpers::createFromHostObject<TensorHostObject>(
-      runtime, std::move(result));
+      runtime, std::move(tensor));
 }
 
 jsi::Value toImpl(
@@ -432,20 +414,13 @@ jsi::Value toImpl(
     const jsi::Value& thisValue,
     const jsi::Value* arguments,
     size_t count) {
-  if (count < 1) {
-    throw jsi::JSError(
-        runtime,
-        "1 argument is expected but " + std::to_string(count) + " are given.");
-  }
-  auto thiz =
-      thisValue.asObject(runtime).asHostObject<TensorHostObject>(runtime);
-  auto tensorOptions =
-      utils::helpers::parseTensorOptions(runtime, arguments, 0, count);
-  auto outputTensor = thiz->tensor.to(tensorOptions);
-  auto tensorHostObject =
-      std::make_shared<TensorHostObject>(runtime, std::move(outputTensor));
-
-  return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto tensorOptions = args.tensorOptions(0);
+  auto tensor =
+      args.thisAsHostObject<TensorHostObject>()->tensor.to(tensorOptions);
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, std::move(tensor));
 };
 
 jsi::Value topkImpl(

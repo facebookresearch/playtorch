@@ -69,7 +69,7 @@ std::shared_ptr<IImage> Image::scale(double sx, double sy) const {
 void Image::close() const {
   // This is not needed once we fully migrate to JSI.
   NSError *error = nil;
-  [JSContext releaseWithJsRef:@{@"ID": [NSString stringWithUTF8String:id_.c_str()]} error:&error];
+  [PTLJSContext releaseWithJsRef:@{@"ID": [NSString stringWithUTF8String:id_.c_str()]} error:&error];
   if (error != nil) {
     throw [error.localizedDescription UTF8String];
   }

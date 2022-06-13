@@ -7,7 +7,7 @@
 
 import Foundation
 
-@objc(JSContext)
+@objc(PTLJSContext)
 public class JSContext: NSObject {
 
     enum JSContextError: Error {

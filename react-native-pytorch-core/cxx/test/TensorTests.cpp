@@ -438,6 +438,72 @@ TEST_F(TorchliveTensorRuntimeTest, tensorSubTest) {
   EXPECT_THROW(eval(tensorSubCodeWithInvalidAlpha), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorSumTest) {
+  std::string tensor1DSum =
+      R"(
+          const tensor = torch.ones(3);
+          const result = tensor.sum();
+          JSON.stringify(result.shape) == '[]' && result.item() == 3;
+        )";
+  EXPECT_TRUE(eval(tensor1DSum).getBool());
+
+  std::string tensor1DSumIn1Dim =
+      R"(
+          const tensor = torch.ones(3);
+          const result = tensor.sum(0);
+          JSON.stringify(result.shape) == '[]' && result.item() == 3;
+        )";
+  EXPECT_TRUE(eval(tensor1DSumIn1Dim).getBool());
+
+  std::string tensor1DSumIn1DimAndKeepDim =
+      R"(
+          const tensor = torch.ones(3);
+          const result = tensor.sum(0, {keepdim: true});
+          JSON.stringify(result.shape) == '[1]' && result.item() == 3;
+        )";
+  EXPECT_TRUE(eval(tensor1DSumIn1DimAndKeepDim).getBool());
+
+  std::string tensor2DSum =
+      R"(
+          const tensor = torch.ones([2, 3]);
+          const result = tensor.sum();
+          JSON.stringify(result.shape) == '[]' && result.item() == 6;
+        )";
+  EXPECT_TRUE(eval(tensor2DSum).getBool());
+
+  std::string tensor2DSumIn1Dim =
+      R"(
+          const tensor = torch.ones([2, 3]);
+          const result = tensor.sum(0);
+          JSON.stringify(result.shape) == '[3]' && JSON.stringify([...result.data()]) == '[2,2,2]';
+        )";
+  EXPECT_TRUE(eval(tensor2DSumIn1Dim).getBool());
+
+  std::string tensor2DSumIn1DimAndKeepDim =
+      R"(
+          const tensor = torch.ones([2, 3]);
+          const result = tensor.sum(0, {keepdim: true});
+          JSON.stringify(result.shape) == '[1,3]' && JSON.stringify([...result.data()]) == '[2,2,2]';
+        )";
+  EXPECT_TRUE(eval(tensor2DSumIn1DimAndKeepDim).getBool());
+
+  std::string tensor2DSumIn2Dims =
+      R"(
+          const tensor = torch.ones([2, 3]);
+          const result = tensor.sum([0, 1]);
+          JSON.stringify(result.shape) == '[]' && result.item() == 6;
+        )";
+  EXPECT_TRUE(eval(tensor2DSumIn2Dims).getBool());
+
+  std::string tensor2DSumIn2DimsAndKeepDims =
+      R"(
+          const tensor = torch.ones([2, 3]);
+          const result = tensor.sum([0, 1], {keepdim: true});
+          JSON.stringify(result.shape) == '[1,1]' && result[0].item() == 6;
+        )";
+  EXPECT_TRUE(eval(tensor2DSumIn2DimsAndKeepDims).getBool());
+}
+
 TEST_F(TorchliveTensorRuntimeTest, TorchTopkTest) {
   std::string tensorTopkValid =
       R"(

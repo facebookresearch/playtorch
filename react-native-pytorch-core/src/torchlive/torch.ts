@@ -250,7 +250,7 @@ export interface Tensor {
    * will re-scale them so that the elements lie in the range `[0, 1]` and sum
    * to `1`.
    *
-   * {@link https://pytorch.org/docs/stable/generated/torch.nn.functional.softmax.html}
+   * {@link https://pytorch.org/docs/1.11/generated/torch.nn.functional.softmax.html}
    *
    * @param dim A dimension along which softmax will be computed.
    */
@@ -292,6 +292,22 @@ export interface Tensor {
    * @param options.alpha The multiplier for `other`. Default: `1`.
    */
   sub(other: Scalar | Tensor, options?: {alpha?: Number}): Tensor;
+  /**
+   * Returns the sum of all elements in the input tensor.
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.sum.html}
+   */
+  sum(): Tensor;
+  /**
+   * Returns the sum of each row of the input tensor in the given dimension dim.
+   * If dim is a list of dimensions, reduce over all of them.
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.sum.html}
+   *
+   * @param dim The dimension or dimensions to reduce.
+   * @param options.keepdim Whether the output tensor has `dim` retained or not.
+   */
+  sum(dim: number | number[], options?: {keepdim?: boolean}): Tensor;
   /**
    * Performs Tensor conversion.
    *

@@ -409,6 +409,37 @@ jsi::Value subImpl(
       runtime, std::move(tensor));
 }
 
+jsi::Value sumImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  auto thiz = args.thisAsHostObject<TensorHostObject>();
+
+  torch_::Tensor tensor;
+  if (count == 0) {
+    tensor = thiz->tensor.sum();
+  } else {
+    size_t nextArgIdx;
+    auto dims = args.dimsVarArgs(0, &nextArgIdx);
+    auto keepdimValue = args.keywordValue(nextArgIdx, "keepdim");
+    if (keepdimValue.isUndefined()) {
+      tensor = thiz->tensor.sum(dims);
+    } else if (keepdimValue.isBool()) {
+      auto keepdim = keepdimValue.getBool();
+      tensor = thiz->tensor.sum(dims, keepdim);
+    } else {
+      throw jsi::JSError(
+          runtime,
+          "expect 'keepdim' to be boolean, but another type is given.");
+    }
+  }
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, std::move(tensor));
+};
+
 jsi::Value toImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -484,6 +515,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "sqrt", 0, sqrtImpl);
   setPropertyHostFunction(runtime, "stride", 0, strideImpl);
   setPropertyHostFunction(runtime, "sub", 1, subImpl);
+  setPropertyHostFunction(runtime, "sum", 0, sumImpl);
   setPropertyHostFunction(runtime, "to", 1, toImpl);
   setPropertyHostFunction(runtime, "topk", 1, topkImpl);
   setPropertyHostFunction(runtime, "unsqueeze", 1, unsqueezeImpl);

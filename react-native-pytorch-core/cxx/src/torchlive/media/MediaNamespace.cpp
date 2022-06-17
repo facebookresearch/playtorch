@@ -59,9 +59,15 @@ jsi::Value imageFromTensorImpl(
   args.requireNumArguments(1);
 
   const auto& tensor = args.asHostObject<torch::TensorHostObject>(0)->tensor;
-  // Assuming format: CHW (channels, height, width), uint8
-  auto width = tensor.size(2);
-  auto height = tensor.size(1);
+  auto sizes = tensor.sizes();
+  if (sizes.size() != 3 || sizes.at(0) != 3 ||
+      tensor.dtype() != torch_::kUInt8) {
+    throw jsi::JSError(
+        runtime,
+        "input tensor must be of shape (3, height, width) with dtype uint8");
+  }
+  auto height = sizes.at(1);
+  auto width = sizes.at(2);
 
   // Switch to MemoryFormat::ChannelsLast, it requires a rank 4 tensor to work
   // https://pytorch.org/tutorials/intermediate/memory_format_tutorial.html#what-is-channels-last
@@ -70,7 +76,6 @@ jsi::Value imageFromTensorImpl(
                            .memory_format(c10::MemoryFormat::ChannelsLast);
   auto updatedTensor = tensor.unsqueeze(0).to(tensorOptions).squeeze(0);
   auto blob = tensorToBlob(updatedTensor);
-
   auto image = torchlive::media::imageFromBlob(*blob, width, height);
   if (image == nullptr) {
     throw jsi::JSError(

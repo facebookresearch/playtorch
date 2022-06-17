@@ -36,9 +36,9 @@ import {
 import ModelPreloader from '../components/ModelPreloader';
 import {MultiClassClassificationModels} from '../Models';
 
-// TODO(T122727861): revert back to a colorful canvas
-const COLOR_CANVAS_BACKGROUND = '#000000';
-const COLOR_TRAIL_STROKE = '#FFFFFF';
+// Must be specified as hex to be parsed correctly.
+const COLOR_CANVAS_BACKGROUND = colors.light;
+const COLOR_TRAIL_STROKE = colors.accent2;
 
 let mnistModel: Module | null = null;
 async function getModel() {
@@ -52,9 +52,41 @@ async function getModel() {
   return mnistModel;
 }
 
-const grayscale = torchvision.transforms.grayscale();
-const resize = torchvision.transforms.resize(28);
-const normalize = torchvision.transforms.normalize([0.1307], [0.3081]);
+const HEX_RGB_RE = /^#?([a-f0-9]{2})([a-f0-9]{2})([a-f0-9]{2})$/i;
+function hexRgbToBytes(hexRgb: string): number[] {
+  const match = HEX_RGB_RE.exec(hexRgb);
+  if (!match) {
+    throw `Invalid color hex string: ${hexRgb}`;
+  }
+  return match.slice(1).map(s => parseInt(s, 16));
+}
+
+/*
+Tensor input is expected to have shape CHW and range [0, 1].
+
+This is a vectorized version of looping over every pixel:
+
+  d0 = colorCartesianDistance(pixelColor, backgroundColor)
+  d1 = colorCartesianDistance(pixelColor, foregroundColor)
+  value = d0 / (d0 + d1)
+
+Where, for 3-channel data:
+
+  colorCartesianDistance = function([r0, g0, b0], [r1, g1, b1]) => (
+    Math.sqrt((r0 - r1) * (r0 - r1) + (g0 - g1) * (g0 - g1) + (b0 - b1) * (b0 - b1))
+  );
+*/
+function maximizeContrast(
+  tensor: Tensor,
+  backgroundTensor: Tensor,
+  foregroundTensor: Tensor,
+): Tensor {
+  const d0Diff = tensor.sub(backgroundTensor);
+  const d0 = d0Diff.mul(d0Diff).sum(0, {keepdim: true}).sqrt();
+  const d1Diff = tensor.sub(foregroundTensor);
+  const d1 = d1Diff.mul(d1Diff).sum(0, {keepdim: true}).sqrt();
+  return d0.div(d0.add(d1));
+}
 
 /**
  * The React hook provides MNIST model inference on an input image.
@@ -70,9 +102,27 @@ function useMNISTModel() {
       3,
     ]);
 
+    const grayscale = torchvision.transforms.grayscale();
+    const resize = torchvision.transforms.resize(28);
+    const normalize = torchvision.transforms.normalize([0.1307], [0.3081]);
+
+    const bgColorGrayscale = grayscale(
+      torch
+        .tensor([[hexRgbToBytes(COLOR_CANVAS_BACKGROUND)]])
+        .permute([2, 0, 1])
+        .div(255),
+    );
+    const fgColorGrayscale = grayscale(
+      torch
+        .tensor([[hexRgbToBytes(COLOR_TRAIL_STROKE)]])
+        .permute([2, 0, 1])
+        .div(255),
+    );
+
     let tensor = imageTensor.permute([2, 0, 1]).div(255);
     tensor = resize(tensor);
     tensor = grayscale(tensor);
+    tensor = maximizeContrast(tensor, bgColorGrayscale, fgColorGrayscale);
     tensor = normalize(tensor);
     tensor = tensor.unsqueeze(0);
     const model = await getModel();

@@ -31,7 +31,7 @@ FetchContent_MakeAvailable(pytorch_mobile fmt hermes)
 
 enable_testing()
 
-file(GLOB_RECURSE torchlive_srcs ../src/**/*.cpp)
+file(GLOB_RECURSE torchlive_srcs ../src/**/[^.]*.cpp)
 
 add_library(
         torchlive

@@ -98,7 +98,6 @@ AsyncTask<TSetupResultType, TWorkResultType>::createPromiseFunction(
              size_t count) {
     SetupResultType setupResult;
     std::shared_ptr<Promise> promise;
-
     // Perform setupFunc within the Promise constructor so errors are captured
     // like they would be in an "async" JavaScript function.
     auto promiseValue = createPromiseAsJSIValue(
@@ -109,6 +108,12 @@ AsyncTask<TSetupResultType, TWorkResultType>::createPromiseFunction(
           promise = std::move(p);
         });
 
+    if (promise == nullptr) {
+      // The JS Promise would have been rejected if exception thrown in
+      // setupFunc, thus lead to exception thrown in the JS Thread.
+      return promiseValue;
+    }
+
     // Start work on a separate thread.
     auto threadFunc = [=, setupResult = std::move(setupResult)]() mutable {
       WorkResultType workResult;
@@ -118,7 +123,6 @@ AsyncTask<TSetupResultType, TWorkResultType>::createPromiseFunction(
         workResult = workFunc(std::move(setupResult));
       } catch (std::exception& e) {
         error = true;
-
         // Report the error on the JavaScript thread.
         runtimeExecutor(
             [=, m = e.what()](facebook::jsi::Runtime&) { promise->reject(m); });

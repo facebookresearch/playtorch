@@ -26,12 +26,6 @@ namespace mobile {
 
 using namespace facebook;
 
-// This construct is borrowed from:
-// https://github.com/pytorch/pytorch/blob/master/android/pytorch_android/src/main/cpp/pytorch_jni_lite.cpp#L27-L38
-struct LiteJITCallGuard {
-  torch_::AutoNonVariableTypeMode non_var_guard;
-};
-
 using ForwardAsyncTask = common::AsyncTask<
     std::tuple<torch_::jit::mobile::Module, std::vector<torch_::jit::IValue>>,
     torch_::jit::IValue>;
@@ -60,7 +54,7 @@ ForwardAsyncTask forwardImpl(
       torch_::jit::mobile::Module mobileModule;
       std::vector<torch_::jit::IValue> tensors;
       std::tie(mobileModule, tensors) = input;
-      LiteJITCallGuard guard;
+      c10::InferenceMode guard;
       return mobileModule.forward(std::move(tensors));
     },
 

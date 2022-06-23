@@ -89,25 +89,38 @@ interface JIT {
   _loadForMobile(filePath: string): Promise<Module>;
 }
 
+/**
+ * A [[Dtype]] is an object that represents the data type of a [[Tensor]].
+ *
+ * :::note
+ *
+ * The `int64` (a.k.a. `long`) data types are not fully supported in React Native.
+ * For now, use `.to({dtype: torch.int32})` to downcast before accessing such
+ * methods as `.data()` and `.item()`.
+ *
+ * :::
+ *
+ * {@link https://pytorch.org/docs/1.11/tensor_attributes.html#torch-dtype}
+ */
+export type Dtype =
+  | 'double'
+  | 'float'
+  | 'float32'
+  | 'float64'
+  | 'int'
+  | 'int16'
+  | 'int32'
+  | 'int64' // Hermes doesn't support BigInt yet (https://github.com/facebook/hermes/issues/510)
+  | 'int8'
+  | 'long'
+  | 'short'
+  | 'uint8';
+
 export type TensorOptions = {
   /**
    * The desired data type of a tensor.
    */
-  dtype?:
-    | 'double'
-    | 'float'
-    | 'float32'
-    | 'float64'
-    | 'int'
-    | 'int16'
-    | 'int32'
-    // Hermes doesn't support BigInt yet (https://github.com/facebook/hermes/issues/510)
-    // | 'int64'
-    | 'int8'
-    // Hermes doesn't support BigInt yet (https://github.com/facebook/hermes/issues/510)
-    // | 'long'
-    | 'short'
-    | 'uint8';
+  dtype?: Dtype;
 };
 
 /**
@@ -220,7 +233,7 @@ export interface Tensor {
    *
    * {@link https://pytorch.org/docs/1.11/tensor_attributes.html}
    */
-  dtype: string;
+  dtype: Dtype;
   /**
    * Returns the value of this tensor as a `number`. This only works for
    * tensors with one element.

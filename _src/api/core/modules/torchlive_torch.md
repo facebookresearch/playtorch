@@ -14,13 +14,27 @@ custom_edit_url: null
 
 ## Type aliases
 
+### MemoryFormat
+
+Ƭ **MemoryFormat**: ``"channelsLast"`` \| ``"contiguousFormat"`` \| ``"preserveFormat"``
+
+A [MemoryFormat](torchlive_torch.md#memoryformat) is an object representing the memory format on which a [Tensor](../interfaces/torchlive_torch.tensor.md) is or will be allocated.
+
+[https://pytorch.org/docs/1.11/tensor_attributes.html#torch.torch.memory_format](https://pytorch.org/docs/1.11/tensor_attributes.html#torch.torch.memory_format)
+
+#### Defined in
+
+[torchlive/torch.ts:118](https://github.com/pytorch/live/blob/6e5d797/react-native-pytorch-core/src/torchlive/torch.ts#L118)
+
+___
+
 ### Scalar
 
 Ƭ **Scalar**: `number`
 
 #### Defined in
 
-[torchlive/torch.ts:114](https://github.com/pytorch/live/blob/22d378f/react-native-pytorch-core/src/torchlive/torch.ts#L114)
+[torchlive/torch.ts:124](https://github.com/pytorch/live/blob/6e5d797/react-native-pytorch-core/src/torchlive/torch.ts#L124)
 
 ___
 
@@ -36,7 +50,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:92](https://github.com/pytorch/live/blob/22d378f/react-native-pytorch-core/src/torchlive/torch.ts#L92)
+[torchlive/torch.ts:92](https://github.com/pytorch/live/blob/6e5d797/react-native-pytorch-core/src/torchlive/torch.ts#L92)
 
 ## Variables
 
@@ -46,4 +60,4 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:511](https://github.com/pytorch/live/blob/22d378f/react-native-pytorch-core/src/torchlive/torch.ts#L511)
+[torchlive/torch.ts:536](https://github.com/pytorch/live/blob/6e5d797/react-native-pytorch-core/src/torchlive/torch.ts#L536)

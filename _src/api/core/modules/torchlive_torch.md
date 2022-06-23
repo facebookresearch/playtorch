@@ -14,6 +14,28 @@ custom_edit_url: null
 
 ## Type aliases
 
+### Dtype
+
+Ƭ **Dtype**: ``"double"`` \| ``"float"`` \| ``"float32"`` \| ``"float64"`` \| ``"int"`` \| ``"int16"`` \| ``"int32"`` \| ``"int64"`` \| ``"int8"`` \| ``"long"`` \| ``"short"`` \| ``"uint8"``
+
+A [Dtype](torchlive_torch.md#dtype) is an object that represents the data type of a [Tensor](../interfaces/torchlive_torch.tensor.md).
+
+:::note
+
+The `int64` (a.k.a. `long`) data types are not fully supported in React Native.
+For now, use `.to({dtype: torch.int32})` to downcast before accessing such
+methods as `.data()` and `.item()`.
+
+:::
+
+[https://pytorch.org/docs/1.11/tensor_attributes.html#torch-dtype](https://pytorch.org/docs/1.11/tensor_attributes.html#torch-dtype)
+
+#### Defined in
+
+[torchlive/torch.ts:105](https://github.com/pytorch/live/blob/6f499ca/react-native-pytorch-core/src/torchlive/torch.ts#L105)
+
+___
+
 ### MemoryFormat
 
 Ƭ **MemoryFormat**: ``"channelsLast"`` \| ``"contiguousFormat"`` \| ``"preserveFormat"``
@@ -24,7 +46,7 @@ A [MemoryFormat](torchlive_torch.md#memoryformat) is an object representing the 
 
 #### Defined in
 
-[torchlive/torch.ts:118](https://github.com/pytorch/live/blob/6e5d797/react-native-pytorch-core/src/torchlive/torch.ts#L118)
+[torchlive/torch.ts:131](https://github.com/pytorch/live/blob/6f499ca/react-native-pytorch-core/src/torchlive/torch.ts#L131)
 
 ___
 
@@ -34,7 +56,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:124](https://github.com/pytorch/live/blob/6e5d797/react-native-pytorch-core/src/torchlive/torch.ts#L124)
+[torchlive/torch.ts:137](https://github.com/pytorch/live/blob/6f499ca/react-native-pytorch-core/src/torchlive/torch.ts#L137)
 
 ___
 
@@ -46,11 +68,11 @@ ___
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `dtype?` | ``"double"`` \| ``"float"`` \| ``"float32"`` \| ``"float64"`` \| ``"int"`` \| ``"int16"`` \| ``"int32"`` \| ``"int8"`` \| ``"short"`` \| ``"uint8"`` | The desired data type of a tensor. |
+| `dtype?` | [Dtype](torchlive_torch.md#dtype) | The desired data type of a tensor. |
 
 #### Defined in
 
-[torchlive/torch.ts:92](https://github.com/pytorch/live/blob/6e5d797/react-native-pytorch-core/src/torchlive/torch.ts#L92)
+[torchlive/torch.ts:119](https://github.com/pytorch/live/blob/6f499ca/react-native-pytorch-core/src/torchlive/torch.ts#L119)
 
 ## Variables
 
@@ -60,4 +82,4 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:536](https://github.com/pytorch/live/blob/6e5d797/react-native-pytorch-core/src/torchlive/torch.ts#L536)
+[torchlive/torch.ts:549](https://github.com/pytorch/live/blob/6f499ca/react-native-pytorch-core/src/torchlive/torch.ts#L549)

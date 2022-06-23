@@ -227,7 +227,10 @@ jsi::Value dataImpl(
   // BigIntArray
   if (type == torch_::kInt64) {
     throw jsi::JSError(
-        runtime, "the property 'data' of BigInt Tensor is not supported.");
+        runtime,
+        "the property 'data' for a tensor of dtype torch.int64 is not"
+        " supported. Work around this with .to({dtype: torch.int32})"
+        " This might alter the tensor values.");
   }
 
   std::string typedArrayName;
@@ -296,6 +299,16 @@ jsi::Value itemImpl(
     size_t count) {
   auto thiz =
       thisValue.asObject(runtime).asHostObject<TensorHostObject>(runtime);
+
+  // TODO(T113480543): enable BigInt once Hermes supports it
+  if (thiz->tensor.dtype() == torch_::kInt64) {
+    throw jsi::JSError(
+        runtime,
+        "the property 'item' for a tensor of dtype torch.int64 is not"
+        " supported. Work around this with .to({dtype: torch.int32})"
+        " This might alter the tensor values.");
+  }
+
   auto scalar = thiz->tensor.item();
   if (scalar.isIntegral(/*includeBool=*/false)) {
     return jsi::Value(scalar.toInt());

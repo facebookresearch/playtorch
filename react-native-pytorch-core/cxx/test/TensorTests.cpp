@@ -245,7 +245,20 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDataTest) {
         const tensor = torch.tensor([128, 255], {dtype: torch.long});
         tensor.data();
       )";
-  EXPECT_THROW(eval(tensorWithDtypeAsInt64), facebook::jsi::JSError);
+  EXPECT_THROW(
+      {
+        try {
+          eval(tensorWithDtypeAsInt64);
+        } catch (const facebook::jsi::JSError& e) {
+          EXPECT_TRUE(
+              std::string(e.what()).find(
+                  "property 'data' for a tensor of dtype torch.int64 is not supported.") !=
+              std::string::npos)
+              << e.what();
+          throw;
+        }
+      },
+      facebook::jsi::JSError);
 }
 
 TEST_F(TorchliveTensorRuntimeTest, TensorIndexing) {
@@ -746,6 +759,25 @@ TEST_F(TorchliveTensorRuntimeTest, TensorItemTest) {
     tensor.item();
   )";
   EXPECT_THROW(eval(tensorItemForMultiElementTensor), facebook::jsi::JSError);
+
+  std::string tensorItemInt64 = R"(
+    const tensor = torch.tensor(1, {dtype: torch.int64});
+    tensor.item();
+  )";
+  EXPECT_THROW(
+      {
+        try {
+          eval(tensorItemInt64);
+        } catch (const facebook::jsi::JSError& e) {
+          EXPECT_TRUE(
+              std::string(e.what()).find(
+                  "property 'item' for a tensor of dtype torch.int64 is not supported.") !=
+              std::string::npos)
+              << e.what();
+          throw;
+        }
+      },
+      facebook::jsi::JSError);
 }
 
 TEST_F(TorchliveTensorRuntimeTest, TensorSqrtTest) {

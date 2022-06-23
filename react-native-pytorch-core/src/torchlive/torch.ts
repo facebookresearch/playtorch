@@ -110,6 +110,16 @@ export type TensorOptions = {
     | 'uint8';
 };
 
+/**
+ * A [[MemoryFormat]] is an object representing the memory format on which a [[Tensor]] is or will be allocated.
+ *
+ * {@link https://pytorch.org/docs/1.11/tensor_attributes.html#torch.torch.memory_format}
+ */
+export type MemoryFormat =
+  | 'channelsLast'
+  | 'contiguousFormat'
+  | 'preserveFormat';
+
 // Adopt the notion of a Scalar
 export type Scalar = number;
 
@@ -162,6 +172,16 @@ export interface Tensor {
    * @param options.max Upper-bound of the range to be clamped to
    */
   clamp(options: {min?: Scalar | Tensor; max?: Scalar | Tensor}): Tensor;
+  /**
+   * Returns a contiguous in memory tensor containing the same data as this
+   * tensor. If this tensor is already in the specified memory format, this
+   * function returns this tensor.
+   *
+   * @param options.memoryFormat The desired memory format of returned Tensor. Default: torch.contiguousFormat.
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.contiguous.html}
+   */
+  contiguous(options?: {memoryFormat: MemoryFormat}): Tensor;
   /**
    * Returns the tensor data as `TypedArray` buffer.
    *
@@ -500,6 +520,11 @@ export interface Torch {
   long: 'long';
   short: 'short';
   uint8: 'uint8';
+
+  // Memory Format
+  channelsLast: 'channelsLast';
+  contiguousFormat: 'contiguousFormat';
+  preserveFormat: 'preserveFormat';
 }
 
 type Torchlive = {

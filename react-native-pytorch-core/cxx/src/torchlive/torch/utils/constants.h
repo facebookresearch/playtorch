@@ -30,6 +30,11 @@ const std::string LONG = "long";
 const std::string SHORT = "short";
 const std::string UINT8 = "uint8";
 
+// Memory Format
+const std::string CHANNELS_LAST = "channelsLast";
+const std::string CONTIGUOUS_FORMAT = "contiguousFormat";
+const std::string PRESERVE_FORMAT = "preserveFormat";
+
 torch_::Dtype getDtypeFromString(std::string dtypeStr);
 
 std::string getStringFromDtype(torch_::Dtype dtype);

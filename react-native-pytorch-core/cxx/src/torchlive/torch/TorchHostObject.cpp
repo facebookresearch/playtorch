@@ -50,6 +50,9 @@ static const std::vector<std::string> PROPERTIES = {
     utils::constants::INT64,
     utils::constants::INT8,
     utils::constants::UINT8,
+    utils::constants::CHANNELS_LAST,
+    utils::constants::CONTIGUOUS_FORMAT,
+    utils::constants::PRESERVE_FORMAT,
     JIT,
 };
 
@@ -103,6 +106,11 @@ TorchHostObject::TorchHostObject(
           {utils::constants::INT64, utils::constants::INT64},
           {utils::constants::LONG, utils::constants::INT64},
           {utils::constants::UINT8, utils::constants::UINT8},
+          {utils::constants::CHANNELS_LAST, utils::constants::CHANNELS_LAST},
+          {utils::constants::CONTIGUOUS_FORMAT,
+           utils::constants::CONTIGUOUS_FORMAT},
+          {utils::constants::PRESERVE_FORMAT,
+           utils::constants::PRESERVE_FORMAT},
       },
       jit_(torchlive::torch::jit::buildNamespace(runtime, runtimeExecutor)) {}
 

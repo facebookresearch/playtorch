@@ -135,6 +135,64 @@ TEST_F(TorchliveTensorRuntimeTest, TensorArgmaxTest) {
       eval(tensorArgmaxWtihInvalidKeepdimOption), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorContiguousTest) {
+  std::string torchPreserveFormat =
+      R"(
+        torch.ones([2, 3, 4]).permute([2, 1, 0]).contiguous({memoryFormat: torch.preserveFormat});
+      )";
+  EXPECT_THROW(eval(torchPreserveFormat), facebook::jsi::JSError);
+
+  std::string torchContiguousFormat =
+      R"(
+        const tensor = torch.ones([2, 3, 4]);
+        const permuted = tensor.permute([2, 1, 0]);
+        const contiguous = permuted.contiguous();
+        const contiguous2 = permuted.contiguous({memoryFormat: torch.contiguousFormat});
+        JSON.stringify(tensor.shape) == '[2,3,4]' && JSON.stringify(tensor.stride()) == '[12,4,1]'
+          && JSON.stringify(permuted.shape) == '[4,3,2]' && JSON.stringify(permuted.stride()) == '[1,4,12]'
+          && JSON.stringify(contiguous.shape) == '[4,3,2]' && JSON.stringify(contiguous.stride()) == '[6,2,1]';
+      )";
+  EXPECT_TRUE(eval(torchContiguousFormat).getBool());
+
+  std::string torchChannelsLast =
+      R"(
+        const tensor = torch.ones([2, 3, 4, 5]);
+        const permuted = tensor.permute([3, 2, 1, 0]);
+        const contiguous = permuted.contiguous({memoryFormat: torch.channelsLast});
+        JSON.stringify(tensor.shape) == '[2,3,4,5]' && JSON.stringify(tensor.stride()) == '[60,20,5,1]'
+          && JSON.stringify(permuted.shape) == '[5,4,3,2]' && JSON.stringify(permuted.stride()) == '[1,5,20,60]'
+          && JSON.stringify(contiguous.shape) == '[5,4,3,2]' && JSON.stringify(contiguous.stride()) == '[24,1,8,4]';
+      )";
+  EXPECT_TRUE(eval(torchChannelsLast).getBool());
+
+  std::string torchChannelsLast3D =
+      R"(
+        torch.ones([2, 3, 4]).permute([2,1,0]).contiguous({memoryFormat: torch.channelsLast});
+      )";
+  /*
+  >>> (torch.ones([2, 3, 4]).permute([2,1,0])
+  ... .contiguous(memory_format=torch.channels_last))
+
+  Traceback (most recent call last):
+    File "<stdin>", line 1, in <module>
+  RuntimeError: required rank 4 tensor to use channels_last format
+  */
+  EXPECT_THROW(
+      {
+        try {
+          eval(torchChannelsLast3D);
+        } catch (const facebook::jsi::JSError& e) {
+          EXPECT_TRUE(
+              std::string(e.what()).find(
+                  "required rank 4 tensor to use channels_last format") !=
+              std::string::npos)
+              << e.what();
+          throw;
+        }
+      },
+      facebook::jsi::JSError);
+}
+
 TEST_F(TorchliveTensorRuntimeTest, TensorDataTest) {
   std::string tensorWithDtypeAsUint8 =
       R"(

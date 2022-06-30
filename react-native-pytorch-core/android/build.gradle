@@ -110,7 +110,7 @@ repositories {
 }
 
 dependencies {
-  def pytorchLiteVersion = '1.11'
+  def pytorchLiteVersion = '1.12.2'
   implementation "org.pytorch:pytorch_android_lite:${pytorchLiteVersion}"
   implementation "org.pytorch:pytorch_android_torchvision_lite:${pytorchLiteVersion}"
 

@@ -1,0 +1,32 @@
+---
+id: flora
+title: The Flora App
+hide_table_of_contents: true
+---
+<div style={{backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem'}}>
+
+# The Flora App
+
+*Flora* is an multimodal learning app built with PlayTorch. It was built through a collaboration between the PlayTorch team and PhD students in Stanford University's Human-Computer Interaction Graduate Program.
+
+The app presents a sample lesson about eucalyptus trees in California and makes use of "multimodal learning" -- learning that happens through a variety of different modes like visual, kinaesthetic, reading, writing and speaking. PlayTorch enabled us to quickly integrate a variety of machine learning models that make the learning experience interactive and engaging.
+
+<img src={require('/img/flora/flora-opening-page.png').default} alt="The Flora App" style={{width: '12rem', marginBottom: '1.5rem'}} />
+
+## Try it out
+
+You can try out Flora for yourself!
+
+To get started follow these steps:
+
+1. Download the PlayTorch app onto an iOS or Android device. [TODO: Add link]
+2. Open the PlayTorch app and use it to scan the QR code on the right side of this Expo Snack [TODO: Add link].
+3. Start the lesson! Your first task is to find a eucalyptus tree and scan it using the custom-tuned imagenet classifier. If you don't have a eucalyptus tree nearby try using one of these [pictures](https://www.google.com/search?q=eucalyptus+tree&rlz=1C5GCEM_enUS992US992&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiMje_M8NX4AhWPDkQIHYNhCGkQ_AUoAXoECAIQAw&biw=1964&bih=1117&dpr=1#imgrc=_iXbgljkmKDk4M).
+
+PlayTorch allowed our team to quickly integrate and use three different machine learning models, which you'll see as you engage with the app:
+1. The imagenet classifier for identifying tree types
+2. The wav2vec model, which enables high-quality speech-to-text.
+3. The BERT QA model for answering basic questions about eucalyptus trees.
+
+
+</div>

@@ -7,11 +7,10 @@
 
 #pragma once
 
-#import <AVFoundation/AVFoundation.h>
 #import <Foundation/Foundation.h>
 #import <string>
+#import "PyTorchCore-Swift-Header.h"
 #import "cxx/src/torchlive/media/audio/IAudio.h"
-#import "react_native_pytorch_core-Swift.h"
 
 namespace torchlive {
 namespace media {

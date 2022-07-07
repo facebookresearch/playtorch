@@ -214,7 +214,7 @@ void setPropertyHostFunction(
     jsi::HostFunctionType hostFunc) {
   auto propNameId = jsi::PropNameID::forUtf8(runtime, name);
   auto func = jsi::Function::createFromHostFunction(
-      runtime, propNameId, paramCount, hostFunc);
+      runtime, propNameId, paramCount, std::move(hostFunc));
   obj.setProperty(runtime, propNameId, std::move(func));
 }
 

@@ -14,13 +14,7 @@
 #import "Audio/Audio.h"
 #import "Image/Image.h"
 #import "MediaUtils.h"
-#import <AVFoundation/AVFoundation.h>
-#import "react_native_pytorch_core-Swift.h"
-
-extern "C" const char* torchlive_media_beginReadData(const char*);
-extern "C" void torchlive_media_endReadData(const char*);
-extern "C" uint8_t* const torchlive_media_getDirectBytes(const char*);
-extern "C" size_t torchlive_media_getDirectSize(const char*);
+#import "PyTorchCore-Swift-Header.h"
 
 namespace torchlive {
 

@@ -7,8 +7,7 @@
 
 #import "Image.h"
 
-#import <AVFoundation/AVFoundation.h>
-#import "react_native_pytorch_core-Swift.h"
+#import "PyTorchCore-Swift-Header.h"
 
 namespace torchlive {
 namespace media {

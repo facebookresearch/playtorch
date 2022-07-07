@@ -9,7 +9,6 @@
 #include "../Promise.h"
 #include "../media/NativeJSRefBridge.h"
 #include "../media/audio/AudioHostObject.h"
-#include "../torch/TensorHostObject.h"
 #include "../torch/utils/ArgumentParser.h"
 #include "../torch/utils/helpers.h"
 

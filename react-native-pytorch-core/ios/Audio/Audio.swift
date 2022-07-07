@@ -8,14 +8,16 @@
 import Foundation
 import AVFoundation
 
-public class Audio: IAudio {
+@objc(PTLAudio)
+public class Audio: NSObject, IAudio {
 
     private var mPlayer: AVAudioPlayer?
     private var mData: Data
 
     private static let DEFAULTVOLUME: Float = 1.0
 
-    init(audioData: Data) {
+    @objc
+    public init(audioData: Data) {
         self.mData = audioData
     }
 
@@ -23,6 +25,7 @@ public class Audio: IAudio {
         return self.mData
     }
 
+    @objc
     public func play() {
         do {
             if self.mPlayer == nil {
@@ -36,12 +39,14 @@ public class Audio: IAudio {
         }
     }
 
+    @objc
     public func pause() {
         if (mPlayer?.isPlaying) != nil {
             mPlayer?.pause()
         }
     }
 
+    @objc
     public func stop() {
         if let mPlayer = mPlayer, mPlayer.isPlaying {
             mPlayer.stop()
@@ -49,6 +54,7 @@ public class Audio: IAudio {
         }
     }
 
+    @objc
     public func getDuration() -> Int {
         do {
             if self.mPlayer == nil {

@@ -6,6 +6,7 @@
  */
 
 #import <Foundation/Foundation.h>
+#import <vector>
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -22,6 +23,9 @@ class Blob;
 UIImage *MediaUtilsImageFromBlob(const torchlive::media::Blob& blob,
                                  double width,
                                  double height);
+
+NSData *MediaUtilsPrependWAVHeader(const std::vector<uint8_t>& bytes,
+                                   int sampleRate);
 
 #ifdef __cplusplus
 }

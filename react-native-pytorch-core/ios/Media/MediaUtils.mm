@@ -7,8 +7,11 @@
 
 #import "MediaUtils.h"
 
+#import <sstream>
 #import <vector>
 #import "cxx/src/torchlive/media/Blob.h"
+
+#pragma mark - Image
 
 UIImage *MediaUtilsImageFromBlob(const torchlive::media::Blob& blob,
                                  double width,
@@ -46,4 +49,47 @@ UIImage *MediaUtilsImageFromBlob(const torchlive::media::Blob& blob,
   CGImageRelease(cgImage);
 
   return image;;
+}
+
+#pragma mark - Audio
+
+static void write(std::stringstream &stream, int value, int size)
+{
+  stream.write(reinterpret_cast<const char*>(&value), size);
+}
+
+NSData *MediaUtilsPrependWAVHeader(const std::vector<uint8_t>& bytes,
+                                   int sampleRate)
+{
+  int m_channels = 1;
+  int bitsPerSample = 16;
+  
+  // Create a stream
+  std::stringstream stream;
+  auto bufSize = bytes.size();
+  
+  // Header
+  stream.write("RIFF", 4);                                       // sGroupID (RIFF = Resource Interchange File Format)
+  write(stream, 36 + static_cast<int>(bufSize), 4);              // dwFileLength
+  stream.write("WAVE", 4);                                       // sRiffType
+  
+  // Format chunk
+  stream.write("fmt ", 4);                                       // sGroupID (fmt = format)
+  write(stream, 16, 4);                                          // Chunk size (of Format Chunk)
+  write(stream, 1, 2);                                           // Format (1 = PCM)
+  write(stream, m_channels, 2);                                  // Channels
+  write(stream, sampleRate, 4);                                  // Sample Rate
+  write(stream, sampleRate * m_channels * bitsPerSample / 8, 4); // Byterate
+  write(stream, m_channels * bitsPerSample / 8, 2);              // Frame size aka Block align
+  write(stream, bitsPerSample, 2);                               // Bits per sample
+  
+  // Data chunk
+  stream.write("data", 4);                                       // sGroupID (data)
+  stream.write((const char*)&bufSize, 4);                        // Chunk size (of Data, and thus of bufferSize)
+  for (const auto& byte : bytes) {
+    write(stream, byte, 1);                                      // The samples DATA!!!
+  }
+  
+  std::string str = stream.str();
+  return [NSData dataWithBytes:str.c_str() length:44 + bufSize]; // header 44 bytes
 }

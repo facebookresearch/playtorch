@@ -203,4 +203,10 @@ public class AudioModule: NSObject, AVAudioRecorderDelegate {
             reject(RCTErrorUnspecified, "Invalid audio reference in release: \(error)", error)
         }
     }
+
+    @objc
+    public static func wrapAudio(_ audio: Audio) -> NSString {
+        let ref = JSContext.wrapObject(object: audio).getJSRef()
+        return ref["ID"]! as NSString
+    }
 }

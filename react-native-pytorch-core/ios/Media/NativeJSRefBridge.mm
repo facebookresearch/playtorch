@@ -11,8 +11,11 @@
 #import "../../cxx/src/torchlive/media/Blob.h"
 #import "../../cxx/src/torchlive/media/NativeJSRefBridge.h"
 #import "../../cxx/src/torchlive/media/image/ImageHostObject.h"
+#import "Audio/Audio.h"
 #import "Image/Image.h"
 #import "MediaUtils.h"
+#import <AVFoundation/AVFoundation.h>
+#import "react_native_pytorch_core-Swift.h"
 
 extern "C" const char* torchlive_media_beginReadData(const char*);
 extern "C" void torchlive_media_endReadData(const char*);
@@ -31,7 +34,7 @@ std::shared_ptr<IImage> imageFromBlob(
   if (image == nil) {
     return nullptr;
   }
-  
+
   try {
     return std::make_shared<Image>(image);
   } catch (...) {
@@ -57,7 +60,9 @@ namespace experimental {
 std::shared_ptr<media::IAudio> audioFromBytes(
     const std::vector<uint8_t>& bytes,
     int sampleRate) {
-  return nullptr;
+  auto dataWithHeader = MediaUtilsPrependWAVHeader(bytes, sampleRate);
+  auto audio = [[PTLAudio alloc] initWithAudioData:dataWithHeader];
+  return std::make_shared<media::Audio>(audio);
 }
 
 } // namespace experimental

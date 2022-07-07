@@ -29,3 +29,6 @@ export {media, Blob} from './torchlive/media';
 
 // Export torchlive text object
 export {text} from './text';
+
+// Export torchlive experimental object and types
+export {experimental} from './torchlive/experimental';

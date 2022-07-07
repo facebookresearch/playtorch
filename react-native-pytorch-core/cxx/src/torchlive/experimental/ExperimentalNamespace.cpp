@@ -29,13 +29,35 @@ Value audioFromBytesImpl(
   auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
   args.requireNumArguments(2);
 
+  std::vector<double> dataArray = parseJSIArrayData(runtime, arguments[0]);
+  std::vector<uint8_t> bytes(dataArray.begin(), dataArray.end());
+  int sampleRate = args.asInteger(1);
+
   auto promiseValue = createPromiseAsJSIValue(
-      runtime, [](Runtime& rt, std::shared_ptr<Promise> promise) {
-        auto audioHostObject =
-            std::make_shared<media::AudioHostObject>(rt, nullptr);
-        auto jsiObject =
-            Object::createFromHostObject(rt, std::move(audioHostObject));
-        promise->resolve(std::move(jsiObject));
+      runtime,
+      [bytes = std::move(bytes), sampleRate](
+          Runtime& rt, std::shared_ptr<Promise> promise) {
+        auto errorMsg = "error on creating audio from bytes with size: " +
+            std::to_string(bytes.size()) +
+            ", sample rate: " + std::to_string(sampleRate) + ". ";
+        try {
+          auto audio = audioFromBytes(bytes, sampleRate);
+          if (audio == nullptr) {
+            promise->reject(errorMsg);
+          } else {
+            auto audioHostObject =
+                std::make_shared<media::AudioHostObject>(rt, std::move(audio));
+            auto jsiObject =
+                Object::createFromHostObject(rt, std::move(audioHostObject));
+            promise->resolve(std::move(jsiObject));
+          }
+        } catch (std::exception& e) {
+          promise->reject(errorMsg + std::string(e.what()));
+        } catch (const char* error) {
+          promise->reject(errorMsg + std::string(error));
+        } catch (...) {
+          promise->reject(errorMsg);
+        }
       });
   return promiseValue;
 }

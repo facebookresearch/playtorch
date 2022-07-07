@@ -12,6 +12,7 @@
 #include "NativeJSRefBridge.h"
 
 namespace torchlive {
+
 namespace media {
 
 std::shared_ptr<IImage>
@@ -26,6 +27,17 @@ std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
 }
 
 } // namespace media
+
+namespace experimental {
+
+std::shared_ptr<media::IAudio> audioFromBytes(
+    const std::vector<uint8_t>& bytes,
+    int sampleRate) {
+  return nullptr;
+}
+
+} // namespace experimental
+
 } // namespace torchlive
 
 #endif

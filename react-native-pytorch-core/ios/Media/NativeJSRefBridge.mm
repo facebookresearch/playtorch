@@ -20,6 +20,7 @@ extern "C" uint8_t* const torchlive_media_getDirectBytes(const char*);
 extern "C" size_t torchlive_media_getDirectSize(const char*);
 
 namespace torchlive {
+
 namespace media {
 
 std::shared_ptr<IImage> imageFromBlob(
@@ -50,4 +51,15 @@ std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
 }
 
 } // namespace media
+
+namespace experimental {
+
+std::shared_ptr<media::IAudio> audioFromBytes(
+    const std::vector<uint8_t>& bytes,
+    int sampleRate) {
+  return nullptr;
+}
+
+} // namespace experimental
+
 } // namespace torchlive

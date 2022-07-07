@@ -7,6 +7,7 @@
 
 #include <jsi/jsi.h>
 
+#include "experimental/ExperimentalNamespace.h"
 #include "media/MediaNamespace.h"
 #include "torch/TorchHostObject.h"
 #include "torchlive.h"
@@ -38,6 +39,9 @@ void install(jsi::Runtime& runtime, RuntimeExecutor runtimeExecutor) {
 
   auto media = media::buildNamespace(runtime, runtimeExecutor);
   torchliveObject.setProperty(runtime, "media", std::move(media));
+
+  auto experimental = experimental::buildNamespace(runtime, runtimeExecutor);
+  torchliveObject.setProperty(runtime, "experimental", std::move(experimental));
 
   runtime.global().setProperty(
       runtime, "__torchlive__", std::move(torchliveObject));

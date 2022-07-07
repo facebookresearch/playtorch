@@ -13,6 +13,9 @@ import androidx.annotation.Keep;
 import com.facebook.proguard.annotations.DoNotStrip;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
+import org.pytorch.rn.core.audio.Audio;
+import org.pytorch.rn.core.audio.AudioUtils;
+import org.pytorch.rn.core.audio.IAudio;
 import org.pytorch.rn.core.image.IImage;
 import org.pytorch.rn.core.image.Image;
 import org.pytorch.rn.core.javascript.JSContext;
@@ -63,5 +66,12 @@ public class MediaUtils {
     }
 
     return bitmap;
+  }
+
+  @DoNotStrip
+  @Keep
+  public static IAudio audioFromBytes(final byte[] bytes, int sampleRate) {
+    final IAudio audio = new Audio(AudioUtils.toShortArray(bytes));
+    return audio;
   }
 }

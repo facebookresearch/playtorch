@@ -13,14 +13,14 @@
 #include <torchlive/media/Blob.h>
 #include <torchlive/media/NativeJSRefBridge.h>
 
+#include "./audio/Audio.h"
+#include "./audio/JIAudio.h"
 #include "./image/Image.h"
 #include "./image/JIImage.h"
 
 namespace torchlive {
-namespace media {
 
-using namespace facebook;
-using namespace jni;
+using namespace facebook::jni;
 
 namespace {
 
@@ -37,6 +37,8 @@ alias_ref<JClass> getMediaUtilsClass() {
 }
 
 } // namespace
+
+namespace media {
 
 std::shared_ptr<IImage>
 imageFromBlob(const Blob& blob, double width, double height) {
@@ -75,7 +77,18 @@ namespace experimental {
 std::shared_ptr<media::IAudio> audioFromBytes(
     const std::vector<uint8_t>& bytes,
     int sampleRate) {
-  return nullptr;
+  auto mediaUtilsClass = getMediaUtilsClass();
+  auto audioFromBytesMethod =
+      mediaUtilsClass->getStaticMethod<local_ref<media::JIAudio>(
+          alias_ref<jbyteArray>, jint)>("audioFromBytes");
+
+  auto byteArray = make_byte_array(bytes.size());
+  byteArray->setRegion(
+      0, bytes.size(), reinterpret_cast<const jbyte*>(bytes.data()));
+  local_ref<media::JIAudio> audio =
+      audioFromBytesMethod(mediaUtilsClass, byteArray, sampleRate);
+
+  return std::make_shared<media::Audio>(make_global(audio));
 }
 
 } // namespace experimental

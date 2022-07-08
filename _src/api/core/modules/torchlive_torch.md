@@ -32,7 +32,7 @@ methods as `.data()` and `.item()`.
 
 #### Defined in
 
-[torchlive/torch.ts:105](https://github.com/pytorch/live/blob/e2cd68c/react-native-pytorch-core/src/torchlive/torch.ts#L105)
+[torchlive/torch.ts:105](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/torchlive/torch.ts#L105)
 
 ___
 
@@ -46,7 +46,7 @@ A [MemoryFormat](torchlive_torch.md#memoryformat) is an object representing the 
 
 #### Defined in
 
-[torchlive/torch.ts:131](https://github.com/pytorch/live/blob/e2cd68c/react-native-pytorch-core/src/torchlive/torch.ts#L131)
+[torchlive/torch.ts:131](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/torchlive/torch.ts#L131)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:137](https://github.com/pytorch/live/blob/e2cd68c/react-native-pytorch-core/src/torchlive/torch.ts#L137)
+[torchlive/torch.ts:137](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/torchlive/torch.ts#L137)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:119](https://github.com/pytorch/live/blob/e2cd68c/react-native-pytorch-core/src/torchlive/torch.ts#L119)
+[torchlive/torch.ts:119](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/torchlive/torch.ts#L119)
 
 ## Variables
 
@@ -82,4 +82,4 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:549](https://github.com/pytorch/live/blob/e2cd68c/react-native-pytorch-core/src/torchlive/torch.ts#L549)
+[torchlive/torch.ts:549](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/torchlive/torch.ts#L549)

@@ -8,7 +8,7 @@
  */
 
 import React, {useEffect, useRef} from 'react';
-import useThemeContext from '@theme/hooks/useThemeContext';
+import {useThemeConfig} from '@docusaurus/theme-common';
 import styles from './ExpoSnack.module.css';
 
 /**
@@ -20,7 +20,7 @@ import styles from './ExpoSnack.module.css';
  * https://github.com/expo/snack/blob/main/docs/embedding-snacks.md
  */
 export default function ExpoSnack({snackId}) {
-  const {isDarkTheme} = useThemeContext();
+  const {isDarkTheme} = useThemeConfig();
   const snackContainerRef = useRef(null);
   // This is a workaround to initialize Expo Snacks when navigating between
   // different tutorials as well as switching between light and dark mode

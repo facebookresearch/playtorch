@@ -2,6 +2,8 @@
 id: cli
 ---
 
+import TOCInline from '@theme/TOCInline';
+
 # CLI
 
 <div className="tutorial-page">
@@ -14,9 +16,7 @@ The PyTorch Live CLI (i.e., `torchlive-cli`) provides a set of commands to help 
 
 ## Index {#index}
 
-import TOCInline from "@theme/TOCInline"
-
-<TOCInline toc={toc[1].children}/>
+<TOCInline toc={toc} />
 
 ## PyTorch Live CLI commands {#torchlive-cli-commands}
 

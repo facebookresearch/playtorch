@@ -57,7 +57,7 @@ export default function App() {
 
 #### Defined in
 
-[CameraView.tsx:212](https://github.com/pytorch/live/blob/ea98a2e/react-native-pytorch-core/src/CameraView.tsx#L212)
+[CameraView.tsx:212](https://github.com/pytorch/live/blob/e2cd68c/react-native-pytorch-core/src/CameraView.tsx#L212)
 
 ___
 
@@ -107,4 +107,4 @@ export default function CameraTakePicture() {
 
 #### Defined in
 
-[CameraView.tsx:198](https://github.com/pytorch/live/blob/ea98a2e/react-native-pytorch-core/src/CameraView.tsx#L198)
+[CameraView.tsx:198](https://github.com/pytorch/live/blob/e2cd68c/react-native-pytorch-core/src/CameraView.tsx#L198)

@@ -18,4 +18,4 @@ custom_edit_url: null
 
 #### Defined in
 
-[torchlive/media.ts:64](https://github.com/pytorch/live/blob/ea98a2e/react-native-pytorch-core/src/torchlive/media.ts#L64)
+[torchlive/media.ts:64](https://github.com/pytorch/live/blob/e2cd68c/react-native-pytorch-core/src/torchlive/media.ts#L64)

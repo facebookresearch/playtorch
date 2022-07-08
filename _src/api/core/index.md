@@ -20,6 +20,7 @@ custom_edit_url: null
 - [text](modules/text.md)
 - [text/BasicTokenizer](modules/text_basictokenizer.md)
 - [text/WordpieceTokenizer](modules/text_wordpiecetokenizer.md)
+- [torchlive/experimental](modules/torchlive_experimental.md)
 - [torchlive/media](modules/torchlive_media.md)
 - [torchlive/torch](modules/torchlive_torch.md)
 - [torchlive/torchvision](modules/torchlive_torchvision.md)

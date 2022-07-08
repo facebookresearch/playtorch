@@ -16,7 +16,7 @@ on:
 
 jobs:
   checks:
-    name: Check Build
+    name: Test Build 🧪
     if: github.event_name != 'push'
     runs-on: ubuntu-latest
     defaults:
@@ -24,16 +24,17 @@ jobs:
         working-directory: ./website
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
-      - name: Install Dependencies
+          node-version: 16.x
+          cache: yarn
+      - name: Install dependencies 🧶
         run: yarn install --frozen-lockfile
-      - name: Test Build
-        run: yarn run build
+      - name: Test build website 🧪
+        run: yarn build
 
   gh-release:
-    name: Build & Deploy
+    name: Build & Deploy 🔨 🚀
     if: github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     defaults:
@@ -41,14 +42,15 @@ jobs:
         working-directory: ./website
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
+      - uses: actions/setup-node@v3
         with:
-          node-version: '14.x'
-      - name: Install Dependencies
+          node-version: 16.x
+          cache: yarn
+      - name: Install dependencies 🧶
         run: yarn install --frozen-lockfile
-      - name: Build
-        run: yarn run build
-      - name: Deploy 🚀
+      - name: Build website 🔨
+        run: yarn build
+      - name: Deploy website 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages

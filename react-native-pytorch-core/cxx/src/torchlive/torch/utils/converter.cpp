@@ -158,6 +158,28 @@ torch_::jit::IValue jsiValuetoIValue(
       }
       return tensorHostObject->tensor;
     }
+    case c10::TypeKind::ListType: {
+      if (!jsValue.isObject()) {
+        throwUnexpectedTypeError(
+            runtime,
+            c10::typeKindToString(kind),
+            helpers::jsValueKindToString(jsValue));
+      } else if (!jsValue.asObject(runtime).isArray(runtime)) {
+        throwUnexpectedTypeError(
+            runtime, c10::typeKindToString(kind), "unknown object");
+      }
+      auto& childType =
+          dynamicType.containedType(0)->expectRef<c10::DynamicType>();
+      auto jsArray = jsValue.asObject(runtime).asArray(runtime);
+      auto length = jsArray.length(runtime);
+      c10::impl::GenericList list =
+          c10::impl::GenericList(dynamicType.containedType(0));
+      for (int i = 0; i < length; i++) {
+        list.push_back(jsiValuetoIValue(
+            runtime, jsArray.getValueAtIndex(runtime, i), childType));
+      }
+      return list;
+    }
     default:
       throwUnsupportedTypeError(
           runtime,

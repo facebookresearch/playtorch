@@ -31,6 +31,10 @@ type TestModule = Module & {
   bumpSync: (start: number, step?: number) => number;
   get_pi: () => Promise<number>;
   get_piSync: () => number;
+  sum_one_d: (arr: number[]) => Promise<number>;
+  sum_one_dSync: (arr: number[]) => number;
+  sum_two_d: (arr2d: number[][]) => Promise<number>;
+  sum_two_dSync: (arr2d: number[]) => number;
 };
 
 const PRINTABLE_LENGTH = 20;
@@ -106,6 +110,28 @@ const Testunit = ({name, testFunc}: TestUnitItem) => {
 };
 
 const testUnitList = [
+  {
+    name: 'generic list input',
+    testFunc: async () => {
+      console.log('------Test generic list input-------');
+      let model_url = await MobileModel.download(
+        require('../../assets/models/dummy_test_model.ptl'),
+      );
+      let model = await torch.jit._loadForMobile<TestModule>(model_url);
+      let outputOneD = await model.sum_one_d([1, 2, 3]);
+      let outputTwoD = await model.sum_two_d([
+        [1, 2, 3],
+        [4, 5],
+      ]);
+      console.log(outputOneD);
+      console.log(outputTwoD);
+      try {
+        await model.sum_two_d([[1, 2, 3.5]]);
+      } catch (e) {
+        console.log(e.message);
+      }
+    },
+  },
   {
     name: 'generic function',
     testFunc: async () => {

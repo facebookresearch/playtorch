@@ -59,10 +59,12 @@ MethodAsyncTask createMethodAsyncTask(
                         .arguments();
 
         // Two Cases in terms of number of argument required and argument
-        // provided Case 1 (n_required < n_provided) we ignore the extra
-        // provided args, respecting Js convention Case 2 (n_required >=
-        // n_provided) we process the provided argument and let libtorch check
-        // if they are enough, this would handle module with default parameters
+        // provided
+        // Case 1 (n_required < n_provided) we ignore the extra provided args,
+        // respecting Js convention
+        // Case 2 (n_required >= n_provided) we process the provided argument
+        // and let libtorch check if they are enough, this would handle module
+        // with default parameters
         int argCount = std::min(count, args.size() - 1);
 
         std::vector<torch_::jit::IValue> input = {};

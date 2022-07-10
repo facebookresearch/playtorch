@@ -23,7 +23,15 @@ import {
   torch,
   torchvision,
   MobileModel,
+  Module,
 } from 'react-native-pytorch-core';
+
+type TestModule = Module & {
+  bump: (start: number, step?: number) => Promise<number>;
+  bumpSync: (start: number, step?: number) => number;
+  get_pi: () => Promise<number>;
+  get_piSync: () => number;
+};
 
 const PRINTABLE_LENGTH = 20;
 
@@ -98,6 +106,31 @@ const Testunit = ({name, testFunc}: TestUnitItem) => {
 };
 
 const testUnitList = [
+  {
+    name: 'generic function',
+    testFunc: async () => {
+      console.log('------Test generic function-------');
+      let model_url = await MobileModel.download(
+        require('../../assets/models/dummy_test_model.ptl'),
+      );
+
+      let model = await torch.jit._loadForMobile<TestModule>(model_url);
+      let lastTime = performance.now();
+
+      for (let i = 0; i < 1000; i++) {
+        await model.bump(1);
+      }
+      let totalTime = performance.now() - lastTime;
+      console.log('average time for bump: ', totalTime / 1000);
+      console.log(model);
+
+      let pi = await model.get_pi();
+      console.log('pi: ', pi);
+
+      let piSync = model.get_piSync();
+      console.log('piSync: ', piSync);
+    },
+  },
   {
     name: 'non-Tensor model input',
     testFunc: async () => {

@@ -8,7 +8,6 @@
 #include <torch/csrc/jit/mobile/module.h>
 #include <utility>
 
-#include "../../../common/AsyncTask.h"
 #include "../../../torchlive.h"
 #include "../../IValueHostObject.h"
 #include "../../TensorHostObject.h"
@@ -26,66 +25,117 @@ namespace mobile {
 
 using namespace facebook;
 
-using ForwardAsyncTask = common::AsyncTask<
-    std::tuple<torch_::jit::mobile::Module, std::vector<torch_::jit::IValue>>,
-    torch_::jit::IValue>;
+namespace {
+std::string getSyncMethodPrefix(const std::string& propName) {
+  const std::string syncSuffix = "Sync";
+  int prefixLength = propName.length() - syncSuffix.length();
+  if (prefixLength <= 0) {
+    return "";
+  }
 
-ForwardAsyncTask forwardImpl(
-    [](jsi::Runtime& runtime,
-       const jsi::Value& thisValue,
-       const jsi::Value* arguments,
-       size_t count) -> ForwardAsyncTask::SetupResultType {
-      if (count < 1) {
-        throw jsi::JSError(runtime, "At least 1 arg is expected");
-      }
+  if (propName.substr(prefixLength, syncSuffix.length()) != syncSuffix) {
+    return "";
+  }
 
-      auto thiz =
-          thisValue.asObject(runtime).asHostObject<ModuleHostObject>(runtime);
+  return propName.substr(0, prefixLength);
+}
+} // namespace
 
-      auto args = thiz->mobileModule.get_method("forward")
-                      .function()
-                      .getSchema()
-                      .arguments();
+MethodAsyncTask createMethodAsyncTask(
+    torch_::jit::mobile::Module& m,
+    std::string functionName) {
+  return MethodAsyncTask(
+      [&, functionName](
+          jsi::Runtime& runtime,
+          const jsi::Value& thisValue,
+          const jsi::Value* arguments,
+          size_t count) -> MethodAsyncTask::SetupResultType {
+        auto thiz =
+            thisValue.asObject(runtime).asHostObject<ModuleHostObject>(runtime);
 
-      // Two Cases in terms of number of argument required and argument provided
-      // Case 1 (n_required < n_provided) we ignore the extra provided args,
-      // respecting Js convention
-      // Case 2 (n_required >= n_provided) we process the provided argument and
-      // let libtorch check if they are enough, this would handle module with
-      // default parameters
-      int argCount = std::min(count, args.size() - 1);
+        auto args = thiz->mobileModule.get_method(functionName)
+                        .function()
+                        .getSchema()
+                        .arguments();
 
-      std::vector<torch_::jit::IValue> input;
-      for (int i = 0; i < argCount; i++) {
-        c10::DynamicType& dynType =
-            args[i + 1].type()->expectRef<c10::DynamicType>();
-        input.push_back(
-            utils::converter::jsiValuetoIValue(runtime, arguments[i], dynType));
-      }
-      return std::make_tuple(thiz->mobileModule, input);
-    },
+        // Two Cases in terms of number of argument required and argument
+        // provided Case 1 (n_required < n_provided) we ignore the extra
+        // provided args, respecting Js convention Case 2 (n_required >=
+        // n_provided) we process the provided argument and let libtorch check
+        // if they are enough, this would handle module with default parameters
+        int argCount = std::min(count, args.size() - 1);
 
-    [](ForwardAsyncTask::SetupResultType&& input) -> torch_::jit::IValue {
-      torch_::jit::mobile::Module mobileModule;
-      std::vector<torch_::jit::IValue> tensors;
-      std::tie(mobileModule, tensors) = input;
-      c10::InferenceMode guard;
-      return mobileModule.forward(std::move(tensors));
-    },
+        std::vector<torch_::jit::IValue> input = {};
+        for (int i = 0; i < argCount; i++) {
+          c10::DynamicType& dynType =
+              args[i + 1].type()->expectRef<c10::DynamicType>();
+          input.push_back(utils::converter::jsiValuetoIValue(
+              runtime, arguments[i], dynType));
+        }
+        return std::make_tuple(thiz->mobileModule, input);
+      },
 
-    [](jsi::Runtime& runtime,
-       torchlive::RuntimeExecutor,
-       torch_::jit::IValue&& value) -> jsi::Value {
-      return utils::converter::ivalueToJSIValue(runtime, value);
-    });
+      [&, functionName](MethodAsyncTask::SetupResultType&& setupResult)
+          -> torch_::jit::IValue {
+        torch_::jit::mobile::Module mobileModule;
+        std::vector<torch_::jit::IValue> inputs;
+        std::tie(mobileModule, inputs) = setupResult;
+        c10::InferenceMode guard;
+        return mobileModule.get_method(functionName)(inputs);
+      },
+
+      [](jsi::Runtime& runtime,
+         torchlive::RuntimeExecutor,
+         torch_::jit::IValue&& value) -> jsi::Value {
+        return utils::converter::ivalueToJSIValue(runtime, value);
+      });
+}
 
 ModuleHostObject::ModuleHostObject(
     jsi::Runtime& rt,
     torchlive::RuntimeExecutor rte,
     torch_::jit::mobile::Module m)
-    : BaseHostObject(rt), mobileModule(m) {
-  setPropertyHostFunction(rt, "forward", 1, forwardImpl.asyncPromiseFunc(rte));
-  setPropertyHostFunction(rt, "forwardSync", 1, forwardImpl.syncFunc(rte));
+    : BaseHostObject(rt),
+      mobileModule(std::move(m)),
+      runtimeExecutor(std::move(rte)) {
+  methodAsyncTasks.emplace(
+      "forward", createMethodAsyncTask(mobileModule, "forward"));
+  setPropertyHostFunction(
+      rt, "forward", 1, methodAsyncTasks.at("forward").asyncPromiseFunc(rte));
+  setPropertyHostFunction(
+      rt, "forwardSync", 1, methodAsyncTasks.at("forward").syncFunc(rte));
+}
+jsi::Value ModuleHostObject::get(
+    jsi::Runtime& runtime,
+    const jsi::PropNameID& name) {
+  const auto& propName = name.utf8(runtime);
+  const auto& syncPrefix = getSyncMethodPrefix(propName);
+  auto member = BaseHostObject::get(runtime, name);
+  if (!member.isUndefined()) {
+    return member;
+  } else if (mobileModule.find_method(propName) != c10::nullopt) {
+    methodAsyncTasks.emplace(
+        propName, createMethodAsyncTask(mobileModule, propName));
+    return jsi::Function::createFromHostFunction(
+        runtime,
+        name,
+        1,
+        methodAsyncTasks.at(propName).asyncPromiseFunc(runtimeExecutor));
+  } else if (
+      // if method with name "*Sync" is looked for, return the "sync version"
+      // of the module method, where * can't be empty.
+      !syncPrefix.empty() &&
+      mobileModule.find_method(syncPrefix) != c10::nullopt) {
+    methodAsyncTasks.emplace(
+        syncPrefix, createMethodAsyncTask(mobileModule, syncPrefix));
+    return jsi::Function::createFromHostFunction(
+        runtime,
+        name,
+        1,
+        methodAsyncTasks.at(syncPrefix).syncFunc(runtimeExecutor));
+  } else {
+    return member;
+  }
 }
 
 } // namespace mobile

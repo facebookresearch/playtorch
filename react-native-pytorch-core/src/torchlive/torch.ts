@@ -85,8 +85,10 @@ interface JIT {
    * Loads a serialized mobile module.
    *
    * @param filePath Path to serialized mobile module.
+   * @returns serialized mobile module of the specified type extending [[Module]],
+   * which, if not specified, default to be [[Module]]
    */
-  _loadForMobile(filePath: string): Promise<Module>;
+  _loadForMobile<T extends Module = Module>(filePath: string): Promise<T>;
 }
 
 /**

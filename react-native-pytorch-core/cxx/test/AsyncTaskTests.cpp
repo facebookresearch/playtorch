@@ -47,5 +47,5 @@ TEST_F(TorchliveAsyncTaskRuntimeTest, setupTaskFail) {
   EXPECT_TRUE(resSync.isNumber());
   EXPECT_EQ(resSync.asNumber(), 6);
 
-  // TODO(yinglao) Test AsyncFunc when RuntimeExecutor is available
+  // TODO(T124305556) Test AsyncFunc when RuntimeExecutor is available
 }

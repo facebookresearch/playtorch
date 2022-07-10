@@ -6,6 +6,7 @@
  */
 
 #include <gtest/gtest.h>
+#include "ATen/core/dynamic_type.h"
 #include "torchlive/torch/TensorHostObject.h"
 #include "torchlive/torch/utils/converter.h"
 #include "torchlive/torch/utils/helpers.h"
@@ -188,40 +189,84 @@ TEST_F(TorchliveConverterRuntimeTest, TupleConversion) {
 // jsi::Value to IValue conversion tests
 
 TEST_F(TorchliveConverterRuntimeTest, jsiValueNumberToIValue) {
-  // jsi explicit double value packed to a double iValue
-  auto jsiDoubleValue = facebook::jsi::Value(3.0);
-  auto iValue1 = jsiValuetoIValue(*rt, jsiDoubleValue);
-  EXPECT_EQ(iValue1, 3.0);
+  // when model is expecting float and a double is passed
+  auto jsiDoubleValue = facebook::jsi::Value(3.5);
+  auto dynType = c10::DynamicType::create(*c10::FloatType::get());
+  auto iValue1 = jsiValuetoIValue(*rt, jsiDoubleValue, *dynType);
+  EXPECT_EQ(iValue1, 3.5);
+  EXPECT_TRUE(iValue1.isDouble());
 
-  // jsi explicit int value packed to a double iValue
+  // when model is expecting int and a int is passed
   auto jsiIntValue = facebook::jsi::Value(3);
-  auto iValue2 = jsiValuetoIValue(*rt, jsiIntValue);
-  EXPECT_EQ(iValue2, 3.0);
+  auto iValue2 = jsiValuetoIValue(
+      *rt, jsiIntValue, *c10::DynamicType::create(*c10::IntType::get()));
+  EXPECT_EQ(iValue2, 3);
+  EXPECT_TRUE(iValue2.isInt());
+
+  // when model is expecting int and a double is passed
+  EXPECT_THROW(
+      jsiValuetoIValue(
+          *rt, jsiDoubleValue, *c10::DynamicType::create(*c10::IntType::get())),
+      facebook::jsi::JSError);
 }
 
 TEST_F(TorchliveConverterRuntimeTest, jsiValueBooleanToIValue) {
   auto jsiBooleanValue = facebook::jsi::Value(true);
-  auto iValue = jsiValuetoIValue(*rt, jsiBooleanValue);
+  auto iValue = jsiValuetoIValue(
+      *rt, jsiBooleanValue, *c10::DynamicType::create(*c10::BoolType::get()));
   EXPECT_EQ(iValue, true);
+  EXPECT_TRUE(iValue.isBool());
 }
 
 TEST_F(TorchliveConverterRuntimeTest, jsiValueStringToIValue) {
   auto jsiStringValue = facebook::jsi::Value(
       *rt, facebook::jsi::String::createFromAscii(*rt, "test"));
-  auto iValue = jsiValuetoIValue(*rt, jsiStringValue);
+  auto iValue = jsiValuetoIValue(
+      *rt, jsiStringValue, *c10::DynamicType::create(*c10::StringType::get()));
   EXPECT_EQ(iValue, "test");
+  EXPECT_TRUE(iValue.isString());
+}
+
+TEST_F(TorchliveConverterRuntimeTest, jsiValueNullToIValue) {
+  auto jsiNullValue = facebook::jsi::Value::null();
+  auto iValue = jsiValuetoIValue(
+      *rt, jsiNullValue, *c10::DynamicType::create(*c10::NoneType::get()));
+  EXPECT_EQ(iValue, c10::nullopt);
+  EXPECT_TRUE(iValue.isNone());
+}
+
+TEST_F(TorchliveConverterRuntimeTest, jsiValueUndefindToIValue) {
+  auto jsiUndefindValue = facebook::jsi::Value::undefined();
+  auto iValue = jsiValuetoIValue(
+      *rt, jsiUndefindValue, *c10::DynamicType::create(*c10::NoneType::get()));
+  EXPECT_EQ(iValue, c10::nullopt);
+  EXPECT_TRUE(iValue.isNone());
 }
 
 TEST_F(TorchliveConverterRuntimeTest, jsiValueTensorToIValue) {
   at::Tensor testTensor = torch_::tensor(
       std::vector<double>({1, 2, 3}),
       c10::TensorOptions().dtype(torch_::kDouble));
-  auto jsiValueFromTensor = ivalueToJSIValue(*rt, testTensor);
-  auto unpackedTensor =
-      torchlive::utils::helpers::parseTensor(*rt, &jsiValueFromTensor);
-  auto iValueFromJsiValue = jsiValuetoIValue(*rt, jsiValueFromTensor);
-  auto jsiTensorFromIvalue = ivalueToJSIValue(*rt, iValueFromJsiValue);
-  auto unpackedTensorFromIvalue =
-      torchlive::utils::helpers::parseTensor(*rt, &jsiTensorFromIvalue);
-  EXPECT_TRUE(unpackedTensor->tensor.equal(unpackedTensorFromIvalue->tensor));
+  auto tensorHostObject = ivalueToJSIValue(*rt, testTensor);
+
+  auto iValueFromJsiValue = jsiValuetoIValue(
+      *rt,
+      tensorHostObject,
+      *c10::DynamicType::create(*c10::TensorType::get()));
+
+  EXPECT_TRUE(testTensor.equal(iValueFromJsiValue.toTensor()));
+  EXPECT_TRUE(iValueFromJsiValue.isTensor());
+}
+
+TEST_F(TorchliveConverterRuntimeTest, jsiValueTensorUnmatchIValue) {
+  at::Tensor testTensor = torch_::tensor(
+      std::vector<double>({1}), c10::TensorOptions().dtype(torch_::kInt32));
+  auto tensorHostObject = ivalueToJSIValue(*rt, testTensor);
+
+  EXPECT_THROW(
+      jsiValuetoIValue(
+          *rt,
+          tensorHostObject,
+          *c10::DynamicType::create(*c10::IntType::get())),
+      std::exception);
 }

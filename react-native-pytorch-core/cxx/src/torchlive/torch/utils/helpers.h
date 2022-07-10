@@ -108,6 +108,11 @@ inline facebook::jsi::Object createFromHostObject(
       runtime, std::move(hostObject));
 }
 
+// adapt from
+// https://github.com/facebook/react-native/blob/main/ReactCommon/jsi/jsi/jsi.cpp#L21
+// to generating short exception strings.
+std::string jsValueKindToString(const facebook::jsi::Value& v);
+
 } // namespace helpers
 } // namespace utils
 } // namespace torchlive

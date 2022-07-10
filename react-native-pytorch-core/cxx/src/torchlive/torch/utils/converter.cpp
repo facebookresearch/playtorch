@@ -6,6 +6,7 @@
  */
 
 #include <torch/script.h>
+#include <cmath>
 
 #include "../TensorHostObject.h"
 #include "converter.h"
@@ -31,6 +32,27 @@ std::string ivalueToObjectKey(jsi::Runtime& runtime, const at::IValue& ivalue) {
         runtime, ivalue.tagKind() + " can't convert to object key.");
   }
 }
+
+void throwUnexpectedTypeError(
+    jsi::Runtime& runtime,
+    const std::string& expected,
+    const std::string& given) {
+  throw jsi::JSError(
+      runtime,
+      "Unexpected Input Type: " + expected + " is expected, but " + given +
+          " is given.");
+}
+
+void throwUnsupportedTypeError(
+    jsi::Runtime& runtime,
+    const std::string& expected,
+    const std::string& given) {
+  throw jsi::JSError(
+      runtime,
+      "Unsupported Input Type: " + expected + " is expected, but " + given +
+          " is given.");
+}
+
 } // namespace
 
 /**
@@ -39,7 +61,6 @@ std::string ivalueToObjectKey(jsi::Runtime& runtime, const at::IValue& ivalue) {
 jsi::Value ivalueToJSIValue(jsi::Runtime& runtime, const at::IValue& ivalue) {
   // use isX over tagKind() to align with
   // https://github.com/pytorch/pytorch/blob/69e048b090ab06103e5be0e6c0774126bcff4b9b/aten/src/ATen/core/ivalue.h#L1006-L1011
-
   if (ivalue.isNone()) {
     return jsi::Value::null();
   } else if (ivalue.isTensor()) {
@@ -94,25 +115,58 @@ jsi::Value ivalueToJSIValue(jsi::Runtime& runtime, const at::IValue& ivalue) {
  */
 torch_::jit::IValue jsiValuetoIValue(
     facebook::jsi::Runtime& runtime,
-    const jsi::Value& jsValue) {
+    const jsi::Value& jsValue,
+    const c10::DynamicType& dynamicType) {
   torch_::jit::IValue iValue;
-  if (jsValue.isNumber()) {
-    iValue = jsValue.asNumber();
-  } else if (jsValue.isBool()) {
-    iValue = jsValue.getBool(); // jsi does not have asBool() method
-  } else if (jsValue.isString()) {
-    iValue = jsValue.asString(runtime).utf8(runtime);
-  } else {
-    auto tensorHostObject = utils::helpers::parseTensor(runtime, &jsValue);
-    if (tensorHostObject != nullptr) {
-      iValue = tensorHostObject->tensor;
-    } else {
-      throw jsi::JSError(runtime, "Unrecognized JSValue format.");
+  auto kind = dynamicType.dynamicKind();
+  switch (kind) {
+    case c10::TypeKind::IntType: {
+      auto n = jsValue.asNumber();
+      if (fmod(n, 1) != 0) {
+        throwUnexpectedTypeError(
+            runtime, c10::typeKindToString(kind), "a float");
+      }
+      return static_cast<int>(n);
     }
+    case c10::TypeKind::FloatType:
+      return jsValue.asNumber();
+    case c10::TypeKind::BoolType:
+      if (!jsValue.isBool()) {
+        throwUnexpectedTypeError(
+            runtime,
+            c10::typeKindToString(kind),
+            helpers::jsValueKindToString(jsValue));
+      }
+      return jsValue.getBool(); // jsi does not have asBool() method
+    case c10::TypeKind::StringType:
+      return jsValue.asString(runtime).utf8(runtime);
+    case c10::TypeKind::NoneType:
+      if (!jsValue.isNull() && !jsValue.isUndefined()) {
+        throwUnexpectedTypeError(
+            runtime,
+            c10::typeKindToString(kind),
+            helpers::jsValueKindToString(jsValue));
+      }
+      return c10::nullopt;
+    case c10::TypeKind::TensorType: {
+      auto tensorHostObject = utils::helpers::parseTensor(runtime, &jsValue);
+      if (tensorHostObject == nullptr) {
+        throwUnexpectedTypeError(
+            runtime,
+            c10::typeKindToString(kind),
+            helpers::jsValueKindToString(jsValue));
+      }
+      return tensorHostObject->tensor;
+    }
+    default:
+      throwUnsupportedTypeError(
+          runtime,
+          c10::typeKindToString(kind),
+          helpers::jsValueKindToString(jsValue));
+      // explicily return to avoid linter complaint
+      return iValue;
   }
-  return iValue;
 }
-
 } // namespace converter
 } // namespace utils
 } // namespace torchlive

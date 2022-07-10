@@ -30,7 +30,8 @@ facebook::jsi::Value ivalueToJSIValue(
  */
 torch_::jit::IValue jsiValuetoIValue(
     facebook::jsi::Runtime& runtime,
-    const facebook::jsi::Value& jsValue);
+    const facebook::jsi::Value& jsValue,
+    const c10::DynamicType& dynamicType);
 
 } // namespace converter
 } // namespace utils

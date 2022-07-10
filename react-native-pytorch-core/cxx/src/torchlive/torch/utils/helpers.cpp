@@ -218,6 +218,24 @@ void setPropertyHostFunction(
   obj.setProperty(runtime, propNameId, std::move(func));
 }
 
+std::string jsValueKindToString(const jsi::Value& v) {
+  if (v.isUndefined()) {
+    return "undefined";
+  } else if (v.isNull()) {
+    return "null";
+  } else if (v.isBool()) {
+    return v.getBool() ? "true" : "false";
+  } else if (v.isNumber()) {
+    return "a number";
+  } else if (v.isString()) {
+    return "a string";
+  } else if (v.isSymbol()) {
+    return "a symbol";
+  } else {
+    return "an object";
+  }
+}
+
 } // namespace helpers
 } // namespace utils
 } // namespace torchlive

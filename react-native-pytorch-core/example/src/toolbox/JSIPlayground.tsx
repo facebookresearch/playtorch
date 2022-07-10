@@ -35,6 +35,16 @@ type TestModule = Module & {
   sum_one_dSync: (arr: number[]) => number;
   sum_two_d: (arr2d: number[][]) => Promise<number>;
   sum_two_dSync: (arr2d: number[]) => number;
+  concate_keys: (dictionary: {[index: string]: number}) => Promise<string>;
+  concate_keysSync: (dictionary: {[index: string]: number}) => string;
+  sum_values: (dictionary: {[index: string]: number}) => Promise<number>;
+  sum_valuesSync: (dictionary: {[index: string]: number}) => number;
+  sum_tensors: (dictionary: {[index: string]: Tensor}) => Promise<{
+    [index: string]: Tensor;
+  }>;
+  sum_tensorsSync: (dictionary: {[index: string]: Tensor}) => {
+    [index: string]: Tensor;
+  };
 };
 
 const PRINTABLE_LENGTH = 20;
@@ -110,6 +120,30 @@ const Testunit = ({name, testFunc}: TestUnitItem) => {
 };
 
 const testUnitList = [
+  {
+    name: 'generic dict input',
+    testFunc: async () => {
+      console.log('------Test generic dict input-------');
+      let model_url = await MobileModel.download(
+        require('../../assets/models/dummy_test_model.ptl'),
+      );
+      let model = await torch.jit._loadForMobile<TestModule>(model_url);
+      let obj1 = {this: 1, is: 2, object: 3};
+      let output1 = await model.concate_keys(obj1);
+      let output2 = await model.sum_values(obj1);
+      console.log(output1, output2);
+
+      let obj2 = {apple: torch.tensor([1, 2]), pear: torch.tensor([3, 4])};
+      let output3 = await model.sum_tensors(obj2);
+      for (let key in output3) {
+        console.log(key, output3[key].item());
+      }
+      let output4 = model.sum_tensorsSync(obj2);
+      for (let key in output4) {
+        console.log(key, output4[key].item());
+      }
+    },
+  },
   {
     name: 'generic list input',
     testFunc: async () => {

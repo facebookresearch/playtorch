@@ -180,6 +180,33 @@ torch_::jit::IValue jsiValuetoIValue(
       }
       return list;
     }
+    case c10::TypeKind::DictType: {
+      if (!jsValue.isObject()) {
+        throwUnexpectedTypeError(
+            runtime,
+            c10::typeKindToString(kind),
+            helpers::jsValueKindToString(jsValue));
+      }
+      auto& keyType =
+          dynamicType.containedType(0)->expectRef<c10::DynamicType>();
+      auto& valueType =
+          dynamicType.containedType(1)->expectRef<c10::DynamicType>();
+      auto jsObject = jsValue.asObject(runtime);
+      auto dict = c10::impl::GenericDict(
+          dynamicType.containedType(0), dynamicType.containedType(1));
+      auto keys = jsObject.getPropertyNames(runtime);
+      auto keysLength = keys.length(runtime);
+      for (int i = 0; i < keysLength; i++) {
+        auto key = keys.getValueAtIndex(runtime, i);
+        dict.insert(
+            jsiValuetoIValue(runtime, key, keyType),
+            jsiValuetoIValue(
+                runtime,
+                jsObject.getProperty(runtime, key.asString(runtime)),
+                valueType));
+      }
+      return dict;
+    }
     default:
       throwUnsupportedTypeError(
           runtime,

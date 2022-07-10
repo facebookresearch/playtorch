@@ -347,3 +347,29 @@ TEST_F(TorchliveConverterRuntimeTest, jsiValueInputUnmatchIValue) {
           *c10::DynamicType::create(*c10::IntType::get())),
       std::exception);
 }
+
+TEST_F(TorchliveConverterRuntimeTest, jsValuecObjectToIValueDict) {
+  auto intTypePtr = c10::DynamicType::create(*c10::IntType::get());
+  auto intListTypePtr =
+      c10::DynamicType::create(*c10::ListType::get("IntListPtr", intTypePtr));
+  auto stringTypePtr = c10::DynamicType::create(*c10::StringType::get());
+  auto dictTypePtr = c10::DynamicType::create(
+      *c10::DictType::get("DictPtr", stringTypePtr, intListTypePtr));
+  const jsi::Value& jsArraryOneD = jsi::Array::createWithElements(
+      *rt, {jsi::Value(1), jsi::Value(2), jsi::Value(3)});
+  auto jsObject = jsi::Object(*rt);
+  jsObject.setProperty(*rt, "apple", jsArraryOneD);
+  const jsi::Value& jsValue = jsi::Value(*rt, jsObject);
+  auto iValue = jsiValuetoIValue(*rt, jsValue, *dictTypePtr);
+
+  EXPECT_TRUE(iValue.isGenericDict());
+  for (auto& item : iValue.toGenericDict()) {
+    auto key = item.key();
+    auto val = item.value();
+    EXPECT_TRUE(key.isString());
+    EXPECT_TRUE(val.isIntList());
+  }
+  EXPECT_EQ(iValue.toGenericDict().at("apple").toIntList().vec()[0], 1);
+  EXPECT_EQ(iValue.toGenericDict().at("apple").toIntList().vec()[1], 2);
+  EXPECT_EQ(iValue.toGenericDict().at("apple").toIntList().vec()[2], 3);
+}

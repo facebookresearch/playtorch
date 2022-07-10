@@ -45,7 +45,7 @@ shapes. The default style is `#000` (black).
 
 #### Defined in
 
-[CanvasView.tsx:91](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L91)
+[CanvasView.tsx:91](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L91)
 
 ___
 
@@ -63,7 +63,7 @@ specifier.
 
 #### Defined in
 
-[CanvasView.tsx:102](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L102)
+[CanvasView.tsx:102](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L102)
 
 ___
 
@@ -88,7 +88,7 @@ Lines can be drawn with the [stroke](canvasview.canvasrenderingcontext2d.md#stro
 
 #### Defined in
 
-[CanvasView.tsx:120](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L120)
+[CanvasView.tsx:120](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L120)
 
 ___
 
@@ -122,7 +122,7 @@ and `"miter"`. The default is `"miter"`.
 
 #### Defined in
 
-[CanvasView.tsx:147](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L147)
+[CanvasView.tsx:147](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L147)
 
 ___
 
@@ -138,7 +138,7 @@ The `lineWidth` property of the Canvas 2D API sets the thickness of lines.
 
 #### Defined in
 
-[CanvasView.tsx:156](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L156)
+[CanvasView.tsx:156](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L156)
 
 ___
 
@@ -152,7 +152,7 @@ The `miterLimit` property of the Canvas 2D API sets the miter limit ratio.
 
 #### Defined in
 
-[CanvasView.tsx:163](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L163)
+[CanvasView.tsx:163](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L163)
 
 ___
 
@@ -169,7 +169,7 @@ for the strokes (outlines) around shapes. The default is `#000` (black).
 
 #### Defined in
 
-[CanvasView.tsx:173](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L173)
+[CanvasView.tsx:173](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L173)
 
 ___
 
@@ -192,7 +192,7 @@ example, if `textAlign` is `"center"`, then the text's left edge will be at
 
 #### Defined in
 
-[CanvasView.tsx:189](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L189)
+[CanvasView.tsx:189](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L189)
 
 ## Methods
 
@@ -231,7 +231,7 @@ clockwise).
 
 #### Defined in
 
-[CanvasView.tsx:213](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L213)
+[CanvasView.tsx:213](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L213)
 
 ___
 
@@ -249,7 +249,7 @@ a new path.
 
 #### Defined in
 
-[CanvasView.tsx:227](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L227)
+[CanvasView.tsx:227](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L227)
 
 ___
 
@@ -267,7 +267,7 @@ Clears the entire canvas to be transparent.
 
 #### Defined in
 
-[CanvasView.tsx:234](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L234)
+[CanvasView.tsx:234](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L234)
 
 ___
 
@@ -297,7 +297,7 @@ transparent black (`rgba(0,0,0,0)`). The rectangle's corner is at
 
 #### Defined in
 
-[CanvasView.tsx:249](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L249)
+[CanvasView.tsx:249](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L249)
 
 ___
 
@@ -319,7 +319,7 @@ the path using the [stroke](canvasview.canvasrenderingcontext2d.md#stroke) or [f
 
 #### Defined in
 
-[CanvasView.tsx:260](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L260)
+[CanvasView.tsx:260](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L260)
 
 ___
 
@@ -345,7 +345,7 @@ Draws a circle at `(x, y)` with the given `radius`.
 
 #### Defined in
 
-[CanvasView.tsx:271](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L271)
+[CanvasView.tsx:271](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L271)
 
 ___
 
@@ -370,7 +370,7 @@ to draw an image onto the canvas.
 
 #### Defined in
 
-[CanvasView.tsx:281](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L281)
+[CanvasView.tsx:281](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L281)
 
 ▸ **drawImage**(`image`, `dx`, `dy`, `dWidth`, `dHeight`): `void`
 
@@ -393,7 +393,7 @@ to draw an image onto the canvas.
 
 #### Defined in
 
-[CanvasView.tsx:293](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L293)
+[CanvasView.tsx:293](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L293)
 
 ▸ **drawImage**(`image`, `sx`, `sy`, `sWidth`, `sHeight`, `dx`, `dy`, `dWidth`, `dHeight`): `void`
 
@@ -420,7 +420,7 @@ draw an image onto the canvas.
 
 #### Defined in
 
-[CanvasView.tsx:315](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L315)
+[CanvasView.tsx:315](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L315)
 
 ___
 
@@ -461,7 +461,7 @@ ctx.fill(region, 'evenodd');
 
 #### Defined in
 
-[CanvasView.tsx:355](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L355)
+[CanvasView.tsx:355](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L355)
 
 ___
 
@@ -487,7 +487,7 @@ Fill a circle at `(x, y)` with the given `radius`.
 
 #### Defined in
 
-[CanvasView.tsx:366](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L366)
+[CanvasView.tsx:366](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L366)
 
 ___
 
@@ -518,7 +518,7 @@ ctx.fillRect(10, 20, 30, 40);
 
 #### Defined in
 
-[CanvasView.tsx:382](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L382)
+[CanvasView.tsx:382](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L382)
 
 ___
 
@@ -560,7 +560,7 @@ ctx.fillText('Hello world', 50, 90);
 
 #### Defined in
 
-[CanvasView.tsx:409](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L409)
+[CanvasView.tsx:409](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L409)
 
 ___
 
@@ -604,7 +604,7 @@ pixels outside the canvas are transparent black in the returned
 
 #### Defined in
 
-[CanvasView.tsx:438](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L438)
+[CanvasView.tsx:438](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L438)
 
 ___
 
@@ -620,7 +620,7 @@ Invalidate the canvas resulting in a repaint.
 
 #### Defined in
 
-[CanvasView.tsx:448](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L448)
+[CanvasView.tsx:448](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L448)
 
 ___
 
@@ -649,7 +649,7 @@ directly render anything. To draw the path onto a canvas, you can use the
 
 #### Defined in
 
-[CanvasView.tsx:462](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L462)
+[CanvasView.tsx:462](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L462)
 
 ___
 
@@ -673,7 +673,7 @@ point specified by the given `(x, y)` coordinates.
 
 #### Defined in
 
-[CanvasView.tsx:471](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L471)
+[CanvasView.tsx:471](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L471)
 
 ___
 
@@ -714,7 +714,7 @@ and `dirtyHeight` params.
 
 #### Defined in
 
-[CanvasView.tsx:497](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L497)
+[CanvasView.tsx:497](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L497)
 
 ___
 
@@ -754,7 +754,7 @@ The `rect()` method creates a rectangular path whose starting point is at
 
 #### Defined in
 
-[CanvasView.tsx:522](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L522)
+[CanvasView.tsx:522](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L522)
 
 ___
 
@@ -774,7 +774,7 @@ For more information about the drawing state, see [CanvasRenderingContext2D.save
 
 #### Defined in
 
-[CanvasView.tsx:531](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L531)
+[CanvasView.tsx:531](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L531)
 
 ___
 
@@ -801,7 +801,7 @@ center point, you will need to move the canvas by using the
 
 #### Defined in
 
-[CanvasView.tsx:543](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L543)
+[CanvasView.tsx:543](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L543)
 
 ___
 
@@ -825,7 +825,7 @@ The drawing state that gets saved onto a stack consists of:
 
 #### Defined in
 
-[CanvasView.tsx:556](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L556)
+[CanvasView.tsx:556](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L556)
 
 ___
 
@@ -856,7 +856,7 @@ the normal size.
 
 #### Defined in
 
-[CanvasView.tsx:572](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L572)
+[CanvasView.tsx:572](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L572)
 
 ___
 
@@ -894,7 +894,7 @@ The newer type consists of a single parameter, `matrix`, representing a 2D trans
 
 #### Defined in
 
-[CanvasView.tsx:595](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L595)
+[CanvasView.tsx:595](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L595)
 
 ___
 
@@ -928,7 +928,7 @@ void ctx.stroke(path);
 
 #### Defined in
 
-[CanvasView.tsx:625](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L625)
+[CanvasView.tsx:625](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L625)
 
 ___
 
@@ -957,7 +957,7 @@ The `strokeRect()` function draws a stroked rectangle whose starting point is at
 
 #### Defined in
 
-[CanvasView.tsx:639](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L639)
+[CanvasView.tsx:639](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L639)
 
 ___
 
@@ -1001,7 +1001,7 @@ ctx.strokeText('Hello world', 50, 90);
 
 #### Defined in
 
-[CanvasView.tsx:668](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L668)
+[CanvasView.tsx:668](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L668)
 
 ___
 
@@ -1029,4 +1029,4 @@ and `y` units vertically on the grid.
 
 #### Defined in
 
-[CanvasView.tsx:681](https://github.com/pytorch/live/blob/99ecf4b/react-native-pytorch-core/src/CanvasView.tsx#L681)
+[CanvasView.tsx:681](https://github.com/pytorch/live/blob/f270d5c/react-native-pytorch-core/src/CanvasView.tsx#L681)

@@ -3,7 +3,7 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-from typing import Dict, List
+from typing import Dict, List, Tuple
 
 import torch
 from torch import Tensor
@@ -67,6 +67,18 @@ class DummyTestModel(torch.nn.Module):
     def sum_tensors(self, dictionary: Dict[str, Tensor]) -> Dict[str, Tensor]:
         return {key: torch.sum(dictionary[key]) for key in dictionary}
 
+    @torch.jit.export
+    def merge_tuple(
+        self,
+        t1: Tuple[str, float, Tuple[int, int]],
+        t2: Tuple[str, float, Tuple[int, int]],
+    ) -> Tuple[str, float, Tuple[int, int]]:
+        return (
+            t1[0] + t2[0],
+            t1[1] + t2[1],
+            (t1[2][0] + t2[2][0], t1[2][1] + t2[2][1]),
+        )
+
 
 scriptified_module = torch.jit.script(DummyTestModel())
 optimized_model = optimize_for_mobile(
@@ -79,6 +91,7 @@ optimized_model = optimize_for_mobile(
         "concate_keys",
         "sum_values",
         "sum_tensors",
+        "merge_tuple",
     ],
 )
 optimized_model._save_for_lite_interpreter("dummy_test_model.ptl")

@@ -26,6 +26,8 @@ import {
   Module,
 } from 'react-native-pytorch-core';
 
+type ComplexTuple = [string, number, [number, number]];
+
 type TestModule = Module & {
   bump: (start: number, step?: number) => Promise<number>;
   bumpSync: (start: number, step?: number) => number;
@@ -45,6 +47,11 @@ type TestModule = Module & {
   sum_tensorsSync: (dictionary: {[index: string]: Tensor}) => {
     [index: string]: Tensor;
   };
+  merge_tuple: (
+    tuple1: ComplexTuple,
+    tuple2: ComplexTuple,
+  ) => Promise<ComplexTuple>;
+  merge_tupleSync: (tuple1: ComplexTuple, tuple2: ComplexTuple) => ComplexTuple;
 };
 
 const PRINTABLE_LENGTH = 20;
@@ -104,7 +111,11 @@ const Testunit = ({name, testFunc}: TestUnitItem) => {
               setOutputTextColor('dodgerblue');
             } catch (e) {
               setOutputTextColor('hotpink');
-              setOutput(e.message);
+              if (e instanceof Error) {
+                setOutput(e.message);
+              } else {
+                setOutput('unknonw exception thrown');
+              }
             }
           }}>
           <Text style={styles.buttonTxt}>{name}</Text>
@@ -120,6 +131,35 @@ const Testunit = ({name, testFunc}: TestUnitItem) => {
 };
 
 const testUnitList = [
+  {
+    name: 'generic tuple input',
+    testFunc: async () => {
+      console.log('------Test generic tuple input-------');
+      let model_url = await MobileModel.download(
+        require('../../assets/models/dummy_test_model.ptl'),
+      );
+      let model = await torch.jit._loadForMobile<TestModule>(model_url);
+      let t1: ComplexTuple = ['light', 3.14, [1, 2]];
+      let t2: ComplexTuple = ['light', 3.14, [1, 2]];
+      let output1 = await model.merge_tuple(t1, t2);
+      let output2 = model.merge_tupleSync(t1, t2);
+      console.log(output1);
+      console.log(output2);
+
+      try {
+        await model.merge_tuple(
+          ['light', 3.14, [1, 1.5]],
+          ['light', 3.14, [1, 2]],
+        );
+      } catch (e) {
+        if (e instanceof Error) {
+          console.log('Exception caught correctly: ', e.message);
+        } else {
+          throw 'unknown exception thrown.';
+        }
+      }
+    },
+  },
   {
     name: 'generic dict input',
     testFunc: async () => {
@@ -162,7 +202,11 @@ const testUnitList = [
       try {
         await model.sum_two_d([[1, 2, 3.5]]);
       } catch (e) {
-        console.log(e.message);
+        if (e instanceof Error) {
+          console.log(e.message);
+        } else {
+          throw 'unknown exception thrown.';
+        }
       }
     },
   },

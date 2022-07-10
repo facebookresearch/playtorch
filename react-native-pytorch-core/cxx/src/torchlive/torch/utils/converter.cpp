@@ -180,6 +180,28 @@ torch_::jit::IValue jsiValuetoIValue(
       }
       return list;
     }
+    case c10::TypeKind::TupleType: {
+      // A tuple is represented as Array in JS
+      if (!jsValue.isObject()) {
+        throwUnexpectedTypeError(
+            runtime,
+            c10::typeKindToString(kind),
+            helpers::jsValueKindToString(jsValue));
+      } else if (!jsValue.asObject(runtime).isArray(runtime)) {
+        throwUnexpectedTypeError(
+            runtime, c10::typeKindToString(kind), "unknown object");
+      }
+      auto jsTuple = jsValue.asObject(runtime).asArray(runtime);
+      auto expectedSize = dynamicType.containedTypeSize();
+      auto initializerVector = std::vector<c10::IValue>();
+      for (int i = 0; i < expectedSize; i++) {
+        auto& childType =
+            dynamicType.containedType(i)->expectRef<c10::DynamicType>();
+        initializerVector.emplace_back(jsiValuetoIValue(
+            runtime, jsTuple.getValueAtIndex(runtime, i), childType));
+      }
+      return c10::ivalue::Tuple::create(std::move(initializerVector));
+    }
     case c10::TypeKind::DictType: {
       if (!jsValue.isObject()) {
         throwUnexpectedTypeError(

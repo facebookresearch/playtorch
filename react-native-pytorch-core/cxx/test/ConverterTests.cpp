@@ -373,3 +373,24 @@ TEST_F(TorchliveConverterRuntimeTest, jsValuecObjectToIValueDict) {
   EXPECT_EQ(iValue.toGenericDict().at("apple").toIntList().vec()[1], 2);
   EXPECT_EQ(iValue.toGenericDict().at("apple").toIntList().vec()[2], 3);
 }
+
+TEST_F(TorchliveConverterRuntimeTest, jsValueTupleToIValue) {
+  auto intTypePtr = c10::DynamicType::create(*c10::IntType::get());
+  auto stringTypePtr = c10::DynamicType::create(*c10::StringType::get());
+  auto tuple1DTypePtr = c10::DynamicType::create(
+      *c10::TupleType::create({intTypePtr, stringTypePtr}));
+  auto tuple2DTypePtr = c10::DynamicType::create(
+      *c10::TupleType::create({intTypePtr, tuple1DTypePtr}));
+  auto jsTuple1D = jsi::Array::createWithElements(
+      *rt, {jsi::Value(1), jsi::String::createFromUtf8(*rt, "apple")});
+  const jsi::Value& jsTuple2D = jsi::Array::createWithElements(
+      *rt, {jsi::Value(2), jsi::Value(*rt, jsTuple1D)});
+  auto iValue = jsiValuetoIValue(*rt, jsTuple2D, *tuple2DTypePtr);
+  EXPECT_TRUE(iValue.isTuple());
+  EXPECT_EQ(iValue.toTuple()->size(), 2);
+  EXPECT_EQ(iValue.toTuple()->elements().at(0), 2);
+  EXPECT_TRUE(iValue.toTuple()->elements().at(1).isTuple());
+  EXPECT_EQ(iValue.toTuple()->elements().at(1).toTuple()->elements().at(0), 1);
+  EXPECT_EQ(
+      iValue.toTuple()->elements().at(1).toTuple()->elements().at(1), "apple");
+}

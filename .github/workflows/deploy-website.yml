@@ -27,6 +27,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
+          cache: yarn
+          cache-dependency-path: website/yarn.lock
       - name: Install dependencies 🧶
         run: yarn install --frozen-lockfile
       - name: Test build website 🧪
@@ -44,12 +46,15 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
+          cache: yarn
+          cache-dependency-path: website/yarn.lock
       - name: Install dependencies 🧶
         run: yarn install --frozen-lockfile
       - name: Build website 🔨
         run: yarn build
       - name: Deploy website 🚀
-        uses: JamesIves/github-pages-deploy-action@4.1.4
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          branch: gh-pages
-          folder: website/build
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          # Build output to publish to the `gh-pages` branch:
+          publish_dir: ./website/build

@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/build-template-android.yml'
       - 'react-native-pytorch-core/android/**'
+      - 'react-native-pytorch-core/cxx/**'
       - 'react-native-template-pytorch-live/template/android/**'
       - 'react-native-pytorch-core/package.json'
       - 'react-native-pytorch-core/yarn.lock'
@@ -14,6 +15,7 @@ on:
     paths:
       - '.github/workflows/build-template-android.yml'
       - 'react-native-pytorch-core/android/**'
+      - 'react-native-pytorch-core/cxx/**'
       - 'react-native-template-pytorch-live/template/android/**'
       - 'react-native-pytorch-core/package.json'
       - 'react-native-pytorch-core/yarn.lock'

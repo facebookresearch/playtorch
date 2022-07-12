@@ -6,6 +6,7 @@ on:
     paths:
       - '.github/workflows/build-template-ios.yml'
       - 'react-native-pytorch-core/*.podspec'
+      - 'react-native-pytorch-core/cxx/**'
       - 'react-native-pytorch-core/ios/**'
       - 'react-native-pytorch-core/example/ios/**'
       - 'react-native-template-pytorch-live/template/ios/**'
@@ -18,6 +19,7 @@ on:
     paths:
       - '.github/workflows/build-template-ios.yml'
       - 'react-native-pytorch-core/*.podspec'
+      - 'react-native-pytorch-core/cxx/**'
       - 'react-native-pytorch-core/ios/**'
       - 'react-native-pytorch-core/example/ios/**'
       - 'react-native-template-pytorch-live/template/ios/**'

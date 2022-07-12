@@ -124,4 +124,213 @@ TEST_F(TorchliveMediaRuntimeTest, BlobSizeTest) {
   EXPECT_EQ(eval(code).getNumber(), 3);
 }
 
+TEST_F(TorchliveMediaRuntimeTest, BlobSliceTest) {
+  // Empty inputs - slice()
+  std::string data = "[2, 3, 4, 5, 6]";
+  std::string expectedResult = "[2, 3, 4, 5, 6]";
+  std::string code = fmt::format(
+      R"(
+        const tensor = torch.tensor({data}, {{dtype: torch.uint8}});
+        let blob = media.toBlob(tensor);
+        blob = blob.slice();
+        blob.arrayBuffer();
+      )",
+      fmt::arg("data", data));
+
+  std::string evalCode = fmt::format(
+      R"(
+        const expectedResult = {expectedResult};
+        result.every((value, i) => value === expectedResult[i])
+      )",
+      fmt::arg("expectedResult", expectedResult));
+
+  EXPECT_TRUE(evalPromise(code, "result", evalCode).getBool());
+
+  // Empty inputs - slice()
+  // Return a new Blob with empty args.
+  data = "[2, 3, 4, 5, 6]";
+  code = fmt::format(
+      R"(
+        const tensor = torch.tensor({data}, {{dtype: torch.uint8}});
+        let blob1 = media.toBlob(tensor);
+        let blob2 = blob1.slice();
+        blob1 === blob2;
+      )",
+      fmt::arg("data", data));
+
+  EXPECT_FALSE(eval(code).getBool());
+
+  // One valid positive input - slice(start)
+  data = "[2, 3, 4, 5, 6]";
+  expectedResult = "[4, 5, 6]";
+  code = fmt::format(
+      R"(
+        const tensor = torch.tensor({data}, {{dtype: torch.uint8}});
+        let blob = media.toBlob(tensor);
+        blob = blob.slice(2);
+        blob.arrayBuffer();
+      )",
+      fmt::arg("data", data));
+
+  evalCode = fmt::format(
+      R"(
+        const expectedResult = {expectedResult};
+        result.every((value, i) => value === expectedResult[i])
+      )",
+      fmt::arg("expectedResult", expectedResult));
+
+  EXPECT_TRUE(evalPromise(code, "result", evalCode).getBool());
+
+  // One valid negative input - slice(start)
+  data = "[2, 3, 4, 5, 6]";
+  expectedResult = "[4, 5, 6]";
+  code = fmt::format(
+      R"(
+        const tensor = torch.tensor({data}, {{dtype: torch.uint8}});
+        let blob = media.toBlob(tensor);
+        blob = blob.slice(-3);
+        blob.arrayBuffer();
+      )",
+      fmt::arg("data", data));
+
+  evalCode = fmt::format(
+      R"(
+        const expectedResult = {expectedResult};
+        result.every((value, i) => value === expectedResult[i])
+      )",
+      fmt::arg("expectedResult", expectedResult));
+
+  EXPECT_TRUE(evalPromise(code, "result", evalCode).getBool());
+
+  // One invalid positive input - slice(start)
+  data = "[2, 3, 4, 5, 6]";
+  expectedResult = "[]";
+  code = fmt::format(
+      R"(
+        const tensor = torch.tensor({data}, {{dtype: torch.uint8}});
+        let blob = media.toBlob(tensor);
+        blob = blob.slice(10);
+        blob.arrayBuffer();
+      )",
+      fmt::arg("data", data));
+
+  evalCode = fmt::format(
+      R"(
+        const expectedResult = {expectedResult};
+        result.every((value, i) => value === expectedResult[i])
+      )",
+      fmt::arg("expectedResult", expectedResult));
+
+  EXPECT_TRUE(evalPromise(code, "result", evalCode).getBool());
+
+  // One invalid negative input - slice(start)
+  data = "[2, 3, 4, 5, 6]";
+  expectedResult = "[]";
+  code = fmt::format(
+      R"(
+        const tensor = torch.tensor({data}, {{dtype: torch.uint8}});
+        let blob = media.toBlob(tensor);
+        blob = blob.slice(-7);
+        blob.arrayBuffer();
+      )",
+      fmt::arg("data", data));
+
+  evalCode = fmt::format(
+      R"(
+        const expectedResult = {expectedResult};
+        result.every((value, i) => value === expectedResult[i])
+      )",
+      fmt::arg("expectedResult", expectedResult));
+
+  EXPECT_TRUE(evalPromise(code, "result", evalCode).getBool());
+
+  // Two inputs - slice(start, end)
+  // Valid positive case
+  data = "[2, 3, 4, 5, 6]";
+  expectedResult = "[3, 4, 5]";
+  code = fmt::format(
+      R"(
+        const tensor = torch.tensor({data}, {{dtype: torch.uint8}});
+        let blob = media.toBlob(tensor);
+        blob = blob.slice(1, 4);
+        blob.arrayBuffer();
+      )",
+      fmt::arg("data", data));
+
+  evalCode = fmt::format(
+      R"(
+        const expectedResult = {expectedResult};
+        result.every((value, i) => value === expectedResult[i])
+      )",
+      fmt::arg("expectedResult", expectedResult));
+
+  EXPECT_TRUE(evalPromise(code, "result", evalCode).getBool());
+
+  // Two inputs - slice(start, end)
+  // Valid negative case
+  data = "[2, 3, 4, 5, 6]";
+  expectedResult = "[3, 4, 5]";
+  code = fmt::format(
+      R"(
+        const tensor = torch.tensor({data}, {{dtype: torch.uint8}});
+        let blob = media.toBlob(tensor);
+        blob = blob.slice(-4, -1);
+        blob.arrayBuffer();
+      )",
+      fmt::arg("data", data));
+
+  evalCode = fmt::format(
+      R"(
+        const expectedResult = {expectedResult};
+        result.every((value, i) => value === expectedResult[i])
+      )",
+      fmt::arg("expectedResult", expectedResult));
+
+  EXPECT_TRUE(evalPromise(code, "result", evalCode).getBool());
+
+  // Two inputs - slice(start, end)
+  // Invalid positive case
+  data = "[2, 3, 4, 5, 6]";
+  expectedResult = "[]";
+  code = fmt::format(
+      R"(
+        const tensor = torch.tensor({data}, {{dtype: torch.uint8}});
+        let blob = media.toBlob(tensor);
+        blob = blob.slice(4, 3);
+        blob.arrayBuffer();
+      )",
+      fmt::arg("data", data));
+
+  evalCode = fmt::format(
+      R"(
+        const expectedResult = {expectedResult};
+        result.every((value, i) => value === expectedResult[i])
+      )",
+      fmt::arg("expectedResult", expectedResult));
+
+  EXPECT_TRUE(evalPromise(code, "result", evalCode).getBool());
+
+  // Two inputs - slice(start, end)
+  // Invalid negative case
+  data = "[2, 3, 4, 5, 6]";
+  expectedResult = "[]";
+  code = fmt::format(
+      R"(
+        const tensor = torch.tensor({data}, {{dtype: torch.uint8}});
+        let blob = media.toBlob(tensor);
+        blob = blob.slice(-3, -5);
+        blob.arrayBuffer();
+      )",
+      fmt::arg("data", data));
+
+  evalCode = fmt::format(
+      R"(
+        const expectedResult = {expectedResult};
+        result.every((value, i) => value === expectedResult[i])
+      )",
+      fmt::arg("expectedResult", expectedResult));
+
+  EXPECT_TRUE(evalPromise(code, "result", evalCode).getBool());
+}
+
 } // namespace

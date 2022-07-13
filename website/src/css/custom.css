@@ -222,7 +222,7 @@ div[class^='announcementBar_'] {
 }
 
 /* Background gradient on landing page and community page */
-.main-wrapper:not([class^='docsWrapper'], [class*=' docsWrapper']) {
+.main-wrapper.gradient-background {
   background-image:
   radial-gradient(ellipse 70% 70% at 0% 0%,#050006ff 0%, #05000600 100%),
   radial-gradient(ellipse 100% 20% at 100% 0%,#ee4c2cff 0%, #ee4c2c00 100%),

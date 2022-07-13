@@ -38,7 +38,7 @@ function SocialIcon({name, color = 'white'}) {
 function Community() {
   const graphicUrl = require('@site/static/img/community_network.png').default;
   return (
-    <Layout title="Community">
+    <Layout title="Community" wrapperClassName="gradient-background">
       <div className={clsx(styles.heroBanner)}>
         <div className="container">
           <div className={clsx(['row', styles.headRow])}>

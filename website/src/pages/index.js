@@ -169,7 +169,7 @@ export default function Home() {
   );
 
   return (
-    <Layout>
+    <Layout wrapperClassName="gradient-background">
       <div className={styles.balloon} style={balloonStyle} />
       <main>
         <div className="container">

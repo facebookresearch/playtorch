@@ -21,6 +21,8 @@ on:
       - 'react-native-pytorch-core/yarn.lock'
       - 'react-native-template-pytorch-live/template/yarn.lock'
 
+  workflow_dispatch:
+
 jobs:
   build:
     name: Build Android Template App

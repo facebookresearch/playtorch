@@ -11,7 +11,6 @@ import React from 'react';
 import clsx from 'clsx';
 import Layout from '@theme/Layout';
 import styles from './community.module.css';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 
 function Card({thumbnail, title, children}) {
   const imgUrl = thumbnail
@@ -38,9 +37,6 @@ function SocialIcon({name, color = 'white'}) {
 
 function Community() {
   const graphicUrl = require('@site/static/img/community_network.png').default;
-  const {siteConfig} = useDocusaurusContext();
-  const {customFields} = siteConfig;
-
   return (
     <Layout title="Community">
       <div className={clsx(styles.heroBanner)}>

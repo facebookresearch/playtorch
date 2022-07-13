@@ -196,9 +196,9 @@ task extractAARForNativeBuild {
     }
 }
 
-
+def configureCMakeTaskName = Integer.parseInt(appRnMinorVersion) < 68 ? "externalNativeBuild" : "configureCMake"
 tasks.whenTaskAdded { task ->
-  if (task.name.contains('externalNativeBuild')) {
+  if (task.name.contains(configureCMakeTaskName)) {
     task.dependsOn(extractAARHeaders)
     task.dependsOn(extractJNIFiles)
     task.dependsOn(extractAARForNativeBuild)

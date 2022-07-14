@@ -6,27 +6,35 @@ title: Add Package to Existing App
 
 import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
 
-<div className="tutorial-page">
+In this tutorial, you will learn how to add the PyTorch Live core package to an existing React Native project.
 
-<div className="tutorial-oneliner">In this tutorial, you will learn how to add the PyTorch Live core package to an existing React Native project.</div>
+If you have an existing React Native project and you want to add ML capabilities, you can add the `react-native-pytorch-core` package. This package includes all code needed to run ML inference, the `Canvas`, `Camera`, `ImageUtil`, and `AudioUtil`.
 
-If you have an existing React Native project and you want to add ML capabilities, you can add the `react-native-pytorch-core` package. This package includes all code needed to run ML inference, the `Canvas`, `Camera`, and the `ImageUtils`.
-
-## Installation
+# Installation
 
 ```shell
 yarn add react-native-pytorch-core
 ```
 
+:::caution
+
+If you are on React Native 0.68+, you will have to use the `nightly` version of the core package. A fix has been added in commit [fix RN0.68 can't build with react-native-pytorch-core](https://github.com/pytorch/live/commit/2cf281fea6fca9e2615b46045a3b13fb08eb93c5), which is currently only available in the `nightly` version.
+
+```shell
+yarn add react-native-pytorch-core@nightly
+```
+
+:::
+
 On iOS you are done, but Android requires the following additional steps for the `react-native-pytorch-core` package to work.
 
-### Additional Assets for Metro
+## Additional Assets for Metro
 
 If the PyTorch Mobile models are part of the React Native bundle, the Metro configuration needs to be changed to resolve the `ptl` files.
 
 :::note
 
-This is only required if models are loaded from the bundle using `require('./path/to/model.ptl')`. It is not required if models are loaded from the local file system or via a URL.
+This is only required if models are loaded from the bundle using `require('./path/to/model.ptl')`. It is not required if models are loaded from the mobile device's local file system or via a URL.
 
 :::
 
@@ -47,11 +55,11 @@ module.exports = {
 
 ```
 
-### Additional steps on Android
+## Additional steps on Android
 
 For the `react-native-pytorch-core` React Native package to work on Android, it requires three changes to the `gradle.properties` and the two `build.gradle` files to increase JVM memory, add Sonatype repository, and packaging options with pick first rule.
 
-#### Increase JVM Memory
+### Increase JVM Memory
 
 Increase the memory for the JVM to avoid OutOfMemory exceptions during the packaging process.
 
@@ -68,7 +76,7 @@ Execution failed for task ':app:packageDebug'.
    > java.lang.OutOfMemoryError (no error message)
 ```
 
-#### Sonatype Repository
+### Sonatype Repository
 
 The PyTorch Mobile for Android dependencies are in the Sonatype repository. Add the repository url to the `allprojects > repositories`.
 
@@ -86,13 +94,31 @@ allprojects {
 }
 ```
 
-#### Packaging Options
+### Update app build.gradle
 
-Add `pickFirst` rule to `packagingOptions`. This is required because both React Native and PyTorch Mobile for Android use `fbjni`. This rule will pick the first shared object (dynamic) library.
+Both React Native and PyTorch Mobile for Android use `fbjni`. For example, the versions for PyTorch Live that are used for development are:
 
-:::note
+* React Native `0.64.3` uses fbjni `0.0.2`
+* PyTorch Mobile `1.12.2` uses fbjni `0.2.2`.
 
-The comment for the `packagingOptions` shows the error that will show if `pickFirst` is not set.
+So far, `fbjni` is forward compatible, which means it is ok to pick the latest version shipped with either of the two dependencies. At this point, it is fbjni `0.2.2`. For Gradle to pick the right version, the `android/app/build.gradle` needs to have a few adjustments:
+
+1. Add `pickFirst` rule to `packagingOptions`. This rule will pick the first shared object (dynamic) library. It will give higher priority to shared object libraries that are coming with direct app dependencies, which is why 2. is important.
+2. Set up an extra directory for fbjni where the fbjni version `0.2.2` from the dependency added in 3. will be extracted. Also add the relevant task to the `build.gradle` file (see `task extraJNILibs` and `tasks.whenTaskAdded` after the `dependencies` definition)
+3. Add fbjni `0.2.2` as direct app dependency.
+
+See the [`build.gradle`](https://github.com/pytorch/live/blob/main/react-native-pytorch-core/example/android/app/build.gradle) in the `react-native-pytorch-core` example app for a possible configuration.
+
+:::info
+
+The following error will show if `pickFirst` is not set:
+
+```
+* What went wrong:
+Execution failed for task ':app:mergeDebugNativeLibs'.
+> A failure occurred while executing com.android.build.gradle.internal.tasks.Workers$ActionFacade
+   > More than one file was found with OS independent path 'lib/x86/libfbjni.so'
+```
 
 :::
 
@@ -111,13 +137,155 @@ android {
     packagingOptions {
         pickFirst '**/*.so'
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs += ["$buildDir/extra-jniLibs/jni"]
+        }
+    }
+    configurations {
+        extraJNILibs
+    }
 
     // ...
 }
+
+dependencies {
+    // ...
+
+    // Used to control the version of libfbjni.so packaged into the APK
+    extraJNILibs("com.facebook.fbjni:fbjni:0.2.2")
+
+    // ...
+}
+
+// ...
+
+// Extract JNI shared libraries as project libraries. This assumes the target directory, $buildDir/extra-jniLibs, is added to the jniLibs.srcDirs configuration.
+task extraJNILibs {
+  doLast {
+    configurations.extraJNILibs.files.each {
+      def file = it.absoluteFile
+
+      copy {
+        from zipTree(file)
+        into "$buildDir/extra-jniLibs" // temp location instead of "src/main/jniLibs"
+        include "jni/**/*"
+      }
+    }
+  }
+}
+
+tasks.whenTaskAdded { task ->
+  if (task.name == 'mergeDebugJniLibFolders' || task.name == 'mergeReleaseJniLibFolders') {
+    task.dependsOn(extraJNILibs)
+  }
+}
+
+// ...
 ```
 
-## Give us feedback
+### Configure JavaScript Interface for React Native app
+
+Last, add the `PyTorchCoreJSIModulePackage` to the `ReactNativeHost` in the app's `MainApplication.java`.
+
+:::info
+
+**JavaScript Interface (JSI)**
+
+A lightweight and VM-independent layer that helps in communication between JavaScript and native platforms easier and faster. It supports Webkit JSC, Custom JSC, and [Hermes](https://hermesengine.dev/).
+
+**JSI Documentation**
+
+The [jsi.h](https://github.com/facebook/hermes/blob/main/API/jsi/jsi/jsi.h) in the Hermes GitHub repository and has a really well-documented C++ header, which is a great place to learn more about JSI.
+
+PyTorch Live uses the JavaScript Interface (JSI) to expose PyTorch Mobile C++ functions
+
+:::
+
+```java title="./android/app/src/main/java/<your-package-path>/MainApplication.java"
+import com.facebook.react.bridge.JSIModulePackage;
+import org.pytorch.rn.core.jsi.PyTorchCoreJSIModulePackage;
+
+// ...
+
+      new ReactNativeHostWrapper(
+          this,
+          new ReactNativeHost(this) {
+            // ...
+
+            @Override
+            protected JSIModulePackage getJSIModulePackage() {
+              return new PyTorchCoreJSIModulePackage();
+            }
+          });
+```
+
+Great! You are done if you don't use other React Native packages that rely on JSI, otherwise continue!
+
+#### Configure multiple React Native packages using JSI
+
+If you use other React Native packages with JSI packages, you will have to create a `JSIModulePackage` that combines all of them. For example, if you use React Reanimated and PyTorch Live Core create a `CustomJSIModulePackage` and return this in the `ReactNativeHost` implementation.
+
+```java title="./android/app/src/main/java/<your-package-path>/CustomJSIModulePackage.java"
+package <your-package-path>;
+
+import androidx.annotation.Keep;
+import com.facebook.proguard.annotations.DoNotStrip;
+import com.facebook.react.bridge.JSIModulePackage;
+import com.facebook.react.bridge.JSIModuleSpec;
+import com.facebook.react.bridge.JavaScriptContextHolder;
+import com.facebook.react.bridge.ReactApplicationContext;
+import com.facebook.soloader.SoLoader;
+import com.swmansion.reanimated.ReanimatedJSIModulePackage;
+import java.util.List;
+import org.pytorch.rn.core.jsi.PyTorchCoreJSIModulePackage;
+
+/**
+ * This is a custom JSIModulePackage that combines ReanimatedJSIModulePackage and
+ * PyTorchCoreJSIModulePackage. It is needed because the ReactNativeHostWrapper only supports
+ * returning a single JSIModulePackage.
+ */
+@DoNotStrip
+@Keep
+public class CustomJSIModulePackage implements JSIModulePackage {
+
+  @DoNotStrip
+  @Keep
+  @Override
+  public List<JSIModuleSpec> getJSIModules(
+      ReactApplicationContext reactApplicationContext, JavaScriptContextHolder jsContext) {
+    ReanimatedJSIModulePackage reaJSIModulePackage = new ReanimatedJSIModulePackage();
+    PyTorchCoreJSIModulePackage ptlJSIModulePackage = new PyTorchCoreJSIModulePackage();
+
+    List<JSIModuleSpec> retList =
+        reaJSIModulePackage.getJSIModules(reactApplicationContext, jsContext);
+    ptlJSIModulePackage.getJSIModules(reactApplicationContext, jsContext);
+
+    return retList;
+  }
+}
+```
+
+```java title="./android/app/src/main/java/<your-package-path>/MainApplication.java"
+// ...
+import com.facebook.react.bridge.JSIModulePackage;
+
+      new ReactNativeHostWrapper(
+          this,
+          new ReactNativeHost(this) {
+            // ...
+
+            @Override
+            protected JSIModulePackage getJSIModulePackage() {
+              // The CustomJSIModulePackage combines JSIModulePackage from different React Native
+              // packages (e.g., Reanimated2 and PyTorch Live).
+              return new CustomJSIModulePackage();
+            }
+          });
+```
+
+That should be all necessary Gradle build configuration changes!
+
+# Give us feedback
 
 <SurveyLinkButton docTitle="Add Package to Existing App" />
-
-</div>

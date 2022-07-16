@@ -10,12 +10,13 @@
 #include <jsi/jsi.h>
 #include <map>
 
+#include "../common/BaseHostObject.h"
 #include "../torchlive.h"
 
 namespace torchlive {
 namespace torch {
 
-class JSI_EXPORT TorchHostObject : public facebook::jsi::HostObject {
+class JSI_EXPORT TorchHostObject : public common::BaseHostObject {
   facebook::jsi::Function arange_;
   facebook::jsi::Function empty_;
   facebook::jsi::Function eye_;

@@ -16,6 +16,7 @@
 #include "TensorHostObject.h"
 #include "TorchHostObject.h"
 #include "jit/JITNamespace.h"
+#include "utils/ArgumentParser.h"
 #include "utils/constants.h"
 #include "utils/helpers.h"
 
@@ -69,10 +70,34 @@ const std::vector<std::string> METHODS = {
     ZEROS,
 };
 
+namespace {
+jsi::Value catImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  argParser.requireNumArguments(1);
+  auto jsArray = arguments[0].asObject(runtime).asArray(runtime);
+  std::vector<torch_::Tensor> tensors;
+  auto size = jsArray.size(runtime);
+  for (int i = 0; i < size; i++) {
+    const auto val = jsArray.getValueAtIndex(runtime, i);
+    tensors.emplace_back(utils::helpers::parseTensor(runtime, &val)->tensor);
+  }
+  auto dimValue = argParser.keywordValue(1, "dim");
+  int dim = dimValue.isUndefined() ? 0 : dimValue.asNumber();
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, torch_::cat(tensors, dim));
+}
+} // namespace
+
 TorchHostObject::TorchHostObject(
     jsi::Runtime& runtime,
     torchlive::RuntimeExecutor runtimeExecutor)
-    : arange_(createArange(runtime)),
+    : BaseHostObject(runtime),
+      arange_(createArange(runtime)),
       empty_(createEmpty(runtime)),
       eye_(createEye(runtime)),
       fromBlob_(createFromBlob(runtime)),
@@ -112,11 +137,13 @@ TorchHostObject::TorchHostObject(
           {utils::constants::PRESERVE_FORMAT,
            utils::constants::PRESERVE_FORMAT},
       },
-      jit_(torchlive::torch::jit::buildNamespace(runtime, runtimeExecutor)) {}
+      jit_(torchlive::torch::jit::buildNamespace(runtime, runtimeExecutor)) {
+  setPropertyHostFunction(runtime, "cat", 2, catImpl);
+}
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(
     jsi::Runtime& rt) {
-  std::vector<jsi::PropNameID> result;
+  auto result = BaseHostObject::getPropertyNames(rt);
   for (std::string property : PROPERTIES) {
     result.push_back(jsi::PropNameID::forUtf8(rt, property));
   }
@@ -146,7 +173,7 @@ jsi::Value TorchHostObject::get(
     return jsi::Value(runtime, jit_);
   }
 
-  return jsi::Value::undefined();
+  return BaseHostObject::get(runtime, propName);
 };
 
 jsi::Function TorchHostObject::createArange(jsi::Runtime& runtime) {

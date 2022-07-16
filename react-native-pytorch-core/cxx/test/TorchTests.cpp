@@ -394,4 +394,41 @@ TEST_F(TorchliveRuntimeTest, TorchOnesTest) {
   EXPECT_THROW(eval("torch.ones()"), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveRuntimeTest, TorchCatTest) {
+  // default dim would be 0 if not specified
+  EXPECT_EQ(
+      eval(
+          "torch.cat([torch.rand([2,3,4]), torch.rand([2,3,4]), torch.rand([2,3,4])]).shape[0]")
+          .getNumber(),
+      6);
+
+  // concat with specified dim
+  EXPECT_EQ(
+      eval(
+          "torch.cat([torch.rand([2,3,4]), torch.rand([2,3,4]), torch.rand([2,3,4])], {dim: 1}).shape[0]")
+          .getNumber(),
+      2);
+  EXPECT_EQ(
+      eval(
+          "torch.cat([torch.rand([2,3,4]), torch.rand([2,3,4]), torch.rand([2,3,4])], {dim: 1}).shape[1]")
+          .getNumber(),
+      9);
+
+  // float tensor concat int tensor would end up to be float tensor
+  EXPECT_TRUE(
+      eval(
+          "torch.cat([torch.rand([2,3,4]), torch.randint(0, 255, [2,3,4]), torch.rand([2,3,4])], {dim: 2}).dtype === torch.float32")
+          .getBool());
+
+  // Unmatched shape can't concat
+  EXPECT_THROW(
+      eval("torch.cat([torch.rand([2,3,4]), torch.rand([2,3,5])]).shape[0]")
+          .getNumber(),
+      facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("torch.cat([torch.rand([2,3,4]), torch.rand([2,3])]).shape[0]")
+          .getNumber(),
+      facebook::jsi::JSError);
+}
+
 } // namespace

@@ -166,6 +166,15 @@ export interface Tensor {
    */
   argmax(options?: {dim?: number; keepdim?: boolean}): Tensor;
   /**
+   * Concatenate a list of tensors along the specified axis, which default to be axis 0
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.cat.html}
+   *
+   * @param tensors A sequence of Tensor to be concatenated.
+   * @param options used to specify the dimenstion to concate.
+   */
+  cat(tensors: Tensor[], options?: {dim?: number}): Tensor;
+  /**
    * Clamps all elements in input into the range `[ min, max ]`.
    *
    * If `min` is `undefined`, there is no lower bound. Or, if `max` is `undefined` there is no upper bound.

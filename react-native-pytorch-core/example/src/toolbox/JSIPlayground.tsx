@@ -132,6 +132,22 @@ const Testunit = ({name, testFunc}: TestUnitItem) => {
 
 const testUnitList = [
   {
+    name: 'torch.cat',
+    testFunc: async () => {
+      console.log('------Test torch.cat-------');
+      const t1 = torch.zeros([1, 24, 24]);
+      const t2 = torch.ones([1, 24, 24]).mul(255);
+      const mask = torch.cat([t1, t1, t1, t2]);
+      console.log(
+        mask.shape,
+        mask[0][0][0].item(),
+        mask[1][0][0].item(),
+        mask[2][0][0].item(),
+        mask[3][0][0].item(),
+      );
+    },
+  },
+  {
     name: 'generic tuple input',
     testFunc: async () => {
       console.log('------Test generic tuple input-------');

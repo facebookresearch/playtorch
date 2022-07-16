@@ -17,7 +17,7 @@ The Blob interface's size property returns the size of the Blob in bytes.
 
 #### Defined in
 
-[torchlive/media.ts:23](https://github.com/pytorch/live/blob/db77142/react-native-pytorch-core/src/torchlive/media.ts#L23)
+[torchlive/media.ts:23](https://github.com/pytorch/live/blob/b64dc9c/react-native-pytorch-core/src/torchlive/media.ts#L23)
 
 ## Methods
 
@@ -34,7 +34,7 @@ contents of the blob as binary data contained in an ArrayBuffer.
 
 #### Defined in
 
-[torchlive/media.ts:19](https://github.com/pytorch/live/blob/db77142/react-native-pytorch-core/src/torchlive/media.ts#L19)
+[torchlive/media.ts:19](https://github.com/pytorch/live/blob/b64dc9c/react-native-pytorch-core/src/torchlive/media.ts#L19)
 
 ___
 
@@ -69,4 +69,4 @@ within the blob on which this method was called. The original blob is not altere
 
 #### Defined in
 
-[torchlive/media.ts:51](https://github.com/pytorch/live/blob/db77142/react-native-pytorch-core/src/torchlive/media.ts#L51)
+[torchlive/media.ts:51](https://github.com/pytorch/live/blob/b64dc9c/react-native-pytorch-core/src/torchlive/media.ts#L51)

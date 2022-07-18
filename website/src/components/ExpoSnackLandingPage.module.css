@@ -26,3 +26,18 @@
 .expoSnack {
   height: 100%;
 }
+
+.appStoreLogo {
+  height: 16px;
+  width: 16px;
+}
+
+.appStoreButtonContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.appStoreButtonText {
+  margin-left: 6px;
+}

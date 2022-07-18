@@ -10,8 +10,21 @@
 import React from 'react';
 import clsx from 'clsx';
 import ExpoSnack from '@site/src/components/ExpoSnack';
-import styles from './ExpoSnackRouter.module.css';
+import styles from './ExpoSnackLandingPage.module.css';
 import RedirectStarterSnack from './RedirectStarterSnack';
+import AppleLogoSvg from '@site/static/img/apple_logo_white.svg';
+import AndroidLogoSvg from '@site/static/img/android_logo_white.svg';
+
+function AppStoreButton({href, LogoComponent, label}) {
+  return (
+    <a className="button button--primary margin--xs" href={href}>
+      <div className={clsx(styles.appStoreButtonContainer)}>
+        <LogoComponent className={clsx(styles.appStoreLogo)} />
+        <div className={clsx(styles.appStoreButtonText)}>{label}</div>
+      </div>
+    </a>
+  );
+}
 
 export default function ExpoSnackLandingPage({match}) {
   const {expoSnackPath} = match.params;
@@ -33,21 +46,27 @@ export default function ExpoSnackLandingPage({match}) {
                   mobile AI experiences.
                 </p>
                 <div>
+                  <p className="margin-bottom--sm">Already have the app?</p>
                   <a
                     className="button button--primary margin--xs"
                     href={`playtorch://snack?snackUrl=exp://exp.host/${expoSnackPath}`}>
                     Open with PlayTorch
                   </a>
-                  <a
-                    className="button button--primary button--outline margin--xs"
-                    href="https://play.google.com/store/apps/details?id=dev.playtorch">
-                    Download PlayTorch for Android
-                  </a>
-                  <a
-                    className="button button--primary button--outline margin--xs"
-                    href="https://[TODO ADD URL]">
-                    Download PlayTorch for iOS
-                  </a>
+                </div>
+                <div className="margin-top--lg">
+                  <p className="margin-bottom--sm">
+                    This snack requires the PlayTorch app to get started.
+                  </p>
+                  <AppStoreButton
+                    href="https://apps.apple.com/us/app/playtorch/id1632121045"
+                    LogoComponent={AppleLogoSvg}
+                    label="Download PlayTorch for iOS"
+                  />
+                  <AppStoreButton
+                    href="https://play.google.com/store/apps/details?id=dev.playtorch"
+                    LogoComponent={AndroidLogoSvg}
+                    label="Download PlayTorch for Android"
+                  />
                 </div>
               </div>
             </div>

@@ -8,6 +8,7 @@
  */
 
 import React, {useEffect, useRef} from 'react';
+import clsx from 'clsx';
 import {useThemeConfig} from '@docusaurus/theme-common';
 import styles from './ExpoSnack.module.css';
 
@@ -19,7 +20,7 @@ import styles from './ExpoSnack.module.css';
  * More details about Expo Snack attributes:
  * https://github.com/expo/snack/blob/main/docs/embedding-snacks.md
  */
-export default function ExpoSnack({snackId}) {
+export default function ExpoSnack({snackPreview = true, snackId, snackStyle}) {
   const {isDarkTheme} = useThemeConfig();
   const snackContainerRef = useRef(null);
   // This is a workaround to initialize Expo Snacks when navigating between
@@ -35,11 +36,11 @@ export default function ExpoSnack({snackId}) {
   return (
     <div
       ref={snackContainerRef}
-      className={styles.expoSnack}
+      className={clsx([styles.expoSnack, snackStyle])}
       data-snack-id={snackId}
       data-snack-loading="lazy"
       data-snack-platform="mydevice"
-      data-snack-preview="true"
+      data-snack-preview={snackPreview}
       data-snack-supported-platforms="mydevice"
       data-snack-theme={isDarkTheme ? 'dark' : 'light'}
     />

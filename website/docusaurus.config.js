@@ -11,6 +11,7 @@ const {fbContent} = require('internaldocs-fb-helpers');
 const katex = require('rehype-katex');
 const math = require('remark-math');
 const npm2yarn = require('@docusaurus/remark-plugin-npm2yarn');
+const path = require('path');
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
@@ -176,6 +177,23 @@ module.exports = {
     ],
   ],
   plugins: [
+    [
+      path.resolve(__dirname, 'plugin-dynamic-routes'),
+      {
+        routes: [
+          {
+            path: '/expo',
+            exact: false,
+            component: '@site/src/components/ExpoSnackRouter',
+          },
+          {
+            path: '/snack',
+            exact: false,
+            component: '@site/src/components/ExpoSnackRouter',
+          },
+        ],
+      },
+    ],
     [
       'docusaurus-plugin-typedoc',
       {

@@ -65,6 +65,11 @@ module.exports = {
           label: 'Community',
         },
         {
+          to: 'faq',
+          position: 'right',
+          label: 'FAQ',
+        },
+        {
           href: 'https://github.com/facebookresearch/playtorch',
           position: 'right',
           className: 'header-github-link',
@@ -215,6 +220,17 @@ module.exports = {
           indexLabel: 'Overview',
         },
         watch: process.env.TYPEDOC_WATCH,
+      },
+    ],
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [
+          {
+            to: '/docs/tutorials/get-started/',
+            from: '/tutorials',
+          },
+        ],
       },
     ],
   ],

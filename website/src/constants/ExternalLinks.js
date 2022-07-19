@@ -10,10 +10,12 @@
 const ExternalLinks = {
   APP_STORE: 'https://apps.apple.com/us/app/playtorch/id1632121045',
   DISCORD: 'https://discord.gg/sQkXTqEt33',
-  GITHUB: 'https://github.com/pytorch/live',
+  GITHUB: 'https://github.com/facebookresearch/playtorch',
   GOOGLE_PLAY_STORE:
     'https://play.google.com/store/apps/details?id=dev.playtorch',
   TWITTER: 'https://twitter.com/playtorch',
+  PRIVACY_POLICY: 'https://www.facebook.com/privacy/policy',
+  TERMS_OF_SERVICE: 'https://www.facebook.com/legal/terms',
 };
 
 export default ExternalLinks;

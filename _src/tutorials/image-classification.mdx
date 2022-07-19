@@ -14,11 +14,11 @@ import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
 
 <div className="tutorial-oneliner">In this tutorial, you will build an app that can take pictures and classify objects in each image using an on-device image classification model.</div>
 
-If you haven't installed the PyTorch Live CLI yet, please [follow this tutorial](./get-started.mdx) to get started.
+If you haven't installed the PlayTorch CLI yet, please [follow this tutorial](./get-started.mdx) to get started.
 
 ## Initialize New Project
 
-Let's start by initializing a new project `ImageClassificationTutorial` with the PyTorch Live CLI.
+Let's start by initializing a new project `ImageClassificationTutorial` with the PlayTorch CLI.
 
 ```shell
 npx torchlive-cli init ImageClassificationTutorial
@@ -38,7 +38,7 @@ cd ImageClassificationTutorial
 
 ### Run the project in the Android emulator or iOS Simulator
 
-The `run-android` and `run-ios` commands from the PyTorch Live CLI allow you to run the image classification project in the Android emulator or iOS Simulator.
+The `run-android` and `run-ios` commands from the PlayTorch CLI allow you to run the image classification project in the Android emulator or iOS Simulator.
 
 <Tabs
   defaultValue="android"
@@ -322,11 +322,11 @@ Known problem: If the images aren't immediately processed frame by frame, flip t
   </TabItem>
 </Tabs>
 
-Congratulations! You finished your first PyTorch Live tutorial.
+Congratulations! You finished your first PlayTorch tutorial.
 
 ## Next steps
 
-PyTorch Live comes with three image classification models that are ready to use. In the example code provided in this tutorial, we use `mobilenet_v3_small.ptl` for inference, but feel free to try out the others by replacing the `model` with code from the tabbed viewer below.
+PlayTorch comes with three image classification models that are ready to use. In the example code provided in this tutorial, we use `mobilenet_v3_small.ptl` for inference, but feel free to try out the others by replacing the `model` with code from the tabbed viewer below.
 
 <Tabs
   defaultValue="mobilenet-v3-small"

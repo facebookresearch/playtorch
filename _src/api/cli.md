@@ -8,7 +8,7 @@ import TOCInline from '@theme/TOCInline';
 
 <div className="tutorial-page">
 
-The PyTorch Live CLI (i.e., `torchlive-cli`) provides a set of commands to help you install build dependencies, initialize new PyTorch Live projects, build and deploy them to emulator or physical devices.
+The PlayTorch CLI (i.e., `torchlive-cli`) provides a set of commands to help you install build dependencies, initialize new PlayTorch projects, build and deploy them to emulator or physical devices.
 
 ## Prerequisites
 
@@ -18,9 +18,9 @@ The PyTorch Live CLI (i.e., `torchlive-cli`) provides a set of commands to help 
 
 <TOCInline toc={toc} />
 
-## PyTorch Live CLI commands {#torchlive-cli-commands}
+## PlayTorch CLI commands {#torchlive-cli-commands}
 
-Below is a list of PyTorch Live CLI commands and their usages:
+Below is a list of PlayTorch CLI commands and their usages:
 
 #### Options {#options}
 
@@ -31,7 +31,7 @@ Below is a list of PyTorch Live CLI commands and their usages:
 
 ### `npx torchlive-cli setup-dev` {#torchlive-cli-setup-dev}
 
-The PyTorch Live CLI provides a setup routine to install all required build dependencies including tooling like Yarn, Watchman, and CocoaPods, SDKs like OpenJDK, Android SDK, Android SDK Manager, Android Virtual Device Manager, and an Android Emulator, and it installs a default emulator device ready to be used with PyTorch Live projects.
+The PlayTorch CLI provides a setup routine to install all required build dependencies including tooling like Yarn, Watchman, and CocoaPods, SDKs like OpenJDK, Android SDK, Android SDK Manager, Android Virtual Device Manager, and an Android Emulator, and it installs a default emulator device ready to be used with PlayTorch projects.
 
 ```shell
 npx torchlive-cli setup-dev
@@ -73,7 +73,7 @@ torchlive version 0.0.2-alpha.19
 
 ### `npx-torchlive-cli init [options] [name]` {#torchlive-cli-init}
 
-Initialize a new PyTorch Live project.
+Initialize a new PlayTorch project.
 
 ```shell
 npx torchlive-cli init MyFirstProject
@@ -88,7 +88,7 @@ npx torchlive-cli init MyFirstProject
 
 ### `npx torchlive-cli run-android [options]` {#torchlive-cli-run-android}
 
-Runs the PyTorch Live project on an Android emulator. It will run the project on a physical device if it is connected.
+Runs the PlayTorch project on an Android emulator. It will run the project on a physical device if it is connected.
 
 ```shell
 npx torchlive-cli run-android
@@ -106,15 +106,15 @@ If you want to deploy the app on your own device, you have to put it into develo
 
 | Name             | Default                              | Description                                                         |
 | ---------------- | ------------------------------------ | ------------------------------------------------------------------- |
-| `--name`, `-n`   | `"pytorch_live"`                     | Run PyTorch Live project on a specific Android Virtual Device (AVD) |
+| `--name`, `-n`   | `"pytorch_live"`                     | Run PlayTorch project on a specific Android Virtual Device (AVD) |
 
 ### `npx torchlive-cli run-ios` {#torchlive-cli-run-ios}
 
-Runs the PyTorch Live project on an iOS simulator.
+Runs the PlayTorch project on an iOS simulator.
 
 :::info
 
-In order to run a PyTorch Live project on an iOS simulator or a physical iOS device, you need to install Xcode from the Apple App Store on your macOS device. PyTorch Live currently supports Xcode version 12.5 or later.
+In order to run a PlayTorch project on an iOS simulator or a physical iOS device, you need to install Xcode from the Apple App Store on your macOS device. PlayTorch currently supports Xcode version 12.5 or later.
 
 :::
 
@@ -136,7 +136,7 @@ npx torchlive-cli clean
 
 ### `npx torchlive-cli emulator` {#torchlive-cli-emulator}
 
-Starts the emulator without building, deploying, and running the PyTorch Live project.
+Starts the emulator without building, deploying, and running the PlayTorch project.
 
 ```shell
 npx torchlive-cli emulator
@@ -158,7 +158,7 @@ Run the `npx torchlive-cli setup-dev` command if any of the health checks fail.
 
 ### `npx torchlive-cli log` {#torchlive-cli-log}
 
-Prints the PyTorch Live CLI logs to the terminal.
+Prints the PlayTorch CLI logs to the terminal.
 
 ```shell
 npx torchlive-cli log

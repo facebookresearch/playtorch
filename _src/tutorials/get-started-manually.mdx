@@ -16,9 +16,9 @@ import WhereToRun from './fb/_where-to-run.mdx';
 
 <div className="tutorial-page">
 
-<div className="tutorial-oneliner">In this tutorial, you will manually set up the build environment, create your first PyTorch Live project, and run it in an emulator or on your phone.</div>
+<div className="tutorial-oneliner">In this tutorial, you will manually set up the build environment, create your first PlayTorch project, and run it in an emulator or on your phone.</div>
 
-If you ended up here, your operating system is either Windows or Linux, or the PyTorch Live command line tool `torchlive-cli` failed for you. No worries, we have prepared manual steps for you to get started with PyTorch Live!
+If you ended up here, your operating system is either Windows or Linux, or the PlayTorch command line tool `torchlive-cli` failed for you. No worries, we have prepared manual steps for you to get started with PlayTorch!
 
 <FbInternalOnly>
 
@@ -28,7 +28,7 @@ If you ended up here, your operating system is either Windows or Linux, or the P
 
 ## Installation
 
-PyTorch Live is powered by [PyTorch Mobile](https://pytorch.org/mobile) and [React Native](https://reactnative.dev/). Both are active and flourishing open source projects and require the following dependencies:
+PlayTorch is powered by [PyTorch Mobile](https://pytorch.org/mobile) and [React Native](https://reactnative.dev/). Both are active and flourishing open source projects and require the following dependencies:
 
 <DevelopmentDependencies />
 
@@ -38,7 +38,7 @@ As a first step, let's follow their installation instructions to set up the deve
 
 ### Set up the PyTorch
 
-PyTorch Live uses `python3` to export PyTorch models for the PyTorch Mobile runtime. The export is part of each PyTorch Live app project initialization (see later steps). Run the following command to check if python3 is installed:
+PlayTorch uses `python3` to export PyTorch models for the PyTorch Mobile runtime. The export is part of each PlayTorch app project initialization (see later steps). Run the following command to check if python3 is installed:
 
 
 ```shell
@@ -93,11 +93,11 @@ Follow their installation instructions on: https://reactnative.dev/docs/environm
 
 ## Create a New Project
 
-Now that we have set up the build environment, let's create a new PyTorch Live project and run it in an emulator or on your device.
+Now that we have set up the build environment, let's create a new PlayTorch project and run it in an emulator or on your device.
 
 ### Initialize Your Project
 
-For PyTorch Live beta, we provide a React Native app template, packed with AI demos and practical examples. Use the `npx react-native init` command to initialize your first PyTorch Live project.
+For PlayTorch beta, we provide a React Native app template, packed with AI demos and practical examples. Use the `npx react-native init` command to initialize your first PlayTorch project.
 
 ```shell
 npx react-native init MyFirstProject --template react-native-template-pytorch-live
@@ -164,19 +164,19 @@ npx: installed 637 in 16.171s
 
 ### Run Your Project
 
-We are almost there. Now let's navigate to the newly created PyTorch Live project folder:
+We are almost there. Now let's navigate to the newly created PlayTorch project folder:
 
 ```shell
 cd MyFirstProject
 ```
 
-And run the PyTorch Live project on Android:
+And run the PlayTorch project on Android:
 
 ```shell
 npx react-native run-android
 ```
 
-By default, the PyTorch Live app will run in an emulator. You can also run it on your own phone which may improve performance. To run it on your phone, connect your phone to your computer and enable Android's developer mode.
+By default, the PlayTorch app will run in an emulator. You can also run it on your own phone which may improve performance. To run it on your phone, connect your phone to your computer and enable Android's developer mode.
 
 :::note
 On Android 4.1 and lower, the Developer options screen is available by default. On Android 4.2 and higher, you must enable this screen. To enable developer options, go to **Settings > Developer options** and tap the **Build Number** option 7 times.
@@ -185,15 +185,15 @@ More details are on the Android [configure on-device developer options](https://
 :::
 
 
-### Welcome to PyTorch Live
+### Welcome to PlayTorch
 
 Start by trying out the various **Examples** in the app. When you are ready to experiment, take a look at the **Toolbox** demos and follow along with a tutorial: [recognizing objects in photographs](./image-classification.mdx) or [answering questions about some text](./question-answering.mdx).
 
 <DocVideo asset="demo" />
 
-PyTorch Live is in beta. Your feedback will help us improve tremendously. Please file issues and share ideas on GitHub.
+PlayTorch is in beta. Your feedback will help us improve tremendously. Please file issues and share ideas on GitHub.
 
-Show us what you've made with PyTorch Live by tagging #pytorchlive in your social media posts.
+Show us what you've made with PlayTorch by tagging #pytorchlive in your social media posts.
 
 ## Give us feedback
 

@@ -17,8 +17,7 @@ const FeatureList = [
   {
     title: (
       <>
-        PyTorch Live helps you build mobile AI experiences in just a few
-        minutes.
+        PlayTorch helps you build mobile AI experiences in just a few minutes.
       </>
     ),
     description: 'Get started now',
@@ -89,7 +88,7 @@ function HomepageHeroVideo() {
       loop={true}
       muted={true}
       className="video__hero_video"
-      alt="PyTorch Live demo video">
+      alt="PlayTorch demo video">
       <source
         src={require('@site/static/video/hero_video.webm').default}
         type="video/webm"
@@ -115,7 +114,7 @@ export function HomepageDemos() {
   return (
     <div className="container padding-top--lg">
       <div className="col center">
-        <h1>Demos made with PyTorch Live</h1>
+        <h1>Demos made with PlayTorch</h1>
       </div>
       <div className="row">
         {FeatureList.map((props, idx) => (

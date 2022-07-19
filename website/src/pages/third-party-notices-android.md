@@ -588,7 +588,7 @@ THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH REGARD TO
 The following component are licensed under the MIT License license reproduced below.
 
 - **DefinitelyTyped**
-- **PyTorch Live** _, Copyright (c) Meta Platforms, Inc. and affiliates._
+- **PlayTorch** _, Copyright (c) Meta Platforms, Inc. and affiliates._
 - **abort-controller 3.0.0** _, Copyright (c) 2017 Toru Nagashima_
 - **absolute-path** _, Copyright (c) 2014 filearts_
 - **accepts 1.3.7** _, Copyright (c) 2014 Jonathan Ong &lt;me@jongleberry.com> Copyright (c) 2015 Douglas Christopher Wilson &lt;doug@somethingdoug.com>_

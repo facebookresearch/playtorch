@@ -70,10 +70,10 @@ function Community() {
             <div className="col col--8 col--offset-2">
               <h2 className={styles.showcaseTitle}>Join our community</h2>
               <p className={styles.showcaseInfo}>
-                PyTorch Live is in beta and we invite you to join us in our
-                social channels. <br />
+                PlayTorch is in beta and we invite you to join us in our social
+                channels. <br />
                 Share what you have made, tell us what you need, and help us
-                improve PyTorch Live.
+                improve PlayTorch.
               </p>
             </div>
           </div>

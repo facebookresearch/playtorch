@@ -1,5 +1,3 @@
-<div style={{backgroundColor: 'white', padding: '2rem', borderRadius: '0.5rem'}}>
-
 # **Third Party Notices**
 
 THE FOLLOWING SETS FORTH ATTRIBUTION NOTICES FOR THIRD PARTY SOFTWARE THAT MAY BE CONTAINED IN PORTIONS OF THIS PRODUCT.
@@ -971,5 +969,3 @@ Glenn Randers-Pehrson
 glennrp at users.sourceforge.net
 
 December 9, 2010
-
-</div>

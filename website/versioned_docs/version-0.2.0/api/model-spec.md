@@ -7,13 +7,13 @@ sidebar_position: 5
 
 :::caution
 
-The model specification will be deprecated and replaced by the PyTorch Live API for JavaScript Interface (JSI).
+The model specification will be deprecated and replaced by the PlayTorch API for JavaScript Interface (JSI).
 
 :::
 
 <div className="tutorial-page">
 
-A PyTorch Live model consists of two components: (1) A model file saved for the PyTorch "lite" interpreter format; and (2) a JSON file with details on the model input and output types. The JSON file is stored within the model file itself as an [extra_file of the model](https://pytorch.org/docs/stable/generated/torch.jit.load.html#torch.jit.load) with the name `model/live.spec.json`.
+A PlayTorch model consists of two components: (1) A model file saved for the PyTorch "lite" interpreter format; and (2) a JSON file with details on the model input and output types. The JSON file is stored within the model file itself as an [extra_file of the model](https://pytorch.org/docs/stable/generated/torch.jit.load.html#torch.jit.load) with the name `model/live.spec.json`.
 
 Example of model with specification preparation:
 

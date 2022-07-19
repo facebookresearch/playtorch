@@ -10,15 +10,15 @@ import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
 
 <div className="tutorial-page">
 
-<div className="tutorial-oneliner">In this tutorial, we will learn how to prepare a custom AI model so that it can be integrated into a PyTorch Live demo.</div>
+<div className="tutorial-oneliner">In this tutorial, we will learn how to prepare a custom AI model so that it can be integrated into a PlayTorch demo.</div>
 
-PyTorch Live works with high-level data types such as images and strings. To run inference, these high-level data types need to be transformed into tensors and the model output needs to be transformed into high-level data types. Transforming a high-level data type into a tensor is called `pack` and transforming a tensor into a high-level data type is called `unpack`.
+PlayTorch works with high-level data types such as images and strings. To run inference, these high-level data types need to be transformed into tensors and the model output needs to be transformed into high-level data types. Transforming a high-level data type into a tensor is called `pack` and transforming a tensor into a high-level data type is called `unpack`.
 
-Each model will have a `pack` and an `unpack`. Both are specified in the PyTorch Live Spec (or Live Spec for short). The Live Spec has to be bundled with the model `ptl` file as `extra_files`.
+Each model will have a `pack` and an `unpack`. Both are specified in the PlayTorch Spec (or Live Spec for short). The Live Spec has to be bundled with the model `ptl` file as `extra_files`.
 
 This section will guide you step-by-step for how to bundle the Live Spec with `pack` and `unpack` for an image classification model, more specifically the MobileNet V3 (small) model.
 
-We can do this bundling step from anywhere in our filesystem that has access to `python`. If you already have a PyTorch Live project, follow these steps from a subdirectory in the project directory, for example, `<PYTORCH_LIVE_PROJECT>/models`, so that the bundled model is in place and ready to go when we're done.
+We can do this bundling step from anywhere in our filesystem that has access to `python`. If you already have a PlayTorch project, follow these steps from a subdirectory in the project directory, for example, `<PLAYTORCH_PROJECT>/models`, so that the bundled model is in place and ready to go when we're done.
 
 ## Create Live Spec
 
@@ -108,7 +108,7 @@ Create the `make_model.py` file, add the Python script above, and then run Pytho
 python3 make_model.py
 ```
 
-If you already have a PyTorch Live project, and you haven't run the commands in the `<PYTORCH_LIVE_PROJECT>/models` directory, copy `mobilenet_v3_small.ptl` to the `<PYTORCH_LIVE_PROJECT>/models` directory. It will now be accessible to load and run in your PyTorch Live project using the path `models/mobilenet_v3_small.ptl`.
+If you already have a PlayTorch project, and you haven't run the commands in the `<PLAYTORCH_PROJECT>/models` directory, copy `mobilenet_v3_small.ptl` to the `<PLAYTORCH_PROJECT>/models` directory. It will now be accessible to load and run in your PlayTorch project using the path `models/mobilenet_v3_small.ptl`.
 
 ## Learn More About Live Spec
 

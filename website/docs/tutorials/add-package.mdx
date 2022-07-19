@@ -18,7 +18,7 @@ yarn add react-native-pytorch-core
 
 :::caution
 
-If you are on React Native 0.68+, you will have to use the `nightly` version of the core package. A fix has been added in commit [fix RN0.68 can't build with react-native-pytorch-core](https://github.com/pytorch/live/commit/2cf281fea6fca9e2615b46045a3b13fb08eb93c5), which is currently only available in the `nightly` version.
+If you are on React Native 0.68+, you will have to use the `nightly` version of the core package. A fix has been added in commit [fix RN0.68 can't build with react-native-pytorch-core](https://github.com/facebookresearch/playtorch/commit/2cf281fea6fca9e2615b46045a3b13fb08eb93c5), which is currently only available in the `nightly` version.
 
 ```shell
 yarn add react-native-pytorch-core@nightly
@@ -107,7 +107,7 @@ So far, `fbjni` is forward compatible, which means it is ok to pick the latest v
 2. Set up an extra directory for fbjni where the fbjni version `0.2.2` from the dependency added in 3. will be extracted. Also add the relevant task to the `build.gradle` file (see `task extraJNILibs` and `tasks.whenTaskAdded` after the `dependencies` definition)
 3. Add fbjni `0.2.2` as direct app dependency.
 
-See the [`build.gradle`](https://github.com/pytorch/live/blob/main/react-native-pytorch-core/example/android/app/build.gradle) in the `react-native-pytorch-core` example app for a possible configuration.
+See the [`build.gradle`](https://github.com/facebookresearch/playtorch/blob/main/react-native-pytorch-core/example/android/app/build.gradle) in the `react-native-pytorch-core` example app for a possible configuration.
 
 :::info
 

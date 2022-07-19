@@ -17,7 +17,7 @@ export default function SurveyLinkButton({docTitle}) {
    * It will be nice to have them all ready go to
    */
   const surveyUrl =
-    'https://github.com/pytorch/live/issues/new?assignees=&labels=Tutorial+Feedback&template=tutorial_feedback.yml';
+    'https://github.com/facebookresearch/playtorch/issues/new?assignees=&labels=Tutorial+Feedback&template=tutorial_feedback.yml';
   return (
     <a href={surveyUrl} target="_blank">
       <div className={styles.surveyLinkBox}>Share what we can improve!</div>

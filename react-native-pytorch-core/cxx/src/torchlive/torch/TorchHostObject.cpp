@@ -91,6 +91,37 @@ jsi::Value catImpl(
   return utils::helpers::createFromHostObject<TensorHostObject>(
       runtime, torch_::cat(tensors, dim));
 }
+
+/**
+ * Creates a tensor of size `size` filled with `fill_value`. The tensor’s dtype
+ * is inferred from `fill_value`.
+ *
+ * See https://pytorch.org/docs/stable/generated/torch.full.html
+ */
+jsi::Value fullImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  argParser.requireNumArguments(2);
+
+  std::vector<int64_t> dims = {};
+  auto jsShape = arguments[0].asObject(runtime).asArray(runtime);
+  auto shapeLength = jsShape.size(runtime);
+  for (int i = 0; i < shapeLength; i++) {
+    int x = jsShape.getValueAtIndex(runtime, i).asNumber();
+    dims.push_back(x);
+  }
+
+  const auto fillValue = arguments[1].asNumber();
+
+  const auto options =
+      utils::helpers::parseTensorOptions(runtime, arguments, 2, count);
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, torch_::full(dims, fillValue, options));
+}
 } // namespace
 
 TorchHostObject::TorchHostObject(
@@ -139,6 +170,7 @@ TorchHostObject::TorchHostObject(
       },
       jit_(torchlive::torch::jit::buildNamespace(runtime, runtimeExecutor)) {
   setPropertyHostFunction(runtime, "cat", 2, catImpl);
+  setPropertyHostFunction(runtime, "full", 2, fullImpl);
 }
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(

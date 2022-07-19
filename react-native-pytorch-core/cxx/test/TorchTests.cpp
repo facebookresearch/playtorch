@@ -431,4 +431,68 @@ TEST_F(TorchliveRuntimeTest, TorchCatTest) {
       facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveRuntimeTest, TorchFullTest) {
+  // Test full with a single dimension
+  EXPECT_EQ(eval("torch.full([4], 3.14).shape[0]").getNumber(), 4);
+  for (auto i = 0; i < 4; i++) {
+    std::string val_s = fmt::format("torch.full([4], 3.14)[{}].item()", i);
+    EXPECT_EQ(eval(val_s).getNumber(), 3.14f);
+  }
+
+  // Test full with multiple dimensions
+  EXPECT_EQ(eval("torch.full([2, 3], 3.14).shape[0]").getNumber(), 2);
+  EXPECT_EQ(eval("torch.full([2, 3], 3.14).shape[1]").getNumber(), 3);
+
+  // Test full with float32 dtype option (default), expecting 3.14f (C++ float)
+  EXPECT_EQ(
+      eval("torch.full([2, 3], 3.14, {dtype:'float32'}).shape[0]").getNumber(),
+      2);
+  EXPECT_EQ(
+      eval("torch.full([2, 3], 3.14, {dtype:'float32'}).shape[1]").getNumber(),
+      3);
+  for (auto i = 0; i < 2; i++) {
+    for (auto j = 0; j < 3; j++) {
+      std::string val_s = fmt::format(
+          "torch.full([2, 3], 3.14, {{dtype:'float32'}})[{}][{}].item()", i, j);
+      EXPECT_EQ(eval(val_s).getNumber(), 3.14f);
+    }
+  }
+
+  // Test full with float64 dtype option, expecting 3.14 (C++ double)
+  EXPECT_EQ(
+      eval("torch.full([2, 3], 3.14, {dtype:'float64'}).shape[0]").getNumber(),
+      2);
+  EXPECT_EQ(
+      eval("torch.full([2, 3], 3.14, {dtype:'float64'}).shape[1]").getNumber(),
+      3);
+  for (auto i = 0; i < 2; i++) {
+    for (auto j = 0; j < 3; j++) {
+      std::string val_s = fmt::format(
+          "torch.full([2, 3], 3.14, {{dtype:'float64'}})[{}][{}].item()", i, j);
+      EXPECT_EQ(eval(val_s).getNumber(), 3.14);
+    }
+  }
+
+  // Test full with int32 dtype option, expecting 3 (C++ int)
+  EXPECT_EQ(
+      eval("torch.full([2, 3], 3.14, {dtype:'int32'}).shape[0]").getNumber(),
+      2);
+  EXPECT_EQ(
+      eval("torch.full([2, 3], 3.14, {dtype:'int32'}).shape[1]").getNumber(),
+      3);
+  for (auto i = 0; i < 2; i++) {
+    for (auto j = 0; j < 3; j++) {
+      std::string val_s = fmt::format(
+          "torch.full([2, 3], 3.14, {{dtype:'int32'}})[{}][{}].item()", i, j);
+      EXPECT_EQ(eval(val_s).getNumber(), 3);
+    }
+  }
+
+  // Test full with no parameters (invalid).
+  EXPECT_THROW(eval("torch.full()"), facebook::jsi::JSError);
+
+  // Test full with one parameter (invalid).
+  EXPECT_THROW(eval("torch.full([1, 2])"), facebook::jsi::JSError);
+}
+
 } // namespace

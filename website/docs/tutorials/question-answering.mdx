@@ -14,13 +14,13 @@ import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
 
 <div className="tutorial-oneliner">In this tutorial, you will integrate an on-device NLP (Natural Language Processing) model that can answer questions about a short paragraph of text.</div>
 
-If you haven't installed the PyTorch Live CLI yet, please [follow this tutorial](./get-started.mdx) to get started.
+If you haven't installed the PlayTorch CLI yet, please [follow this tutorial](./get-started.mdx) to get started.
 
 If you get lost at any point in this tutorial, completed examples of each step can be found [here](https://github.com/pytorch/live/tree/main/examples/question-answering/).
 
 ## Initialize New Project
 
-Let's start by initializing a new project `QuestionAnsweringTutorial` with the PyTorch Live CLI.
+Let's start by initializing a new project `QuestionAnsweringTutorial` with the PlayTorch CLI.
 
 ```shell
 npx torchlive-cli init QuestionAnsweringTutorial
@@ -40,7 +40,7 @@ cd QuestionAnsweringTutorial
 
 ### Run the project in the Android emulator or iOS Simulator
 
-The `run-android` and `run-ios` commands from the PyTorch Live CLI allow you to run the question answering project in the Android emulator or iOS Simulator.
+The `run-android` and `run-ios` commands from the PlayTorch CLI allow you to run the question answering project in the Android emulator or iOS Simulator.
 
 <Tabs
   defaultValue="android"
@@ -189,7 +189,7 @@ token of every sequence is always a special classification token (i.e., `[CLS]`)
 
 :::note
 
-It will use the `bert_qa.ptl` model that is already prepared for PyTorch Live. You can follow the [Prepare Custom Model](./prepare-custom-model.mdx) tutorial to prepare your own NLP model and use this model instead for question answering.
+It will use the `bert_qa.ptl` model that is already prepared for PlayTorch. You can follow the [Prepare Custom Model](./prepare-custom-model.mdx) tutorial to prepare your own NLP model and use this model instead for question answering.
 
 :::
 

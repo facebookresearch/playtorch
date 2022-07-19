@@ -8,15 +8,15 @@ import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
 
 <div className="tutorial-page">
 
-<div className="tutorial-oneliner">In this tutorial, we will connect our PyTorch Live demo to the server we created in [the GPT server model tutorial](/docs/tutorials/server-model).</div>
+<div className="tutorial-oneliner">In this tutorial, we will connect our PlayTorch demo to the server we created in [the GPT server model tutorial](/docs/tutorials/server-model).</div>
 
-You will need to have completed that tutorial for this one to work as is. If you haven't installed the PyTorch Live CLI yet, please [follow this tutorial](./get-started.mdx) to get started.
+You will need to have completed that tutorial for this one to work as is. If you haven't installed the PlayTorch CLI yet, please [follow this tutorial](./get-started.mdx) to get started.
 
 If you are just looking for an example of how to connect to your own server model, feel free to follow along and adapt what we do to your situation.
 
 ## Create a new React Native project
 
-We will start by creating a new React Native project with the PyTorch Live template using the CLI. Run the following command:
+We will start by creating a new React Native project with the PlayTorch template using the CLI. Run the following command:
 
 ```shell
 npx torchlive-cli init GPTClient
@@ -33,7 +33,7 @@ yarn android
 
 ## Adding UI
 
-The aim of this tutorial is to help you integrate your PyTorch Live apps with server models, so we will not spend much time on the UI. We will add some handling for interactions, but won't discuss layout or styling.
+The aim of this tutorial is to help you integrate your PlayTorch apps with server models, so we will not spend much time on the UI. We will add some handling for interactions, but won't discuss layout or styling.
 
 That being said, we will start by copying the following code into the file `src/demos/MyDemos.tsx`:
 
@@ -412,7 +412,7 @@ Note that the GIF below is drastically sped up. Inference with the GPT model tak
 
 ![](/img/tutorial/connecting-to-a-server-model/working-gpt-demo.gif)
 
-You can find the [completed versions of the source code](https://github.com/pytorch/live/tree/main/examples/gpt3-server-tutorials/GPTClient) we've written in this tutorial in the `examples` folder Pytorch Live GitHub repo.
+You can find the [completed versions of the source code](https://github.com/pytorch/live/tree/main/examples/gpt3-server-tutorials/GPTClient) we've written in this tutorial in the `examples` folder PlayTorch GitHub repo.
 
 ## Next steps
 

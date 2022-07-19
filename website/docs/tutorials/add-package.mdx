@@ -6,7 +6,7 @@ title: Add Package to Existing App
 
 import SurveyLinkButton from '@site/src/components/SurveyLinkButton';
 
-In this tutorial, you will learn how to add the PyTorch Live core package to an existing React Native project.
+In this tutorial, you will learn how to add the PlayTorch core package to an existing React Native project.
 
 If you have an existing React Native project and you want to add ML capabilities, you can add the `react-native-pytorch-core` package. This package includes all code needed to run ML inference, the `Canvas`, `Camera`, `ImageUtil`, and `AudioUtil`.
 
@@ -96,7 +96,7 @@ allprojects {
 
 ### Update app build.gradle
 
-Both React Native and PyTorch Mobile for Android use `fbjni`. For example, the versions for PyTorch Live that are used for development are:
+Both React Native and PyTorch Mobile for Android use `fbjni`. For example, the versions for PlayTorch that are used for development are:
 
 * React Native `0.64.3` uses fbjni `0.0.2`
 * PyTorch Mobile `1.12.2` uses fbjni `0.2.2`.
@@ -198,7 +198,7 @@ A lightweight and VM-independent layer that helps in communication between JavaS
 
 The [jsi.h](https://github.com/facebook/hermes/blob/main/API/jsi/jsi/jsi.h) in the Hermes GitHub repository and has a really well-documented C++ header, which is a great place to learn more about JSI.
 
-PyTorch Live uses the JavaScript Interface (JSI) to expose PyTorch Mobile C++ functions
+PlayTorch uses the JavaScript Interface (JSI) to expose PyTorch Mobile C++ functions
 
 :::
 
@@ -224,7 +224,7 @@ Great! You are done if you don't use other React Native packages that rely on JS
 
 #### Configure multiple React Native packages using JSI
 
-If you use other React Native packages with JSI packages, you will have to create a `JSIModulePackage` that combines all of them. For example, if you use React Reanimated and PyTorch Live Core create a `CustomJSIModulePackage` and return this in the `ReactNativeHost` implementation.
+If you use other React Native packages with JSI packages, you will have to create a `JSIModulePackage` that combines all of them. For example, if you use React Reanimated and PlayTorch Core create a `CustomJSIModulePackage` and return this in the `ReactNativeHost` implementation.
 
 ```java title="./android/app/src/main/java/<your-package-path>/CustomJSIModulePackage.java"
 package <your-package-path>;
@@ -278,7 +278,7 @@ import com.facebook.react.bridge.JSIModulePackage;
             @Override
             protected JSIModulePackage getJSIModulePackage() {
               // The CustomJSIModulePackage combines JSIModulePackage from different React Native
-              // packages (e.g., Reanimated2 and PyTorch Live).
+              // packages (e.g., Reanimated2 and PlayTorch).
               return new CustomJSIModulePackage();
             }
           });

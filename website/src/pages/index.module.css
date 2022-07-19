@@ -7,13 +7,6 @@
  * @format
  */
 
-.titleWrapper {
-  padding: 0;
-  margin-top: 1rem;
-  position: absolute;
-  top: 0;
-}
-
 h1.title {
   font-size: 4rem;
   font-weight: 400;
@@ -22,18 +15,6 @@ h1.title {
   white-space: nowrap;
   margin: 0;
   padding: 0;
-}
-
-.beta {
-  font-weight: 500;
-  position: absolute;
-  top: -1rem;
-  left: 0px;
-  font-size: 0.7rem;
-  line-height: 1.2rem;
-  border-radius: 1.2rem;
-  padding: 2px 10px 0px;
-  background-color: rgba(255, 255, 255, 0.1);
 }
 
 .contentRow {
@@ -63,8 +44,6 @@ h1.title {
   display: flex;
   width: 100%;
   flex-direction: column;
-  /* border: 1px solid #fff; */
-  align-items: flex-start;
 }
 
 .odd {
@@ -94,7 +73,7 @@ h1.title {
   font-size: 2.2rem;
   line-height: 2.5rem;
   text-align: left;
-  font-weight: 400;
+  font-weight: 600;
   margin-left: 0px;
   margin-right: auto;
 }
@@ -130,12 +109,43 @@ h1.title {
   text-decoration: none;
 }
 
+.appStoreButtonRow {
+  display: flex;
+  flex-direction: row;
+  margin-top: 11px;
+}
+
+.appStoreButtonRow img {
+  max-width: none; /* unset 100% for button images */
+}
+
+.googlePlayButtonWrapper {
+  text-decoration: none;
+}
+
+.googlePlayBadge {
+  width: 155px;
+  height: 60px;
+}
+
+.appStoreButtonWrapper {
+  margin-left: 11px;
+  margin-top: 10px;
+  text-decoration: none;
+  vertical-align: top;
+}
+
+.appStoreBadge {
+  width: 120px;
+  height: 40px;
+}
+
 .odd .buttonWrapper {
   margin-left: 120px;
 }
 
 .buttonWrapper:hover .button {
-  background-color: #ee4c2c;
+  background-color: #6200ea;
 }
 
 .balloon {
@@ -154,8 +164,8 @@ h1.title {
     radial-gradient(ellipse 100% 60% at 70% 10%, #812ce5ff 0%, #812ce566 30%),
     radial-gradient(
       farthest-corner at 0% 70%,
-      #e93b43ff 0%,
-      #e93b43ff 30%,
+      #6200eaff 0%,
+      #6200eaff 30%,
       #e93b4300 60%
     ),
     radial-gradient(farthest-corner at 100% 80%, #4a6bc7ff 0%, #4a6bc700 30%);
@@ -164,11 +174,12 @@ h1.title {
 /* Tablet */
 @media only screen and (max-width: 1024px) and (min-device-width: 813px) {
   .message,
-  .buttonWrapper {
-    margin-left: 50px;
-  }
-  .video {
-    margin-left: 50px;
+  .buttonWrapper,
+  .video,
+  .odd .message,
+  .odd .buttonWrapper,
+  .odd .video {
+    margin-left: 20px;
   }
 
   h1.title {
@@ -208,6 +219,10 @@ h1.title {
     width: 100%;
   }
 
+  .appStoreButtonRow {
+    justify-content: center;
+  }
+
   .button {
     padding: 0 2rem;
   }
@@ -221,7 +236,12 @@ h1.title {
   }
 
   .firstRow {
-    margin-top: 20vh;
+    margin-top: 5vh;
+    flex-direction: column;
+  }
+
+  .firstRow .video {
+    margin-top: 5vh;
   }
 
   .titleWrapper {

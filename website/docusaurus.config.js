@@ -17,8 +17,8 @@ const path = require('path');
 module.exports = {
   title:
     'Easy to use set of tools to create on-device ML demos on Android and iOS. Unlock the vast potential of AI innovations.',
-  url: 'https://pytorch.org',
-  baseUrl: '/live/',
+  url: 'https://playtorch.dev',
+  baseUrl: '/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.ico',
@@ -38,20 +38,14 @@ module.exports = {
     navbar: {
       title: '',
       logo: {
-        alt: 'PyTorch Live Logo',
-        src: 'img/pytorch_logo_black.png',
-        href: 'https://pytorch.org',
-        target: '_self',
+        alt: 'PlayTorch Logo',
+        src: 'img/PlayTorch_Logo_N.svg',
+        href: 'https://playtorch.dev',
       },
       items: [
         {
           type: 'docsVersionDropdown',
           position: 'right',
-        },
-        {
-          href: '/',
-          position: 'right',
-          label: 'PyTorch Live',
         },
         {
           type: 'doc',
@@ -71,7 +65,7 @@ module.exports = {
           label: 'Community',
         },
         {
-          href: 'https://github.com/pytorch/live',
+          href: 'https://github.com/facebookresearch/playtorch',
           position: 'right',
           className: 'header-github-link',
           'aria-label': 'GitHub repository',
@@ -82,14 +76,14 @@ module.exports = {
       style: 'dark',
       links: [
         {
-          title: 'PyTorch Live',
+          title: 'PlayTorch Logo',
+          items: [],
+        },
+        {
+          title: 'PlayTorch',
           items: [
             {
-              label: 'Home',
-              to: '/',
-            },
-            {
-              label: 'Tutorials',
+              label: 'Tutorial',
               to: '/docs/tutorials/get-started',
             },
             {
@@ -100,10 +94,6 @@ module.exports = {
               label: 'Community',
               to: '/community',
             },
-            {
-              label: 'PyTorch',
-              to: 'https://pytorch.org',
-            },
           ],
         },
         {
@@ -111,11 +101,11 @@ module.exports = {
           items: [
             {
               label: 'GitHub',
-              href: 'https://github.com/pytorch/live/',
+              href: 'https://github.com/facebookresearch/playtorch',
             },
             {
               label: 'Stack Overflow',
-              href: 'https://stackoverflow.com/questions/tagged/pytorch-live',
+              href: 'https://stackoverflow.com/questions/tagged/playtorch',
             },
           ],
         },
@@ -125,13 +115,13 @@ module.exports = {
           items: [
             {
               label: 'Privacy',
-              href: 'https://opensource.facebook.com/legal/privacy/',
+              href: 'https://opensource.fb.com/legal/privacy/',
               target: '_blank',
               rel: 'noreferrer noopener',
             },
             {
               label: 'Terms',
-              href: 'https://opensource.facebook.com/legal/terms/',
+              href: 'https://opensource.fb.com/legal/terms/',
               target: '_blank',
               rel: 'noreferrer noopener',
             },
@@ -139,12 +129,12 @@ module.exports = {
         },
       ],
       logo: {
-        alt: 'Facebook Open Source Logo',
-        src: 'img/oss_logo.png',
-        href: 'https://opensource.facebook.com',
+        alt: 'Meta Open Source Logo',
+        src: 'img/oss_logo.svg',
+        href: 'https://opensource.fb.com',
       },
       // Please do not remove the credits, help to publicize Docusaurus :)
-      copyright: `Copyright © ${new Date().getFullYear()} Facebook, Inc. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} Meta, Inc. Built with Docusaurus.`,
     },
     algolia: {
       appId: 'A90B6S14WY',
@@ -164,7 +154,8 @@ module.exports = {
           editUrl: fbContent({
             internal:
               'https://www.internalfb.com/code/fbsource/xplat/pytorch/live/website',
-            external: 'https://github.com/pytorch/live/edit/main/website',
+            external:
+              'https://github.com/facebookresearch/playtorch/edit/main/website',
           }),
         },
         theme: {
@@ -233,11 +224,13 @@ module.exports = {
   ],
   customFields: {
     discordUrl: 'https://discord.gg/sQkXTqEt33',
-    githubUrl: 'https://github.com/pytorch/live/',
+    githubUrl: 'https://github.com/facebookresearch/playtorch',
     githubShowcaseUrl:
-      'https://github.com/pytorch/live/issues/new?assignees=&labels=Use%20Case&template=use_case.yml',
-    twitterTagUrl: 'https://twitter.com/search?q=%23pytorchlive',
-    stackoverflowTagUrl:
-      'https://stackoverflow.com/questions/tagged/pytorchlive',
+      'https://github.com/facebookresearch/playtorch/issues/new?assignees=&labels=Use%20Case&template=use_case.yml',
+    twitterTagUrl: 'https://twitter.com/search?q=%23playtorch',
+    stackoverflowTagUrl: 'https://stackoverflow.com/questions/tagged/playtorch',
+    appStoreUrl: 'https://apps.apple.com/us/app/playtorch/id1632121045',
+    googlePlayUrl:
+      'https://play.google.com/store/apps/details?id=dev.playtorch',
   },
 };

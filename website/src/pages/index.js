@@ -12,6 +12,10 @@ import clsx from 'clsx';
 import Layout from '@theme/Layout';
 import styles from './index.module.css';
 import DocVideo from '../components/DocVideo';
+import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+
+import AppStoreBadge from '@site/static/img/download_on_the_app_store_badge.svg';
+import GooglePlayBadgeUrl from '@site/static/img/google_play_badge.png';
 
 function Row({
   content,
@@ -46,7 +50,57 @@ function Row({
   );
 }
 
+function AppStoreRow({
+  content,
+  video,
+  odd,
+  head = false,
+  tail = false,
+  appStoreLink,
+  googlePlayLink,
+}) {
+  return (
+    <div
+      className={clsx([
+        styles.contentRow,
+        odd ? styles.odd : '',
+        head ? styles.firstRow : '',
+        tail ? styles.lastRow : '',
+      ])}>
+      <div className={clsx([styles.content])}>
+        <div className={clsx([styles.message, head ? styles.heading : ''])}>
+          {content}
+        </div>
+        <div className={clsx([styles.appStoreButtonRow])}>
+          <a
+            className={clsx([styles.googlePlayButtonWrapper])}
+            href={googlePlayLink || '#'}>
+            <img
+              className={clsx([styles.googlePlayBadge])}
+              alt="Google Play Badge"
+              src={GooglePlayBadgeUrl}
+            />
+          </a>
+          <a
+            className={clsx([styles.appStoreButtonWrapper])}
+            href={appStoreLink || '#'}>
+            <AppStoreBadge
+              className={clsx([styles.appStoreBadge])}
+              title="Download on the App Store Badge"
+              role="img"
+            />
+          </a>
+        </div>
+      </div>
+      <div className={clsx([styles.content])}>
+        <div className={styles.video}>{video}</div>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
+  const {siteConfig} = useDocusaurusContext();
   const [balloonStyle, setBalloonStyle] = useState({});
 
   useEffect(() => {
@@ -94,15 +148,8 @@ export default function Home() {
     />
   );
   const heroContent = (
-    <div>
-      <div className={styles.titleWrapper}>
-        <h1 className={styles.title}>PyTorch&nbsp;&nbsp;Live</h1>
-        <div className={styles.beta}>BETA</div>
-      </div>
-      <div>Build your AI powered mobile prototypes in minutes</div>
-    </div>
+    <div>Build your AI powered mobile prototypes in minutes</div>
   );
-  const heroButton = <div className={styles.button}>Get Started</div>;
 
   const firstPropVideo = (
     <DocVideo
@@ -115,10 +162,8 @@ export default function Home() {
     />
   );
   const firstPropContent =
-    'Quickly set up your dev environment and bootstrap ML mobile app projects';
-  const firstPropButton = (
-    <div className={styles.button}>Run CLI setup tool</div>
-  );
+    'Set up your dev environment and bootstrap ML mobile app projects';
+  const firstPropButton = <div className={styles.button}>Get Started</div>;
 
   const secondPropVideo = (
     <DocVideo
@@ -173,13 +218,13 @@ export default function Home() {
       <div className={styles.balloon} style={balloonStyle} />
       <main>
         <div className="container">
-          <Row
+          <AppStoreRow
             content={heroContent}
             video={heroVideo}
-            button={heroButton}
             odd={false}
             head={true}
-            link="docs/tutorials/get-started"
+            appStoreLink={siteConfig.customFields.appStoreUrl}
+            googlePlayLink={siteConfig.customFields.googlePlayLink}
           />
 
           <Row

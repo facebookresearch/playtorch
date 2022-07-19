@@ -182,6 +182,11 @@ module.exports = {
             exact: false,
             component: '@site/src/components/ExpoSnackRouter',
           },
+          {
+            path: '/example',
+            exact: false,
+            component: '@site/src/components/ExampleRouter',
+          },
         ],
       },
     ],

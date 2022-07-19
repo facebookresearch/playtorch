@@ -4,8 +4,8 @@
   <ShortName>Easy to use set of tools to create on-device ML demos on Android and iOS. Unlock the vast potential of AI innovations.</ShortName>
   <Description>Search Easy to use set of tools to create on-device ML demos on Android and iOS. Unlock the vast potential of AI innovations.</Description>
   <InputEncoding>UTF-8</InputEncoding>
-  <Image width="16" height="16" type="image/x-icon">https://pytorch.org/live/img/favicon.ico</Image>
-  <Url type="text/html" method="get" template="https://pytorch.org/live/search?q={searchTerms}"/>
-  <Url type="application/opensearchdescription+xml" rel="self" template="https://pytorch.org/live/opensearch.xml" />
-  <moz:SearchForm>https://pytorch.org/live/</moz:SearchForm>
+  <Image width="16" height="16" type="image/x-icon">https://playtorch.dev/img/favicon.ico</Image>
+  <Url type="text/html" method="get" template="https://playtorch.dev/search?q={searchTerms}"/>
+  <Url type="application/opensearchdescription+xml" rel="self" template="https://playtorch.dev/opensearch.xml" />
+  <moz:SearchForm>https://playtorch.dev/</moz:SearchForm>
 </OpenSearchDescription>

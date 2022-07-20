@@ -32,7 +32,7 @@ methods as `.data()` and `.item()`.
 
 #### Defined in
 
-[torchlive/torch.ts:107](https://github.com/facebookresearch/playtorch/blob/402f6ff/react-native-pytorch-core/src/torchlive/torch.ts#L107)
+[torchlive/torch.ts:107](https://github.com/facebookresearch/playtorch/blob/adacee4/react-native-pytorch-core/src/torchlive/torch.ts#L107)
 
 ___
 
@@ -46,7 +46,7 @@ A [MemoryFormat](torchlive_torch.md#memoryformat) is an object representing the 
 
 #### Defined in
 
-[torchlive/torch.ts:133](https://github.com/facebookresearch/playtorch/blob/402f6ff/react-native-pytorch-core/src/torchlive/torch.ts#L133)
+[torchlive/torch.ts:133](https://github.com/facebookresearch/playtorch/blob/adacee4/react-native-pytorch-core/src/torchlive/torch.ts#L133)
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:139](https://github.com/facebookresearch/playtorch/blob/402f6ff/react-native-pytorch-core/src/torchlive/torch.ts#L139)
+[torchlive/torch.ts:139](https://github.com/facebookresearch/playtorch/blob/adacee4/react-native-pytorch-core/src/torchlive/torch.ts#L139)
 
 ___
 
@@ -72,7 +72,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:121](https://github.com/facebookresearch/playtorch/blob/402f6ff/react-native-pytorch-core/src/torchlive/torch.ts#L121)
+[torchlive/torch.ts:121](https://github.com/facebookresearch/playtorch/blob/adacee4/react-native-pytorch-core/src/torchlive/torch.ts#L121)
 
 ## Variables
 
@@ -82,4 +82,4 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:560](https://github.com/facebookresearch/playtorch/blob/402f6ff/react-native-pytorch-core/src/torchlive/torch.ts#L560)
+[torchlive/torch.ts:560](https://github.com/facebookresearch/playtorch/blob/adacee4/react-native-pytorch-core/src/torchlive/torch.ts#L560)

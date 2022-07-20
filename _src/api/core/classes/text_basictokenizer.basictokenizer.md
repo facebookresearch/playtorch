@@ -23,7 +23,7 @@ Construct a BasicTokenizer Object.
 
 #### Defined in
 
-[text/BasicTokenizer.ts:18](https://github.com/facebookresearch/playtorch/blob/2b91a1c/react-native-pytorch-core/src/text/BasicTokenizer.ts#L18)
+[text/BasicTokenizer.ts:18](https://github.com/facebookresearch/playtorch/blob/402f6ff/react-native-pytorch-core/src/text/BasicTokenizer.ts#L18)
 
 ## Methods
 
@@ -46,4 +46,4 @@ Normally used to clean text before passing to other tokenizers (e.g. wordpiece).
 
 #### Defined in
 
-[text/BasicTokenizer.ts:70](https://github.com/facebookresearch/playtorch/blob/2b91a1c/react-native-pytorch-core/src/text/BasicTokenizer.ts#L70)
+[text/BasicTokenizer.ts:70](https://github.com/facebookresearch/playtorch/blob/402f6ff/react-native-pytorch-core/src/text/BasicTokenizer.ts#L70)

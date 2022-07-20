@@ -17,7 +17,19 @@ function ExternalRedirect({to}) {
     }
   }, [to]);
 
-  return null;
+  return (
+    <div className="container">
+      <div className="row">
+        <div className="col col--10 col--offset--1">
+          <p>Redirecting...</p>
+          <p>
+            Click <a href={to}>here</a> if you are not automatically redirected
+            to <a href={to}>{to}</a>.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function BrowserOnlyRedirect({to}) {

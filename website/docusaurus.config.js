@@ -167,7 +167,7 @@ module.exports = {
           customCss: require.resolve('./src/css/custom.css'),
         },
         googleAnalytics: {
-          trackingID: 'UA-117752657-2',
+          trackingID: 'G-703RV77NHN',
         },
       },
     ],

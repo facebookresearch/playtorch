@@ -35,6 +35,29 @@ TEST_F(TorchliveRuntimeTest, TensorDtypeTest) {
       "float64");
 }
 
+TEST_F(TorchliveRuntimeTest, TorchLinspaceTest) {
+  // Valid inputs
+  std::string torchLinspaceWithDefaultOption =
+      R"(
+      const tensor = torch.linspace(-10, 10, 5);
+      expectedData = [-10.0, -5.0, 0, 5.0, 10.0];
+      tensor.shape.length == 1 && tensor.shape[0] == 5 && tensor.data().every((v, i) => v == expectedData[i]) && tensor.dtype == torch.float32;
+    )";
+  EXPECT_TRUE(eval(torchLinspaceWithDefaultOption).getBool());
+
+  EXPECT_TRUE(
+      eval("torch.linspace(3, 10, 5, {dtype: torch.int}).dtype == torch.int")
+          .getBool());
+
+  // Invald Inputs
+  EXPECT_THROW(eval("torch.linspace()"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.linspace(1)"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.linspace(1,2)"), facebook::jsi::JSError);
+
+  EXPECT_THROW(eval("torch.linspace(1,2,-3)"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.linspace(1,2,2.5)"), facebook::jsi::JSError);
+}
+
 TEST_F(TorchliveRuntimeTest, TorchEmptyTest) {
   // Valid inputs
   EXPECT_TRUE(eval("torch.empty([1,2]).shape[0] === 1").getBool());

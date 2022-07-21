@@ -122,6 +122,27 @@ jsi::Value fullImpl(
   return utils::helpers::createFromHostObject<TensorHostObject>(
       runtime, torch_::full(dims, fillValue, options));
 }
+
+jsi::Value linspaceImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  argParser.requireNumArguments(3);
+
+  torch_::TensorOptions tensorOptions = torch_::TensorOptions();
+  if (arguments[count - 1].isObject()) {
+    tensorOptions = utils::helpers::parseTensorOptions(
+        runtime, arguments, count - 1, count);
+  }
+  auto start = argParser.asInteger(0);
+  auto end = argParser.asInteger(1);
+  auto steps = argParser.asInteger(2);
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, torch_::linspace(start, end, steps, tensorOptions));
+}
 } // namespace
 
 TorchHostObject::TorchHostObject(
@@ -171,6 +192,7 @@ TorchHostObject::TorchHostObject(
       jit_(torchlive::torch::jit::buildNamespace(runtime, runtimeExecutor)) {
   setPropertyHostFunction(runtime, "cat", 2, catImpl);
   setPropertyHostFunction(runtime, "full", 2, fullImpl);
+  setPropertyHostFunction(runtime, "linspace", 3, linspaceImpl);
 }
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(

@@ -12,10 +12,10 @@
   max-width: 600px;
 }
 
-.noMaxWidth {
+.docVideo.noMaxWidth {
   max-width: none;
 }
 
-.noMargin {
+.docVideo.noMargin {
   margin: 0;
 }

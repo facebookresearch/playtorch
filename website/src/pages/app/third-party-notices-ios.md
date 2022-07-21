@@ -889,7 +889,7 @@ THE SOFTWARE IS PROVIDED "AS IS" AND ISC DISCLAIMS ALL WARRANTIES WITH REGARD TO
 
 The following component are licensed under the MIT License license reproduced below.
 
-- **PyTorchLive** _, Copyright (c) Meta Platforms, Inc. and affiliates._
+- **PlayTorch** _, Copyright (c) Meta Platforms, Inc. and affiliates._
 - **SDWebImage** _, Copyright (c) 2009-2020 Olivier Poitrey rs@dailymotion.com_
 - **SDWebImageWebPCoder** _, Copyright (c) 2018 Bogdan Poplauschi_
 - **SwiftyJSON** _, Copyright (c) 2017 Ruoyu Fu_

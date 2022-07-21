@@ -91,7 +91,7 @@ function Community() {
             </div>
             <div className="col col--4">
               <Card thumbnail="social_card1.jpg" title="Join the conversation">
-                Share with #pytorchlive on{' '}
+                Share with #playtorch on{' '}
                 <a href="https://twitter.com/playtorch">Twitter</a> and{' '}
                 <a href="https://stackoverflow.com/questions/tagged/playtorch">
                   Stack Overflow

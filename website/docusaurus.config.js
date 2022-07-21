@@ -39,7 +39,7 @@ module.exports = {
       title: '',
       logo: {
         alt: 'PlayTorch Logo',
-        src: 'img/PlayTorch_Logo_N.svg',
+        src: 'img/PlayTorch_Logo_P.svg',
         href: 'https://playtorch.dev',
       },
       items: [

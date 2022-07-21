@@ -470,6 +470,23 @@ export interface Torch {
    */
   fromBlob(blob: any, sizes?: number[], options?: TensorOptions): Tensor;
   /**
+   * Returns a one-dimensional tensor of size steps whose values are evenly spaced from
+   * base^start to base^end, inclusive, on a logarithmic scale with base.
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.logspace.html}
+   *
+   * @param start starting value for the set of points
+   * @param end ending value for the set of points
+   * @param steps size of the constructed tensor
+   * @param options object to customizing base and dtype. default to be {base: 10, dtype: torch.float32}
+   */
+  logspace(
+    start: number,
+    end: number,
+    steps: number,
+    options?: TensorOptions & {base: number},
+  ): Tensor;
+  /**
    * Returns a tensor filled with the scalar value 1, with the shape defined
    * by the argument `size`.
    *

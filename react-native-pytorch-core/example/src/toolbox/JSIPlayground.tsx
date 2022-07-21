@@ -148,6 +148,16 @@ const testUnitList = [
     },
   },
   {
+    name: 'torch.logspace',
+    testFunc: async () => {
+      console.log('------Test torch.logspace-------');
+      const tensor1 = torch.logspace(-2, 2, 3, {base: 2});
+      const tensor2 = torch.logspace(-2, 2, 5, {base: 10, dtype: torch.int});
+      printTensor(tensor1);
+      printTensor(tensor2);
+    },
+  },
+  {
     name: 'generic tuple input',
     testFunc: async () => {
       console.log('------Test generic tuple input-------');

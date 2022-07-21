@@ -32,4 +32,4 @@ LICENSE file in the root directory of this source tree.
 
 #### Defined in
 
-[text/BasicTokenizer.ts:10](https://github.com/facebookresearch/playtorch/blob/d8eb616/react-native-pytorch-core/src/text/BasicTokenizer.ts#L10)
+[text/BasicTokenizer.ts:10](https://github.com/facebookresearch/playtorch/blob/732fa9c/react-native-pytorch-core/src/text/BasicTokenizer.ts#L10)

@@ -23,6 +23,7 @@ export default function DocVideo({
   defaultMuted = true,
   playsInline = true,
   noMargin = false,
+  noMaxWidth = false,
   poster,
 }) {
   const videoRef = useRef(undefined);
@@ -35,7 +36,11 @@ export default function DocVideo({
   return (
     <video
       ref={videoRef}
-      className={clsx([styles.docVideo, noMargin ? styles.noMargin : ''])}
+      className={clsx([
+        styles.docVideo,
+        noMargin ? styles.noMargin : '',
+        noMaxWidth ? styles.noMaxWidth : '',
+      ])}
       style={style}
       controls={controls}
       loop={loop}

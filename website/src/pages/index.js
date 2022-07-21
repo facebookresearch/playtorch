@@ -99,6 +99,26 @@ function AppStoreRow({
   );
 }
 
+function WideRow({content, video, head = false, tail = false}) {
+  return (
+    <div
+      className={clsx([
+        styles.wideContentRow,
+        head ? styles.firstRow : '',
+        tail ? styles.lastRow : '',
+      ])}>
+      <div className={clsx([styles.wideContent])}>
+        <div className={clsx([styles.message, head ? styles.heading : ''])}>
+          {content}
+        </div>
+      </div>
+      <div className={clsx([styles.wideContent])}>
+        <div className={styles.wideVideo}>{video}</div>
+      </div>
+    </div>
+  );
+}
+
 export default function Home() {
   const {siteConfig} = useDocusaurusContext();
   const [balloonStyle, setBalloonStyle] = useState({});
@@ -153,17 +173,16 @@ export default function Home() {
 
   const firstPropVideo = (
     <DocVideo
-      asset="PlayTorch_Photo"
+      asset="PlayTorch_Video"
       noMargin={true}
-      autoPlay={true}
-      loop={true}
-      controls={false}
-      poster="PlayTorch_Photo.jpg"
+      noMaxWidth={true}
+      controls={true}
+      muted={false}
+      defaultMuted={false}
+      poster="PlayTorch_Video.jpg"
     />
   );
-  const firstPropContent =
-    'Set up your dev environment and bootstrap ML mobile app projects';
-  const firstPropButton = <div className={styles.button}>Get Started</div>;
+  const firstPropContent = 'How it works';
 
   const secondPropVideo = (
     <DocVideo
@@ -227,13 +246,7 @@ export default function Home() {
             googlePlayLink={siteConfig.customFields.googlePlayLink}
           />
 
-          <Row
-            content={firstPropContent}
-            video={firstPropVideo}
-            button={firstPropButton}
-            odd={true}
-            link="docs/tutorials/get-started"
-          />
+          <WideRow content={firstPropContent} video={firstPropVideo} />
 
           <Row
             content={secondPropContent}

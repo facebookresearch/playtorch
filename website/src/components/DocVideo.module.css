@@ -12,6 +12,10 @@
   max-width: 600px;
 }
 
+.noMaxWidth {
+  max-width: none;
+}
+
 .noMargin {
   margin: 0;
 }

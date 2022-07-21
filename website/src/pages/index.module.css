@@ -32,8 +32,22 @@ h1.title {
   box-sizing: border-box;
 }
 
+.wideContentRow {
+  position: relative;
+  padding: 2rem;
+  color: var(--ifm-color-gray-0);
+  clear: both;
+  width: 95%;
+  max-width: 1100px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  margin: 0 auto 8rem;
+  box-sizing: border-box;
+}
+
 .firstRow {
-  margin-top: 5rem;
+  margin-top: 8rem;
 }
 
 .lastRow {
@@ -44,6 +58,10 @@ h1.title {
   display: flex;
   width: 100%;
   flex-direction: column;
+}
+
+.wideContent {
+  display: flex;
 }
 
 .odd {
@@ -58,6 +76,13 @@ h1.title {
   width: 30vw;
   min-height: min(60vw, 600px);
   margin-left: 120px;
+  box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.4);
+}
+
+.wideVideo {
+  padding: 15px;
+  background-color: #000;
+  margin-top: 32px;
   box-shadow: 0 0 40px 0 rgba(0, 0, 0, 0.4);
 }
 
@@ -113,6 +138,7 @@ h1.title {
   display: flex;
   flex-direction: row;
   margin-top: 11px;
+  margin-left: -10px; /* offset Play Store badge padding */
 }
 
 .appStoreButtonRow img {
@@ -221,6 +247,7 @@ h1.title {
 
   .appStoreButtonRow {
     justify-content: center;
+    margin-left: 0;
   }
 
   .button {

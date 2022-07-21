@@ -23,7 +23,7 @@ Construct a tokenizer with a WordPieceTokenizer object.
 
 #### Defined in
 
-[text/WordpieceTokenizer.ts:26](https://github.com/facebookresearch/playtorch/blob/ff8d04a/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L26)
+[text/WordpieceTokenizer.ts:26](https://github.com/facebookresearch/playtorch/blob/b02551c/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L26)
 
 ## Methods
 
@@ -47,7 +47,7 @@ a string decoded from the output of the model
 
 #### Defined in
 
-[text/WordpieceTokenizer.ts:143](https://github.com/facebookresearch/playtorch/blob/ff8d04a/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L143)
+[text/WordpieceTokenizer.ts:143](https://github.com/facebookresearch/playtorch/blob/b02551c/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L143)
 
 ___
 
@@ -71,7 +71,7 @@ An array of number, which can then be used to create a tensor as model input wit
 
 #### Defined in
 
-[text/WordpieceTokenizer.ts:132](https://github.com/facebookresearch/playtorch/blob/ff8d04a/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L132)
+[text/WordpieceTokenizer.ts:132](https://github.com/facebookresearch/playtorch/blob/b02551c/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L132)
 
 ___
 
@@ -96,4 +96,4 @@ an array of tokens in vocabulary representing the input text.
 
 #### Defined in
 
-[text/WordpieceTokenizer.ts:71](https://github.com/facebookresearch/playtorch/blob/ff8d04a/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L71)
+[text/WordpieceTokenizer.ts:71](https://github.com/facebookresearch/playtorch/blob/b02551c/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L71)

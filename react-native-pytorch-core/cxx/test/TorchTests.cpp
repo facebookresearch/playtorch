@@ -518,4 +518,57 @@ TEST_F(TorchliveRuntimeTest, TorchFullTest) {
   EXPECT_THROW(eval("torch.full([1, 2])"), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveRuntimeTest, TorchLogspaceTest) {
+  // expect length to be equal to steps
+  EXPECT_EQ(eval("torch.logspace(-10, 10, 5).shape[0]").getNumber(), 5);
+
+  // expect default base to perform correctly
+  std::string defaultBaseExpected =
+      R"(
+    const result = torch.logspace(2, 2, 1);
+    const expected = torch.logspace(2, 2, 1, {base: 10});
+    result.shape.length == expected.shape.length && result.shape.every((v, i) => v == expected.shape[i]) && result.data().every((v, i) => v == expected.data()[i]);
+  )";
+  EXPECT_TRUE(eval(defaultBaseExpected).getBool());
+
+  // expect base to perform correctly
+  std::string setBaseExpected =
+      R"(
+    const result = torch.logspace(2, 2, 1, {base: 2});
+    const expectedShape = [1];
+    expectedData = [4];
+    result.shape.length == expectedShape.length && result.shape.every((v, i) => v == expectedShape[i]) && result.data().every((v, i) => v == expectedData[i]);
+  )";
+  EXPECT_TRUE(eval(setBaseExpected).getBool());
+
+  // expect default dtype to perform correctly
+  std::string defaultDtypeExpected =
+      R"(
+    const result = torch.logspace(2, 2, 1);
+    result.dtype == torch.float32;
+  )";
+  EXPECT_TRUE(eval(defaultDtypeExpected).getBool());
+
+  // expect dtype to perform correctly
+  std::string setDtypeExpected =
+      R"(
+    const result = torch.logspace(2, 2, 1, {dtype: torch.int});
+    result.dtype == torch.int;
+  )";
+  EXPECT_TRUE(eval(setDtypeExpected).getBool());
+
+  // expect base and dtype to perform correctly
+  std::string setBaseAndDtypeExpected =
+      R"(
+    const result = torch.logspace(2, 2, 1, {base: 2, dtype: torch.int});
+    const expectedShape = [1];
+    expectedData = [4];
+    result.shape.length == expectedShape.length && result.shape.every((v, i) => v == expectedShape[i]) && result.data().every((v, i) => v == expectedData[i]) && result.dtype == torch.int32;
+  )";
+  EXPECT_TRUE(eval(setBaseAndDtypeExpected).getBool());
+
+  // not enough args
+  EXPECT_THROW(eval("torch.logspace(2, 2)"), facebook::jsi::JSError);
+}
+
 } // namespace

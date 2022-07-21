@@ -143,6 +143,37 @@ jsi::Value linspaceImpl(
   return utils::helpers::createFromHostObject<TensorHostObject>(
       runtime, torch_::linspace(start, end, steps, tensorOptions));
 }
+
+/**
+ * Creates a one-dimensional tensor of size steps whose values are evenly spaced
+ * from base^start to base^end, inclusive, on a logarithmic scale.
+ *
+ * See
+ * https://pytorch.org/docs/stable/generated/torch.logspace.html#torch.logspace
+ */
+jsi::Value logspaceImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  argParser.requireNumArguments(3);
+  auto start = argParser.asInteger(0);
+  auto end = argParser.asInteger(1);
+  auto steps = argParser.asInteger(2);
+  auto baseValue = utils::helpers::parseKeywordArgument(
+      runtime, arguments, 3, count, "base");
+  double base = baseValue.isUndefined() ? 10.0 : baseValue.asNumber();
+  torch_::TensorOptions options;
+  if (!utils::helpers::parseKeywordArgument(
+           runtime, arguments, 3, count, "dtype")
+           .isUndefined()) {
+    options = utils::helpers::parseTensorOptions(runtime, arguments, 3, count);
+  }
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, torch_::logspace(start, end, steps, base, options));
+}
 } // namespace
 
 TorchHostObject::TorchHostObject(
@@ -193,6 +224,7 @@ TorchHostObject::TorchHostObject(
   setPropertyHostFunction(runtime, "cat", 2, catImpl);
   setPropertyHostFunction(runtime, "full", 2, fullImpl);
   setPropertyHostFunction(runtime, "linspace", 3, linspaceImpl);
+  setPropertyHostFunction(runtime, "logspace", 3, logspaceImpl);
 }
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(

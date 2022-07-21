@@ -243,7 +243,7 @@ export default function Home() {
             odd={false}
             head={true}
             appStoreLink={siteConfig.customFields.appStoreUrl}
-            googlePlayLink={siteConfig.customFields.googlePlayLink}
+            googlePlayLink={siteConfig.customFields.googlePlayUrl}
           />
 
           <WideRow content={firstPropContent} video={firstPropVideo} />

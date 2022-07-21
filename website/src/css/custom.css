@@ -25,7 +25,9 @@
   --ifm-link-hover-decoration: none;
   --ifm-navbar-padding-horizontal: 42px;
   --ifm-navbar-padding-vertical: 22px;
+  --ifm-navbar-item-padding-vertical: 0.1rem;
   --ifm-navbar-height: 5.5rem;
+  --ifm-navbar-link-hover-color: #6200ea;
   --ifm-footer-link-color: #fff;
   --ifm-footer-link-hover-color: #ffffff99;
 }
@@ -110,8 +112,17 @@ html[data-theme='dark'] {
   text-transform: uppercase;
 }
 
+.navbar__item {
+  margin: 0 var(--ifm-navbar-item-padding-horizontal);
+  padding: var(--ifm-navbar-item-padding-vertical) 0;
+}
+
 .navbar__link {
   font-weight: 700;
+}
+
+.navbar__link--active {
+  border-bottom: 2px solid var(--ifm-navbar-link-hover-color);
 }
 
 .navbar__link:hover {

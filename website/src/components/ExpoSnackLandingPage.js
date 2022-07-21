@@ -14,6 +14,7 @@ import styles from './ExpoSnackLandingPage.module.css';
 import RedirectStarterSnack from './RedirectStarterSnack';
 import AppleLogoSvg from '@site/static/img/apple_logo_white.svg';
 import AndroidLogoSvg from '@site/static/img/android_logo_white.svg';
+import {GOOGLE_PLAY_STORE, APP_STORE} from '@site/src/constants/ExternalLinks';
 
 function AppStoreButton({href, LogoComponent, label}) {
   return (
@@ -58,12 +59,12 @@ export default function ExpoSnackLandingPage({match}) {
                     This snack requires the PlayTorch app to get started.
                   </p>
                   <AppStoreButton
-                    href="https://apps.apple.com/us/app/playtorch/id1632121045"
+                    href={APP_STORE}
                     LogoComponent={AppleLogoSvg}
                     label="Download PlayTorch for iOS"
                   />
                   <AppStoreButton
-                    href="https://play.google.com/store/apps/details?id=dev.playtorch"
+                    href={GOOGLE_PLAY_STORE}
                     LogoComponent={AndroidLogoSvg}
                     label="Download PlayTorch for Android"
                   />

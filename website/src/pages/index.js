@@ -139,12 +139,12 @@ export default function Home() {
 
   const heroVideo = (
     <DocVideo
-      asset="demo_catdog"
+      asset="PlayTorch_View_Demo"
       noMargin={true}
       autoPlay={true}
       loop={true}
       controls={false}
-      poster="demo_catdog.jpg"
+      poster="PlayTorch_View_Demo.jpg"
     />
   );
   const heroContent = (
@@ -153,12 +153,12 @@ export default function Home() {
 
   const firstPropVideo = (
     <DocVideo
-      asset="demo_mnist"
+      asset="PlayTorch_Photo"
       noMargin={true}
       autoPlay={true}
       loop={true}
       controls={false}
-      poster="demo_mnist.jpg"
+      poster="PlayTorch_Photo.jpg"
     />
   );
   const firstPropContent =
@@ -167,12 +167,12 @@ export default function Home() {
 
   const secondPropVideo = (
     <DocVideo
-      asset="demo_model"
+      asset="PlayTorch_AnimeGan"
       noMargin={true}
       autoPlay={true}
       loop={true}
       controls={false}
-      poster="demo_model.jpg"
+      poster="PlayTorch_AnimeGAN.jpg"
     />
   );
   const secondPropContent =
@@ -183,12 +183,12 @@ export default function Home() {
 
   const thirdPropVideo = (
     <DocVideo
-      asset="demo_ui"
+      asset="PlayTorch_QA"
       noMargin={true}
       autoPlay={true}
       loop={true}
       controls={false}
-      poster="demo_ui.jpg"
+      poster="PlayTorch_QA.jpg"
     />
   );
   const thirdPropContent =
@@ -199,12 +199,12 @@ export default function Home() {
 
   const forthPropVideo = (
     <DocVideo
-      asset="demo_community"
+      asset="PlayTorch_Overview"
       noMargin={true}
       autoPlay={true}
       loop={true}
       controls={false}
-      poster="demo_community.jpg"
+      poster="PlayTorch_Overview.jpg"
     />
   );
   const forthPropContent =

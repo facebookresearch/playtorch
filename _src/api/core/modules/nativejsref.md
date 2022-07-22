@@ -47,4 +47,4 @@ A Plain NativeJSRef object with only the ID property.
 
 #### Defined in
 
-[NativeJSRef.ts:88](https://github.com/facebookresearch/playtorch/blob/1e45739/react-native-pytorch-core/src/NativeJSRef.ts#L88)
+[NativeJSRef.ts:88](https://github.com/facebookresearch/playtorch/blob/1ab511e/react-native-pytorch-core/src/NativeJSRef.ts#L88)

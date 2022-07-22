@@ -18,4 +18,4 @@ custom_edit_url: null
 
 #### Defined in
 
-[torchlive/media.ts:92](https://github.com/facebookresearch/playtorch/blob/1e45739/react-native-pytorch-core/src/torchlive/media.ts#L92)
+[torchlive/media.ts:92](https://github.com/facebookresearch/playtorch/blob/1ab511e/react-native-pytorch-core/src/torchlive/media.ts#L92)

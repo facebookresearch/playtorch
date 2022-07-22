@@ -266,7 +266,7 @@ export default function Home() {
             video={thirdPropVideo}
             button={thirdPropButton}
             odd={true}
-            link="docs/tutorials/mnist-digit-classification"
+            link="docs/tutorials/snacks/image-classification/"
           />
 
           <Row

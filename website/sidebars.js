@@ -38,11 +38,11 @@ module.exports = {
       label: 'Tutorials',
       collapsed: false,
       items: [
-        'tutorials/jsi-tutorials/image-classification-jsi',
-        'tutorials/jsi-tutorials/nlp-qa-jsi',
-        'tutorials/jsi-tutorials/object-detection-jsi',
-        'tutorials/jsi-tutorials/anime-gan-jsi',
-        'tutorials/jsi-tutorials/seq2seq-nmt-jsi',
+        'tutorials/snacks/image-classification',
+        'tutorials/snacks/nlp-qa',
+        'tutorials/snacks/object-detection',
+        'tutorials/snacks/anime-gan',
+        'tutorials/snacks/seq2seq-nmt',
       ],
     },
     fbContent({

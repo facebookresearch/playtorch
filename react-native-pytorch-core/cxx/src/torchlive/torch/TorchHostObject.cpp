@@ -191,6 +191,34 @@ jsi::Value randpermImpl(
       runtime, torch_::randperm(upperBound, options));
 }
 
+/**
+ * Returns a tensor filled with random numbers from a normal distribution with
+ * mean 0 and variance 1 (also called the standard normal distribution).
+ *
+ * See https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn
+ */
+jsi::Value randnImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  argParser.requireNumArguments(1);
+
+  std::vector<int64_t> dims = {};
+  auto jsShape = arguments[0].asObject(runtime).asArray(runtime);
+  auto shapeLength = jsShape.size(runtime);
+  for (int i = 0; i < shapeLength; i++) {
+    int x = jsShape.getValueAtIndex(runtime, i).asNumber();
+    dims.push_back(x);
+  }
+
+  const auto options =
+      utils::helpers::parseTensorOptions(runtime, arguments, 1, count);
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, torch_::randn(dims, options));
+}
 } // namespace
 
 TorchHostObject::TorchHostObject(
@@ -243,6 +271,7 @@ TorchHostObject::TorchHostObject(
   setPropertyHostFunction(runtime, "linspace", 3, linspaceImpl);
   setPropertyHostFunction(runtime, "logspace", 3, logspaceImpl);
   setPropertyHostFunction(runtime, "randperm", 2, randpermImpl);
+  setPropertyHostFunction(runtime, "randn", 2, randnImpl);
 }
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(

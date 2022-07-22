@@ -607,4 +607,30 @@ TEST_F(TorchliveRuntimeTest, TorchRandPermTest) {
         )";
   EXPECT_TRUE(eval(torchRandPermData).getBool());
 }
+TEST_F(TorchliveRuntimeTest, TorchRandnTest) {
+  // Test randn with a single dimension
+  EXPECT_EQ(eval("torch.randn([4]).shape[0]").getNumber(), 4);
+
+  // Test randn with multiple dimensions
+  EXPECT_EQ(eval("torch.randn([2, 3]).shape[0]").getNumber(), 2);
+  EXPECT_EQ(eval("torch.randn([2, 3]).shape[1]").getNumber(), 3);
+
+  // Test randn with float32 dtype option (default), expecting C++ float
+  EXPECT_EQ(
+      eval("torch.randn([2, 3], {dtype:'float32'}).shape[0]").getNumber(), 2);
+  EXPECT_EQ(
+      eval("torch.randn([2, 3], {dtype:'float32'}).shape[1]").getNumber(), 3);
+
+  // Test randn with float64 dtype option, expecting C++ double
+  EXPECT_EQ(
+      eval("torch.randn([2, 3], {dtype:'float64'}).shape[0]").getNumber(), 2);
+  EXPECT_EQ(
+      eval("torch.randn([2, 3], {dtype:'float64'}).shape[1]").getNumber(), 3);
+
+  // Test randn with no parameters (invalid).
+  EXPECT_THROW(eval("torch.randn()"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.randn([1, 'x'])"), facebook::jsi::JSError);
+  EXPECT_THROW(eval("torch.randn(2,3)"), facebook::jsi::JSError);
+}
+
 } // namespace

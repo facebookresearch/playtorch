@@ -338,6 +338,10 @@ div[class^='announcementBar_'] {
   border: 0;
 }
 
+.dropdown__menu {
+  top: calc(100% - var(--ifm-navbar-item-padding-vertical) + 0.1rem);
+}
+
 .dropdown-separator {
   margin: 0.3rem 0;
 }

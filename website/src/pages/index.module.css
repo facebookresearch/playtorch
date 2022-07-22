@@ -226,6 +226,15 @@ h1.title {
     font-size: 4.8vw;
     line-height: 5.5vw;
   }
+
+  /* remove after switch to App Store badge */
+  .appStoreButtonRow {
+    flex-direction: column;
+  }
+
+  .googlePlayButtonWrapper {
+    margin-left: 20px;
+  }
 }
 
 /* Mobile */
@@ -254,6 +263,9 @@ h1.title {
   .appStoreButtonRow {
     justify-content: center;
     margin-left: 0;
+    /* remove following after switch back to App Store badge */
+    flex-direction: column;
+    text-align: center;
   }
 
   .button {

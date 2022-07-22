@@ -1,7 +1,7 @@
 ---
 id: get-started-manually
-sidebar_position: 2
-title: Get Started Manually
+sidebar_position: 3
+title: Manual Environment Setup
 ---
 
 import Tabs from '@theme/Tabs';
@@ -35,55 +35,6 @@ PlayTorch is powered by [PyTorch Mobile](https://pytorch.org/mobile) and [React 
 <AppleM1Note />
 
 As a first step, let's follow their installation instructions to set up the development environment for Android and iOS.
-
-### Set up the PyTorch
-
-PlayTorch uses `python3` to export PyTorch models for the PyTorch Mobile runtime. The export is part of each PlayTorch app project initialization (see later steps). Run the following command to check if python3 is installed:
-
-
-```shell
-❯ python3 --version
-Python 3.9.4
-```
-
-:::note
-
-The version installed on your machine might be slightly different, but should at least be version `3.7` or above.
-
-:::
-
-
-If `python3` is not installed, you can download Python from the [python.org website](https://python.org), or install it via Chocolatey (Windows), apt (Linux), or Homebrew (macOS).
-
-<Tabs
-  defaultValue="chocolatey"
-  values={[
-    {label: 'Chocolatey', value: 'chocolatey'},
-    {label: 'Apt', value: 'apt'},
-    {label: 'Homebrew', value: 'homebrew'},
-  ]}>
-  <TabItem value="chocolatey">
-
-  ```shell
-  choco install python3
-  ```
-
-  </TabItem>
-  <TabItem value="apt">
-
-  ```shell
-  apt install python3
-  ```
-
-  </TabItem>
-  <TabItem value="homebrew">
-
-  ```shell
-  brew install python3
-  ```
-
-  </TabItem>
-</Tabs>
 
 ### Set up the React Native development environment
 

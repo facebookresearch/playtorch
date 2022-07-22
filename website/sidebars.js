@@ -28,6 +28,7 @@ module.exports = {
       collapsed: false,
       items: [
         'tutorials/get-started',
+        'tutorials/get-started-local',
         'tutorials/get-started-manually',
         'tutorials/add-package',
       ],

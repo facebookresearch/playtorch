@@ -1,0 +1,39 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @format
+ */
+
+.appStoreButtonRow {
+  display: flex;
+  flex-direction: row;
+  margin-top: 11px;
+}
+
+.appStoreButtonRow img {
+  max-width: none; /* unset 100% for button images */
+}
+
+.googlePlayButtonWrapper {
+  text-decoration: none;
+}
+
+.googlePlayBadge {
+  width: 155px;
+  height: 60px;
+}
+
+.appStoreButtonWrapper {
+  margin-left: 11px;
+  margin-top: 10px;
+  text-decoration: none;
+  vertical-align: top;
+}
+
+.appStoreBadge {
+  width: 120px;
+  height: 40px;
+}

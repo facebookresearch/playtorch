@@ -15,8 +15,7 @@ const path = require('path');
 
 /** @type {import('@docusaurus/types').DocusaurusConfig} */
 module.exports = {
-  title:
-    'Easy to use set of tools to create on-device ML demos on Android and iOS. Unlock the vast potential of AI innovations.',
+  title: 'PlayTorch is a framework for rapidly creating mobile AI experiences.',
   url: 'https://playtorch.dev',
   baseUrl: '/',
   onBrokenLinks: 'throw',

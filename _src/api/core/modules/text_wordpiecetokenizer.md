@@ -27,4 +27,4 @@ custom_edit_url: null
 
 #### Defined in
 
-[text/WordpieceTokenizer.ts:12](https://github.com/facebookresearch/playtorch/blob/c057e30/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L12)
+[text/WordpieceTokenizer.ts:12](https://github.com/facebookresearch/playtorch/blob/3e21f78/react-native-pytorch-core/src/text/WordpieceTokenizer.ts#L12)

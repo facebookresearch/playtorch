@@ -571,4 +571,40 @@ TEST_F(TorchliveRuntimeTest, TorchLogspaceTest) {
   EXPECT_THROW(eval("torch.logspace(2, 2)"), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveRuntimeTest, TorchRandPermTest) {
+  // Test randperm with a valid upperbound
+  EXPECT_EQ(eval("torch.randperm(5).shape[0]").getNumber(), 5);
+
+  // Test randperm with float64 datatype and a valid upperbound
+  EXPECT_EQ(
+      eval("torch.randperm(5,{dtype:'float64'}).shape[0]").getNumber(), 5);
+
+  // Test randperm with an invalid upperbound
+  EXPECT_THROW(eval("torch.randperm(-1)"), facebook::jsi::JSError);
+
+  // Test randperm with a 0 upperbound
+  EXPECT_EQ(eval("torch.randperm(0).shape[0]").getNumber(), 0);
+
+  // Test randperm with an invalid upperbound
+  EXPECT_THROW(eval("torch.randperm([1,2])"), facebook::jsi::JSError);
+
+  // Test randperm with no parameters
+  EXPECT_THROW(eval("torch.randperm()"), facebook::jsi::JSError);
+
+  // Test randperm with float64 datatype and verify the datatype
+  EXPECT_TRUE(
+      eval("torch.randperm(5,{dtype:'float64'}).dtype === torch.float64")
+          .getBool());
+
+  // Test randperm with an upperbound of 5, expecting integers in the range 0 to
+  // 4
+  std::string torchRandPermData =
+      R"(
+          const tensor = torch.randperm(5, {dtype:'int32'});
+          const data = tensor.data();
+          data.sort();
+          data[0] === 0 && data[1] === 1 && data[2] === 2 && data[3] === 3 && data[4] === 4;
+        )";
+  EXPECT_TRUE(eval(torchRandPermData).getBool());
+}
 } // namespace

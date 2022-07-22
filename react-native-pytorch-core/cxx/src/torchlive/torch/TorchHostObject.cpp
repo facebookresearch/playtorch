@@ -174,6 +174,23 @@ jsi::Value logspaceImpl(
   return utils::helpers::createFromHostObject<TensorHostObject>(
       runtime, torch_::logspace(start, end, steps, base, options));
 }
+jsi::Value randpermImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  argParser.requireNumArguments(1);
+
+  auto upperBound = arguments[0].asNumber();
+
+  const auto options =
+      utils::helpers::parseTensorOptions(runtime, arguments, 1, count);
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, torch_::randperm(upperBound, options));
+}
+
 } // namespace
 
 TorchHostObject::TorchHostObject(
@@ -225,6 +242,7 @@ TorchHostObject::TorchHostObject(
   setPropertyHostFunction(runtime, "full", 2, fullImpl);
   setPropertyHostFunction(runtime, "linspace", 3, linspaceImpl);
   setPropertyHostFunction(runtime, "logspace", 3, logspaceImpl);
+  setPropertyHostFunction(runtime, "randperm", 2, randpermImpl);
 }
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(

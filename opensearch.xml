@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
                        xmlns:moz="http://www.mozilla.org/2006/browser/search/">
-  <ShortName>Easy to use set of tools to create on-device ML demos on Android and iOS. Unlock the vast potential of AI innovations.</ShortName>
-  <Description>Search Easy to use set of tools to create on-device ML demos on Android and iOS. Unlock the vast potential of AI innovations.</Description>
+  <ShortName>PlayTorch is a framework for rapidly creating mobile AI experiences.</ShortName>
+  <Description>Search PlayTorch is a framework for rapidly creating mobile AI experiences.</Description>
   <InputEncoding>UTF-8</InputEncoding>
   <Image width="16" height="16" type="image/x-icon">https://playtorch.dev/img/favicon.ico</Image>
   <Url type="text/html" method="get" template="https://playtorch.dev/search?q={searchTerms}"/>

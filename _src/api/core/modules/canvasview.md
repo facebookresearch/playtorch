@@ -68,4 +68,4 @@ export default function App() {
 
 #### Defined in
 
-[CanvasView.tsx:996](https://github.com/facebookresearch/playtorch/blob/df480fd/react-native-pytorch-core/src/CanvasView.tsx#L996)
+[CanvasView.tsx:996](https://github.com/facebookresearch/playtorch/blob/95b260f/react-native-pytorch-core/src/CanvasView.tsx#L996)

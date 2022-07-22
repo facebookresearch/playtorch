@@ -44,17 +44,6 @@ module.exports = {
         'tutorials/jsi-tutorials/seq2seq-nmt-jsi',
       ],
     },
-    {
-      type: 'category',
-      label: 'On-device Models',
-      collapsed: false,
-      items: [
-        'tutorials/image-classification',
-        'tutorials/question-answering',
-        'tutorials/mnist-digit-classification',
-        'tutorials/prepare-custom-model',
-      ],
-    },
     fbContent({
       internal: {
         type: 'category',

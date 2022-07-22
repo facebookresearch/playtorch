@@ -54,7 +54,7 @@ The `run-android` and `run-ios` commands from the PyTorch Live CLI allow you to 
 
   The app will deploy and run on your physical Android device if it is connected to your computer via USB, and it is in developer mode. There are more details on that in the [Get Started tutorial](./get-started.mdx).
 
-  ![](/img/tutorial/image-classification/android/first-run.png "Screenshot of app after fresh init with CLI")
+  ![](/img/tutorial-0.1/image-classification/android/first-run.png "Screenshot of app after fresh init with CLI")
 
   </TabItem>
   <TabItem value="ios-sim">
@@ -63,7 +63,7 @@ The `run-android` and `run-ios` commands from the PyTorch Live CLI allow you to 
   npx torchlive-cli run-ios
   ```
 
-  ![](/img/tutorial/image-classification/ios/first-run.png "Screenshot of app after fresh init with CLI")
+  ![](/img/tutorial-0.1/image-classification/ios/first-run.png "Screenshot of app after fresh init with CLI")
 
   </TabItem>
 </Tabs>
@@ -94,12 +94,12 @@ The `MyDemos.tsx` already contains code. Replace the code with the code below.
   ]}>
   <TabItem value="android">
 
-  ![](/img/tutorial/image-classification/android/image-classification-text.png "Screenshot of initial code with text component")
+  ![](/img/tutorial-0.1/image-classification/android/image-classification-text.png "Screenshot of initial code with text component")
 
   </TabItem>
   <TabItem value="ios-sim">
 
-  ![](/img/tutorial/image-classification/ios/image-classification-text.png "Screenshot of initial code with text component")
+  ![](/img/tutorial-0.1/image-classification/ios/image-classification-text.png "Screenshot of initial code with text component")
 
   </TabItem>
 </Tabs>
@@ -127,12 +127,12 @@ Great! Let's add some basic styling to the app UI. The styles will change the `V
   ]}>
   <TabItem value="android">
 
-  ![](/img/tutorial/image-classification/android/simple-styles.png "Screenshot after applying simple component styles")
+  ![](/img/tutorial-0.1/image-classification/android/simple-styles.png "Screenshot after applying simple component styles")
 
   </TabItem>
   <TabItem value="ios-sim">
 
-  ![](/img/tutorial/image-classification/ios/simple-styles.png "Screenshot after applying simple component styles")
+  ![](/img/tutorial-0.1/image-classification/ios/simple-styles.png "Screenshot after applying simple component styles")
 
   </TabItem>
 </Tabs>
@@ -155,14 +155,14 @@ Next, let's add a `Camera` component to take pictures that can be used later for
   ]}>
   <TabItem value="android">
 
-  ![](/img/tutorial/image-classification/android/camera.png "Screenshot with camera component")
+  ![](/img/tutorial-0.1/image-classification/android/camera.png "Screenshot with camera component")
 
   </TabItem>
   <TabItem value="ios-sim">
 
   In order to get the camera to work on iOS, you'll have to run the app on a physical iOS device. For more details, please check out the [Running On Device docs on the React Native website](https://reactnative.dev/docs/running-on-device).
 
-  ![](/img/tutorial/image-classification/ios/camera-sim.png "Screenshot showing camera not available on iOS Simulator")
+  ![](/img/tutorial-0.1/image-classification/ios/camera-sim.png "Screenshot showing camera not available on iOS Simulator")
 
   </TabItem>
   <TabItem value="ios">
@@ -177,7 +177,7 @@ Next, let's add a `Camera` component to take pictures that can be used later for
 
   Run app on physical device.
 
-  ![](/img/tutorial/image-classification/ios/camera.png "Screenshot with camera component")
+  ![](/img/tutorial-0.1/image-classification/ios/camera.png "Screenshot with camera component")
 
   </TabItem>
 </Tabs>
@@ -201,7 +201,7 @@ The `image.release()` function call is important to release the memory allocated
 
 Click on camera capture button and check logged output in terminal. It will log a JavaScript representation of the image to the console every time you click the capture button.
 
-![](/img/tutorial/image-classification/metro-console-log.png)
+![](/img/tutorial-0.1/image-classification/metro-console-log.png)
 
 ### Run model inference
 
@@ -218,7 +218,7 @@ Last, let's log the inference result to the console.
   <ImageClassificationDemoExamples.V4CodeBlock title="src/demos/MyDemos.tsx" />
 </ExampleDiffCodeTabs>
 
-![](/img/tutorial/image-classification/metro-console-log-inference-result.png)
+![](/img/tutorial-0.1/image-classification/metro-console-log-inference-result.png)
 
 The logged inference result is a JavaScript object containing the inference result including the `maxIdx` (argmax result) mapping to the top class detected in the image, a confidence value for this class to be correct, and inference metrics (i.e., inference time, pack time, unpack time, and total time).
 
@@ -235,7 +235,7 @@ Let's see what the `maxIdx` `673` resolves into by logging the `topClass` label 
   <ImageClassificationDemoExamples.V5CodeBlock title="src/demos/MyDemos.tsx" />
 </ExampleDiffCodeTabs>
 
-![](/img/tutorial/image-classification/metro-resolved-top-class.png)
+![](/img/tutorial-0.1/image-classification/metro-resolved-top-class.png)
 
 It looks like the model classified the image as `mouse, computer mouse`. The next section will reveal if this is correct!
 
@@ -266,12 +266,12 @@ For more information on [React Hooks](https://reactjs.org/docs/hooks-intro.html)
   ]}>
   <TabItem value="android">
 
-  ![](/img/tutorial/image-classification/android/captured-object.png "Screenshot for showing the label of the captured object")
+  ![](/img/tutorial-0.1/image-classification/android/captured-object.png "Screenshot for showing the label of the captured object")
 
   </TabItem>
   <TabItem value="ios">
 
-  ![](/img/tutorial/image-classification/ios/captured-object.png "Screenshot for showing the label of the captured object")
+  ![](/img/tutorial-0.1/image-classification/ios/captured-object.png "Screenshot for showing the label of the captured object")
 
   </TabItem>
 </Tabs>
@@ -312,12 +312,12 @@ Known problem: If the images aren't immediately processed frame by frame, flip t
   ]}>
   <TabItem value="android">
 
-  ![](/img/tutorial/image-classification/android/frame-by-frame.gif "Screenshot for showing the label of the captured object")
+  ![](/img/tutorial-0.1/image-classification/android/frame-by-frame.gif "Screenshot for showing the label of the captured object")
 
   </TabItem>
   <TabItem value="ios">
 
-  ![](/img/tutorial/image-classification/ios/frame-by-frame.gif "Screenshot for showing the label of the captured object")
+  ![](/img/tutorial-0.1/image-classification/ios/frame-by-frame.gif "Screenshot for showing the label of the captured object")
 
   </TabItem>
 </Tabs>

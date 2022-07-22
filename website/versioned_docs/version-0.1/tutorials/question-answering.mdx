@@ -56,7 +56,7 @@ The `run-android` and `run-ios` commands from the PyTorch Live CLI allow you to 
 
   The app will deploy and run on your physical Android device if it is connected to your computer via USB, and it is in developer mode. There are more details on that in the [Get Started tutorial](./get-started.mdx).
 
-  ![](/img/tutorial/question-answering/android/first-run.png "Screenshot of app after fresh init with CLI")
+  ![](/img/tutorial-0.1/question-answering/android/first-run.png "Screenshot of app after fresh init with CLI")
 
   </TabItem>
   <TabItem value="ios-sim">
@@ -65,7 +65,7 @@ The `run-android` and `run-ios` commands from the PyTorch Live CLI allow you to 
   npx torchlive-cli run-ios
   ```
 
-  ![](/img/tutorial/question-answering/ios/first-run.png "Screenshot of app after fresh init with CLI")
+  ![](/img/tutorial-0.1/question-answering/ios/first-run.png "Screenshot of app after fresh init with CLI")
 
   </TabItem>
 </Tabs>
@@ -98,12 +98,12 @@ The initial code creates a component rendering two text inputs, a button, and a 
   ]}>
   <TabItem value="android">
 
-  ![](/img/tutorial/question-answering/android/initial-ui.png "Screenshot of initial user interface")
+  ![](/img/tutorial-0.1/question-answering/android/initial-ui.png "Screenshot of initial user interface")
 
   </TabItem>
   <TabItem value="ios-sim">
 
-  ![](/img/tutorial/question-answering/ios/initial-ui.png "Screenshot of initial user interface")
+  ![](/img/tutorial-0.1/question-answering/ios/initial-ui.png "Screenshot of initial user interface")
 
   </TabItem>
 </Tabs>
@@ -131,12 +131,12 @@ Note that we also set a max length of 360 on the first `TextInput`. The model we
   ]}>
   <TabItem value="android">
 
-  ![](/img/tutorial/question-answering/android/simple-styles.png "Screenshot after applying simple component styles")
+  ![](/img/tutorial-0.1/question-answering/android/simple-styles.png "Screenshot after applying simple component styles")
 
   </TabItem>
   <TabItem value="ios-sim">
 
-  ![](/img/tutorial/question-answering/ios/simple-styles.png "Screenshot after applying simple component styles")
+  ![](/img/tutorial-0.1/question-answering/ios/simple-styles.png "Screenshot after applying simple component styles")
 
   </TabItem>
 </Tabs>
@@ -160,19 +160,19 @@ Add an event handler to the `Ask` button. The event handler `handleAsk` will be 
   ]}>
   <TabItem value="android">
 
-  ![](/img/tutorial/question-answering/android/event-handler-and-more-style.png "Screenshot event handler and more styling")
+  ![](/img/tutorial-0.1/question-answering/android/event-handler-and-more-style.png "Screenshot event handler and more styling")
 
   </TabItem>
   <TabItem value="ios-sim">
 
-  ![](/img/tutorial/question-answering/ios/event-handler-and-more-style.png "Screenshot event handler and more styling")
+  ![](/img/tutorial-0.1/question-answering/ios/event-handler-and-more-style.png "Screenshot event handler and more styling")
 
   </TabItem>
 </Tabs>
 
 Type into both text inputs, click the `Ask` button, and check logged output in terminal.
 
-![](/img/tutorial/question-answering/metro-console-log.png)
+![](/img/tutorial-0.1/question-answering/metro-console-log.png)
 
 ### Run model inference
 
@@ -202,7 +202,7 @@ Last, let's log the inference result to the console.
   <QuestionAnsweringDemoExamples.V3CodeBlock title="src/demos/MyDemos.tsx" />
 </ExampleDiffCodeTabs>
 
-![](/img/tutorial/question-answering/metro-console-log-inference-result.png)
+![](/img/tutorial-0.1/question-answering/metro-console-log-inference-result.png)
 
 The logged inference result is a JavaScript object containing the inference result including the `answer` and inference metrics (i.e., inference time, pack time, unpack time, and total time).
 
@@ -235,12 +235,12 @@ For more information on [React Hooks](https://reactjs.org/docs/hooks-intro.html)
   ]}>
   <TabItem value="android">
 
-  ![](/img/tutorial/question-answering/android/inference-example.png "Screenshot of question answering inference result")
+  ![](/img/tutorial-0.1/question-answering/android/inference-example.png "Screenshot of question answering inference result")
 
   </TabItem>
   <TabItem value="ios-sim">
 
-  ![](/img/tutorial/question-answering/ios/inference-example.png "Screenshot of question answering inference result")
+  ![](/img/tutorial-0.1/question-answering/ios/inference-example.png "Screenshot of question answering inference result")
 
   </TabItem>
 </Tabs>
@@ -264,12 +264,12 @@ It can take a few milliseconds for the model to return the answer. Let's add a `
   ]}>
   <TabItem value="android">
 
-  ![](/img/tutorial/question-answering/android/user-feedback.gif "Screenshot for showing question answering with user feedback")
+  ![](/img/tutorial-0.1/question-answering/android/user-feedback.gif "Screenshot for showing question answering with user feedback")
 
   </TabItem>
   <TabItem value="ios">
 
-  ![](/img/tutorial/question-answering/ios/user-feedback.gif "Screenshot for showing question answering with user feedback")
+  ![](/img/tutorial-0.1/question-answering/ios/user-feedback.gif "Screenshot for showing question answering with user feedback")
 
   </TabItem>
 </Tabs>

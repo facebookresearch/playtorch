@@ -3,8 +3,6 @@ id: faq
 title: Frequently Asked Questions
 ---
 
-<div className="tutorial-page">
-
 We are constantly looking for ways to improve PlayTorch. If you have questions or feedback, please [file an issue on GitHub](https://github.com/facebookresearch/playtorch/issues).
 
 ## General Setup
@@ -66,5 +64,3 @@ A: PyTorch does not provide security at the model-level. Most mobile platforms s
 If security of ML model is desired then you may get close by turning off debugging and backup in the app manifest for Android. If you do this then the data stored in your local app data directory cannot be extracted without rooting the device.
 
 Another possibility is to encrypt the model and store the encrypted model in the underlying platform-provided secure location. This will likely increase latency and may impact other metrics that your app may care about. You may want to consider securing the ML model using any mechanism that you use for securing other valuable assets in use by the app.
-
-</div>

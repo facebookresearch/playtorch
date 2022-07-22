@@ -55,12 +55,6 @@ module.exports = {
         'tutorials/prepare-custom-model',
       ],
     },
-    {
-      type: 'category',
-      label: 'Server Models (unstable)',
-      collapsed: false,
-      items: ['tutorials/server-model', 'tutorials/connecting-to-a-server'],
-    },
     fbContent({
       internal: {
         type: 'category',

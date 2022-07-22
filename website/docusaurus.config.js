@@ -174,28 +174,6 @@ module.exports = {
   ],
   plugins: [
     [
-      path.resolve(__dirname, 'plugin-dynamic-routes'),
-      {
-        routes: [
-          {
-            path: '/expo',
-            exact: false,
-            component: '@site/src/components/ExpoSnackRouter',
-          },
-          {
-            path: '/snack',
-            exact: false,
-            component: '@site/src/components/ExpoSnackRouter',
-          },
-          {
-            path: '/example',
-            exact: false,
-            component: '@site/src/components/ExampleRouter',
-          },
-        ],
-      },
-    ],
-    [
       'docusaurus-plugin-typedoc',
       {
         name: 'React Native PyTorch Core',
@@ -220,17 +198,6 @@ module.exports = {
           indexLabel: 'Overview',
         },
         watch: process.env.TYPEDOC_WATCH,
-      },
-    ],
-    [
-      '@docusaurus/plugin-client-redirects',
-      {
-        redirects: [
-          {
-            to: '/docs/tutorials/get-started/',
-            from: '/tutorials',
-          },
-        ],
       },
     ],
   ],

@@ -1,12 +1,13 @@
 {
+  "trailingSlash": false,
   "rewrites": [
-    {"source": "/snack/(.*)", "destination": "/snack/"},
+    {"source": "/snack/(.*)", "destination": "/snack"},
     {"source": "/expo/(.*)", "destination": "/snack/"},
     {"source": "/example/(.*)", "destination": "/example/"}
   ],
   "redirects": [
     {
-      "source": "/tutorials",
+      "source": "/tutorials/",
       "destination": "/docs/tutorials/get-started/",
       "permanent": false
     },

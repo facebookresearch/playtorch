@@ -54,9 +54,12 @@ PlayTorch apps may target Android 10.0 (API 21) and iOS 12.0 or newer. You may u
 ## 🎉 Building your first PlayTorch app
 Follow the [Getting Started guide](https://playtorch.dev/docs/tutorials/get-started). We also have a few tutorials for you to keep going after getting started:
 
-* [Image Classification](https://playtorch.dev/docs/tutorials/image-classification)
-* [Question Answering](https://playtorch.dev/docs/tutorials/question-answering)
-* [Prepare Custom Model](https://playtorch.dev/docs/tutorials/prepare-custom-model)
+* [Image Classification](https://playtorch.dev/docs/tutorials/snacks/image-classification/)
+* [Question Answering](https://playtorch.dev/docs/tutorials/snacks/nlp-qa/)
+* [Object Detection](https://playtorch.dev/docs/tutorials/snacks/object-detection/)
+* [AnimeGAN](https://playtorch.dev/docs/tutorials/snacks/anime-gan/)
+* [French Translator](https://playtorch.dev/docs/tutorials/snacks/seq2seq-nmt/)
+* [Prepare Custom Model](https://playtorch.dev/docs/tutorials/prepare-custom-model/)
 
 ## 📖 Documentation
 

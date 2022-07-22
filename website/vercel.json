@@ -1,5 +1,5 @@
 {
-  "trailingSlash": false,
+  "trailingSlash": true,
   "rewrites": [
     {"source": "/snack/(.*)", "destination": "/snack"},
     {"source": "/expo/(.*)", "destination": "/snack/"},

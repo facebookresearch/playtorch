@@ -174,6 +174,28 @@ module.exports = {
   ],
   plugins: [
     [
+      path.resolve(__dirname, 'plugin-dynamic-routes'),
+      {
+        routes: [
+          {
+            path: '/expo',
+            exact: false,
+            component: '@site/src/components/ExpoSnackRouter',
+          },
+          {
+            path: '/snack',
+            exact: false,
+            component: '@site/src/components/ExpoSnackRouter',
+          },
+          {
+            path: '/example',
+            exact: false,
+            component: '@site/src/components/ExampleRouter',
+          },
+        ],
+      },
+    ],
+    [
       'docusaurus-plugin-typedoc',
       {
         name: 'React Native PyTorch Core',

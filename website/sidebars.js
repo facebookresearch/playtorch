@@ -34,6 +34,18 @@ module.exports = {
     },
     {
       type: 'category',
+      label: 'Tutorials',
+      collapsed: false,
+      items: [
+        'tutorials/jsi-tutorials/image-classification-jsi',
+        'tutorials/jsi-tutorials/nlp-qa-jsi',
+        'tutorials/jsi-tutorials/object-detection-jsi',
+        'tutorials/jsi-tutorials/anime-gan-jsi',
+        'tutorials/jsi-tutorials/seq2seq-nmt-jsi',
+      ],
+    },
+    {
+      type: 'category',
       label: 'On-device Models',
       collapsed: false,
       items: [
@@ -54,15 +66,7 @@ module.exports = {
         type: 'category',
         label: '[Meta Only]',
         collapsed: false,
-        items: [
-          'fb/wikis/creating-a-release',
-          'fb/wikis/install-ptl-app',
-          'fb/jsi-tutorials/image-classification-jsi',
-          'fb/jsi-tutorials/nlp-qa-jsi',
-          'fb/jsi-tutorials/object-detection-jsi',
-          'fb/jsi-tutorials/anime-gan-jsi',
-          'fb/jsi-tutorials/seq2seq-nmt-jsi',
-        ],
+        items: ['fb/wikis/creating-a-release', 'fb/wikis/install-ptl-app'],
       },
       external: {},
     }),

@@ -115,7 +115,7 @@ h1.title {
 .button {
   display: inline-block;
   font-size: 0.9rem;
-  height: 3rem;
+  min-height: 3rem;
   line-height: 3rem;
   border-radius: 1.5rem;
   color: #fff;
@@ -269,7 +269,7 @@ h1.title {
   }
 
   .button {
-    padding: 0 2rem;
+    padding: 0 1.5rem;
   }
 
   .video {

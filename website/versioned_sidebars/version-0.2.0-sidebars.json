@@ -20,7 +20,8 @@
         "tutorials/snacks/nlp-qa",
         "tutorials/snacks/object-detection",
         "tutorials/snacks/anime-gan",
-        "tutorials/snacks/seq2seq-nmt"
+        "tutorials/snacks/seq2seq-nmt",
+        "tutorials/prepare-custom-model"
       ]
     },
     {},

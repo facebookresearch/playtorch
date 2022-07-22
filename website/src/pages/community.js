@@ -15,7 +15,7 @@ import styles from './community.module.css';
 function Card({thumbnail, title, children}) {
   const imgUrl = thumbnail
     ? require(`@site/static/img/${thumbnail}`).default
-    : require(`@site/static/img/default_card.jpg`).default;
+    : require(`@site/static/img/default_card.png`).default;
   return (
     <div className={styles.showCard}>
       <div

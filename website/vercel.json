@@ -7,11 +7,6 @@
   ],
   "redirects": [
     {
-      "source": "/tutorials/",
-      "destination": "/docs/tutorials/get-started/",
-      "permanent": false
-    },
-    {
       "source": "/app/privacy/policy/",
       "destination": "https://www.facebook.com/privacy/policy",
       "permanent": false

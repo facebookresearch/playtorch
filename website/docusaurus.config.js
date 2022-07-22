@@ -200,6 +200,17 @@ module.exports = {
         watch: process.env.TYPEDOC_WATCH,
       },
     ],
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        redirects: [
+          {
+            to: '/docs/tutorials/get-started/',
+            from: '/tutorials',
+          },
+        ],
+      },
+    ],
   ],
   stylesheets: [
     {

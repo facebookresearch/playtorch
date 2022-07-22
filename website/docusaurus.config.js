@@ -20,7 +20,7 @@ module.exports = {
   url: 'https://playtorch.dev',
   baseUrl: '/',
   onBrokenLinks: 'throw',
-  onBrokenMarkdownLinks: 'warn',
+  onBrokenMarkdownLinks: 'throw',
   favicon: 'img/favicon.ico',
   organizationName: 'pytorch',
   projectName: 'live',

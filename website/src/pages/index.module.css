@@ -156,9 +156,15 @@ h1.title {
 
 .appStoreButtonWrapper {
   margin-left: 11px;
-  margin-top: 10px;
+  margin-top: 5px; /* for badge: 10px */
   text-decoration: none;
   vertical-align: top;
+}
+
+/* for badge: remove this */
+.appStoreButtonWrapper .button {
+  margin-top: 0;
+  text-transform: none;
 }
 
 .appStoreBadge {

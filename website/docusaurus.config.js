@@ -251,8 +251,5 @@ module.exports = {
       'https://github.com/facebookresearch/playtorch/issues/new?assignees=&labels=Use%20Case&template=use_case.yml',
     twitterTagUrl: 'https://twitter.com/search?q=%23playtorch',
     stackoverflowTagUrl: 'https://stackoverflow.com/questions/tagged/playtorch',
-    appStoreUrl: 'https://apps.apple.com/us/app/playtorch/id1632121045',
-    googlePlayUrl:
-      'https://play.google.com/store/apps/details?id=dev.playtorch',
   },
 };

@@ -12,7 +12,7 @@ import clsx from 'clsx';
 import Layout from '@theme/Layout';
 import styles from './index.module.css';
 import DocVideo from '../components/DocVideo';
-import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
+import ExternalLinks from '@site/src/constants/ExternalLinks';
 
 import AppStoreBadge from '@site/static/img/download_on_the_app_store_badge.svg';
 import GooglePlayBadgeUrl from '@site/static/img/google_play_badge.png';
@@ -82,13 +82,19 @@ function AppStoreRow({
             />
           </a>
           <a
-            className={clsx([styles.appStoreButtonWrapper])}
+            className={clsx([
+              styles.appStoreButtonWrapper,
+              styles.buttonWrapper,
+            ])}
             href={appStoreLink || '#'}>
-            <AppStoreBadge
-              className={clsx([styles.appStoreBadge])}
-              title="Download on the App Store Badge"
-              role="img"
-            />
+            <div className={styles.button}>JOIN THE iOS BETA</div>
+            {false && (
+              <AppStoreBadge
+                className={clsx([styles.appStoreBadge])}
+                title="Download on the App Store Badge"
+                role="img"
+              />
+            )}
           </a>
         </div>
       </div>
@@ -120,7 +126,6 @@ function WideRow({content, video, head = false, tail = false}) {
 }
 
 export default function Home() {
-  const {siteConfig} = useDocusaurusContext();
   const [balloonStyle, setBalloonStyle] = useState({});
 
   useEffect(() => {
@@ -242,8 +247,8 @@ export default function Home() {
             video={heroVideo}
             odd={false}
             head={true}
-            appStoreLink={siteConfig.customFields.appStoreUrl}
-            googlePlayLink={siteConfig.customFields.googlePlayUrl}
+            appStoreLink={ExternalLinks.APP_STORE}
+            googlePlayLink={ExternalLinks.GOOGLE_PLAY_STORE}
           />
 
           <WideRow content={firstPropContent} video={firstPropVideo} />

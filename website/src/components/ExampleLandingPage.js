@@ -13,7 +13,7 @@ import clsx from 'clsx';
 import styles from './ExampleLandingPage.module.css';
 import AppleLogoSvg from '@site/static/img/apple_logo_white.svg';
 import AndroidLogoSvg from '@site/static/img/android_logo_white.svg';
-import {GOOGLE_PLAY_STORE, APP_STORE} from '@site/src/constants/ExternalLinks';
+import ExternalLinks from '@site/src/constants/ExternalLinks';
 
 function AppStoreButton({href, LogoComponent, label}) {
   return (
@@ -68,12 +68,12 @@ export default function ExampleLandingPage({match, history}) {
                     This example requires the PlayTorch app to get started.
                   </p>
                   <AppStoreButton
-                    href={APP_STORE}
+                    href={ExternalLinks.APP_STORE}
                     LogoComponent={AppleLogoSvg}
-                    label="Download PlayTorch for iOS"
+                    label="Join the iOS Beta"
                   />
                   <AppStoreButton
-                    href={GOOGLE_PLAY_STORE}
+                    href={ExternalLinks.GOOGLE_PLAY_STORE}
                     LogoComponent={AndroidLogoSvg}
                     label="Download PlayTorch for Android"
                   />

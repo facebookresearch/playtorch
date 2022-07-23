@@ -43,6 +43,7 @@ module.exports = {
         'tutorials/snacks/object-detection',
         'tutorials/snacks/anime-gan',
         'tutorials/snacks/seq2seq-nmt',
+        'tutorials/snacks/yolov5',
         'tutorials/prepare-custom-model',
       ],
     },

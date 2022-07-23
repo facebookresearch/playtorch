@@ -59,6 +59,7 @@ Follow the [Getting Started guide](https://playtorch.dev/docs/tutorials/get-star
 * [Object Detection](https://playtorch.dev/docs/tutorials/snacks/object-detection/)
 * [AnimeGAN](https://playtorch.dev/docs/tutorials/snacks/anime-gan/)
 * [French Translator](https://playtorch.dev/docs/tutorials/snacks/seq2seq-nmt/)
+* [YOLOv5](https://playtorch.dev/docs/tutorials/snacks/yolov5)
 * [Prepare Custom Model](https://playtorch.dev/docs/tutorials/prepare-custom-model/)
 
 ## 📖 Documentation

@@ -8,7 +8,7 @@
   Build your AI powered mobile prototypes in minutes:
   <a href="https://playtorch.dev/docs/tutorials/get-started">Get Started</a>
   <span> · </span>
-  <a href="https://playtorch.dev/docs/tutorials/image-classification">Tutorials</a>
+  <a href="https://playtorch.dev/docs/tutorials/snacks/image-classification/">Tutorials</a>
   <span> · </span>
   <a href="https://playtorch.dev/docs/api/cli">API</a>
 </h3>

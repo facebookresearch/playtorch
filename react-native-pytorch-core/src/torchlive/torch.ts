@@ -526,6 +526,16 @@ export interface Torch {
    */
   randint(low: number, high: number, size: number[]): Tensor;
   /**
+   * Returns a tensor filled with random numbers from a normal distribution
+   * with mean 0 and variance 1 (also called the standard normal distribution).
+   *
+   * {@link https://pytorch.org/docs/1.11/generated/torch.randn.html}
+   *
+   * @param size A sequence of integers defining the shape of the output tensor.
+   * @param options Tensor options.
+   */
+  randn(size: number[], options?: TensorOptions): Tensor;
+  /**
    * Constructs a tensor with no autograd history.
    *
    * @param data Tensor data as multi-dimensional array.

@@ -158,6 +158,18 @@ const testUnitList = [
     },
   },
   {
+    name: 'torch.randn',
+    testFunc: async () => {
+      console.log('------Test torch.randn-------');
+      const tensor1 = torch.randn([4]);
+      const tensor2 = torch.randn([2, 3]);
+      const tensor3 = torch.randn([2, 3], {dtype: torch.float32});
+      printTensor(tensor1);
+      printTensor(tensor2);
+      printTensor(tensor3);
+    },
+  },
+  {
     name: 'generic tuple input',
     testFunc: async () => {
       console.log('------Test generic tuple input-------');

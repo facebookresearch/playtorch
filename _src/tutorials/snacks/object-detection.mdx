@@ -122,8 +122,8 @@ However, currently the code in our `App.js` file doesn't pass anything to our `<
 Here is a quick summary of the changes that we are making:
 
 1. Create a new async function called `handleImage` that does the following:
-   i. Log the image so we can inspect it
-   i. Release the image so it doesn't leak memory
+   1. Log the image so we can inspect it
+   1. Release the image so it doesn't leak memory
 1. Pass the new `handleImage` property to the `onCapture` prop
 
 ```jsx title="App.js" {39-43,48}
@@ -598,7 +598,7 @@ Now that we have the results in a much more usable format with class labels and 
 
 In order to display the results in our app, all we need to do is make some simple changes in our `App.js` file.
 
-Before we make any changes, we should not that we have a `screenState` state variable that chooses which screen we show. Currently we are only ever showing the camera screen, so we will need to update that state variable. You can also find a `ScreenStates` object that has the 3 different screen states our app can have.
+Before we make any changes, we should have a `screenState` state variable that chooses which screen we show. Currently we are only ever showing the camera screen, so we will need to update that state variable. You can also find a `ScreenStates` object that has the 3 different screen states our app can have.
 
 We also should notice that we have a state variable called `boundingBoxes` that is currently always an empty array. That `boundingBoxes` state variable is passed to our `ResultsScreen`, so we will need to make sure we updated it for our results to be displayed.
 

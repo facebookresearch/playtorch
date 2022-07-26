@@ -135,6 +135,97 @@ TEST_F(TorchliveTensorRuntimeTest, TensorArgmaxTest) {
       eval(tensorArgmaxWtihInvalidKeepdimOption), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorArgminTest) {
+  // Valid inputs
+  std::string tensorArgmin1D =
+      R"(
+          const tensor = torch.tensor([1,-2,3]);
+          const result = tensor.argmin().item();
+          result == 1;
+        )";
+  EXPECT_TRUE(eval(tensorArgmin1D).getBool());
+
+  std::string tensorArgminWithMultipleMinValue =
+      R"(
+          const tensor = torch.tensor([[1,2,-3,4]]);
+          const result = tensor.argmin().item();
+          result == 2;
+        )";
+  EXPECT_TRUE(eval(tensorArgminWithMultipleMinValue).getBool());
+
+  std::string tensorArgminReturnIndexOnFlattenArray =
+      R"(
+          const tensor = torch.tensor([[1,2,3],[4,5,-6]]);
+          const result = tensor.argmin();
+          result.item() === 5;
+        )";
+  EXPECT_TRUE(eval(tensorArgminReturnIndexOnFlattenArray).getBool());
+
+  std::string tensorArgminWithSimpleDim0 =
+      R"(
+      const tensor = torch.tensor([[1, 2, 3],[4, -5, 6]]);
+      const result = tensor.argmin({dim: 0});
+      const expectedShape = [3];
+      expectedData = [0, 1, 0];
+      result.shape.length == expectedShape.length && result.shape.every((v, i) => v == expectedShape[i]) && result.data().every((v, i) => v == expectedData[i]);
+    )";
+  EXPECT_TRUE(eval(tensorArgminWithSimpleDim0).getBool());
+
+  std::string tensorArgminWithSimpleDim1 =
+      R"(
+      const tensor = torch.tensor([[1, 2, 3],[4, -5, 6]]);
+      const result = tensor.argmin({dim: 1});
+      const expectedShape = [2];
+      expectedData = [0, 1];
+      result.shape.length == expectedShape.length && result.shape.every((v, i) => v == expectedShape[i]) && result.data().every((v, i) => v == expectedData[i]);
+    )";
+  EXPECT_TRUE(eval(tensorArgminWithSimpleDim1).getBool());
+
+  std::string tensorArgminWithDimOption =
+      R"(
+      const tensor = torch.tensor([[[1,2,3], [4,5,6]], [[7, 8, 9], [10, 11, 12]]]);
+      const result = tensor.argmin({dim: 0});
+      const expectedShape = [2, 3];
+      expectedData = [0, 0, 0, 0, 0, 0];
+      result.shape.length == expectedShape.length && result.shape.every((v, i) => v == expectedShape[i]) && result.data().every((v, i) => v == expectedData[i]);
+    )";
+  EXPECT_TRUE(eval(tensorArgminWithDimOption).getBool());
+
+  std::string tensorArgminWithDimOptionAndKeepdimOption =
+      R"(
+      const tensor = torch.tensor([[[1,2,3], [4,5,6]], [[7, 8, 9], [10, 11, 12]]]);
+      const result = tensor.argmin({dim: 2, keepdim: true});
+      const expectedShape = [2, 2, 1];
+      expectedData = [0, 0, 0, 0];
+      result.shape.length == expectedShape.length && result.shape.every((v, i) => v == expectedShape[i]) && result.data().every((v, i) => v == expectedData[i]);
+    )";
+  EXPECT_TRUE(eval(tensorArgminWithDimOptionAndKeepdimOption).getBool());
+
+  // invalid input
+  std::string tensorArgminWtihNonEmptyTensor =
+      R"(
+          const tensor = torch.tensor([]);
+          tensor.argmin();
+        )";
+  EXPECT_THROW(eval(tensorArgminWtihNonEmptyTensor), facebook::jsi::JSError);
+
+  std::string tensorArgminWtihDimOptionNotExistd =
+      R"(
+          const tensor = torch.tensor([[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]]);
+          tensor.argmin({dim: 5});
+        )";
+  EXPECT_THROW(
+      eval(tensorArgminWtihDimOptionNotExistd), facebook::jsi::JSError);
+
+  std::string tensorArgminWtihInvalidKeepdimOption =
+      R"(
+          const tensor = torch.tensor([[[1, 2, 3], [4, 5, 6]], [[7, 8, 9], [10, 11, 12]]]);
+          tensor.argmin({keepdim: 1});
+        )";
+  EXPECT_THROW(
+      eval(tensorArgminWtihInvalidKeepdimOption), facebook::jsi::JSError);
+}
+
 TEST_F(TorchliveTensorRuntimeTest, TensorContiguousTest) {
   std::string torchPreserveFormat =
       R"(

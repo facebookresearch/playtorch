@@ -107,6 +107,37 @@ jsi::Value argmaxImpl(
       runtime, std::move(tensor));
 };
 
+jsi::Value argminImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  auto thiz = args.thisAsHostObject<TensorHostObject>();
+
+  auto dimValue = args.keywordValue(0, "dim");
+  c10::optional<int64_t> dim = c10::nullopt;
+  if (!dimValue.isUndefined()) {
+    dim = dimValue.asNumber();
+  }
+
+  auto keepdimValue = args.keywordValue(0, "keepdim");
+  bool keepdim = false;
+  if (keepdimValue.isBool()) {
+    keepdim = keepdimValue.getBool();
+  } else if (!keepdimValue.isUndefined()) {
+    throw jsi::JSError(
+        runtime, "expect 'keepdim' to be boolean, but another type is given.");
+  }
+
+  // transform the tensor to dtype of Int32 because Hermes doesn't support
+  // BigInt yet.
+  auto tensor = thiz->tensor.argmin(dim, keepdim)
+                    .to(torch_::TensorOptions().dtype(torch_::kInt32));
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, std::move(tensor));
+};
+
 jsi::Value clampImp(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -555,6 +586,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "abs", 0, absImpl);
   setPropertyHostFunction(runtime, "add", 1, addImpl);
   setPropertyHostFunction(runtime, "argmax", 0, argmaxImpl);
+  setPropertyHostFunction(runtime, "argmin", 0, argminImpl);
   setPropertyHostFunction(runtime, "clamp", 1, clampImp);
   setPropertyHostFunction(runtime, "contiguous", 0, contiguousImpl);
   setPropertyHostFunction(runtime, "data", 0, dataImpl);

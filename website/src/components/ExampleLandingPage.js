@@ -30,7 +30,7 @@ function RedirectToNotFound({history}) {
   useEffect(() => {
     // This is a hack to show the "Page Not Found" screen when an invalid example slug is provided
     // or no slug is provided. This page doesn't exist, so docusaurus will show the generic not found page.
-    history.push('/example-not-found');
+    history.replace('/example-not-found');
   }, [history]);
   return null;
 }

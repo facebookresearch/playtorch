@@ -1,0 +1,20 @@
+{
+  "trailingSlash": true,
+  "rewrites": [
+    {"source": "/snack/(.*)", "destination": "/snack"},
+    {"source": "/expo/(.*)", "destination": "/snack/"},
+    {"source": "/example/(.*)", "destination": "/example/"}
+  ],
+  "redirects": [
+    {
+      "source": "/app/privacy/policy/",
+      "destination": "https://www.facebook.com/privacy/policy",
+      "permanent": false
+    },
+    {
+      "source": "/app/legal/terms/",
+      "destination": "https://www.facebook.com/legal/terms",
+      "permanent": false
+    }
+  ]
+}

@@ -273,7 +273,7 @@ PODS:
     - React-jsi (= 0.64.3)
     - React-perflogger (= 0.64.3)
   - React-jsinspector (0.64.3)
-  - "react-native-pytorch-core (0.0.0+ce487b35)":
+  - "react-native-pytorch-core (0.0.0+4247030d)":
     - LibTorch-Lite (~> 1.12.0)
     - React
     - React-callinvoker
@@ -543,7 +543,7 @@ SPEC CHECKSUMS:
   CocoaAsyncSocket: 065fd1e645c7abab64f7a6a2007a48038fdc6a99
   DoubleConversion: cf9b38bf0b2d048436d9a82ad2abe1404f11e7de
   FBLazyVector: c71c5917ec0ad2de41d5d06a5855f6d5eda06971
-  FBReactNativeSpec: dfa2fb77646f8f23d44176fdac01d1167dcee2f7
+  FBReactNativeSpec: 6a6c0d0f8a3ad480d32f3cdcc2b12504dbfbbe89
   Flipper: d3da1aa199aad94455ae725e9f3aa43f3ec17021
   Flipper-DoubleConversion: 38631e41ef4f9b12861c67d17cb5518d06badc41
   Flipper-Folly: 755929a4f851b2fb2c347d533a23f191b008554c
@@ -567,7 +567,7 @@ SPEC CHECKSUMS:
   React-jsi: a8b09c29521c798f1783348b37b511ba7b3dbeb3
   React-jsiexecutor: df6abc9fafbecb8e5b7a5fbc5e6d4bd017d594d5
   React-jsinspector: 34e23860273a23695342f58eed3ffd3ba10c31e0
-  react-native-pytorch-core: 404de8d81615fa852af11a17f635c8a53e15080a
+  react-native-pytorch-core: fd2359b8482bc9c2a734c441de7846070b0cb379
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   React-perflogger: cc76a4254d19640f1d8ad1c66fdee800414b805c
   React-RCTActionSheet: 7448f049318d8d7e8a9a1ebb742ada721757eea8

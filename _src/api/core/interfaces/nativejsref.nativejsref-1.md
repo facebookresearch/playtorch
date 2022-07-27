@@ -31,4 +31,4 @@ functions on the JavaScript object.
 
 #### Defined in
 
-[NativeJSRef.ts:64](https://github.com/facebookresearch/playtorch/blob/8aba7cb/react-native-pytorch-core/src/NativeJSRef.ts#L64)
+[NativeJSRef.ts:64](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/NativeJSRef.ts#L64)

@@ -1,4 +1,4 @@
-name: Deploy Website
+name: Test Build Website
 
 on:
   push:
@@ -33,28 +33,3 @@ jobs:
         run: yarn install --frozen-lockfile
       - name: Test build website 🧪
         run: yarn build
-
-  gh-release:
-    name: Build & Deploy 🔨 🚀
-    if: github.event_name != 'pull_request'
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./website
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 16.x
-          cache: yarn
-          cache-dependency-path: website/yarn.lock
-      - name: Install dependencies 🧶
-        run: yarn install --frozen-lockfile
-      - name: Build website 🔨
-        run: yarn build
-      - name: Deploy website 🚀
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # Build output to publish to the `gh-pages` branch:
-          publish_dir: ./website/build

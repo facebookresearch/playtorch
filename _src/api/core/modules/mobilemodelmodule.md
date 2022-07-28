@@ -20,4 +20,4 @@ custom_edit_url: null
 
 #### Defined in
 
-[MobileModelModule.ts:116](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/MobileModelModule.ts#L116)
+[MobileModelModule.ts:116](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/MobileModelModule.ts#L116)

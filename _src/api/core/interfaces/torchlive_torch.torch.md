@@ -15,7 +15,7 @@ custom_edit_url: null
 
 #### Defined in
 
-[torchlive/torch.ts:586](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L586)
+[torchlive/torch.ts:586](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L586)
 
 ___
 
@@ -25,7 +25,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:587](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L587)
+[torchlive/torch.ts:587](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L587)
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:572](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L572)
+[torchlive/torch.ts:572](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L572)
 
 ___
 
@@ -45,7 +45,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:573](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L573)
+[torchlive/torch.ts:573](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L573)
 
 ___
 
@@ -55,7 +55,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:574](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L574)
+[torchlive/torch.ts:574](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L574)
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:575](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L575)
+[torchlive/torch.ts:575](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L575)
 
 ___
 
@@ -75,7 +75,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:576](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L576)
+[torchlive/torch.ts:576](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L576)
 
 ___
 
@@ -85,7 +85,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:577](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L577)
+[torchlive/torch.ts:577](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L577)
 
 ___
 
@@ -95,7 +95,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:578](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L578)
+[torchlive/torch.ts:578](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L578)
 
 ___
 
@@ -105,7 +105,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:579](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L579)
+[torchlive/torch.ts:579](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L579)
 
 ___
 
@@ -115,7 +115,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:580](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L580)
+[torchlive/torch.ts:580](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L580)
 
 ___
 
@@ -127,7 +127,7 @@ JIT module
 
 #### Defined in
 
-[torchlive/torch.ts:569](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L569)
+[torchlive/torch.ts:569](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L569)
 
 ___
 
@@ -137,7 +137,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:581](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L581)
+[torchlive/torch.ts:581](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L581)
 
 ___
 
@@ -147,7 +147,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:588](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L588)
+[torchlive/torch.ts:588](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L588)
 
 ___
 
@@ -157,7 +157,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:582](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L582)
+[torchlive/torch.ts:582](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L582)
 
 ___
 
@@ -167,7 +167,7 @@ ___
 
 #### Defined in
 
-[torchlive/torch.ts:583](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L583)
+[torchlive/torch.ts:583](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L583)
 
 ## Methods
 
@@ -193,7 +193,7 @@ Returns a 1-D tensor of size `(end - 0) / 1` with values from the interval
 
 #### Defined in
 
-[torchlive/torch.ts:406](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L406)
+[torchlive/torch.ts:406](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L406)
 
 ▸ **arange**(`start`, `end`, `options?`): [Tensor](torchlive_torch.tensor.md)
 
@@ -217,7 +217,7 @@ interval `[start, end)` taken with common difference 1 beginning from
 
 #### Defined in
 
-[torchlive/torch.ts:418](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L418)
+[torchlive/torch.ts:418](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L418)
 
 ▸ **arange**(`start`, `end`, `step`, `options?`): [Tensor](torchlive_torch.tensor.md)
 
@@ -242,7 +242,7 @@ interval `[start, end)` taken with common difference `step` beginning from
 
 #### Defined in
 
-[torchlive/torch.ts:431](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L431)
+[torchlive/torch.ts:431](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L431)
 
 ___
 
@@ -268,7 +268,7 @@ Concatenate a list of tensors along the specified axis, which default to be axis
 
 #### Defined in
 
-[torchlive/torch.ts:445](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L445)
+[torchlive/torch.ts:445](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L445)
 
 ___
 
@@ -294,7 +294,7 @@ is defined by the variable argument size.
 
 #### Defined in
 
-[torchlive/torch.ts:455](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L455)
+[torchlive/torch.ts:455](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L455)
 
 ___
 
@@ -321,7 +321,7 @@ The shape of the tensor is defined by the arguments n and m.
 
 #### Defined in
 
-[torchlive/torch.ts:465](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L465)
+[torchlive/torch.ts:465](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L465)
 
 ___
 
@@ -352,7 +352,7 @@ The function exists in JavaScript and C++ (torch::from_blob).
 
 #### Defined in
 
-[torchlive/torch.ts:481](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L481)
+[torchlive/torch.ts:481](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L481)
 
 ___
 
@@ -380,7 +380,7 @@ base^start to base^end, inclusive, on a logarithmic scale with base.
 
 #### Defined in
 
-[torchlive/torch.ts:493](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L493)
+[torchlive/torch.ts:493](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L493)
 
 ___
 
@@ -406,7 +406,7 @@ by the argument `size`.
 
 #### Defined in
 
-[torchlive/torch.ts:508](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L508)
+[torchlive/torch.ts:508](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L508)
 
 ___
 
@@ -430,7 +430,7 @@ the interval `[0, 1)`.
 
 #### Defined in
 
-[torchlive/torch.ts:516](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L516)
+[torchlive/torch.ts:516](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L516)
 
 ___
 
@@ -456,7 +456,7 @@ Returns a tensor filled with random integers generated uniformly between
 
 #### Defined in
 
-[torchlive/torch.ts:526](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L526)
+[torchlive/torch.ts:526](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L526)
 
 ▸ **randint**(`low`, `high`, `size`): [Tensor](torchlive_torch.tensor.md)
 
@@ -479,7 +479,7 @@ Returns a tensor filled with random integers generated uniformly between
 
 #### Defined in
 
-[torchlive/torch.ts:537](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L537)
+[torchlive/torch.ts:537](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L537)
 
 ___
 
@@ -505,7 +505,7 @@ with mean 0 and variance 1 (also called the standard normal distribution).
 
 #### Defined in
 
-[torchlive/torch.ts:547](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L547)
+[torchlive/torch.ts:547](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L547)
 
 ___
 
@@ -528,7 +528,7 @@ Constructs a tensor with no autograd history.
 
 #### Defined in
 
-[torchlive/torch.ts:554](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L554)
+[torchlive/torch.ts:554](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L554)
 
 ___
 
@@ -554,4 +554,4 @@ by the argument `size`.
 
 #### Defined in
 
-[torchlive/torch.ts:564](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L564)
+[torchlive/torch.ts:564](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L564)

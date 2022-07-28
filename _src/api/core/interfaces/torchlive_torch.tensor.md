@@ -33,7 +33,7 @@ A dtype is an string that represents the data type of a torch.Tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:248](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L248)
+[torchlive/torch.ts:248](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L248)
 
 ___
 
@@ -47,7 +47,7 @@ Returns the size of the tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:286](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L286)
+[torchlive/torch.ts:286](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L286)
 
 ## Methods
 
@@ -65,7 +65,7 @@ Computes the absolute value of each element in input.
 
 #### Defined in
 
-[torchlive/torch.ts:147](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L147)
+[torchlive/torch.ts:147](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L147)
 
 ___
 
@@ -91,7 +91,7 @@ Add a scalar or tensor to this tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:156](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L156)
+[torchlive/torch.ts:156](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L156)
 
 ___
 
@@ -118,7 +118,7 @@ tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:167](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L167)
+[torchlive/torch.ts:167](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L167)
 
 ___
 
@@ -144,7 +144,7 @@ Returns the indices of the minimum value(s) of the flattened tensor or along a d
 
 #### Defined in
 
-[torchlive/torch.ts:177](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L177)
+[torchlive/torch.ts:177](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L177)
 
 ___
 
@@ -171,7 +171,7 @@ If `min` is `undefined`, there is no lower bound. Or, if `max` is `undefined` th
 
 #### Defined in
 
-[torchlive/torch.ts:188](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L188)
+[torchlive/torch.ts:188](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L188)
 
 ▸ **clamp**(`options`): [Tensor](torchlive_torch.tensor.md)
 
@@ -195,7 +195,7 @@ If `min` is `undefined`, there is no lower bound. Or, if `max` is `undefined` th
 
 #### Defined in
 
-[torchlive/torch.ts:199](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L199)
+[torchlive/torch.ts:199](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L199)
 
 ___
 
@@ -220,7 +220,7 @@ function returns this tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:209](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L209)
+[torchlive/torch.ts:209](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L209)
 
 ___
 
@@ -252,7 +252,7 @@ The function only exists in JavaScript.
 
 #### Defined in
 
-[torchlive/torch.ts:229](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L229)
+[torchlive/torch.ts:229](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L229)
 
 ___
 
@@ -279,7 +279,7 @@ other.
 
 #### Defined in
 
-[torchlive/torch.ts:239](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L239)
+[torchlive/torch.ts:239](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L239)
 
 ___
 
@@ -298,7 +298,7 @@ tensors with one element.
 
 #### Defined in
 
-[torchlive/torch.ts:255](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L255)
+[torchlive/torch.ts:255](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L255)
 
 ___
 
@@ -322,7 +322,7 @@ Multiplies input by other scalar or tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:272](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L272)
+[torchlive/torch.ts:272](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L272)
 
 ___
 
@@ -346,7 +346,7 @@ Returns a view of the original tensor input with its dimensions permuted.
 
 #### Defined in
 
-[torchlive/torch.ts:280](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L280)
+[torchlive/torch.ts:280](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L280)
 
 ___
 
@@ -371,7 +371,7 @@ with the specified shape.
 
 #### Defined in
 
-[torchlive/torch.ts:264](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L264)
+[torchlive/torch.ts:264](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L264)
 
 ___
 
@@ -389,7 +389,7 @@ Returns the size of the tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:292](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L292)
+[torchlive/torch.ts:292](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L292)
 
 ___
 
@@ -415,7 +415,7 @@ to `1`.
 
 #### Defined in
 
-[torchlive/torch.ts:302](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L302)
+[torchlive/torch.ts:302](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L302)
 
 ___
 
@@ -433,7 +433,7 @@ Computes the square-root value of each element in input.
 
 #### Defined in
 
-[torchlive/torch.ts:308](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L308)
+[torchlive/torch.ts:308](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L308)
 
 ___
 
@@ -457,7 +457,7 @@ Returns a tensor with all the dimensions of input of size 1 removed.
 
 #### Defined in
 
-[torchlive/torch.ts:316](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L316)
+[torchlive/torch.ts:316](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L316)
 
 ___
 
@@ -475,7 +475,7 @@ Returns the stride of the tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:322](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L322)
+[torchlive/torch.ts:322](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L322)
 
 ▸ **stride**(`dim`): `number`
 
@@ -495,7 +495,7 @@ Returns the stride of the tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:330](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L330)
+[torchlive/torch.ts:330](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L330)
 
 ___
 
@@ -521,7 +521,7 @@ Subtracts other from input.
 
 #### Defined in
 
-[torchlive/torch.ts:339](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L339)
+[torchlive/torch.ts:339](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L339)
 
 ___
 
@@ -539,7 +539,7 @@ Returns the sum of all elements in the input tensor.
 
 #### Defined in
 
-[torchlive/torch.ts:345](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L345)
+[torchlive/torch.ts:345](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L345)
 
 ▸ **sum**(`dim`, `options?`): [Tensor](torchlive_torch.tensor.md)
 
@@ -562,7 +562,7 @@ If dim is a list of dimensions, reduce over all of them.
 
 #### Defined in
 
-[torchlive/torch.ts:355](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L355)
+[torchlive/torch.ts:355](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L355)
 
 ___
 
@@ -586,7 +586,7 @@ Performs Tensor conversion.
 
 #### Defined in
 
-[torchlive/torch.ts:363](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L363)
+[torchlive/torch.ts:363](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L363)
 
 ___
 
@@ -611,7 +611,7 @@ dimension.
 
 #### Defined in
 
-[torchlive/torch.ts:372](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L372)
+[torchlive/torch.ts:372](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L372)
 
 ___
 
@@ -636,4 +636,4 @@ specified position.
 
 #### Defined in
 
-[torchlive/torch.ts:381](https://github.com/facebookresearch/playtorch/blob/f62da3b/react-native-pytorch-core/src/torchlive/torch.ts#L381)
+[torchlive/torch.ts:381](https://github.com/facebookresearch/playtorch/blob/4aa8b9e/react-native-pytorch-core/src/torchlive/torch.ts#L381)

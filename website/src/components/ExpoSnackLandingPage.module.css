@@ -8,17 +8,19 @@
  */
 
 .container {
-  display: flex;
-  flex-direction: column;
+  /* display: flex;
+  flex-direction: column; */
 }
 
 .expoSnackContainer {
-  flex: 1 auto;
-  flex-grow: 1;
+  /* background-color: red; */
+  padding: 1em;
+  /* flex: 1 auto;
+  flex-grow: 1; */
 }
 
 .expoSnack {
-  height: 100%;
+  /* height: 100%; */
 }
 
 .appStoreLogo {

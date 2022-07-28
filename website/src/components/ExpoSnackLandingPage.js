@@ -36,39 +36,37 @@ export default function ExpoSnackLandingPage({match}) {
 
   return (
     <div className={clsx(styles.container)}>
-      <div className={clsx(styles.infoView)}>
-        <div className="row">
-          <div className="col col--10 col--offset--1">
-            <div className="hero shadow--lw">
-              <div className="container">
-                <h1 className="hero__title">PlayTorch</h1>
-                <p className="hero__subtitle">
-                  PlayTorch is a framework for rapidly creating cross-platform
-                  mobile AI experiences.
+      <div className="row">
+        <div className="col col--10 col--offset--1">
+          <div className="hero shadow--lw">
+            <div className="container">
+              <h1 className="hero__title">PlayTorch</h1>
+              <p className="hero__subtitle">
+                PlayTorch is a framework for rapidly creating cross-platform
+                mobile AI experiences.
+              </p>
+              <div>
+                <p className="margin-bottom--sm">Already have the app?</p>
+                <a
+                  className="button button--primary margin--xs"
+                  href={`playtorch://snack?snackUrl=exp://exp.host/${expoSnackPath}`}>
+                  Open with PlayTorch
+                </a>
+              </div>
+              <div className="margin-top--lg">
+                <p className="margin-bottom--sm">
+                  This snack requires the PlayTorch app to get started.
                 </p>
-                <div>
-                  <p className="margin-bottom--sm">Already have the app?</p>
-                  <a
-                    className="button button--primary margin--xs"
-                    href={`playtorch://snack?snackUrl=exp://exp.host/${expoSnackPath}`}>
-                    Open with PlayTorch
-                  </a>
-                </div>
-                <div className="margin-top--lg">
-                  <p className="margin-bottom--sm">
-                    This snack requires the PlayTorch app to get started.
-                  </p>
-                  <AppStoreButton
-                    href={ExternalLinks.APP_STORE}
-                    LogoComponent={AppleLogoSvg}
-                    label="Join the iOS Beta"
-                  />
-                  <AppStoreButton
-                    href={ExternalLinks.GOOGLE_PLAY_STORE}
-                    LogoComponent={AndroidLogoSvg}
-                    label="Download PlayTorch for Android"
-                  />
-                </div>
+                <AppStoreButton
+                  href={ExternalLinks.APP_STORE}
+                  LogoComponent={AppleLogoSvg}
+                  label="Join the iOS Beta"
+                />
+                <AppStoreButton
+                  href={ExternalLinks.GOOGLE_PLAY_STORE}
+                  LogoComponent={AndroidLogoSvg}
+                  label="Download PlayTorch for Android"
+                />
               </div>
             </div>
           </div>

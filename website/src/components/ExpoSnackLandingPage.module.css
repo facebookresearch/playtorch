@@ -10,12 +10,6 @@
 .container {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-}
-
-.infoView {
-  overflow: hidden;
-  overflow-y: auto;
 }
 
 .expoSnackContainer {

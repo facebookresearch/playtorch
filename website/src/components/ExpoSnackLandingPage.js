@@ -35,10 +35,10 @@ export default function ExpoSnackLandingPage({match}) {
   }
 
   return (
-    <div className={clsx(styles.container)}>
+    <div>
       <div className="row">
         <div className="col col--10 col--offset--1">
-          <div className="hero shadow--lw">
+          <div className="hero">
             <div className="container">
               <h1 className="hero__title">PlayTorch</h1>
               <p className="hero__subtitle">
@@ -73,11 +73,7 @@ export default function ExpoSnackLandingPage({match}) {
         </div>
       </div>
       <div className={clsx(styles.expoSnackContainer)}>
-        <ExpoSnack
-          snackPreview={false}
-          snackId={expoSnackPath}
-          snackStyle={clsx(styles.expoSnack)}
-        />
+        <ExpoSnack snackPreview={false} snackId={expoSnackPath} />
       </div>
     </div>
   );

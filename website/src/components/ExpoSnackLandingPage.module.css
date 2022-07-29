@@ -7,24 +7,8 @@
  * @format
  */
 
-.container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-}
-
-.infoView {
-  overflow: hidden;
-  overflow-y: auto;
-}
-
 .expoSnackContainer {
-  flex: 1 auto;
-  flex-grow: 1;
-}
-
-.expoSnack {
-  height: 100%;
+  padding: 1em;
 }
 
 .appStoreLogo {

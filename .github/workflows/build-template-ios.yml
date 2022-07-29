@@ -33,12 +33,15 @@ on:
 jobs:
   build:
     name: Build iOS Template App
-    runs-on: macOS-latest
+    runs-on: macos-12
     defaults:
       run:
         working-directory: ./react-native-template-pytorch-live/template/ios
     steps:
       - uses: actions/checkout@v2
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: '13.3.1'
       - name: Get yarn cache directory path
         id: yarn-cache-dir-path
         run: echo "::set-output name=dir::$(yarn cache dir)"
@@ -71,10 +74,10 @@ jobs:
           key: ${{ runner.os }}-pods-${{ hashFiles('**/Podfile.lock') }}
           restore-keys: |
             ${{ runner.os }}-pods-
+      - name: Install cocoapods-check
+        run: gem install cocoapods-check
       - name: Install Pods
         run: pod check || pod install
-      - name: Install xcpretty
-        run: gem install xcpretty
       - name: Build App
         run: "set -o pipefail && xcodebuild \
           CC=clang CPLUSPLUS=clang++ LD=clang LDPLUSPLUS=clang++ \
@@ -85,4 +88,4 @@ jobs:
           -configuration Debug \
           -destination 'platform=iOS Simulator,name=iPhone 11 Pro' \
           build \
-          CODE_SIGNING_ALLOWED=NO | xcpretty"
+          CODE_SIGNING_ALLOWED=NO"

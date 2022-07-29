@@ -38,12 +38,12 @@ std::shared_ptr<IImage> imageFromBlob(
 
 std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
   auto idRef = refId.c_str();
-  auto mediaDataRef = torchlive_media_beginReadData(idRef);
-  uint8_t* const tmpBuffer = torchlive_media_getDirectBytes(mediaDataRef);
-  size_t size = torchlive_media_getDirectSize(mediaDataRef);
+  auto mediaDataRef = [PTLBlobUtils beginReadDataWithCRefId:idRef];
+  uint8_t* const tmpBuffer = [PTLBlobUtils getDirectBytesWithCRefId:mediaDataRef];
+  size_t size = [PTLBlobUtils getDirectSizeWithCRefId:mediaDataRef];
   auto data = std::unique_ptr<uint8_t[]>(new uint8_t[size]);
   std::memcpy(data.get(), tmpBuffer, size);
-  torchlive_media_endReadData(mediaDataRef);
+  [PTLBlobUtils endReadDataWithCRefId:mediaDataRef];
   return std::make_unique<torchlive::media::Blob>(std::move(data), size);
 }
 

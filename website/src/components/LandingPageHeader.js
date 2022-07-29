@@ -33,7 +33,7 @@ export default function LandingPageHeader({expoSnackPath}) {
     <div className="row">
       <div className="col col--10 col--offset--1">
         <div className="hero">
-          <div>
+          <div className="container">
             <h1 className="hero__title">PlayTorch</h1>
             <p className="hero__subtitle">
               PlayTorch is a framework for rapidly creating cross-platform

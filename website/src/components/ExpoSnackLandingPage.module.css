@@ -7,20 +7,8 @@
  * @format
  */
 
-.container {
-  /* display: flex;
-  flex-direction: column; */
-}
-
 .expoSnackContainer {
-  /* background-color: red; */
   padding: 1em;
-  /* flex: 1 auto;
-  flex-grow: 1; */
-}
-
-.expoSnack {
-  /* height: 100%; */
 }
 
 .appStoreLogo {

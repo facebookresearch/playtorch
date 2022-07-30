@@ -361,7 +361,7 @@ const testUnitList = [
     },
   },
   {
-    name: 'torch.arrange',
+    name: 'torch.arange',
     testFunc: () => {
       console.log('---Test torch.arange---');
       let printOptions = ['data'];

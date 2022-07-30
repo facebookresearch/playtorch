@@ -29,7 +29,6 @@ namespace torch {
 using namespace facebook;
 
 // TorchHostObject Method Name
-static const std::string ARANGE = "arange";
 static const std::string EMPTY = "empty";
 static const std::string EYE = "eye";
 static const std::string FROM_BLOB = "fromBlob";
@@ -59,7 +58,6 @@ static const std::vector<std::string> PROPERTIES = {
 
 // TorchHostObject Methods
 const std::vector<std::string> METHODS = {
-    ARANGE,
     EMPTY,
     EYE,
     FROM_BLOB,
@@ -71,6 +69,37 @@ const std::vector<std::string> METHODS = {
 };
 
 namespace {
+/**
+ * Creates a 1-D tensor of size `(end - start) / step` with values from the
+ * interval `[start, end)` taken with common difference `step` beginning from
+ * `start`.
+ *
+ * See https://pytorch.org/docs/stable/generated/torch.arange.html
+ */
+jsi::Value arangeImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  argParser.requireNumArguments(1);
+
+  torch_::TensorOptions tensorOptions = torch_::TensorOptions();
+  auto positionalArgCount = count;
+  if (arguments[count - 1].isObject()) {
+    positionalArgCount--;
+    tensorOptions = utils::helpers::parseTensorOptions(
+        runtime, arguments, count - 1, count);
+  }
+  auto end = (positionalArgCount > 1) ? arguments[1].asNumber()
+                                      : arguments[0].asNumber();
+  auto start = (positionalArgCount > 1) ? arguments[0].asNumber() : 0;
+  auto step = (positionalArgCount > 2) ? arguments[2].asNumber() : 1;
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, torch_::arange(start, end, step, tensorOptions));
+}
+
 jsi::Value catImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -225,7 +254,6 @@ TorchHostObject::TorchHostObject(
     jsi::Runtime& runtime,
     torchlive::RuntimeExecutor runtimeExecutor)
     : BaseHostObject(runtime),
-      arange_(createArange(runtime)),
       empty_(createEmpty(runtime)),
       eye_(createEye(runtime)),
       fromBlob_(createFromBlob(runtime)),
@@ -236,7 +264,6 @@ TorchHostObject::TorchHostObject(
       zeros_(createZeros(runtime)),
       runtimeExecutor_(runtimeExecutor),
       methods{
-          {ARANGE, &arange_},
           {EMPTY, &empty_},
           {EYE, &eye_},
           {FROM_BLOB, &fromBlob_},
@@ -266,6 +293,7 @@ TorchHostObject::TorchHostObject(
            utils::constants::PRESERVE_FORMAT},
       },
       jit_(torchlive::torch::jit::buildNamespace(runtime, runtimeExecutor)) {
+  setPropertyHostFunction(runtime, "arange", 1, arangeImpl);
   setPropertyHostFunction(runtime, "cat", 2, catImpl);
   setPropertyHostFunction(runtime, "full", 2, fullImpl);
   setPropertyHostFunction(runtime, "linspace", 3, linspaceImpl);
@@ -308,38 +336,6 @@ jsi::Value TorchHostObject::get(
 
   return BaseHostObject::get(runtime, propName);
 };
-
-jsi::Function TorchHostObject::createArange(jsi::Runtime& runtime) {
-  auto arangeImpl = [](jsi::Runtime& runtime,
-                       const jsi::Value& thisValue,
-                       const jsi::Value* arguments,
-                       size_t count) {
-    if (count == 0) {
-      throw jsi::JSError(runtime, "This function requires at least 1 argument");
-    }
-
-    auto positionalArgCount = count;
-    torch_::TensorOptions tensorOptions = torch_::TensorOptions();
-    if (arguments[count - 1].isObject()) {
-      positionalArgCount--;
-      tensorOptions = utils::helpers::parseTensorOptions(
-          runtime, arguments, count - 1, count);
-    }
-
-    auto end = (positionalArgCount > 1) ? arguments[1].asNumber()
-                                        : arguments[0].asNumber();
-    auto start = (positionalArgCount > 1) ? arguments[0].asNumber() : 0;
-    auto step = (positionalArgCount > 2) ? arguments[2].asNumber() : 1;
-
-    auto tensor = torch_::arange(start, end, step, tensorOptions);
-
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, ARANGE), 1, arangeImpl);
-}
 
 jsi::Function TorchHostObject::createRand(jsi::Runtime& runtime) {
   auto randImpl = [](jsi::Runtime& runtime,

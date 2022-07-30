@@ -29,7 +29,6 @@ namespace torch {
 using namespace facebook;
 
 // TorchHostObject Method Name
-static const std::string EMPTY = "empty";
 static const std::string EYE = "eye";
 static const std::string FROM_BLOB = "fromBlob";
 static const std::string ONES = "ones";
@@ -58,7 +57,6 @@ static const std::vector<std::string> PROPERTIES = {
 
 // TorchHostObject Methods
 const std::vector<std::string> METHODS = {
-    EMPTY,
     EYE,
     FROM_BLOB,
     ONES,
@@ -119,6 +117,31 @@ jsi::Value catImpl(
 
   return utils::helpers::createFromHostObject<TensorHostObject>(
       runtime, torch_::cat(tensors, dim));
+}
+
+/**
+ * Returns a tensor filled with uninitialized data. The shape of the tensor
+ * is defined by the variable argument size.
+ *
+ * See https://pytorch.org/docs/stable/generated/torch.empty.html
+ */
+jsi::Value emptyImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  argParser.requireNumArguments(1);
+
+  std::vector<int64_t> dims = {};
+  int nextArgumentIndex =
+      utils::helpers::parseSize(runtime, arguments, 0, count, &dims);
+
+  torch_::TensorOptions tensorOptions = utils::helpers::parseTensorOptions(
+      runtime, arguments, nextArgumentIndex, count);
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, torch_::empty(c10::ArrayRef<int64_t>(dims), tensorOptions));
 }
 
 /**
@@ -254,7 +277,6 @@ TorchHostObject::TorchHostObject(
     jsi::Runtime& runtime,
     torchlive::RuntimeExecutor runtimeExecutor)
     : BaseHostObject(runtime),
-      empty_(createEmpty(runtime)),
       eye_(createEye(runtime)),
       fromBlob_(createFromBlob(runtime)),
       ones_(createOnes(runtime)),
@@ -264,7 +286,6 @@ TorchHostObject::TorchHostObject(
       zeros_(createZeros(runtime)),
       runtimeExecutor_(runtimeExecutor),
       methods{
-          {EMPTY, &empty_},
           {EYE, &eye_},
           {FROM_BLOB, &fromBlob_},
           {ONES, &ones_},
@@ -295,6 +316,7 @@ TorchHostObject::TorchHostObject(
       jit_(torchlive::torch::jit::buildNamespace(runtime, runtimeExecutor)) {
   setPropertyHostFunction(runtime, "arange", 1, arangeImpl);
   setPropertyHostFunction(runtime, "cat", 2, catImpl);
+  setPropertyHostFunction(runtime, "empty", 1, emptyImpl);
   setPropertyHostFunction(runtime, "full", 2, fullImpl);
   setPropertyHostFunction(runtime, "linspace", 3, linspaceImpl);
   setPropertyHostFunction(runtime, "logspace", 3, logspaceImpl);
@@ -367,32 +389,6 @@ jsi::Function TorchHostObject::createRand(jsi::Runtime& runtime) {
 
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, RAND), 2, randImpl);
-}
-
-jsi::Function TorchHostObject::createEmpty(jsi::Runtime& runtime) {
-  auto emptyFunc = [](jsi::Runtime& runtime,
-                      const jsi::Value& thisValue,
-                      const jsi::Value* arguments,
-                      size_t count) {
-    if (count == 0) {
-      throw jsi::JSError(
-          runtime, "This function requires at least one argument.");
-    }
-    std::vector<int64_t> dimensions = {};
-    int nextArgumentIndex =
-        utils::helpers::parseSize(runtime, arguments, 0, count, &dimensions);
-
-    torch_::TensorOptions tensorOptions = utils::helpers::parseTensorOptions(
-        runtime, arguments, nextArgumentIndex, count);
-    auto tensor =
-        torch_::empty(c10::ArrayRef<int64_t>(dimensions), tensorOptions);
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, EMPTY), 1, emptyFunc);
 }
 
 /**

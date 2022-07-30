@@ -17,7 +17,6 @@ namespace torchlive {
 namespace torch {
 
 class JSI_EXPORT TorchHostObject : public common::BaseHostObject {
-  facebook::jsi::Function empty_;
   facebook::jsi::Function eye_;
   facebook::jsi::Function fromBlob_;
   facebook::jsi::Function ones_;
@@ -39,7 +38,6 @@ class JSI_EXPORT TorchHostObject : public common::BaseHostObject {
 
  private:
   torchlive::RuntimeExecutor runtimeExecutor_;
-  static facebook::jsi::Function createEmpty(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createEye(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createFromBlob(
       facebook::jsi::Runtime& runtime);

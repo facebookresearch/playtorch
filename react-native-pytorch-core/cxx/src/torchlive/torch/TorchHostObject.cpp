@@ -29,7 +29,6 @@ namespace torch {
 using namespace facebook;
 
 // TorchHostObject Method Name
-static const std::string EYE = "eye";
 static const std::string FROM_BLOB = "fromBlob";
 static const std::string ONES = "ones";
 static const std::string RAND = "rand";
@@ -57,7 +56,6 @@ static const std::vector<std::string> PROPERTIES = {
 
 // TorchHostObject Methods
 const std::vector<std::string> METHODS = {
-    EYE,
     FROM_BLOB,
     ONES,
     RAND,
@@ -142,6 +140,46 @@ jsi::Value emptyImpl(
 
   return utils::helpers::createFromHostObject<TensorHostObject>(
       runtime, torch_::empty(c10::ArrayRef<int64_t>(dims), tensorOptions));
+}
+
+/**
+ * Returns an eye tensor with the given dimensions:
+ *   * eye(n, m) if two integer arguments n, m given,
+ *   * eye(n, n) if one integer argument n given
+ *
+ * See https://pytorch.org/docs/stable/generated/torch.eye.html
+ */
+jsi::Value eyeImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  argParser.requireNumArguments(1);
+
+  const auto rows = arguments[0].asNumber();
+  auto columns = rows;
+  torch_::TensorOptions tensorOptions;
+  if (count > 1 && arguments[1].isNumber()) {
+    columns = arguments[1].asNumber();
+    if (std::trunc(rows) != rows) {
+      throw jsi::JSError(
+          runtime,
+          "torch.eye requires the first argument to be a positive integer");
+    }
+    if (std::trunc(columns) != columns) {
+      throw jsi::JSError(
+          runtime,
+          "torch.eye requires the second argument to be a positive integer");
+    }
+    tensorOptions =
+        utils::helpers::parseTensorOptions(runtime, arguments, 2, count);
+  } else {
+    tensorOptions =
+        utils::helpers::parseTensorOptions(runtime, arguments, 1, count);
+  }
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, torch_::eye(rows, columns, tensorOptions));
 }
 
 /**
@@ -277,7 +315,6 @@ TorchHostObject::TorchHostObject(
     jsi::Runtime& runtime,
     torchlive::RuntimeExecutor runtimeExecutor)
     : BaseHostObject(runtime),
-      eye_(createEye(runtime)),
       fromBlob_(createFromBlob(runtime)),
       ones_(createOnes(runtime)),
       rand_(createRand(runtime)),
@@ -286,7 +323,6 @@ TorchHostObject::TorchHostObject(
       zeros_(createZeros(runtime)),
       runtimeExecutor_(runtimeExecutor),
       methods{
-          {EYE, &eye_},
           {FROM_BLOB, &fromBlob_},
           {ONES, &ones_},
           {RAND, &rand_},
@@ -317,6 +353,7 @@ TorchHostObject::TorchHostObject(
   setPropertyHostFunction(runtime, "arange", 1, arangeImpl);
   setPropertyHostFunction(runtime, "cat", 2, catImpl);
   setPropertyHostFunction(runtime, "empty", 1, emptyImpl);
+  setPropertyHostFunction(runtime, "eye", 1, eyeImpl);
   setPropertyHostFunction(runtime, "full", 2, fullImpl);
   setPropertyHostFunction(runtime, "linspace", 3, linspaceImpl);
   setPropertyHostFunction(runtime, "logspace", 3, logspaceImpl);
@@ -389,57 +426,6 @@ jsi::Function TorchHostObject::createRand(jsi::Runtime& runtime) {
 
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, RAND), 2, randImpl);
-}
-
-/**
- * Returns an eye tensor with the given dimensions:
- *   * eye(n, m) if two integer arguments n, m given,
- *   * eye(n, n) if one integer argument n given
- *
- * See https://pytorch.org/docs/stable/generated/torch.eye.html
- */
-jsi::Function TorchHostObject::createEye(jsi::Runtime& runtime) {
-  const auto eye = [](jsi::Runtime& runtime,
-                      const jsi::Value& self,
-                      const jsi::Value* arguments,
-                      size_t count) {
-    const auto createTensorObject = [&runtime](at::Tensor&& tensor) {
-      return jsi::Object::createFromHostObject(
-          runtime,
-          std::make_shared<torchlive::torch::TensorHostObject>(
-              runtime, tensor));
-    };
-    if (count < 1) {
-      throw jsi::JSError(runtime, "torch.eye requires at least one argument");
-    } else if (!arguments[0].isNumber()) {
-      throw jsi::JSError(
-          runtime, "torch.eye requires the first argument to be a number");
-    }
-    const auto rows = arguments[0].asNumber();
-    if ((count > 1) && arguments[1].isNumber()) {
-      const auto columns = arguments[1].asNumber();
-      if (std::trunc(rows) != rows) {
-        throw jsi::JSError(
-            runtime,
-            "torch.eye requires the first argument to be a positive integer");
-      }
-      if (std::trunc(columns) != columns) {
-        throw jsi::JSError(
-            runtime,
-            "torch.eye requires the second argument to be a positive integer");
-      }
-
-      const auto options =
-          utils::helpers::parseTensorOptions(runtime, arguments, 2, count);
-      return createTensorObject(torch_::eye(rows, columns, options));
-    } else {
-      const auto options =
-          utils::helpers::parseTensorOptions(runtime, arguments, 1, count);
-      return createTensorObject(torch_::eye(rows, options));
-    }
-  };
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, EYE), 1, eye);
 }
 
 jsi::Function TorchHostObject::createFromBlob(jsi::Runtime& runtime) {

@@ -7,6 +7,17 @@
  * @format
  */
 
-.expoSnackContainer {
-  padding: 1em;
+.appStoreLogo {
+  height: 16px;
+  width: 16px;
+}
+
+.appStoreButtonContainer {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.appStoreButtonText {
+  margin-left: 6px;
 }

@@ -73,6 +73,17 @@ export default function LandingPageHeader({
                 label="Download PlayTorch for Android"
               />
             </div>
+            {!isLikelyAndroidOrIOSDevice && (
+              <div className="margin-top--lg">
+                <p>
+                  <i>
+                    (Already have the app? Click{' '}
+                    <a href={urlToOpenInPlayTorch}>here</a> to open from your
+                    mobile device.)
+                  </i>
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -23,7 +23,10 @@ export default function ExpoSnackLandingPage({match}) {
 
   return (
     <div>
-      <LandingPageHeader expoSnackPath={expoSnackPath} />
+      <LandingPageHeader
+        nameOfSharedItem="snack"
+        urlToOpenInPlayTorch={`playtorch://snack?snackUrl=exp://exp.host/${expoSnackPath}`}
+      />
       <div className={clsx(styles.expoSnackContainer)}>
         <ExpoSnack snackPreview={false} snackId={expoSnackPath} />
       </div>

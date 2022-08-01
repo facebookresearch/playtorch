@@ -26,7 +26,10 @@ function AppStoreButton({href, LogoComponent, label}) {
   );
 }
 
-export default function LandingPageHeader({expoSnackPath}) {
+export default function LandingPageHeader({
+  urlToOpenInPlayTorch,
+  nameOfSharedItem,
+}) {
   const isLikelyAndroidOrIOSDevice = getIsLikelyAndroidOrIOSDevice();
 
   return (
@@ -44,7 +47,7 @@ export default function LandingPageHeader({expoSnackPath}) {
                 <p className="margin-bottom--sm">Already have the app?</p>
                 <a
                   className="button button--primary margin--xs"
-                  href={`playtorch://snack?snackUrl=exp://exp.host/${expoSnackPath}`}>
+                  href={urlToOpenInPlayTorch}>
                   Open with PlayTorch
                 </a>
               </div>
@@ -52,8 +55,12 @@ export default function LandingPageHeader({expoSnackPath}) {
             <div className="margin-top--lg">
               <p className="margin-bottom--sm">
                 {isLikelyAndroidOrIOSDevice
-                  ? 'This snack requires the PlayTorch app to get started.'
-                  : 'This snack requires the PlayTorch app. Download the app and then open this page on your mobile device to get started.'}
+                  ? `This ${
+                      nameOfSharedItem ?? ''
+                    } requires the PlayTorch app to get started.`
+                  : `This ${
+                      nameOfSharedItem ?? ''
+                    } requires the PlayTorch app. Download the app and then open this page on your mobile device to get started.`}
               </p>
               <AppStoreButton
                 href={ExternalLinks.APP_STORE}

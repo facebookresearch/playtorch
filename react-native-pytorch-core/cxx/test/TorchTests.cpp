@@ -454,6 +454,92 @@ TEST_F(TorchliveRuntimeTest, TorchCatTest) {
       facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveRuntimeTest, TorchExpandTest) {
+  // test torch.expand on implicit higher dimensions
+  EXPECT_EQ(
+      eval("torch.tensor([[1], [2], [3]]).expand([4, 3, 5]).shape[0]")
+          .getNumber(),
+      4);
+  EXPECT_EQ(
+      eval("torch.tensor([[1], [2], [3]]).expand([4, 3, 5]).shape[1]")
+          .getNumber(),
+      3);
+  EXPECT_EQ(
+      eval("torch.tensor([[1], [2], [3]]).expand([4, 3, 5]).shape[2]")
+          .getNumber(),
+      5);
+  for (auto i = 0; i < 4; i++) {
+    for (auto j = 0; j < 3; j++) {
+      for (auto k = 0; k < 5; k++) {
+        std::string tensorDataAtToEval = fmt::format(
+            "torch.tensor([[1], [2], [3]]).expand([4, 3, 5])[{}][{}][{}].item()",
+            i,
+            j,
+            k);
+        EXPECT_EQ(eval(tensorDataAtToEval).getNumber(), j + 1);
+      }
+    }
+  }
+
+  // test torch.expand with same number of dimensions
+  EXPECT_EQ(
+      eval("torch.tensor([[1], [2], [3]]).expand([3, 5]).shape[0]").getNumber(),
+      3);
+  EXPECT_EQ(
+      eval("torch.tensor([[1], [2], [3]]).expand([3, 5]).shape[1]").getNumber(),
+      5);
+  for (auto i = 0; i < 3; i++) {
+    for (auto j = 0; j < 5; j++) {
+      std::string tensorDataAtToEval = fmt::format(
+          "torch.tensor([[1], [2], [3]]).expand([3, 5])[{}][{}].item()", i, j);
+      EXPECT_EQ(eval(tensorDataAtToEval).getNumber(), i + 1);
+    }
+  }
+
+  // test torch.expand with -1 for unchanged size on the highest dimension
+  EXPECT_EQ(
+      eval("torch.tensor([[1], [2], [3]]).expand([-1, 4]).shape[0]")
+          .getNumber(),
+      3);
+  EXPECT_EQ(
+      eval("torch.tensor([[1], [2], [3]]).expand([-1, 4]).shape[1]")
+          .getNumber(),
+      4);
+  for (auto i = 0; i < 3; i++) {
+    for (auto j = 0; j < 4; j++) {
+      std::string tensorDataAtToEval = fmt::format(
+          "torch.tensor([[1], [2], [3]]).expand([-1, 4])[{}][{}].item()", i, j);
+      EXPECT_EQ(eval(tensorDataAtToEval).getNumber(), i + 1);
+    }
+  }
+
+  // test torch.expand with -1 for unchanged size on the lowest dimension
+  EXPECT_EQ(
+      eval("torch.tensor([[1], [2], [3]]).expand([3, -1]).shape[0]")
+          .getNumber(),
+      3);
+  EXPECT_EQ(
+      eval("torch.tensor([[1], [2], [3]]).expand([3, -1]).shape[1]")
+          .getNumber(),
+      1);
+
+  // test torch.expand with changed size on dimension not equal to 1
+  EXPECT_THROW(
+      eval("torch.tensor([[1], [2], [3]]).expand([5, 1])"),
+      facebook::jsi::JSError);
+
+  // test torch.expand with unspecified dimension size.
+  EXPECT_THROW(
+      eval("torch.tensor([[1], [2], [3]]).expand([5])"),
+      facebook::jsi::JSError);
+
+  // test torch.expand with empty dimention sizes or no parameter.
+  EXPECT_THROW(
+      eval("torch.tensor([[1], [2], [3]]).expand()"), facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("torch.tensor([[1], [2], [3]]).expand([])"), facebook::jsi::JSError);
+}
+
 TEST_F(TorchliveRuntimeTest, TorchFullTest) {
   // Test full with a single dimension
   EXPECT_EQ(eval("torch.full([4], 3.14).shape[0]").getNumber(), 4);

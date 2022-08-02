@@ -454,6 +454,14 @@ export interface Torch {
    */
   empty(size: number[], options?: TensorOptions): Tensor;
   /**
+   * Returns a new view of the tensor expanded to a larger size.
+   *
+   * {@link https://pytorch.org/docs/stable/generated/torch.Tensor.expand.html}
+   *
+   * @param sizes The expanded size, eg: ([3, 4]).
+   */
+  expand(sizes: number[]): Tensor;
+  /**
    * Returns a tensor filled with ones on the diagonal, and zeroes elsewhere.
    * The shape of the tensor is defined by the arguments n and m.
    *

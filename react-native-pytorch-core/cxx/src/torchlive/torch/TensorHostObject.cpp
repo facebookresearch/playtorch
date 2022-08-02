@@ -323,6 +323,24 @@ jsi::Value divImpl(
       runtime, std::move(tensor));
 }
 
+jsi::Value expandImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  auto thiz = args.thisAsHostObject<TensorHostObject>();
+  args.requireNumArguments(1);
+
+  std::vector<int64_t> dimensions = {};
+  utils::helpers::parseSize(runtime, arguments, 0, count, &dimensions);
+
+  auto tensor = thiz->tensor.expand(c10::ArrayRef<int64_t>(dimensions));
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, std::move(tensor));
+}
+
 jsi::Value itemImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -587,6 +605,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "add", 1, addImpl);
   setPropertyHostFunction(runtime, "argmax", 0, argmaxImpl);
   setPropertyHostFunction(runtime, "argmin", 0, argminImpl);
+  setPropertyHostFunction(runtime, "expand", 1, expandImpl);
   setPropertyHostFunction(runtime, "clamp", 1, clampImp);
   setPropertyHostFunction(runtime, "contiguous", 0, contiguousImpl);
   setPropertyHostFunction(runtime, "data", 0, dataImpl);

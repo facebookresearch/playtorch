@@ -7,12 +7,13 @@
  * @format
  */
 
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useMemo} from 'react';
 import clsx from 'clsx';
 import Layout from '@theme/Layout';
 import styles from './index.module.css';
 import DocVideo from '../components/DocVideo';
 import ExternalLinks from '@site/src/constants/ExternalLinks';
+import {getIsLikelyIOSDevice} from '@site/src/components/MobileBrowserDetector';
 
 import AppStoreBadge from '@site/static/img/download_on_the_app_store_badge.svg';
 import GooglePlayBadgeUrl from '@site/static/img/google_play_badge.png';
@@ -59,6 +60,8 @@ function AppStoreRow({
   appStoreLink,
   googlePlayLink,
 }) {
+  const isLikelyIOSDevice = useMemo(() => getIsLikelyIOSDevice(), []);
+
   return (
     <div
       className={clsx([
@@ -72,21 +75,27 @@ function AppStoreRow({
           {content}
         </div>
         <div className={clsx([styles.appStoreButtonRow])}>
-          <a
-            className={clsx([styles.googlePlayButtonWrapper])}
-            href={googlePlayLink || '#'}>
-            <img
-              className={clsx([styles.googlePlayBadge])}
-              alt="Google Play Badge"
-              src={GooglePlayBadgeUrl}
-            />
-          </a>
+          {
+            // Hide the google play store button on iOS devices to satisfy the iOS app store approvers when the
+            // home page is reached via the PlayTorch app
+            isLikelyIOSDevice ? null : (
+              <a
+                className={clsx([styles.googlePlayButtonWrapper])}
+                href={googlePlayLink || '#'}>
+                <img
+                  className={clsx([styles.googlePlayBadge])}
+                  alt="Google Play Badge"
+                  src={GooglePlayBadgeUrl}
+                />
+              </a>
+            )
+          }
           <a
             className={clsx([
               styles.appStoreButtonWrapper,
               styles.buttonWrapper,
             ])}
-            href={appStoreLink || '#'}>
+            href={appStoreLink}>
             <div className={styles.button}>JOIN THE iOS BETA</div>
             {false && (
               <AppStoreBadge

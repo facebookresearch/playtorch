@@ -41,6 +41,7 @@ export default function ExpoSnack({snackPreview = true, snackId, snackStyle}) {
       data-snack-loading="lazy"
       data-snack-platform="mydevice"
       data-snack-preview={snackPreview}
+      data-snack-sdkversion="44.0.0"
       data-snack-supported-platforms="mydevice"
       data-snack-theme={isDarkTheme ? 'dark' : 'light'}
     />

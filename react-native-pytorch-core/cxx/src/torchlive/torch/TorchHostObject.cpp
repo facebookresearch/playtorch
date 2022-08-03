@@ -29,7 +29,6 @@ namespace torch {
 using namespace facebook;
 
 // TorchHostObject Method Name
-static const std::string ONES = "ones";
 static const std::string RAND = "rand";
 static const std::string RANDINT = "randint";
 static const std::string TENSOR = "tensor";
@@ -55,7 +54,6 @@ static const std::vector<std::string> PROPERTIES = {
 
 // TorchHostObject Methods
 const std::vector<std::string> METHODS = {
-    ONES,
     RAND,
     RANDINT,
     TENSOR,
@@ -78,7 +76,7 @@ jsi::Value arangeImpl(
   auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
   args.requireNumArguments(1);
 
-  torch_::TensorOptions tensorOptions = torch_::TensorOptions();
+  torch_::TensorOptions tensorOptions;
   auto positionalArgCount = count;
   if (arguments[count - 1].isObject()) {
     positionalArgCount--;
@@ -133,7 +131,7 @@ jsi::Value emptyImpl(
   int nextArgumentIndex =
       utils::helpers::parseSize(runtime, arguments, 0, count, &dims);
 
-  torch_::TensorOptions tensorOptions = utils::helpers::parseTensorOptions(
+  auto tensorOptions = utils::helpers::parseTensorOptions(
       runtime, arguments, nextArgumentIndex, count);
 
   return utils::helpers::createFromHostObject<TensorHostObject>(
@@ -202,7 +200,7 @@ jsi::Value fromBlobImpl(
 
   const auto& blobHostObject =
       args.asHostObject<torchlive::media::BlobHostObject>(0);
-  torch_::TensorOptions tensorOptions =
+  auto tensorOptions =
       utils::helpers::parseTensorOptions(runtime, arguments, 2, count);
   auto blob = blobHostObject->blob.get();
   auto size = blob->getDirectSize();
@@ -257,7 +255,7 @@ jsi::Value linspaceImpl(
   auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
   args.requireNumArguments(3);
 
-  torch_::TensorOptions tensorOptions = torch_::TensorOptions();
+  auto tensorOptions = torch_::TensorOptions();
   if (arguments[count - 1].isObject()) {
     tensorOptions = utils::helpers::parseTensorOptions(
         runtime, arguments, count - 1, count);
@@ -300,6 +298,32 @@ jsi::Value logspaceImpl(
   return utils::helpers::createFromHostObject<TensorHostObject>(
       runtime, torch_::logspace(start, end, steps, base, options));
 }
+
+/**
+ * Returns a tensor filled with the scalar value 1,
+ * with the shape defined by the variable argument size.
+ *
+ * See: https://pytorch.org/docs/stable/generated/torch.ones.html
+ */
+jsi::Value onesImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+
+  std::vector<int64_t> dims = {};
+  int nextArgumentIndex =
+      utils::helpers::parseSize(runtime, arguments, 0, count, &dims);
+
+  auto tensorOptions = utils::helpers::parseTensorOptions(
+      runtime, arguments, nextArgumentIndex, count);
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, torch_::ones(c10::ArrayRef<int64_t>(dims), tensorOptions));
+}
+
 jsi::Value randpermImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -351,14 +375,12 @@ TorchHostObject::TorchHostObject(
     jsi::Runtime& runtime,
     torchlive::RuntimeExecutor runtimeExecutor)
     : BaseHostObject(runtime),
-      ones_(createOnes(runtime)),
       rand_(createRand(runtime)),
       randint_(createRandint(runtime)),
       tensor_(createTensor(runtime)),
       zeros_(createZeros(runtime)),
       runtimeExecutor_(runtimeExecutor),
       methods{
-          {ONES, &ones_},
           {RAND, &rand_},
           {RANDINT, &randint_},
           {TENSOR, &tensor_},
@@ -392,6 +414,7 @@ TorchHostObject::TorchHostObject(
   setPropertyHostFunction(runtime, "full", 2, fullImpl);
   setPropertyHostFunction(runtime, "linspace", 3, linspaceImpl);
   setPropertyHostFunction(runtime, "logspace", 3, logspaceImpl);
+  setPropertyHostFunction(runtime, "ones", 1, onesImpl);
   setPropertyHostFunction(runtime, "randperm", 2, randpermImpl);
   setPropertyHostFunction(runtime, "randn", 2, randnImpl);
 }
@@ -461,41 +484,6 @@ jsi::Function TorchHostObject::createRand(jsi::Runtime& runtime) {
 
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, RAND), 2, randImpl);
-}
-
-/**
- * Returns a tensor filled with the scalar value 1,
- * with the shape defined by the variable argument size.
- *
- * See: https://pytorch.org/docs/stable/generated/torch.ones.html
- */
-jsi::Function TorchHostObject::createOnes(jsi::Runtime& runtime) {
-  auto onesImpl = [](jsi::Runtime& runtime,
-                     const jsi::Value& thisValue,
-                     const jsi::Value* arguments,
-                     size_t count) {
-    if (count == 0) {
-      throw jsi::JSError(
-          runtime, "This function requires at least one argument.");
-    }
-    std::vector<int64_t> dimensions = {};
-    int nextArgumentIndex =
-        utils::helpers::parseSize(runtime, arguments, 0, count, &dimensions);
-
-    torch_::TensorOptions tensorOptions = utils::helpers::parseTensorOptions(
-        runtime, arguments, nextArgumentIndex, count);
-
-    auto tensor =
-        torch_::ones(c10::ArrayRef<int64_t>(dimensions), tensorOptions);
-
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
-
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, ONES), 1, onesImpl);
 }
 
 jsi::Function TorchHostObject::createRandint(jsi::Runtime& runtime) {

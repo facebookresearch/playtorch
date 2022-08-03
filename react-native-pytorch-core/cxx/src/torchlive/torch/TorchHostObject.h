@@ -30,7 +30,6 @@ class JSI_EXPORT TorchHostObject : public common::BaseHostObject {
 
  private:
   torchlive::RuntimeExecutor runtimeExecutor_;
-  std::map<std::string, facebook::jsi::Function*> methods;
   std::map<std::string, std::string> properties;
   facebook::jsi::Object jit_;
 };

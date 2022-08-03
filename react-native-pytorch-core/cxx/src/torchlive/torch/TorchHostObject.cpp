@@ -28,8 +28,6 @@ namespace torch {
 
 using namespace facebook;
 
-// TorchHostObject Method Name
-
 // TorchHostObject Property Names
 static const std::string JIT = "jit";
 
@@ -47,9 +45,6 @@ static const std::vector<std::string> PROPERTIES = {
     utils::constants::PRESERVE_FORMAT,
     JIT,
 };
-
-// TorchHostObject Methods
-const std::vector<std::string> METHODS = {};
 
 namespace {
 /**
@@ -456,7 +451,6 @@ TorchHostObject::TorchHostObject(
     torchlive::RuntimeExecutor runtimeExecutor)
     : BaseHostObject(runtime),
       runtimeExecutor_(runtimeExecutor),
-      methods{},
       properties{
           {utils::constants::FLOAT32, utils::constants::FLOAT32},
           {utils::constants::FLOAT, utils::constants::FLOAT32},
@@ -500,10 +494,6 @@ std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(
   for (std::string property : PROPERTIES) {
     result.push_back(jsi::PropNameID::forUtf8(rt, property));
   }
-
-  for (std::string method : METHODS) {
-    result.push_back(jsi::PropNameID::forUtf8(rt, method));
-  }
   return result;
 }
 
@@ -511,11 +501,6 @@ jsi::Value TorchHostObject::get(
     jsi::Runtime& runtime,
     const jsi::PropNameID& propName) {
   auto name = propName.utf8(runtime);
-
-  auto method = methods.find(name);
-  if (method != methods.end()) {
-    return jsi::Value(runtime, *(method->second));
-  }
 
   auto property = properties.find(name);
   if (property != properties.end()) {

@@ -156,15 +156,9 @@ h1.title {
 
 .appStoreButtonWrapper {
   margin-left: 11px;
-  margin-top: 5px; /* for badge: 10px */
+  margin-top: 10px;
   text-decoration: none;
   vertical-align: top;
-}
-
-/* for badge: remove this */
-.appStoreButtonWrapper .button {
-  margin-top: 0;
-  text-transform: none;
 }
 
 .appStoreBadge {
@@ -227,11 +221,6 @@ h1.title {
     line-height: 5.5vw;
   }
 
-  /* remove after switch to App Store badge */
-  .appStoreButtonRow {
-    flex-direction: column;
-  }
-
   .googlePlayButtonWrapper {
     margin-left: 20px;
   }
@@ -263,9 +252,6 @@ h1.title {
   .appStoreButtonRow {
     justify-content: center;
     margin-left: 0;
-    /* remove following after switch back to App Store badge */
-    flex-direction: column;
-    text-align: center;
   }
 
   .button {

@@ -85,7 +85,7 @@ function AppStoreRow({
                   isLikelyIOSDevice ? null : (
                     <a
                       className={clsx([styles.googlePlayButtonWrapper])}
-                      href={googlePlayLink || '#'}>
+                      href={googlePlayLink}>
                       <img
                         className={clsx([styles.googlePlayBadge])}
                         alt="Google Play Badge"
@@ -95,19 +95,13 @@ function AppStoreRow({
                   )
                 }
                 <a
-                  className={clsx([
-                    styles.appStoreButtonWrapper,
-                    styles.buttonWrapper,
-                  ])}
+                  className={clsx([styles.appStoreButtonWrapper])}
                   href={appStoreLink}>
-                  <div className={styles.button}>JOIN THE iOS BETA</div>
-                  {false && (
-                    <AppStoreBadge
-                      className={clsx([styles.appStoreBadge])}
-                      title="Download on the App Store Badge"
-                      role="img"
-                    />
-                  )}
+                  <AppStoreBadge
+                    className={clsx([styles.appStoreBadge])}
+                    title="Download on the App Store Badge"
+                    role="img"
+                  />
                 </a>
               </>
             )}

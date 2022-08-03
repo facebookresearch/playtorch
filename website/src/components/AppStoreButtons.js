@@ -11,9 +11,8 @@ import React from 'react';
 import clsx from 'clsx';
 import styles from './AppStoreButtons.module.css';
 import ExternalLinks from '@site/src/constants/ExternalLinks';
-// import AppStoreBadge from '@site/static/img/download_on_the_app_store_badge.svg';
+import AppStoreBadge from '@site/static/img/download_on_the_app_store_badge.svg';
 import GooglePlayBadgeUrl from '@site/static/img/google_play_badge.png';
-import AppleLogoSvg from '@site/static/img/apple_logo_white.svg';
 
 export function GooglePlayButton() {
   return (
@@ -29,41 +28,19 @@ export function GooglePlayButton() {
   );
 }
 
-function GenericButton({href, LogoComponent, label}) {
+export function AppStoreButton() {
   return (
-    <a className="button button--primary margin--xs" href={href}>
-      <div className={clsx(styles.appStoreButtonContainer)}>
-        <LogoComponent className={clsx(styles.appStoreLogo)} />
-        <div className={clsx(styles.appStoreButtonText)}>{label}</div>
-      </div>
+    <a
+      className={clsx([styles.appStoreButtonWrapper])}
+      href={ExternalLinks.APP_STORE}>
+      <AppStoreBadge
+        className={clsx([styles.appStoreBadge])}
+        title="Download on the App Store Badge"
+        role="img"
+      />
     </a>
   );
 }
-
-export function AppStoreButton() {
-  return (
-    <GenericButton
-      href={ExternalLinks.APP_STORE}
-      LogoComponent={AppleLogoSvg}
-      label="Join the iOS Beta"
-    />
-  );
-}
-
-// TODO: Uncomment this once the app is out of testflight
-// export function AppStoreButton() {
-//   return (
-//     <a
-//       className={clsx([styles.appStoreButtonWrapper])}
-//       href={ExternalLinks.APP_STORE}>
-//       <AppStoreBadge
-//         className={clsx([styles.appStoreBadge])}
-//         title="Download on the App Store Badge"
-//         role="img"
-//       />
-//     </a>
-//   );
-// }
 
 export default function AppStoreButtons() {
   return (

@@ -65,7 +65,7 @@ export default function LandingPageHeader({
               <AppStoreButton
                 href={ExternalLinks.APP_STORE}
                 LogoComponent={AppleLogoSvg}
-                label="Join the iOS Beta"
+                label="Download PlayTorch for iOS"
               />
               <AppStoreButton
                 href={ExternalLinks.GOOGLE_PLAY_STORE}

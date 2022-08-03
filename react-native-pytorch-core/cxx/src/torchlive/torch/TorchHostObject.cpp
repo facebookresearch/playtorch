@@ -29,7 +29,6 @@ namespace torch {
 using namespace facebook;
 
 // TorchHostObject Method Name
-static const std::string RAND = "rand";
 static const std::string RANDINT = "randint";
 static const std::string TENSOR = "tensor";
 static const std::string ZEROS = "zeros";
@@ -54,7 +53,6 @@ static const std::vector<std::string> PROPERTIES = {
 
 // TorchHostObject Methods
 const std::vector<std::string> METHODS = {
-    RAND,
     RANDINT,
     TENSOR,
     ZEROS,
@@ -324,6 +322,25 @@ jsi::Value onesImpl(
       runtime, torch_::ones(c10::ArrayRef<int64_t>(dims), tensorOptions));
 }
 
+jsi::Value randImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+
+  std::vector<int64_t> dims = {};
+  int nextArgumentIndex =
+      utils::helpers::parseSize(runtime, arguments, 0, count, &dims);
+
+  auto tensorOptions = utils::helpers::parseTensorOptions(
+      runtime, arguments, nextArgumentIndex, count);
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, torch_::rand(c10::ArrayRef<int64_t>(dims), tensorOptions));
+}
+
 jsi::Value randpermImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -375,13 +392,11 @@ TorchHostObject::TorchHostObject(
     jsi::Runtime& runtime,
     torchlive::RuntimeExecutor runtimeExecutor)
     : BaseHostObject(runtime),
-      rand_(createRand(runtime)),
       randint_(createRandint(runtime)),
       tensor_(createTensor(runtime)),
       zeros_(createZeros(runtime)),
       runtimeExecutor_(runtimeExecutor),
       methods{
-          {RAND, &rand_},
           {RANDINT, &randint_},
           {TENSOR, &tensor_},
           {ZEROS, &zeros_},
@@ -415,8 +430,9 @@ TorchHostObject::TorchHostObject(
   setPropertyHostFunction(runtime, "linspace", 3, linspaceImpl);
   setPropertyHostFunction(runtime, "logspace", 3, logspaceImpl);
   setPropertyHostFunction(runtime, "ones", 1, onesImpl);
-  setPropertyHostFunction(runtime, "randperm", 2, randpermImpl);
+  setPropertyHostFunction(runtime, "rand", 1, randImpl);
   setPropertyHostFunction(runtime, "randn", 2, randnImpl);
+  setPropertyHostFunction(runtime, "randperm", 2, randpermImpl);
 }
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(
@@ -453,38 +469,6 @@ jsi::Value TorchHostObject::get(
 
   return BaseHostObject::get(runtime, propName);
 };
-
-jsi::Function TorchHostObject::createRand(jsi::Runtime& runtime) {
-  auto randImpl = [](jsi::Runtime& runtime,
-                     const jsi::Value& thisValue,
-                     const jsi::Value* arguments,
-                     size_t count) {
-    if (count == 0) {
-      throw jsi::JSError(
-          runtime, "This function requires at least one argument");
-    }
-    jsi::Array jsShape = arguments[0].asObject(runtime).asArray(runtime);
-    auto shapeLength = jsShape.size(runtime);
-    std::vector<int64_t> dims = {};
-    for (int i = 0; i < shapeLength; i++) {
-      int x = jsShape.getValueAtIndex(runtime, i).asNumber();
-      dims.push_back(x);
-    }
-
-    torch_::TensorOptions tensorOptions =
-        utils::helpers::parseTensorOptions(runtime, arguments, 1, count);
-
-    auto tensor = torch_::rand(c10::ArrayRef<int64_t>(dims), tensorOptions);
-
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
-
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, RAND), 2, randImpl);
-}
 
 jsi::Function TorchHostObject::createRandint(jsi::Runtime& runtime) {
   auto randintImpl = [](jsi::Runtime& runtime,

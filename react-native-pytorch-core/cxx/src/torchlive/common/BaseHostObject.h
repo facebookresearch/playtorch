@@ -38,6 +38,11 @@ class BaseHostObject : public facebook::jsi::HostObject {
   void setPropertyHostFunction(
       facebook::jsi::Runtime& rt,
       const std::string& name,
+      /**
+       * The paramCount parameter specifies the function.length property in JSI
+       * metadata, and is set to the the minimal required arg count of the
+       * function.
+       */
       unsigned int paramCount,
       facebook::jsi::HostFunctionType func);
 

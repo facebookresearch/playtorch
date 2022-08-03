@@ -87,6 +87,8 @@ std::vector<int64_t> parseJSIArrayShape(
 
 /**
  * A helper method to assign a HostFunction to an Object property.
+ * The paramCount parameter specifies the function.length property in JSI
+ * metadata, and is set to the the minimal required arg count of the function.
  */
 void setPropertyHostFunction(
     facebook::jsi::Runtime& runtime,

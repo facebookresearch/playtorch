@@ -472,7 +472,7 @@ TorchHostObject::TorchHostObject(
       },
       jit_(torchlive::torch::jit::buildNamespace(runtime, runtimeExecutor)) {
   setPropertyHostFunction(runtime, "arange", 1, arangeImpl);
-  setPropertyHostFunction(runtime, "cat", 2, catImpl);
+  setPropertyHostFunction(runtime, "cat", 1, catImpl);
   setPropertyHostFunction(runtime, "empty", 1, emptyImpl);
   setPropertyHostFunction(runtime, "eye", 1, eyeImpl);
   setPropertyHostFunction(runtime, "fromBlob", 2, fromBlobImpl);
@@ -482,8 +482,8 @@ TorchHostObject::TorchHostObject(
   setPropertyHostFunction(runtime, "ones", 1, onesImpl);
   setPropertyHostFunction(runtime, "rand", 1, randImpl);
   setPropertyHostFunction(runtime, "randint", 2, randintImpl);
-  setPropertyHostFunction(runtime, "randn", 2, randnImpl);
-  setPropertyHostFunction(runtime, "randperm", 2, randpermImpl);
+  setPropertyHostFunction(runtime, "randn", 1, randnImpl);
+  setPropertyHostFunction(runtime, "randperm", 1, randpermImpl);
   setPropertyHostFunction(runtime, "tensor", 1, tensorImpl);
   setPropertyHostFunction(runtime, "zeros", 1, zerosImpl);
 }

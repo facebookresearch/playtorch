@@ -51,7 +51,7 @@ export interface Blob {
   slice(start?: number, end?: number): Blob;
 }
 
-interface Media {
+export interface Media {
   /**
    * Converts a [[Blob]] into an [[Image]]. The blob should be in RGB format.
    * The width and height input should match the blob size.

@@ -17,7 +17,6 @@ namespace torchlive {
 namespace torch {
 
 class JSI_EXPORT TorchHostObject : public common::BaseHostObject {
-  facebook::jsi::Function randint_;
   facebook::jsi::Function tensor_;
   facebook::jsi::Function zeros_;
 
@@ -34,7 +33,6 @@ class JSI_EXPORT TorchHostObject : public common::BaseHostObject {
 
  private:
   torchlive::RuntimeExecutor runtimeExecutor_;
-  static facebook::jsi::Function createRandint(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createTensor(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createZeros(facebook::jsi::Runtime& runtime);
   std::map<std::string, facebook::jsi::Function*> methods;

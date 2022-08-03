@@ -29,7 +29,6 @@ namespace torch {
 using namespace facebook;
 
 // TorchHostObject Method Name
-static const std::string RANDINT = "randint";
 static const std::string TENSOR = "tensor";
 static const std::string ZEROS = "zeros";
 
@@ -53,7 +52,6 @@ static const std::vector<std::string> PROPERTIES = {
 
 // TorchHostObject Methods
 const std::vector<std::string> METHODS = {
-    RANDINT,
     TENSOR,
     ZEROS,
 };
@@ -341,6 +339,36 @@ jsi::Value randImpl(
       runtime, torch_::rand(c10::ArrayRef<int64_t>(dims), tensorOptions));
 }
 
+jsi::Value randintImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+
+  auto low = 0;
+  auto high = 0;
+  std::vector<int64_t> dims = {};
+  int nextArgumentIndex;
+  if (arguments[1].isObject()) {
+    high = arguments[0].asNumber();
+    nextArgumentIndex =
+        utils::helpers::parseSize(runtime, arguments, 1, count, &dims);
+  } else {
+    low = arguments[0].asNumber();
+    high = arguments[1].asNumber();
+    nextArgumentIndex =
+        utils::helpers::parseSize(runtime, arguments, 2, count, &dims);
+  }
+
+  auto tensorOptions = utils::helpers::parseTensorOptions(
+      runtime, arguments, nextArgumentIndex, count);
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, torch_::randint(low, high, dims, tensorOptions));
+}
+
 jsi::Value randpermImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -392,12 +420,10 @@ TorchHostObject::TorchHostObject(
     jsi::Runtime& runtime,
     torchlive::RuntimeExecutor runtimeExecutor)
     : BaseHostObject(runtime),
-      randint_(createRandint(runtime)),
       tensor_(createTensor(runtime)),
       zeros_(createZeros(runtime)),
       runtimeExecutor_(runtimeExecutor),
       methods{
-          {RANDINT, &randint_},
           {TENSOR, &tensor_},
           {ZEROS, &zeros_},
       },
@@ -431,6 +457,7 @@ TorchHostObject::TorchHostObject(
   setPropertyHostFunction(runtime, "logspace", 3, logspaceImpl);
   setPropertyHostFunction(runtime, "ones", 1, onesImpl);
   setPropertyHostFunction(runtime, "rand", 1, randImpl);
+  setPropertyHostFunction(runtime, "randint", 2, randintImpl);
   setPropertyHostFunction(runtime, "randn", 2, randnImpl);
   setPropertyHostFunction(runtime, "randperm", 2, randpermImpl);
 }
@@ -469,52 +496,6 @@ jsi::Value TorchHostObject::get(
 
   return BaseHostObject::get(runtime, propName);
 };
-
-jsi::Function TorchHostObject::createRandint(jsi::Runtime& runtime) {
-  auto randintImpl = [](jsi::Runtime& runtime,
-                        const jsi::Value& thisValue,
-                        const jsi::Value* arguments,
-                        size_t count) {
-    if (count < 2) {
-      throw jsi::JSError(
-          runtime, "This function requires at least 2 arguments");
-    }
-
-    auto low = 0;
-    auto high = 0;
-    jsi::Array size = jsi::Array::createWithElements(runtime, {});
-    torch_::TensorOptions tensorOptions = torch_::TensorOptions();
-    if (count == 2) {
-      high = arguments[0].asNumber();
-      size = arguments[1].asObject(runtime).asArray(runtime);
-    } else if (arguments[1].isObject()) {
-      high = arguments[0].asNumber();
-      size = arguments[1].asObject(runtime).asArray(runtime);
-      tensorOptions =
-          utils::helpers::parseTensorOptions(runtime, arguments, 2, count);
-    } else {
-      low = arguments[0].asNumber();
-      high = arguments[1].asNumber();
-      size = arguments[2].asObject(runtime).asArray(runtime);
-      tensorOptions =
-          utils::helpers::parseTensorOptions(runtime, arguments, 3, count);
-    }
-
-    auto shapeLength = size.size(runtime);
-    std::vector<int64_t> dims = {};
-    for (int i = 0; i < shapeLength; i++) {
-      int x = size.getValueAtIndex(runtime, i).asNumber();
-      dims.push_back(x);
-    }
-    auto tensor = torch_::randint(low, high, dims, tensorOptions);
-
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, RANDINT), 1, randintImpl);
-}
 
 jsi::Function TorchHostObject::createTensor(jsi::Runtime& runtime) {
   auto tensorImpl = [](jsi::Runtime& runtime,

@@ -49,7 +49,7 @@ export default function DocVideo({
       height={height}
       muted={muted}
       playsInline={playsInline}
-      defaultmuted={defaultMuted}
+      defaultmuted={defaultMuted.toString()}
       poster={poster ? require(`@site/static/img/${poster}`).default : null}>
       <source
         src={require(`@site/static/video/${asset}.mp4`).default}

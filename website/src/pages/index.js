@@ -14,6 +14,7 @@ import styles from './index.module.css';
 import DocVideo from '../components/DocVideo';
 import ExternalLinks from '@site/src/constants/ExternalLinks';
 import {getIsLikelyIOSDevice} from '@site/src/components/MobileBrowserDetector';
+import BrowserOnly from '@docusaurus/BrowserOnly';
 
 import AppStoreBadge from '@site/static/img/download_on_the_app_store_badge.svg';
 import GooglePlayBadgeUrl from '@site/static/img/google_play_badge.png';
@@ -75,36 +76,42 @@ function AppStoreRow({
           {content}
         </div>
         <div className={clsx([styles.appStoreButtonRow])}>
-          {
-            // Hide the google play store button on iOS devices to satisfy the iOS app store approvers when the
-            // home page is reached via the PlayTorch app
-            isLikelyIOSDevice ? null : (
-              <a
-                className={clsx([styles.googlePlayButtonWrapper])}
-                href={googlePlayLink || '#'}>
-                <img
-                  className={clsx([styles.googlePlayBadge])}
-                  alt="Google Play Badge"
-                  src={GooglePlayBadgeUrl}
-                />
-              </a>
-            )
-          }
-          <a
-            className={clsx([
-              styles.appStoreButtonWrapper,
-              styles.buttonWrapper,
-            ])}
-            href={appStoreLink}>
-            <div className={styles.button}>JOIN THE iOS BETA</div>
-            {false && (
-              <AppStoreBadge
-                className={clsx([styles.appStoreBadge])}
-                title="Download on the App Store Badge"
-                role="img"
-              />
+          <BrowserOnly>
+            {() => (
+              <>
+                {
+                  // Hide the google play store button on iOS devices to satisfy the iOS app store approvers when the
+                  // home page is reached via the PlayTorch app
+                  isLikelyIOSDevice ? null : (
+                    <a
+                      className={clsx([styles.googlePlayButtonWrapper])}
+                      href={googlePlayLink || '#'}>
+                      <img
+                        className={clsx([styles.googlePlayBadge])}
+                        alt="Google Play Badge"
+                        src={GooglePlayBadgeUrl}
+                      />
+                    </a>
+                  )
+                }
+                <a
+                  className={clsx([
+                    styles.appStoreButtonWrapper,
+                    styles.buttonWrapper,
+                  ])}
+                  href={appStoreLink}>
+                  <div className={styles.button}>JOIN THE iOS BETA</div>
+                  {false && (
+                    <AppStoreBadge
+                      className={clsx([styles.appStoreBadge])}
+                      title="Download on the App Store Badge"
+                      role="img"
+                    />
+                  )}
+                </a>
+              </>
             )}
-          </a>
+          </BrowserOnly>
         </div>
       </div>
       <div className={clsx([styles.content])}>

@@ -17,8 +17,6 @@ namespace torchlive {
 namespace torch {
 
 class JSI_EXPORT TorchHostObject : public common::BaseHostObject {
-  facebook::jsi::Function zeros_;
-
  public:
   TorchHostObject(
       facebook::jsi::Runtime& runtime,
@@ -32,7 +30,6 @@ class JSI_EXPORT TorchHostObject : public common::BaseHostObject {
 
  private:
   torchlive::RuntimeExecutor runtimeExecutor_;
-  static facebook::jsi::Function createZeros(facebook::jsi::Runtime& runtime);
   std::map<std::string, facebook::jsi::Function*> methods;
   std::map<std::string, std::string> properties;
   facebook::jsi::Object jit_;

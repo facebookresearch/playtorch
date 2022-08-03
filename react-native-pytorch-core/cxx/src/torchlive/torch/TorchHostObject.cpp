@@ -29,7 +29,6 @@ namespace torch {
 using namespace facebook;
 
 // TorchHostObject Method Name
-static const std::string ZEROS = "zeros";
 
 // TorchHostObject Property Names
 static const std::string JIT = "jit";
@@ -50,9 +49,7 @@ static const std::vector<std::string> PROPERTIES = {
 };
 
 // TorchHostObject Methods
-const std::vector<std::string> METHODS = {
-    ZEROS,
-};
+const std::vector<std::string> METHODS = {};
 
 namespace {
 /**
@@ -433,17 +430,33 @@ jsi::Value tensorImpl(
       torch_::tensor(std::move(data), tensorOptions)
           .reshape(at::IntArrayRef(std::move(shape))));
 }
+
+jsi::Value zerosImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+
+  std::vector<int64_t> dims = {};
+  int nextArgumentIndex =
+      utils::helpers::parseSize(runtime, arguments, 0, count, &dims);
+
+  auto tensorOptions = utils::helpers::parseTensorOptions(
+      runtime, arguments, nextArgumentIndex, count);
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, torch_::zeros(c10::ArrayRef<int64_t>(dims), tensorOptions));
+}
 } // namespace
 
 TorchHostObject::TorchHostObject(
     jsi::Runtime& runtime,
     torchlive::RuntimeExecutor runtimeExecutor)
     : BaseHostObject(runtime),
-      zeros_(createZeros(runtime)),
       runtimeExecutor_(runtimeExecutor),
-      methods{
-          {ZEROS, &zeros_},
-      },
+      methods{},
       properties{
           {utils::constants::FLOAT32, utils::constants::FLOAT32},
           {utils::constants::FLOAT, utils::constants::FLOAT32},
@@ -478,6 +491,7 @@ TorchHostObject::TorchHostObject(
   setPropertyHostFunction(runtime, "randn", 2, randnImpl);
   setPropertyHostFunction(runtime, "randperm", 2, randpermImpl);
   setPropertyHostFunction(runtime, "tensor", 1, tensorImpl);
+  setPropertyHostFunction(runtime, "zeros", 1, zerosImpl);
 }
 
 std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(
@@ -514,38 +528,6 @@ jsi::Value TorchHostObject::get(
 
   return BaseHostObject::get(runtime, propName);
 };
-
-/**
- * Returns a tensor filled with the scalar value 0, with the shape defined by
- * the variable argument size.
- */
-jsi::Function TorchHostObject::createZeros(jsi::Runtime& runtime) {
-  auto zerosImpl = [](jsi::Runtime& runtime,
-                      const jsi::Value& thisValue,
-                      const jsi::Value* arguments,
-                      size_t count) {
-    if (count == 0) {
-      throw jsi::JSError(
-          runtime, "This function requires at least one argument.");
-    }
-    std::vector<int64_t> dims = {};
-    int nextArgumentIndex =
-        utils::helpers::parseSize(runtime, arguments, 0, count, &dims);
-
-    torch_::TensorOptions tensorOptions = utils::helpers::parseTensorOptions(
-        runtime, arguments, nextArgumentIndex, count);
-
-    auto tensor = torch_::zeros(c10::ArrayRef<int64_t>(dims), tensorOptions);
-
-    auto tensorHostObject =
-        std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
-
-    return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-  };
-
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, ZEROS), 1, zerosImpl);
-}
 
 } // namespace torch
 } // namespace torchlive

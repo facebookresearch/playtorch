@@ -29,7 +29,6 @@ namespace torch {
 using namespace facebook;
 
 // TorchHostObject Method Name
-static const std::string FROM_BLOB = "fromBlob";
 static const std::string ONES = "ones";
 static const std::string RAND = "rand";
 static const std::string RANDINT = "randint";
@@ -56,7 +55,6 @@ static const std::vector<std::string> PROPERTIES = {
 
 // TorchHostObject Methods
 const std::vector<std::string> METHODS = {
-    FROM_BLOB,
     ONES,
     RAND,
     RANDINT,
@@ -77,8 +75,8 @@ jsi::Value arangeImpl(
     const jsi::Value& thisValue,
     const jsi::Value* arguments,
     size_t count) {
-  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
-  argParser.requireNumArguments(1);
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
 
   torch_::TensorOptions tensorOptions = torch_::TensorOptions();
   auto positionalArgCount = count;
@@ -101,8 +99,8 @@ jsi::Value catImpl(
     const jsi::Value& thisValue,
     const jsi::Value* arguments,
     size_t count) {
-  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
-  argParser.requireNumArguments(1);
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
   auto jsArray = arguments[0].asObject(runtime).asArray(runtime);
   std::vector<torch_::Tensor> tensors;
   auto size = jsArray.size(runtime);
@@ -110,7 +108,7 @@ jsi::Value catImpl(
     const auto val = jsArray.getValueAtIndex(runtime, i);
     tensors.emplace_back(utils::helpers::parseTensor(runtime, &val)->tensor);
   }
-  auto dimValue = argParser.keywordValue(1, "dim");
+  auto dimValue = args.keywordValue(1, "dim");
   int dim = dimValue.isUndefined() ? 0 : dimValue.asNumber();
 
   return utils::helpers::createFromHostObject<TensorHostObject>(
@@ -128,8 +126,8 @@ jsi::Value emptyImpl(
     const jsi::Value& thisValue,
     const jsi::Value* arguments,
     size_t count) {
-  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
-  argParser.requireNumArguments(1);
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
 
   std::vector<int64_t> dims = {};
   int nextArgumentIndex =
@@ -154,8 +152,8 @@ jsi::Value eyeImpl(
     const jsi::Value& thisValue,
     const jsi::Value* arguments,
     size_t count) {
-  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
-  argParser.requireNumArguments(1);
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
 
   const auto rows = arguments[0].asNumber();
   auto columns = rows;
@@ -182,6 +180,44 @@ jsi::Value eyeImpl(
       runtime, torch_::eye(rows, columns, tensorOptions));
 }
 
+jsi::Value fromBlobImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+
+  // We are not using utils::helpers::parseSize here because the
+  // torch::from_blob is only available in C++ and doesn't support sizes as
+  // variadics.
+  jsi::Array jsSizes = arguments[1].asObject(runtime).asArray(runtime);
+  auto sizesLength = jsSizes.size(runtime);
+  std::vector<int64_t> sizes;
+  sizes.reserve(sizesLength);
+  for (int i = 0; i < sizesLength; i++) {
+    auto value = jsSizes.getValueAtIndex(runtime, i);
+    sizes.push_back(value.asNumber());
+  }
+
+  const auto& blobHostObject =
+      args.asHostObject<torchlive::media::BlobHostObject>(0);
+  torch_::TensorOptions tensorOptions =
+      utils::helpers::parseTensorOptions(runtime, arguments, 2, count);
+  auto blob = blobHostObject->blob.get();
+  auto size = blob->getDirectSize();
+  uint8_t* const buffer = blob->getDirectBytes();
+  if (!tensorOptions.has_dtype()) {
+    // explicitly set to default uint8 dtype
+    tensorOptions = torch_::TensorOptions().dtype(torch_::kUInt8);
+  }
+  // TODO(T111718110) Check if blob sizes exceed buffer size and if so throw
+  // an error
+  auto tensor = torch_::from_blob(buffer, sizes, tensorOptions).clone();
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, std::move(tensor));
+}
+
 /**
  * Creates a tensor of size `size` filled with `fill_value`. The tensor’s dtype
  * is inferred from `fill_value`.
@@ -193,8 +229,8 @@ jsi::Value fullImpl(
     const jsi::Value& thisValue,
     const jsi::Value* arguments,
     size_t count) {
-  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
-  argParser.requireNumArguments(2);
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
 
   std::vector<int64_t> dims = {};
   auto jsShape = arguments[0].asObject(runtime).asArray(runtime);
@@ -218,17 +254,17 @@ jsi::Value linspaceImpl(
     const jsi::Value& thisValue,
     const jsi::Value* arguments,
     size_t count) {
-  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
-  argParser.requireNumArguments(3);
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(3);
 
   torch_::TensorOptions tensorOptions = torch_::TensorOptions();
   if (arguments[count - 1].isObject()) {
     tensorOptions = utils::helpers::parseTensorOptions(
         runtime, arguments, count - 1, count);
   }
-  auto start = argParser.asInteger(0);
-  auto end = argParser.asInteger(1);
-  auto steps = argParser.asInteger(2);
+  auto start = args.asInteger(0);
+  auto end = args.asInteger(1);
+  auto steps = args.asInteger(2);
 
   return utils::helpers::createFromHostObject<TensorHostObject>(
       runtime, torch_::linspace(start, end, steps, tensorOptions));
@@ -246,11 +282,11 @@ jsi::Value logspaceImpl(
     const jsi::Value& thisValue,
     const jsi::Value* arguments,
     size_t count) {
-  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
-  argParser.requireNumArguments(3);
-  auto start = argParser.asInteger(0);
-  auto end = argParser.asInteger(1);
-  auto steps = argParser.asInteger(2);
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(3);
+  auto start = args.asInteger(0);
+  auto end = args.asInteger(1);
+  auto steps = args.asInteger(2);
   auto baseValue = utils::helpers::parseKeywordArgument(
       runtime, arguments, 3, count, "base");
   double base = baseValue.isUndefined() ? 10.0 : baseValue.asNumber();
@@ -269,8 +305,8 @@ jsi::Value randpermImpl(
     const jsi::Value& thisValue,
     const jsi::Value* arguments,
     size_t count) {
-  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
-  argParser.requireNumArguments(1);
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
 
   auto upperBound = arguments[0].asNumber();
 
@@ -292,8 +328,8 @@ jsi::Value randnImpl(
     const jsi::Value& thisValue,
     const jsi::Value* arguments,
     size_t count) {
-  auto argParser = utils::ArgumentParser(runtime, thisValue, arguments, count);
-  argParser.requireNumArguments(1);
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
 
   std::vector<int64_t> dims = {};
   auto jsShape = arguments[0].asObject(runtime).asArray(runtime);
@@ -315,7 +351,6 @@ TorchHostObject::TorchHostObject(
     jsi::Runtime& runtime,
     torchlive::RuntimeExecutor runtimeExecutor)
     : BaseHostObject(runtime),
-      fromBlob_(createFromBlob(runtime)),
       ones_(createOnes(runtime)),
       rand_(createRand(runtime)),
       randint_(createRandint(runtime)),
@@ -323,7 +358,6 @@ TorchHostObject::TorchHostObject(
       zeros_(createZeros(runtime)),
       runtimeExecutor_(runtimeExecutor),
       methods{
-          {FROM_BLOB, &fromBlob_},
           {ONES, &ones_},
           {RAND, &rand_},
           {RANDINT, &randint_},
@@ -354,6 +388,7 @@ TorchHostObject::TorchHostObject(
   setPropertyHostFunction(runtime, "cat", 2, catImpl);
   setPropertyHostFunction(runtime, "empty", 1, emptyImpl);
   setPropertyHostFunction(runtime, "eye", 1, eyeImpl);
+  setPropertyHostFunction(runtime, "fromBlob", 2, fromBlobImpl);
   setPropertyHostFunction(runtime, "full", 2, fullImpl);
   setPropertyHostFunction(runtime, "linspace", 3, linspaceImpl);
   setPropertyHostFunction(runtime, "logspace", 3, logspaceImpl);
@@ -426,65 +461,6 @@ jsi::Function TorchHostObject::createRand(jsi::Runtime& runtime) {
 
   return jsi::Function::createFromHostFunction(
       runtime, jsi::PropNameID::forUtf8(runtime, RAND), 2, randImpl);
-}
-
-jsi::Function TorchHostObject::createFromBlob(jsi::Runtime& runtime) {
-  auto fromBlobImpl = [](jsi::Runtime& runtime,
-                         const jsi::Value& thisValue,
-                         const jsi::Value* arguments,
-                         size_t count) {
-    if (count < 2) {
-      throw jsi::JSError(
-          runtime, "This function requires at least 2 arguments");
-    }
-
-    if (!arguments[1].isObject() ||
-        !arguments[1].asObject(runtime).isArray(runtime)) {
-      throw jsi::JSError(runtime, "Arg 2 should be an array of numbers");
-    }
-
-    // We are not using utils::helpers::parseSize here because the
-    // torch::from_blob is only available in C++ and doesn't support sizes as
-    // variadics.
-    jsi::Array jsSizes = arguments[1].asObject(runtime).asArray(runtime);
-    auto sizesLength = jsSizes.size(runtime);
-    std::vector<int64_t> sizes;
-    sizes.reserve(sizesLength);
-    for (int i = 0; i < sizesLength; i++) {
-      auto value = jsSizes.getValueAtIndex(runtime, i);
-      if (value.isNumber()) {
-        sizes.push_back(value.asNumber());
-      } else {
-        throw jsi::JSError(runtime, "Input should be an array of numbers");
-      }
-    }
-
-    auto hostObject = arguments[0].asObject(runtime).asHostObject(runtime);
-    auto blobHostObject =
-        dynamic_cast<torchlive::media::BlobHostObject*>(hostObject.get());
-    if (blobHostObject != nullptr) {
-      torch_::TensorOptions tensorOptions =
-          utils::helpers::parseTensorOptions(runtime, arguments, 2, count);
-      auto blob = blobHostObject->blob.get();
-      auto size = blob->getDirectSize();
-      uint8_t* const buffer = blob->getDirectBytes();
-      if (!tensorOptions.has_dtype()) {
-        // explicitly set to default uint8 dtype
-        tensorOptions = torch_::TensorOptions().dtype(torch_::kUInt8);
-      }
-      // TODO(T111718110) Check if blob sizes exceed buffer size and if so throw
-      // an error
-      auto tensor = torch_::from_blob(buffer, sizes, tensorOptions).clone();
-      auto tensorHostObject =
-          std::make_shared<torchlive::torch::TensorHostObject>(runtime, tensor);
-      return jsi::Object::createFromHostObject(runtime, tensorHostObject);
-    } else {
-      throw jsi::JSError(
-          runtime, "The fromBlob function only works with BlobHostObject");
-    }
-  };
-  return jsi::Function::createFromHostFunction(
-      runtime, jsi::PropNameID::forUtf8(runtime, FROM_BLOB), 1, fromBlobImpl);
 }
 
 /**

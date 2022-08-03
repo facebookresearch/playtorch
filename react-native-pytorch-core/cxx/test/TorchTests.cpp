@@ -14,6 +14,10 @@
 namespace {
 
 class TorchliveRuntimeTest : public torchlive::test::TorchliveBindingsTestBase {
+ public:
+  TorchliveRuntimeTest() : torchlive::test::TorchliveBindingsTestBase() {
+    importTorchliveModule("media");
+  }
 };
 
 TEST_F(TorchliveRuntimeTest, TorchObjectTest) {
@@ -538,6 +542,35 @@ TEST_F(TorchliveRuntimeTest, TorchExpandTest) {
       eval("torch.tensor([[1], [2], [3]]).expand()"), facebook::jsi::JSError);
   EXPECT_THROW(
       eval("torch.tensor([[1], [2], [3]]).expand([])"), facebook::jsi::JSError);
+}
+
+TEST_F(TorchliveRuntimeTest, TorchFromBlobTest) {
+  std::string blob =
+      R"(
+          const tensor1 = torch.tensor([3, 2, 4], {dtype: torch.uint8});
+          const blob = media.toBlob(tensor1);
+      )";
+
+  // Test missing parameter
+  std::string missingJsSize = "const tensor2 = torch.fromBlob(blob);";
+  EXPECT_THROW(eval(blob + missingJsSize), facebook::jsi::JSError);
+
+  // The second parameter should be an array of numbers
+  std::string notArray = "const tensor2 = torch.fromBlob(blob, 3);";
+  EXPECT_THROW(eval(blob + notArray), facebook::jsi::JSError);
+  std::string notNumber =
+      "const tensor2 = torch.fromBlob(blob, ['not-valid']);";
+  EXPECT_THROW(eval(blob + notNumber), facebook::jsi::JSError);
+
+  // Test converting blob back to tensor
+  std::string blobToTensor =
+      R"(
+          const tensor2 = torch.fromBlob(blob, [3]);
+          const data1 = tensor1.data();
+          const data2 = tensor2.data();
+          data1.every((value, i) => value === data2[i]);
+      )";
+  EXPECT_TRUE(eval(blob + blobToTensor).getBool());
 }
 
 TEST_F(TorchliveRuntimeTest, TorchFullTest) {

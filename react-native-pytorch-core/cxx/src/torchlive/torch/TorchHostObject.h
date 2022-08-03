@@ -17,7 +17,6 @@ namespace torchlive {
 namespace torch {
 
 class JSI_EXPORT TorchHostObject : public common::BaseHostObject {
-  facebook::jsi::Function fromBlob_;
   facebook::jsi::Function ones_;
   facebook::jsi::Function rand_;
   facebook::jsi::Function randint_;
@@ -37,8 +36,6 @@ class JSI_EXPORT TorchHostObject : public common::BaseHostObject {
 
  private:
   torchlive::RuntimeExecutor runtimeExecutor_;
-  static facebook::jsi::Function createFromBlob(
-      facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createOnes(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createRand(facebook::jsi::Runtime& runtime);
   static facebook::jsi::Function createRandint(facebook::jsi::Runtime& runtime);

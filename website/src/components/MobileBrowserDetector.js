@@ -7,6 +7,8 @@
  * @format
  */
 
+import ExecutionEnvironment from '@docusaurus/ExecutionEnvironment';
+
 /**
  * NOTE: This is not a totally reliable method. There essentially aren't any
  * totally reliable methods. So be careful using this.
@@ -15,9 +17,16 @@
  */
 
 /**
- * @returns boolean if we suspect the user is using an android mobile device
+ * @returns boolean if we suspect the user is using an android mobile device, or false if in SSR
  */
 export function getIsLikelyAndroidDevice() {
+  // Return false for SSR environment
+  if (!ExecutionEnvironment.canUseDOM) {
+    return false;
+  }
+  if (navigator == null) {
+    return false;
+  }
   if (/Android/i.test(navigator.userAgent)) {
     return true;
   }
@@ -25,9 +34,16 @@ export function getIsLikelyAndroidDevice() {
 }
 
 /**
- * @returns boolean if we suspect the user is using an ios mobile device
+ * @returns boolean if we suspect the user is using an ios mobile device, or false if in SSR
  */
 export function getIsLikelyIOSDevice() {
+  // Return false for SSR environment
+  if (!ExecutionEnvironment.canUseDOM) {
+    return false;
+  }
+  if (navigator == null) {
+    return false;
+  }
   if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
     return true;
   }
@@ -35,7 +51,7 @@ export function getIsLikelyIOSDevice() {
 }
 
 /**
- * @returns boolean if we suspect the user is using an android/ios mobile device
+ * @returns boolean if we suspect the user is using an android/ios mobile device, or false if in SSR
  */
 export function getIsLikelyAndroidOrIOSDevice() {
   return getIsLikelyAndroidDevice() || getIsLikelyIOSDevice();

@@ -40,7 +40,11 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/facebookresearch/playtorch/tree/main/react-native-pytorch-core",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/facebookresearch/playtorch.git",
+    "directory": "react-native-pytorch-core"
+  },
   "author": "Meta Platforms, Inc.",
   "license": "MIT",
   "bugs": {

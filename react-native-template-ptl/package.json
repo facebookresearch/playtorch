@@ -2,7 +2,11 @@
   "name": "react-native-template-ptl",
   "version": "0.0.0",
   "description": "A minimal React Native template for PlayTorch",
-  "repository": "https://github.com/facebookresearch/playtorch/tree/main/react-native-template-ptl",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/facebookresearch/playtorch.git",
+    "directory": "react-native-template-ptl"
+  },
   "author": "Meta Platforms, Inc.",
   "license": "MIT",
   "bugs": {

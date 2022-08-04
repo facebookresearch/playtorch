@@ -4,7 +4,13 @@ id: cli
 
 import TOCInline from '@theme/TOCInline';
 
-# CLI
+# CLI (Deprecated)
+
+:::caution
+
+The CLI is deprecated and will be removed in a future release. Instead, [get started quickly with the PlayTorch app](../tutorials/get-started.mdx). An alternative to developing with the app is to [manually set up a local environment](../tutorials/get-started-manually.mdx) or [add PlayTorch to an existing app](../tutorials/add-package.mdx).
+
+:::
 
 <div className="tutorial-page">
 

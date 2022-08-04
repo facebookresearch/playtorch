@@ -8,7 +8,7 @@
  */
 
 const ExternalLinks = {
-  APP_STORE: 'https://apps.apple.com/us/app/playtorch/id1632121045',
+  APP_STORE: 'https://apps.apple.com/app/playtorch/id1632121045',
   DISCORD: 'https://discord.gg/sQkXTqEt33',
   GITHUB: 'https://github.com/facebookresearch/playtorch',
   GOOGLE_PLAY_STORE:

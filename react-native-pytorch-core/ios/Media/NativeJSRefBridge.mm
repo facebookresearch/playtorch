@@ -37,13 +37,17 @@ std::shared_ptr<IImage> imageFromBlob(
 }
 
 std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
-  auto idRef = refId.c_str();
-  auto mediaDataRef = [PTLBlobUtils beginReadDataWithCRefId:idRef];
-  uint8_t* const tmpBuffer = [PTLBlobUtils getDirectBytesWithCRefId:mediaDataRef];
-  size_t size = [PTLBlobUtils getDirectSizeWithCRefId:mediaDataRef];
+  auto idRef = [NSString stringWithUTF8String:refId.c_str()];
+  NSError *error = nil;
+  auto mediaToBlob = [[PTLMediaToBlob alloc] initWithRefId:idRef error:&error];
+  if (error != nil) {
+    return nullptr;
+  }
+  
+  auto tmpBuffer = [mediaToBlob getByteBuffer];
+  auto size = tmpBuffer.length;
   auto data = std::unique_ptr<uint8_t[]>(new uint8_t[size]);
-  std::memcpy(data.get(), tmpBuffer, size);
-  [PTLBlobUtils endReadDataWithCRefId:mediaDataRef];
+  std::memcpy(data.get(), tmpBuffer.bytes, size);
   return std::make_unique<torchlive::media::Blob>(std::move(data), size);
 }
 

@@ -207,6 +207,7 @@ module.exports = {
           '../react-native-pytorch-core/**/example',
         ],
         tsconfig: '../react-native-pytorch-core/tsconfig.build.json',
+        disableSources: true,
         excludePrivate: true,
         excludeProtected: true,
         excludeExternals: true,

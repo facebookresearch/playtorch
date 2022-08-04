@@ -1,17 +1,17 @@
 # PyTorch core library for React Native
 
-The PyTorch core library for React Native is part of the PyTorch Live project. Please follow the instructions provided on the [PyTorch Live website](https://pytorch.org/live) as outlined below!
+The PyTorch core library for React Native is part of the PlayTorch project. Please follow the instructions provided on the [PlayTorch website](https://playtorch.dev/) as outlined below!
 
-## 🎉 Building your first PyTorch Live app
-Follow the [Getting Started guide](https://pytorch.org/live/docs/tutorials/get-started). PyTorch Live offers a CLI with convenient commands to install development dependencies and initialize new projects. We also have a few tutorials for you to keep going after getting started:
+## 🎉 Getting started with PlayTorch
+Follow the [Getting Started guide](https://playtorch.dev/docs/tutorials/get-started/). Use the PlayTorch app to get started with no development environment required, or set up a local development environment to build a standalone app by following the [Manual Environment Setup guide](https://playtorch.dev/docs/tutorials/get-started-manually/). We also have a few tutorials for you to keep going after getting started:
 
-* [Image Classification](https://pytorch.org/live/docs/tutorials/image-classification)
-* [Question Answering](https://pytorch.org/live/docs/tutorials/question-answering)
-* [Prepare Custom Model](https://pytorch.org/live/docs/tutorials/prepare-custom-model)
+* [Image Classification](https://playtorch.dev/docs/tutorials/snacks/image-classification/)
+* [Question Answering](https://playtorch.dev/docs/tutorials/snacks/nlp-qa/)
+* [Prepare Custom Model](https://playtorch.dev/docs/tutorials/prepare-custom-model/)
 
 ## 📖 Documentation
 
-The full documentation for PyTorch Live can be found on our [website](https://pytorch.org/live/).
+The full documentation for PlayTorch can be found on our [website](https://playtorch.dev/).
 
 ## Example Usage
 
@@ -36,12 +36,12 @@ const T = torchvision.transforms;
 
 // URL to the image classification model that is used int his example
 const MODEL_URL =
-  'https://github.com/pytorch/live/releases/download/v0.1.0/mobilenet_v3_small.ptl';
+  'https://github.com/facebookresearch/playtorch/releases/download/v0.1.0/mobilenet_v3_small.ptl';
 
 // URL to the ImageNetClasses JSON file, which is used below to map the
 // processed model result to a class label
 const IMAGENET_CLASSES_URL =
-  'https://github.com/pytorch/live/releases/download/v0.1.0/ImageNetClasses.json';
+  'https://github.com/facebookresearch/playtorch/releases/download/v0.1.0/ImageNetClasses.json';
 
 // Variable to hold a reference to the loaded ML model
 let model: Module | null = null;
@@ -152,20 +152,20 @@ const styles = StyleSheet.create({
 ```
 
 ## 👏 How to Contribute
-The main purpose of this repository is to continue evolving PyTorch Live. We want to make contributing to this project as easy and transparent as possible, and we are grateful to the community for contributing bug fixes and improvements. Read below to learn how you can take part in improving PyTorch Live.
+The main purpose of this repository is to continue evolving PlayTorch. We want to make contributing to this project as easy and transparent as possible, and we are grateful to the community for contributing bug fixes and improvements. Read below to learn how you can take part in improving PlayTorch.
 
 ### [Code of Conduct][code]
-Facebook has adopted a Code of Conduct that we expect project participants to adhere to.
+Meta has adopted a Code of Conduct that we expect project participants to adhere to.
 Please read the [full text][code] so that you can understand what actions will and will not be tolerated.
 
-[code]: https://code.fb.com/codeofconduct/
+[code]: https://opensource.fb.com/code-of-conduct/
 
 ### [Contributing Guide][contribute]
-Read our [**Contributing Guide**][contribute] to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to PyTorch Live.
+Read our [**Contributing Guide**][contribute] to learn about our development process, how to propose bugfixes and improvements, and how to build and test your changes to PlayTorch.
 
 [contribute]: CONTRIBUTING.md
 
 ## License
-PyTorch Live is MIT licensed, as found in the [LICENSE][license] file.
+PlayTorch is MIT licensed, as found in the [LICENSE][license] file.
 
 [license]: LICENSE.md

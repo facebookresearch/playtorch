@@ -40,13 +40,13 @@
     "ios",
     "android"
   ],
-  "repository": "https://github.com/pytorch/live/tree/main/react-native-pytorch-core",
-  "author": "Facebook, Inc.",
+  "repository": "https://github.com/facebookresearch/playtorch/tree/main/react-native-pytorch-core",
+  "author": "Meta Platforms, Inc.",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/pytorch/live/issues"
+    "url": "https://github.com/facebookresearch/playtorch/issues"
   },
-  "homepage": "https://pytorch.org/live",
+  "homepage": "https://playtorch.dev/",
   "publishConfig": {
     "registry": "https://registry.npmjs.org/"
   },

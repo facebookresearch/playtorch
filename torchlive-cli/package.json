@@ -1,9 +1,15 @@
 {
   "name": "torchlive-cli",
   "version": "0.0.0",
-  "description": "PyTorch Live CLI",
-  "main": "index.js",
+  "description": "PlayTorch CLI",
+  "repository": "https://github.com/facebookresearch/playtorch/tree/main/torchlive-cli",
+  "author": "Meta Platforms, Inc.",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/facebookresearch/playtorch/issues"
+  },
+  "homepage": "https://playtorch.dev/",
+  "main": "index.js",
   "bin": {
     "torchlive": "./build/index.js"
   },

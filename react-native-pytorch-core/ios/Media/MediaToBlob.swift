@@ -11,6 +11,10 @@ import Foundation
 public class MediaToBlob: NSObject {
   private var mBuffer: Data?
 
+  enum MediaToBlobError: Error {
+      case unknownUnwrappedObject
+  }
+
   @objc
   public init(refId: String) throws {
       super.init()
@@ -24,7 +28,7 @@ public class MediaToBlob: NSObject {
           let audio = obj as! IAudio
           audioToBlob(audio: audio)
       } else {
-        print("error unwrapping object")
+        throw MediaToBlobError.unknownUnwrappedObject
       }
   }
 

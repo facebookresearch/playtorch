@@ -41,7 +41,7 @@ std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
   NSError *error = nil;
   auto mediaToBlob = [[PTLMediaToBlob alloc] initWithRefId:idRef error:&error];
   if (error != nil) {
-    return nullptr;
+    throw std::runtime_error(std::string([error.description UTF8String]));
   }
   
   auto tmpBuffer = [mediaToBlob getByteBuffer];

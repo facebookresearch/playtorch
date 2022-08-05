@@ -108,12 +108,14 @@ BlobHostObject::BlobHostObject(
     jsi::Runtime& runtime,
     std::unique_ptr<torchlive::media::Blob>&& b)
     : BaseHostObject(runtime), blob(std::move(b)) {
+  // Properties
+  setProperty(runtime, "size", static_cast<int>(blob->getDirectSize()));
+  setProperty(
+      runtime, "type", jsi::String::createFromUtf8(runtime, blob->getType()));
+
   // Functions
   setPropertyHostFunction(runtime, "arrayBuffer", 0, arrayBufferImpl);
   setPropertyHostFunction(runtime, "slice", 0, sliceImpl);
-
-  // Properties
-  setProperty(runtime, "size", static_cast<int>(blob->getDirectSize()));
 }
 
 } // namespace media

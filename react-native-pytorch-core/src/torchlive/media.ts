@@ -13,15 +13,20 @@ import type {Image} from '../ImageModule';
 
 export interface Blob {
   /**
+   * The Blob interface's size property returns the size of the Blob in bytes.
+   */
+  readonly size: number;
+  /**
+   * A string indicating the MIME type of the data contained in the Blob.
+   * If the type is unknown, this string is empty.
+   */
+  readonly type: string;
+
+  /**
    * The `arrayBuffer()` function returns a `Promise` that resolves with the
    * contents of the blob as binary data contained in an ArrayBuffer.
    */
   arrayBuffer(): Promise<Uint8Array>;
-  /**
-   * The Blob interface's size property returns the size of the Blob in bytes.
-   */
-  readonly size: number;
-
   /**
    * The `slice() function creates and returns a new [[Blob]] object which contains
    * data from a subset of the blob on which it's called.

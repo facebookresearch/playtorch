@@ -10,15 +10,22 @@
 namespace torchlive {
 namespace media {
 
-Blob::Blob(std::unique_ptr<uint8_t[]>&& b, size_t bl)
-    : buffer(std::move(b)), byteLength(bl) {}
+Blob::Blob(
+    std::unique_ptr<uint8_t[]>&& buffer,
+    size_t byteLength,
+    const std::string& type)
+    : buffer_(std::move(buffer)), byteLength_(byteLength), type_(type) {}
 
 uint8_t* const Blob::getDirectBytes() const {
-  return this->buffer.get();
+  return buffer_.get();
 }
 
-size_t Blob::getDirectSize() const {
-  return this->byteLength;
+size_t Blob::getDirectSize() const noexcept {
+  return byteLength_;
+}
+
+const std::string& Blob::getType() const noexcept {
+  return type_;
 }
 
 } // namespace media

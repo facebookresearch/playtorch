@@ -8,20 +8,26 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 namespace torchlive {
 namespace media {
 
 class Blob {
  public:
-  Blob(std::unique_ptr<uint8_t[]>&& b, size_t bl);
+  Blob(
+      std::unique_ptr<uint8_t[]>&& buffer,
+      size_t byteLength,
+      const std::string& type = "");
 
   uint8_t* const getDirectBytes() const;
-  size_t getDirectSize() const;
+  size_t getDirectSize() const noexcept;
+  const std::string& getType() const noexcept;
 
  private:
-  std::unique_ptr<uint8_t[]> buffer;
-  size_t byteLength;
+  std::unique_ptr<uint8_t[]> buffer_;
+  size_t byteLength_;
+  std::string type_;
 };
 
 } // namespace media

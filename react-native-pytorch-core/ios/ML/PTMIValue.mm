@@ -34,7 +34,7 @@
     if (_ivalue.isTensor() == NO) {
         return nil;
     }
-    
+
     at::Tensor tensor = _ivalue.toTensor();
     return [PTMTensor fromTensor:tensor];
 }
@@ -43,7 +43,7 @@
     if (_ivalue.toString() == NO) {
         return nil;
     }
-    
+
     auto answer = _ivalue.toString();
     return [NSString stringWithUTF8String:answer->string().c_str()];
 }
@@ -52,10 +52,10 @@
     if (_ivalue.isGenericDict() == NO) {
         return nil;
     }
-    
+
     auto dict = _ivalue.toGenericDict();
-    auto keyType = dict.keyType();
-    auto keyTypeKind = keyType->kind();
+    auto& keyType = dict.keyType()->expectRef<c10::DynamicType>();
+    auto keyTypeKind = keyType.dynamicKind();
 
     if (keyTypeKind != c10::TypeKind::StringType) {
         return nil;

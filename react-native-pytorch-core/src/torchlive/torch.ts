@@ -102,7 +102,7 @@ interface JIT {
  *
  * :::
  *
- * {@link https://pytorch.org/docs/1.11/tensor_attributes.html#torch-dtype}
+ * {@link https://pytorch.org/docs/1.12/tensor_attributes.html#torch-dtype}
  */
 export type Dtype =
   | 'double'
@@ -128,7 +128,7 @@ export type TensorOptions = {
 /**
  * A [[MemoryFormat]] is an object representing the memory format on which a [[Tensor]] is or will be allocated.
  *
- * {@link https://pytorch.org/docs/1.11/tensor_attributes.html#torch.torch.memory_format}
+ * {@link https://pytorch.org/docs/1.12/tensor_attributes.html#torch.torch.memory_format}
  */
 export type MemoryFormat =
   | 'channelsLast'
@@ -142,13 +142,13 @@ export interface Tensor {
   /**
    * Computes the absolute value of each element in input.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.abs.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.abs.html}
    */
   abs(): Tensor;
   /**
    * Add a scalar or tensor to this tensor.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.add.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.add.html}
    *
    * @param other Scalar or tensor to be added to each element in this tensor.
    * @param options.alpha The multiplier for `other`. Default: `1`.
@@ -158,7 +158,7 @@ export interface Tensor {
    * Returns the indices of the maximum value of all elements in the input
    * tensor.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.argmax.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.argmax.html}
    *
    * @param options argmax Options as keywords argument in pytorch
    * @param options.dim The dimension to reduce. If `undefined`, the argmax of the flattened input is returned.
@@ -168,7 +168,7 @@ export interface Tensor {
   /**
    * Returns the indices of the minimum value(s) of the flattened tensor or along a dimension
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.argmin.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.argmin.html}
    *
    * @param options argmin Options as keywords argument in pytorch
    * @param options.dim The dimension to reduce. If `undefined`, the argmin of the flattened input is returned.
@@ -180,7 +180,7 @@ export interface Tensor {
    *
    * If `min` is `undefined`, there is no lower bound. Or, if `max` is `undefined` there is no upper bound.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.clamp.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.clamp.html}
    *
    * @param min Lower-bound of the range to be clamped to
    * @param max Upper-bound of the range to be clamped to
@@ -191,7 +191,7 @@ export interface Tensor {
    *
    * If `min` is `undefined`, there is no lower bound. Or, if `max` is `undefined` there is no upper bound.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.clamp.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.clamp.html}
    *
    * @param options.min Lower-bound of the range to be clamped to
    * @param options.max Upper-bound of the range to be clamped to
@@ -204,7 +204,7 @@ export interface Tensor {
    *
    * @param options.memoryFormat The desired memory format of returned Tensor. Default: torch.contiguousFormat.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.contiguous.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.contiguous.html}
    */
   contiguous(options?: {memoryFormat: MemoryFormat}): Tensor;
   /**
@@ -231,7 +231,7 @@ export interface Tensor {
    * Divides each element of the input input by the corresponding element of
    * other.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.div.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.div.html}
    *
    * @param other Scalar or tensor that divides each element in this tensor.
    * @param options.roundingMode Type of rounding applied to the result
@@ -243,21 +243,21 @@ export interface Tensor {
   /**
    * A dtype is an string that represents the data type of a torch.Tensor.
    *
-   * {@link https://pytorch.org/docs/1.11/tensor_attributes.html}
+   * {@link https://pytorch.org/docs/1.12/tensor_attributes.html}
    */
   dtype: Dtype;
   /**
    * Returns the value of this tensor as a `number`. This only works for
    * tensors with one element.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.item.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.item.html}
    */
   item(): number;
   /**
    * Returns a tensor with the same data and number of elements as input, but
    * with the specified shape.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.reshape.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.reshape.html}
    *
    * @param shape The new shape.
    */
@@ -265,7 +265,7 @@ export interface Tensor {
   /**
    * Multiplies input by other scalar or tensor.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.mul.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.mul.html}
    *
    * @param other Scalar or tensor multiplied with each element in this tensor.
    */
@@ -273,7 +273,7 @@ export interface Tensor {
   /**
    * Returns a view of the original tensor input with its dimensions permuted.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.permute.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.permute.html}
    *
    * @param dims The desired ordering of dimensions.
    */
@@ -281,13 +281,13 @@ export interface Tensor {
   /**
    * Returns the size of the tensor.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.size.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.size.html}
    */
   shape: number[];
   /**
    * Returns the size of the tensor.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.size.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.size.html}
    */
   size(): number[];
   /**
@@ -295,7 +295,7 @@ export interface Tensor {
    * will re-scale them so that the elements lie in the range `[0, 1]` and sum
    * to `1`.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.nn.functional.softmax.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.nn.functional.softmax.html}
    *
    * @param dim A dimension along which softmax will be computed.
    */
@@ -303,13 +303,13 @@ export interface Tensor {
   /**
    * Computes the square-root value of each element in input.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.sqrt.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sqrt.html}
    */
   sqrt(): Tensor;
   /**
    * Returns a tensor with all the dimensions of input of size 1 removed.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.squeeze.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.squeeze.html}
    *
    * @param dim If given, the input will be squeezed only in this dimension.
    */
@@ -317,13 +317,13 @@ export interface Tensor {
   /**
    * Returns the stride of the tensor.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.stride.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.stride.html}
    */
   stride(): number[];
   /**
    * Returns the stride of the tensor.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.stride.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.stride.html}
    *
    * @param dim The desired dimension in which stride is required.
    */
@@ -331,7 +331,7 @@ export interface Tensor {
   /**
    * Subtracts other from input.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.sub.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sub.html}
    *
    * @param other The scalar or tensor to subtract from input.
    * @param options.alpha The multiplier for `other`. Default: `1`.
@@ -340,14 +340,14 @@ export interface Tensor {
   /**
    * Returns the sum of all elements in the input tensor.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.sum.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sum.html}
    */
   sum(): Tensor;
   /**
    * Returns the sum of each row of the input tensor in the given dimension dim.
    * If dim is a list of dimensions, reduce over all of them.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.sum.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sum.html}
    *
    * @param dim The dimension or dimensions to reduce.
    * @param options.keepdim Whether the output tensor has `dim` retained or not.
@@ -356,7 +356,7 @@ export interface Tensor {
   /**
    * Performs Tensor conversion.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.to.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.to.html}
    *
    * @param options Tensor options.
    */
@@ -365,7 +365,7 @@ export interface Tensor {
    * Returns the k largest elements of the given input tensor along a given
    * dimension.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.topk.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.topk.html}
    *
    * @param k The k in "top-k"
    */
@@ -374,7 +374,7 @@ export interface Tensor {
    * Returns a new tensor with a dimension of size one inserted at the
    * specified position.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.Tensor.unsqueeze.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.unsqueeze.html}
    *
    * @param dim The index at which to insert the singleton dimension.
    */
@@ -398,7 +398,7 @@ export interface Torch {
    * Returns a 1-D tensor of size `(end - 0) / 1` with values from the interval
    * `[0, end)` taken with common difference step beginning from start.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.arange.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.arange.html}
    *
    * @param end The ending value for the set of points.
    * @param options
@@ -409,7 +409,7 @@ export interface Torch {
    * interval `[start, end)` taken with common difference 1 beginning from
    * `start`.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.arange.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.arange.html}
    *
    * @param start The starting value for the set of points.
    * @param end The ending value for the set of points.
@@ -421,7 +421,7 @@ export interface Torch {
    * interval `[start, end)` taken with common difference `step` beginning from
    * `start`.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.arange.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.arange.html}
    *
    * @param start The starting value for the set of points.
    * @param end The ending value for the set of points.
@@ -437,7 +437,7 @@ export interface Torch {
   /**
    * Concatenate a list of tensors along the specified axis, which default to be axis 0
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.cat.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.cat.html}
    *
    * @param tensors A sequence of Tensor to be concatenated.
    * @param options used to specify the dimenstion to concate.
@@ -447,7 +447,7 @@ export interface Torch {
    * Returns a tensor filled with uninitialized data. The shape of the tensor
    * is defined by the variable argument size.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.empty.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.empty.html}
    *
    * @param size A sequence of integers defining the shape of the output
    * tensor.
@@ -456,7 +456,7 @@ export interface Torch {
   /**
    * Returns a new view of the tensor expanded to a larger size.
    *
-   * {@link https://pytorch.org/docs/stable/generated/torch.Tensor.expand.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.expand.html}
    *
    * @param sizes The expanded size, eg: ([3, 4]).
    */
@@ -465,7 +465,7 @@ export interface Torch {
    * Returns a tensor filled with ones on the diagonal, and zeroes elsewhere.
    * The shape of the tensor is defined by the arguments n and m.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.eye.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.eye.html}
    *
    * @param n An integer defining the number of rows in the result.
    * @param m An integer defining the number of columns in the result. Optional, defaults to n.
@@ -491,7 +491,7 @@ export interface Torch {
    * Returns a one-dimensional tensor of size steps whose values are evenly spaced from
    * base^start to base^end, inclusive, on a logarithmic scale with base.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.logspace.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.logspace.html}
    *
    * @param start starting value for the set of points
    * @param end ending value for the set of points
@@ -508,7 +508,7 @@ export interface Torch {
    * Returns a tensor filled with the scalar value 1, with the shape defined
    * by the argument `size`.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.ones.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.ones.html}
    *
    * @param size A sequence of integers defining the shape of the output tensor.
    * @param options Tensor options.
@@ -526,7 +526,7 @@ export interface Torch {
    * Returns a tensor filled with random integers generated uniformly between
    * `0` (inclusive) and `high` (exclusive).
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.randint.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.randint.html}
    *
    * @param high One above the highest integer to be drawn from the distribution.
    * @param size A tuple defining the shape of the output tensor.
@@ -536,7 +536,7 @@ export interface Torch {
    * Returns a tensor filled with random integers generated uniformly between
    * `low` (inclusive) and `high` (exclusive).
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.randint.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.randint.html}
    *
    * @param low Lowest integer to be drawn from the distribution.
    * @param high One above the highest integer to be drawn from the distribution.
@@ -547,7 +547,7 @@ export interface Torch {
    * Returns a tensor filled with random numbers from a normal distribution
    * with mean 0 and variance 1 (also called the standard normal distribution).
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.randn.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.randn.html}
    *
    * @param size A sequence of integers defining the shape of the output tensor.
    * @param options Tensor options.
@@ -564,7 +564,7 @@ export interface Torch {
    * Returns a tensor filled with the scalar value 0, with the shape defined
    * by the argument `size`.
    *
-   * {@link https://pytorch.org/docs/1.11/generated/torch.zeros.html}
+   * {@link https://pytorch.org/docs/1.12/generated/torch.zeros.html}
    *
    * @param size A sequence of integers defining the shape of the output tensor.
    * @param options Tensor options.

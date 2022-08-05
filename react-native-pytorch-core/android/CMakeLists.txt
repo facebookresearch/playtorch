@@ -35,7 +35,7 @@ add_library(
         ../cxx/src/torchlive/torch/jit/JITNamespace.cpp
         ../cxx/src/torchlive/torch/jit/mobile/ModuleHostObject.cpp
         ../cxx/src/torchlive/torch/TensorHostObject.cpp
-        ../cxx/src/torchlive/torch/TorchHostObject.cpp
+        ../cxx/src/torchlive/torch/TorchNamespace.cpp
         ../cxx/src/torchlive/torch/utils/ArgumentParser.cpp
         ../cxx/src/torchlive/torch/utils/constants.cpp
         ../cxx/src/torchlive/torch/utils/converter.cpp

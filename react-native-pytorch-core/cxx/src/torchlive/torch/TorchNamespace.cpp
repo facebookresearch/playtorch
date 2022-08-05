@@ -11,11 +11,11 @@
 #include <vector>
 
 #include "../media/BlobHostObject.h"
-#include "ATen/Functions.h"
-#include "ATen/core/TensorBody.h"
+#include "../torchlive.h"
 #include "TensorHostObject.h"
-#include "TorchHostObject.h"
+#include "TorchNamespace.h"
 #include "jit/JITNamespace.h"
+#include "jsi/jsi.h"
 #include "utils/ArgumentParser.h"
 #include "utils/constants.h"
 #include "utils/helpers.h"
@@ -31,29 +31,27 @@ using namespace facebook;
 // TorchHostObject Property Names
 static const std::string JIT = "jit";
 
-// TorchHostObject Properties
-static const std::vector<std::string> PROPERTIES = {
-    utils::constants::FLOAT32,
-    utils::constants::FLOAT64,
-    utils::constants::INT16,
-    utils::constants::INT32,
-    utils::constants::INT64,
-    utils::constants::INT8,
-    utils::constants::UINT8,
-    utils::constants::CHANNELS_LAST,
-    utils::constants::CONTIGUOUS_FORMAT,
-    utils::constants::PRESERVE_FORMAT,
-    JIT,
+// TorchHostObject Constant Properties
+static const std::map<std::string, std::string> CONSTANTS = {
+    {utils::constants::FLOAT32, utils::constants::FLOAT32},
+    {utils::constants::FLOAT, utils::constants::FLOAT32},
+    {utils::constants::FLOAT64, utils::constants::FLOAT64},
+    {utils::constants::DOUBLE, utils::constants::FLOAT64},
+    {utils::constants::INT8, utils::constants::INT8},
+    {utils::constants::INT16, utils::constants::INT16},
+    {utils::constants::SHORT, utils::constants::INT16},
+    {utils::constants::INT32, utils::constants::INT32},
+    {utils::constants::INT, utils::constants::INT32},
+    {utils::constants::INT64, utils::constants::INT64},
+    {utils::constants::LONG, utils::constants::INT64},
+    {utils::constants::UINT8, utils::constants::UINT8},
+    {utils::constants::CHANNELS_LAST, utils::constants::CHANNELS_LAST},
+    {utils::constants::CONTIGUOUS_FORMAT, utils::constants::CONTIGUOUS_FORMAT},
+    {utils::constants::PRESERVE_FORMAT, utils::constants::PRESERVE_FORMAT},
 };
 
 namespace {
-/**
- * Creates a 1-D tensor of size `(end - start) / step` with values from the
- * interval `[start, end)` taken with common difference `step` beginning from
- * `start`.
- *
- * See https://pytorch.org/docs/stable/generated/torch.arange.html
- */
+
 jsi::Value arangeImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -99,12 +97,6 @@ jsi::Value catImpl(
       runtime, torch_::cat(tensors, dim));
 }
 
-/**
- * Returns a tensor filled with uninitialized data. The shape of the tensor
- * is defined by the variable argument size.
- *
- * See https://pytorch.org/docs/stable/generated/torch.empty.html
- */
 jsi::Value emptyImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -124,13 +116,6 @@ jsi::Value emptyImpl(
       runtime, torch_::empty(c10::ArrayRef<int64_t>(dims), tensorOptions));
 }
 
-/**
- * Returns an eye tensor with the given dimensions:
- *   * eye(n, m) if two integer arguments n, m given,
- *   * eye(n, n) if one integer argument n given
- *
- * See https://pytorch.org/docs/stable/generated/torch.eye.html
- */
 jsi::Value eyeImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -202,12 +187,6 @@ jsi::Value fromBlobImpl(
       runtime, std::move(tensor));
 }
 
-/**
- * Creates a tensor of size `size` filled with `fill_value`. The tensor’s dtype
- * is inferred from `fill_value`.
- *
- * See https://pytorch.org/docs/stable/generated/torch.full.html
- */
 jsi::Value fullImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -254,13 +233,6 @@ jsi::Value linspaceImpl(
       runtime, torch_::linspace(start, end, steps, tensorOptions));
 }
 
-/**
- * Creates a one-dimensional tensor of size steps whose values are evenly spaced
- * from base^start to base^end, inclusive, on a logarithmic scale.
- *
- * See
- * https://pytorch.org/docs/stable/generated/torch.logspace.html#torch.logspace
- */
 jsi::Value logspaceImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -285,12 +257,6 @@ jsi::Value logspaceImpl(
       runtime, torch_::logspace(start, end, steps, base, options));
 }
 
-/**
- * Returns a tensor filled with the scalar value 1,
- * with the shape defined by the variable argument size.
- *
- * See: https://pytorch.org/docs/stable/generated/torch.ones.html
- */
 jsi::Value onesImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -376,12 +342,6 @@ jsi::Value randpermImpl(
       runtime, torch_::randperm(upperBound, options));
 }
 
-/**
- * Returns a tensor filled with random numbers from a normal distribution with
- * mean 0 and variance 1 (also called the standard normal distribution).
- *
- * See https://pytorch.org/docs/stable/generated/torch.randn.html#torch.randn
- */
 jsi::Value randnImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -446,73 +406,38 @@ jsi::Value zerosImpl(
 }
 } // namespace
 
-TorchHostObject::TorchHostObject(
-    jsi::Runtime& runtime,
-    torchlive::RuntimeExecutor runtimeExecutor)
-    : BaseHostObject(runtime),
-      runtimeExecutor_(runtimeExecutor),
-      properties{
-          {utils::constants::FLOAT32, utils::constants::FLOAT32},
-          {utils::constants::FLOAT, utils::constants::FLOAT32},
-          {utils::constants::FLOAT64, utils::constants::FLOAT64},
-          {utils::constants::DOUBLE, utils::constants::FLOAT64},
-          {utils::constants::INT8, utils::constants::INT8},
-          {utils::constants::INT16, utils::constants::INT16},
-          {utils::constants::SHORT, utils::constants::INT16},
-          {utils::constants::INT32, utils::constants::INT32},
-          {utils::constants::INT, utils::constants::INT32},
-          {utils::constants::INT64, utils::constants::INT64},
-          {utils::constants::LONG, utils::constants::INT64},
-          {utils::constants::UINT8, utils::constants::UINT8},
-          {utils::constants::CHANNELS_LAST, utils::constants::CHANNELS_LAST},
-          {utils::constants::CONTIGUOUS_FORMAT,
-           utils::constants::CONTIGUOUS_FORMAT},
-          {utils::constants::PRESERVE_FORMAT,
-           utils::constants::PRESERVE_FORMAT},
-      },
-      jit_(torchlive::torch::jit::buildNamespace(runtime, runtimeExecutor)) {
-  setPropertyHostFunction(runtime, "arange", 1, arangeImpl);
-  setPropertyHostFunction(runtime, "cat", 1, catImpl);
-  setPropertyHostFunction(runtime, "empty", 1, emptyImpl);
-  setPropertyHostFunction(runtime, "eye", 1, eyeImpl);
-  setPropertyHostFunction(runtime, "fromBlob", 2, fromBlobImpl);
-  setPropertyHostFunction(runtime, "full", 2, fullImpl);
-  setPropertyHostFunction(runtime, "linspace", 3, linspaceImpl);
-  setPropertyHostFunction(runtime, "logspace", 3, logspaceImpl);
-  setPropertyHostFunction(runtime, "ones", 1, onesImpl);
-  setPropertyHostFunction(runtime, "rand", 1, randImpl);
-  setPropertyHostFunction(runtime, "randint", 2, randintImpl);
-  setPropertyHostFunction(runtime, "randn", 1, randnImpl);
-  setPropertyHostFunction(runtime, "randperm", 1, randpermImpl);
-  setPropertyHostFunction(runtime, "tensor", 1, tensorImpl);
-  setPropertyHostFunction(runtime, "zeros", 1, zerosImpl);
+jsi::Object buildNamespace(jsi::Runtime& rt, RuntimeExecutor rte) {
+  using utils::helpers::setPropertyHostFunction;
+
+  jsi::Object ns(rt);
+
+  // Properties
+  for (auto& constant : CONSTANTS) {
+    ns.setProperty(
+        rt, jsi::PropNameID::forUtf8(rt, constant.first), constant.second);
+  }
+
+  auto jit = torchlive::torch::jit::buildNamespace(rt, rte);
+  ns.setProperty(rt, jsi::PropNameID::forUtf8(rt, JIT), jit);
+
+  // Functions
+  setPropertyHostFunction(rt, ns, "arange", 1, arangeImpl);
+  setPropertyHostFunction(rt, ns, "cat", 1, catImpl);
+  setPropertyHostFunction(rt, ns, "empty", 1, emptyImpl);
+  setPropertyHostFunction(rt, ns, "eye", 1, eyeImpl);
+  setPropertyHostFunction(rt, ns, "fromBlob", 2, fromBlobImpl);
+  setPropertyHostFunction(rt, ns, "full", 2, fullImpl);
+  setPropertyHostFunction(rt, ns, "linspace", 3, linspaceImpl);
+  setPropertyHostFunction(rt, ns, "logspace", 3, logspaceImpl);
+  setPropertyHostFunction(rt, ns, "ones", 1, onesImpl);
+  setPropertyHostFunction(rt, ns, "rand", 1, randImpl);
+  setPropertyHostFunction(rt, ns, "randint", 2, randintImpl);
+  setPropertyHostFunction(rt, ns, "randn", 1, randnImpl);
+  setPropertyHostFunction(rt, ns, "randperm", 1, randpermImpl);
+  setPropertyHostFunction(rt, ns, "tensor", 1, tensorImpl);
+  setPropertyHostFunction(rt, ns, "zeros", 1, zerosImpl);
+  return ns;
 }
-
-std::vector<jsi::PropNameID> TorchHostObject::getPropertyNames(
-    jsi::Runtime& rt) {
-  auto result = BaseHostObject::getPropertyNames(rt);
-  for (std::string property : PROPERTIES) {
-    result.push_back(jsi::PropNameID::forUtf8(rt, property));
-  }
-  return result;
-}
-
-jsi::Value TorchHostObject::get(
-    jsi::Runtime& runtime,
-    const jsi::PropNameID& propName) {
-  auto name = propName.utf8(runtime);
-
-  auto property = properties.find(name);
-  if (property != properties.end()) {
-    return jsi::String::createFromAscii(runtime, property->second);
-  }
-
-  if (name == JIT) {
-    return jsi::Value(runtime, jit_);
-  }
-
-  return BaseHostObject::get(runtime, propName);
-};
 
 } // namespace torch
 } // namespace torchlive

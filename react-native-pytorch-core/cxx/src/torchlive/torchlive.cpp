@@ -9,7 +9,7 @@
 
 #include "experimental/ExperimentalNamespace.h"
 #include "media/MediaNamespace.h"
-#include "torch/TorchHostObject.h"
+#include "torch/TorchNamespace.h"
 #include "torchlive.h"
 #include "torchvision/TorchvisionHostObject.h"
 #include "vision/VisionHostObject.h"
@@ -21,9 +21,7 @@ using namespace facebook;
 void install(jsi::Runtime& runtime, RuntimeExecutor runtimeExecutor) {
   jsi::Object torchliveObject(runtime);
 
-  auto torchObject = std::make_shared<torchlive::torch::TorchHostObject>(
-      runtime, runtimeExecutor);
-  auto torch = jsi::Object::createFromHostObject(runtime, torchObject);
+  auto torch = torch::buildNamespace(runtime, runtimeExecutor);
   torchliveObject.setProperty(runtime, "torch", std::move(torch));
 
   auto visionObject =

@@ -247,6 +247,14 @@ export interface Tensor {
    */
   dtype: Dtype;
   /**
+   * Reverse the order of a n-D tensor along given axis in dims.
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.flip.html}
+   *
+   * @param dims
+   */
+  flip(dims: number[]): Tensor;
+  /**
    * Returns the value of this tensor as a `number`. This only works for
    * tensors with one element.
    *

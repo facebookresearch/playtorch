@@ -464,6 +464,32 @@ TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {
       facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorFlipTest) {
+  std::string tensorFlip =
+      R"(
+          const tensor = torch.arange(8).reshape([2, 2, 2]);
+          const result = tensor.flip([0, 1]);
+          const shape = result.shape;
+          JSON.stringify(result.shape) == '[2,2,2]' && JSON.stringify([...result.data()]) == '[6,7,4,5,2,3,0,1]';
+        )";
+  EXPECT_TRUE(eval(tensorFlip).getBool());
+
+  // Flip dimensions out of bounds -> dimension 3 does not exist
+  EXPECT_THROW(
+      eval("torch.arange(8).reshape([2, 2, 2]).flip([0, 3])"),
+      facebook::jsi::JSError);
+
+  // Flip requires 1 argument but no argument provided
+  EXPECT_THROW(
+      eval("torch.arange(8).reshape([2, 2, 2]).flip()"),
+      facebook::jsi::JSError);
+
+  // Incorrect argument type
+  EXPECT_THROW(
+      eval("torch.arange(8).reshape([2, 2, 2]).flip('foo')"),
+      facebook::jsi::JSError);
+}
+
 TEST_F(TorchliveTensorRuntimeTest, TensorMulTest) {
   std::string tensorMulWithNumber =
       R"(

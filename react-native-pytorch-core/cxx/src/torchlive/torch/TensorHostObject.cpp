@@ -341,6 +341,24 @@ jsi::Value expandImpl(
       runtime, std::move(tensor));
 }
 
+jsi::Value flipImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto thiz = args.thisAsHostObject<TensorHostObject>();
+
+  std::vector<int64_t> dims = {};
+  utils::helpers::parseSize(runtime, arguments, 0, count, &dims);
+
+  auto tensor = thiz->tensor.flip(dims);
+
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, std::move(tensor));
+}
+
 jsi::Value itemImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -610,6 +628,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "contiguous", 0, contiguousImpl);
   setPropertyHostFunction(runtime, "data", 0, dataImpl);
   setPropertyHostFunction(runtime, "div", 1, divImpl);
+  setPropertyHostFunction(runtime, "flip", 1, flipImpl);
   setPropertyHostFunction(runtime, "item", 0, itemImpl);
   setPropertyHostFunction(runtime, "mul", 1, mulImpl);
   setPropertyHostFunction(runtime, "permute", 1, permuteImpl);

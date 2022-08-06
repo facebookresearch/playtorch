@@ -17,6 +17,10 @@ import RedirectStarterSnack from './RedirectStarterSnack';
 
 export default function ExpoSnackLandingPage({match}) {
   const {expoSnackPath} = match.params;
+  const title = React.useMemo(
+    () => `${expoSnackPath} | PlayTorch Snack`,
+    [expoSnackPath],
+  );
 
   if (expoSnackPath == null || expoSnackPath.length === 0) {
     return <RedirectStarterSnack />;
@@ -24,7 +28,17 @@ export default function ExpoSnackLandingPage({match}) {
 
   return (
     <div>
-      <Head title={`${expoSnackPath} | PlayTorch Snack`} />
+      <Head title={title}>
+        <meta property="og:title" content={title} />
+        <meta name="description" content={title} />
+        <meta property="og:description" content={title} />
+        <link
+          rel="search"
+          type="application/opensearchdescription+xml"
+          title={title}
+          href="/opensearch.xml"
+        />
+      </Head>
       <LandingPageHeader
         heroTitle={expoSnackPath}
         nameOfSharedItem="snack"

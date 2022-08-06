@@ -7,12 +7,13 @@
  * @format
  */
 
-import React from 'react';
-import clsx from 'clsx';
+import Head from '@docusaurus/Head';
 import ExpoSnack from '@site/src/components/ExpoSnack';
+import clsx from 'clsx';
+import * as React from 'react';
 import styles from './ExpoSnackLandingPage.module.css';
-import RedirectStarterSnack from './RedirectStarterSnack';
 import LandingPageHeader from './LandingPageHeader';
+import RedirectStarterSnack from './RedirectStarterSnack';
 
 export default function ExpoSnackLandingPage({match}) {
   const {expoSnackPath} = match.params;
@@ -23,7 +24,9 @@ export default function ExpoSnackLandingPage({match}) {
 
   return (
     <div>
+      <Head title={`${expoSnackPath} | PlayTorch Snack`} />
       <LandingPageHeader
+        heroTitle={expoSnackPath}
         nameOfSharedItem="snack"
         urlToOpenInPlayTorch={`playtorch://snack?snackUrl=exp://exp.host/${expoSnackPath}`}
       />

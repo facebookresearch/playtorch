@@ -27,6 +27,7 @@ function AppStoreButton({href, LogoComponent, label}) {
 }
 
 export default function LandingPageHeader({
+  heroTitle,
   urlToOpenInPlayTorch,
   nameOfSharedItem,
 }) {
@@ -37,7 +38,7 @@ export default function LandingPageHeader({
       <div className="col col--10 col--offset--1">
         <div className="hero">
           <div className="container">
-            <h1 className="hero__title">PlayTorch</h1>
+            <h1 className="hero__title">{heroTitle}</h1>
             <p className="hero__subtitle">
               PlayTorch is a framework for rapidly creating cross-platform
               mobile AI experiences.

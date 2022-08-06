@@ -7,7 +7,8 @@
  * @format
  */
 
-import React from 'react';
+import Head from '@docusaurus/Head';
+import * as React from 'react';
 import {useEffect} from 'react';
 import LandingPageHeader from './LandingPageHeader';
 
@@ -30,7 +31,9 @@ export default function ExampleLandingPage({match, history}) {
 
   return (
     <div>
+      <Head title={`${slug} | PlayTorch Example`} />
       <LandingPageHeader
+        heroTitle={slug}
         nameOfSharedItem="example"
         urlToOpenInPlayTorch={`playtorch://example?example=${slug}`}
       />

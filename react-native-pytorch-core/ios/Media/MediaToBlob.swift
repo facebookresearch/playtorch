@@ -10,6 +10,7 @@ import Foundation
 @objc(PTLMediaToBlob)
 public class MediaToBlob: NSObject {
   private var mBuffer: Data?
+  private var mBlobType: String?
 
   enum MediaToBlobError: Error {
       case unknownUnwrappedObject
@@ -61,14 +62,21 @@ public class MediaToBlob: NSObject {
       }
 
       mBuffer = Data(buffer)
+      mBlobType = "image/x-playtorch-rgb"
   }
 
   private func audioToBlob(audio: IAudio) {
       mBuffer = audio.getData()
+      mBlobType = "audio/x-playtorch"
   }
 
   @objc
   public func getByteBuffer() -> Data? {
       return mBuffer
+  }
+
+  @objc
+  public func getBlobType() -> String? {
+    return mBlobType
   }
 }

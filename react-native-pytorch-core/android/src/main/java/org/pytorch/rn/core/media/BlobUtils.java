@@ -37,6 +37,20 @@ public class BlobUtils {
 
   @DoNotStrip
   @Keep
+  public static String nativeJSRefToType(final String refId) {
+    final JSContext.NativeJSRef nativeJSRef = JSContext.getRef(refId);
+    final Object obj = nativeJSRef.getObject();
+    if (obj instanceof IImage) {
+      return "image/x-playtorch-rgb";
+    } else if (obj instanceof IAudio) {
+      return "audio/x-playtorch";
+    }
+    throw new UnsupportedOperationException(
+        "Cannot get type for class: " + obj.getClass().getName());
+  }
+
+  @DoNotStrip
+  @Keep
   public static ByteBuffer bitmapToByteBuffer(Bitmap bitmap) {
     byte[] buffer = bitmapToRGB(bitmap);
     ByteBuffer byteBuffer = ByteBuffer.allocateDirect(buffer.length);

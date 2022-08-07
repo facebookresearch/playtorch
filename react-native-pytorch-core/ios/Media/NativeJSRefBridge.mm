@@ -25,15 +25,7 @@ std::shared_ptr<IImage> imageFromBlob(
     double width,
     double height) {
   auto image = MediaUtilsImageFromBlob(blob, width, height);
-  if (image == nil) {
-    return nullptr;
-  }
-
-  try {
-    return std::make_shared<Image>(image);
-  } catch (...) {
-    return nullptr;
-  }
+  return std::make_shared<Image>(image);
 }
 
 std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
@@ -43,12 +35,14 @@ std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
   if (error != nil) {
     throw std::runtime_error(std::string([error.description UTF8String]));
   }
-  
+
   auto tmpBuffer = [mediaToBlob getByteBuffer];
   auto size = tmpBuffer.length;
+  auto type = [mediaToBlob getBlobType];
   auto data = std::unique_ptr<uint8_t[]>(new uint8_t[size]);
   std::memcpy(data.get(), tmpBuffer.bytes, size);
-  return std::make_unique<torchlive::media::Blob>(std::move(data), size);
+
+  return std::make_unique<torchlive::media::Blob>(std::move(data), size, std::string([type UTF8String]));
 }
 
 } // namespace media

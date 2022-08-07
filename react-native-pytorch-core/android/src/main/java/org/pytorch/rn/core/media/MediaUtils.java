@@ -37,15 +37,26 @@ public class MediaUtils {
 
   @DoNotStrip
   @Keep
-  public static IImage imageFromBlob(final ByteBuffer buffer, double width, double height) {
+  public static IImage imageFromBlob(
+      final ByteBuffer buffer, final double width, final double height, final String type) {
     buffer.order(ByteOrder.nativeOrder());
-    final Bitmap bitmap = rgbToBitmap(buffer, (int) width, (int) height);
+    boolean hasAlpha = false;
+    if ("image/x-playtorch-rgba".equals(type)) {
+      hasAlpha = true;
+    } else if ("image/x-playtorch-rgb".equals(type)) {
+      hasAlpha = false;
+    } else {
+      throw new UnsupportedOperationException("Cannot create image from blob with type: " + type);
+    }
+
+    final Bitmap bitmap = blobToBitmap(buffer, (int) width, (int) height, hasAlpha);
     return new Image(bitmap);
   }
 
   @DoNotStrip
   @Keep
-  public static Bitmap rgbToBitmap(final ByteBuffer buffer, int width, int height) {
+  public static Bitmap blobToBitmap(
+      final ByteBuffer buffer, final int width, final int height, final boolean hasAlpha) {
     final Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
 
     final int length = buffer.limit();
@@ -53,15 +64,20 @@ public class MediaUtils {
     buffer.get(data);
 
     int n = 0;
+    bitmap.setPremultiplied(true);
     for (int i = 0; i < width * height; i++) {
-      int r = (int) (data[n++] & 0xff);
-      int g = (int) (data[n++] & 0xff);
-      int b = (int) (data[n++] & 0xff);
+      int a = (int) (hasAlpha ? (data[n + 3] & 0xff) : 255);
+      int r = (int) (data[n++] & 0xff) * a / 255;
+      int g = (int) (data[n++] & 0xff) * a / 255;
+      int b = (int) (data[n++] & 0xff) * a / 255;
+      if (hasAlpha) {
+        n++;
+      }
 
       int x = i / width;
       int y = i % width;
 
-      int color = Color.rgb(r, g, b);
+      int color = (hasAlpha ? Color.argb(a, r, g, b) : Color.rgb(r, g, b));
       bitmap.setPixel(y, x, color);
     }
 

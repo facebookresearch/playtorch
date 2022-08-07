@@ -45,29 +45,39 @@ imageFromBlob(const Blob& blob, double width, double height) {
   auto mediaUtilsClass = getMediaUtilsClass();
   auto imageFromBlobMethod =
       mediaUtilsClass->getStaticMethod<local_ref<JIImage>(
-          alias_ref<JByteBuffer>, jdouble, jdouble)>("imageFromBlob");
+          alias_ref<JByteBuffer>, jdouble, jdouble, local_ref<JString>)>(
+          "imageFromBlob");
   uint8_t* const data = blob.getDirectBytes();
   size_t const size = blob.getDirectSize();
+  const auto& type = blob.getType();
   local_ref<JByteBuffer> buffer = JByteBuffer::allocateDirect(size);
   std::memcpy(buffer->getDirectBytes(), data, size);
-  local_ref<JIImage> image =
-      imageFromBlobMethod(mediaUtilsClass, buffer, width, height);
+  local_ref<JIImage> image = imageFromBlobMethod(
+      mediaUtilsClass, buffer, width, height, make_jstring(type));
   return std::make_shared<Image>(make_global(image));
 }
 
 std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
   auto blobUtilsClass = getJBlobUtilsClass();
   static const auto nativeJSRefToByteBufferMethod =
-      blobUtilsClass->getStaticMethod<local_ref<JByteBuffer>(std::string)>(
-          "nativeJSRefToByteBuffer");
+      blobUtilsClass
+          ->getStaticMethod<local_ref<JByteBuffer>(local_ref<JString>)>(
+              "nativeJSRefToByteBuffer");
   local_ref<JByteBuffer> buffer =
-      nativeJSRefToByteBufferMethod(blobUtilsClass, refId);
+      nativeJSRefToByteBufferMethod(blobUtilsClass, make_jstring(refId));
 
   uint8_t* const bytes = buffer->getDirectBytes();
   size_t const size = buffer->getDirectSize();
   auto data = std::make_unique<uint8_t[]>(size);
   std::memcpy(data.get(), bytes, size);
-  return std::make_unique<torchlive::media::Blob>(std::move(data), size);
+
+  static const auto nativeJSRefToTypeMethod =
+      blobUtilsClass->getStaticMethod<local_ref<JString>(local_ref<JString>)>(
+          "nativeJSRefToType");
+  auto type = nativeJSRefToTypeMethod(blobUtilsClass, make_jstring(refId));
+
+  return std::make_unique<torchlive::media::Blob>(
+      std::move(data), size, type->toStdString());
 }
 
 } // namespace media

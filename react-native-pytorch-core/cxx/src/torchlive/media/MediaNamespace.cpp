@@ -20,11 +20,13 @@ using namespace facebook;
 
 namespace {
 
-std::unique_ptr<Blob> tensorToBlob(const ::torch::Tensor& tensor) {
+std::unique_ptr<Blob> tensorToBlob(
+    const ::torch::Tensor& tensor,
+    const std::string& type = "") {
   auto size = tensor.numel();
   auto data = std::make_unique<uint8_t[]>(size);
   std::memcpy(data.get(), tensor.data_ptr(), size);
-  return std::make_unique<torchlive::media::Blob>(std::move(data), size);
+  return std::make_unique<torchlive::media::Blob>(std::move(data), size, type);
 }
 
 jsi::Value imageFromBlobImpl(
@@ -39,12 +41,15 @@ jsi::Value imageFromBlobImpl(
   auto width = args[1].asNumber();
   auto height = args[2].asNumber();
 
-  auto image = torchlive::media::imageFromBlob(*blob, width, height);
-  if (image == nullptr) {
+  std::shared_ptr<IImage> image;
+  try {
+    image = torchlive::media::imageFromBlob(*blob, width, height);
+  } catch (const std::exception& e) {
     throw jsi::JSError(
         runtime,
         "error on converting blob to image with width: " +
-            std::to_string(width) + ", height: " + std::to_string(height));
+            std::to_string(width) + ", height: " + std::to_string(height) +
+            "\n" + e.what());
   }
   return utils::helpers::createFromHostObject<ImageHostObject>(
       runtime, std::move(image));
@@ -60,14 +65,25 @@ jsi::Value imageFromTensorImpl(
 
   const auto& tensor = args.asHostObject<torch::TensorHostObject>(0)->tensor;
   auto sizes = tensor.sizes();
-  if (sizes.size() != 3 || sizes.at(0) != 3 ||
-      tensor.dtype() != torch_::kUInt8) {
+  if (sizes.size() != 3 || tensor.dtype() != torch_::kUInt8) {
     throw jsi::JSError(
         runtime,
-        "input tensor must be of shape (3, height, width) with dtype uint8");
+        "input tensor must be of shape (channel, height, width) with dtype uint8");
   }
+  auto channel = sizes.at(0);
   auto height = sizes.at(1);
   auto width = sizes.at(2);
+  std::string blobType;
+
+  if (channel == 3) {
+    blobType = "image/x-playtorch-rgb";
+  } else if (channel == 4) {
+    blobType = "image/x-playtorch-rgba";
+  } else {
+    throw jsi::JSError(
+        runtime,
+        "input tensor must be of shape (3, height, width) or (4, height, width)");
+  }
 
   // Switch to MemoryFormat::ChannelsLast, it requires a rank 4 tensor to work
   // https://pytorch.org/tutorials/intermediate/memory_format_tutorial.html#what-is-channels-last
@@ -75,13 +91,17 @@ jsi::Value imageFromTensorImpl(
                            .dtype(tensor.dtype())
                            .memory_format(c10::MemoryFormat::ChannelsLast);
   auto updatedTensor = tensor.unsqueeze(0).to(tensorOptions).squeeze(0);
-  auto blob = tensorToBlob(updatedTensor);
-  auto image = torchlive::media::imageFromBlob(*blob, width, height);
-  if (image == nullptr) {
+
+  auto blob = tensorToBlob(updatedTensor, blobType);
+  std::shared_ptr<IImage> image;
+  try {
+    image = torchlive::media::imageFromBlob(*blob, width, height);
+  } catch (const std::exception& e) {
     throw jsi::JSError(
         runtime,
-        "error on converting tensor to image with width: " +
-            std::to_string(width) + ", height: " + std::to_string(height));
+        "error on converting blob to image with width: " +
+            std::to_string(width) + ", height: " + std::to_string(height) +
+            "\n" + e.what());
   }
   return utils::helpers::createFromHostObject<ImageHostObject>(
       runtime, std::move(image));

@@ -131,6 +131,201 @@ const Testunit = ({name, testFunc}: TestUnitItem) => {
 };
 
 const testUnitList = [
+  // api tests for model.* functions
+  {
+    name: 'generic model.* functions',
+    testFunc: async () => {
+      console.log('------Test generic function-------');
+      let model_url = await MobileModel.download(
+        require('../../assets/models/dummy_test_model.ptl'),
+      );
+
+      let model = await torch.jit._loadForMobile<TestModule>(model_url);
+      let lastTime = performance.now();
+
+      for (let i = 0; i < 1000; i++) {
+        await model.bump(1);
+      }
+      let totalTime = performance.now() - lastTime;
+      console.log('average time for bump: ', totalTime / 1000);
+      console.log(model);
+
+      let pi = await model.get_pi();
+      console.log('pi: ', pi);
+
+      let piSync = model.get_piSync();
+      console.log('piSync: ', piSync);
+    },
+  },
+  {
+    name: 'model.* with empty input (with exceptions)',
+    testFunc: async () => {
+      console.log('------Catch error on  empty model input-------');
+      let model_url = await MobileModel.download(
+        'https://github.com/liuyinglao/TestData/raw/main/input_test_module.ptl',
+      );
+      let model = await torch.jit._loadForMobile(model_url);
+      try {
+        await model.forward();
+      } catch (e) {
+        console.log('verified error can be caught with empty input');
+      }
+    },
+  },
+  {
+    name: 'model.* with dict input',
+    testFunc: async () => {
+      console.log('------Test generic dict input-------');
+      let model_url = await MobileModel.download(
+        require('../../assets/models/dummy_test_model.ptl'),
+      );
+      let model = await torch.jit._loadForMobile<TestModule>(model_url);
+      let obj1 = {this: 1, is: 2, object: 3};
+      let output1 = await model.concate_keys(obj1);
+      let output2 = await model.sum_values(obj1);
+      console.log(output1, output2);
+
+      let obj2 = {apple: torch.tensor([1, 2]), pear: torch.tensor([3, 4])};
+      let output3 = await model.sum_tensors(obj2);
+      for (let key in output3) {
+        console.log(key, output3[key].item());
+      }
+      let output4 = model.sum_tensorsSync(obj2);
+      for (let key in output4) {
+        console.log(key, output4[key].item());
+      }
+    },
+  },
+  {
+    name: 'model.* with list input',
+    testFunc: async () => {
+      console.log('------Test generic list input-------');
+      let model_url = await MobileModel.download(
+        require('../../assets/models/dummy_test_model.ptl'),
+      );
+      let model = await torch.jit._loadForMobile<TestModule>(model_url);
+      let outputOneD = await model.sum_one_d([1, 2, 3]);
+      let outputTwoD = await model.sum_two_d([
+        [1, 2, 3],
+        [4, 5],
+      ]);
+      console.log(outputOneD);
+      console.log(outputTwoD);
+      try {
+        await model.sum_two_d([[1, 2, 3.5]]);
+      } catch (e) {
+        if (e instanceof Error) {
+          console.log(e.message);
+        } else {
+          throw 'unknown exception thrown.';
+        }
+      }
+    },
+  },
+  {
+    name: 'model.* with string input',
+    testFunc: async () => {
+      console.log('------Test non-Tensor model input-------');
+      let model_url = await MobileModel.download(
+        require('../../assets/models/dummy_test_model.ptl'),
+      );
+      let model = await torch.jit._loadForMobile(model_url);
+      let inputStrings = ['tensor', 'bool', 'integer', 'double', 'other'];
+      for (const inputString of inputStrings) {
+        let output = model.forwardSync<
+          string | number | boolean | Tensor,
+          string
+        >(inputString, torch.tensor([1, 2, 3]), true, 3, 4.5);
+        console.log(output);
+      }
+      for (const inputString of inputStrings) {
+        let output = await model.forward<
+          string | number | boolean | Tensor,
+          string
+        >(inputString, torch.tensor([1, 2, 3]), true, 3, 4.5);
+        console.log(output);
+      }
+    },
+  },
+  {
+    name: 'model.* with tuple input',
+    testFunc: async () => {
+      console.log('------Test generic tuple input-------');
+      let model_url = await MobileModel.download(
+        require('../../assets/models/dummy_test_model.ptl'),
+      );
+      let model = await torch.jit._loadForMobile<TestModule>(model_url);
+      let t1: ComplexTuple = ['light', 3.14, [1, 2]];
+      let t2: ComplexTuple = ['light', 3.14, [1, 2]];
+      let output1 = await model.merge_tuple(t1, t2);
+      let output2 = model.merge_tupleSync(t1, t2);
+      console.log(output1);
+      console.log(output2);
+
+      try {
+        await model.merge_tuple(
+          ['light', 3.14, [1, 1.5]],
+          ['light', 3.14, [1, 2]],
+        );
+      } catch (e) {
+        if (e instanceof Error) {
+          console.log('Exception caught correctly: ', e.message);
+        } else {
+          throw 'unknown exception thrown.';
+        }
+      }
+    },
+  },
+
+  // api tests for tensor.* functions
+  {
+    name: 'tensor.abs',
+    testFunc: () => {
+      console.log('---Test tensor.abs---');
+      let absTensor = torch.tensor([
+        [-2, -1],
+        [0, 1],
+      ]);
+      printTensor(absTensor);
+      let tensorAbsOutput = absTensor.abs();
+      printTensor(tensorAbsOutput);
+    },
+  },
+  {
+    name: 'tensor.add',
+    testFunc: () => {
+      console.log('---Test tensor.add---');
+      const addTensor1 = torch.rand([1, 2]);
+      printTensor(addTensor1);
+      const addTensor2 = addTensor1.add(2);
+      printTensor(addTensor2);
+      printTensor(addTensor1.add(addTensor2));
+    },
+  },
+  {
+    name: 'tensor.argmin',
+    testFunc: async () => {
+      console.log('------Test tensor.argmin-------');
+      const t1 = torch.randn([2, 3]);
+      printTensor(t1, ['shape', 'dtype', 'stride']);
+      const minIndex = t1.argmin();
+      printTensor(minIndex, ['shape', 'dtype', 'stride']);
+      const minIndexRow = t1.argmin({dim: 0, keepdim: true});
+      printTensor(minIndexRow, ['shape', 'dtype', 'stride']);
+    },
+  },
+  {
+    name: 'tensor.div',
+    testFunc: () => {
+      console.log('---Test tensor.div---');
+      let divTensor = torch.arange(1, 10);
+      printTensor(divTensor);
+      printTensor(divTensor.div(2));
+      printTensor(divTensor.div(2, {roundingMode: 'floor'}));
+      printTensor(divTensor.div(divTensor));
+      printTensor(divTensor.div(divTensor, {roundingMode: 'floor'}));
+    },
+  },
   {
     name: 'tensor.expand',
     testFunc: async () => {
@@ -168,35 +363,58 @@ const testUnitList = [
     },
   },
   {
-    name: 'tensor.argmin',
-    testFunc: async () => {
-      console.log('------Test tensor.argmin-------');
-      const t1 = torch.randn([2, 3]);
-      printTensor(t1, ['shape', 'dtype', 'stride']);
-      const minIndex = t1.argmin();
-      printTensor(minIndex, ['shape', 'dtype', 'stride']);
-      const minIndexRow = t1.argmin({dim: 0, keepdim: true});
-      printTensor(minIndexRow, ['shape', 'dtype', 'stride']);
+    name: 'tensor.mul',
+    testFunc: () => {
+      console.log('---Test tensor.mul---');
+      let tensor1 = torch.arange(10);
+      printTensor(tensor1);
+      let tensor2 = tensor1.mul(2);
+      printTensor(tensor2);
+      printTensor(tensor2.mul(tensor1));
     },
   },
   {
-    name: 'torch.linspace',
-    testFunc: async () => {
-      console.log('------Test torch.linspace-------');
-      const t1 = torch.linspace(-5, 5, 4);
-      printTensor(t1);
-      const t2 = torch.linspace(-5, 5, 4, {dtype: torch.float32});
-      printTensor(t2);
+    name: 'tensor.softmax',
+    testFunc: () => {
+      console.log('---Test tensor.softmax---');
+      let softmaxTensor1 = torch.arange(2);
+      printTensor(softmaxTensor1);
+      printTensor(softmaxTensor1.softmax(0));
     },
   },
   {
-    name: 'torch.randperm',
-    testFunc: async () => {
-      console.log('------Test torch.randperm-------');
-      const t1 = torch.randperm(10, {dtype: torch.int32});
-      printTensor(t1);
-      const t2 = torch.randperm(10, {dtype: torch.float});
-      console.log(t2.dtype);
+    name: 'tensor.sub',
+    testFunc: () => {
+      console.log('---Test tensor.sub---');
+      const subTensor1 = torch.arange(2);
+      printTensor(subTensor1);
+      const subTensor2 = subTensor1.sub(2);
+      printTensor(subTensor2);
+      printTensor(subTensor1.sub(subTensor2));
+    },
+  },
+
+  {
+    name: 'tensor.topk',
+    testFunc: () => {
+      console.log('---Test tensor.topk---');
+      let topkTensor = torch.arange(10, 20);
+      console.log(topkTensor.data());
+      let [values, indices] = topkTensor.topk(3);
+      console.log(values.data());
+      console.log(indices.data());
+    },
+  },
+
+  // api tests for torch.* functiond
+  {
+    name: 'torch.arange',
+    testFunc: () => {
+      console.log('---Test torch.arange---');
+      let printOptions = ['data'];
+      printTensor(torch.arange(5), printOptions);
+      printTensor(torch.arange(1, 4), printOptions);
+      printTensor(torch.arange(1, 2.5, 0.5), printOptions);
     },
   },
   {
@@ -213,198 +431,6 @@ const testUnitList = [
         mask[2][0][0].item(),
         mask[3][0][0].item(),
       );
-    },
-  },
-  {
-    name: 'torch.logspace',
-    testFunc: async () => {
-      console.log('------Test torch.logspace-------');
-      const tensor1 = torch.logspace(-2, 2, 3, {base: 2});
-      const tensor2 = torch.logspace(-2, 2, 5, {base: 10, dtype: torch.int});
-      printTensor(tensor1);
-      printTensor(tensor2);
-    },
-  },
-  {
-    name: 'torch.randn',
-    testFunc: async () => {
-      console.log('------Test torch.randn-------');
-      const tensor1 = torch.randn([4]);
-      const tensor2 = torch.randn([2, 3]);
-      const tensor3 = torch.randn([2, 3], {dtype: torch.float32});
-      printTensor(tensor1);
-      printTensor(tensor2);
-      printTensor(tensor3);
-    },
-  },
-  {
-    name: 'generic tuple input',
-    testFunc: async () => {
-      console.log('------Test generic tuple input-------');
-      let model_url = await MobileModel.download(
-        require('../../assets/models/dummy_test_model.ptl'),
-      );
-      let model = await torch.jit._loadForMobile<TestModule>(model_url);
-      let t1: ComplexTuple = ['light', 3.14, [1, 2]];
-      let t2: ComplexTuple = ['light', 3.14, [1, 2]];
-      let output1 = await model.merge_tuple(t1, t2);
-      let output2 = model.merge_tupleSync(t1, t2);
-      console.log(output1);
-      console.log(output2);
-
-      try {
-        await model.merge_tuple(
-          ['light', 3.14, [1, 1.5]],
-          ['light', 3.14, [1, 2]],
-        );
-      } catch (e) {
-        if (e instanceof Error) {
-          console.log('Exception caught correctly: ', e.message);
-        } else {
-          throw 'unknown exception thrown.';
-        }
-      }
-    },
-  },
-  {
-    name: 'generic dict input',
-    testFunc: async () => {
-      console.log('------Test generic dict input-------');
-      let model_url = await MobileModel.download(
-        require('../../assets/models/dummy_test_model.ptl'),
-      );
-      let model = await torch.jit._loadForMobile<TestModule>(model_url);
-      let obj1 = {this: 1, is: 2, object: 3};
-      let output1 = await model.concate_keys(obj1);
-      let output2 = await model.sum_values(obj1);
-      console.log(output1, output2);
-
-      let obj2 = {apple: torch.tensor([1, 2]), pear: torch.tensor([3, 4])};
-      let output3 = await model.sum_tensors(obj2);
-      for (let key in output3) {
-        console.log(key, output3[key].item());
-      }
-      let output4 = model.sum_tensorsSync(obj2);
-      for (let key in output4) {
-        console.log(key, output4[key].item());
-      }
-    },
-  },
-  {
-    name: 'generic list input',
-    testFunc: async () => {
-      console.log('------Test generic list input-------');
-      let model_url = await MobileModel.download(
-        require('../../assets/models/dummy_test_model.ptl'),
-      );
-      let model = await torch.jit._loadForMobile<TestModule>(model_url);
-      let outputOneD = await model.sum_one_d([1, 2, 3]);
-      let outputTwoD = await model.sum_two_d([
-        [1, 2, 3],
-        [4, 5],
-      ]);
-      console.log(outputOneD);
-      console.log(outputTwoD);
-      try {
-        await model.sum_two_d([[1, 2, 3.5]]);
-      } catch (e) {
-        if (e instanceof Error) {
-          console.log(e.message);
-        } else {
-          throw 'unknown exception thrown.';
-        }
-      }
-    },
-  },
-  {
-    name: 'generic function',
-    testFunc: async () => {
-      console.log('------Test generic function-------');
-      let model_url = await MobileModel.download(
-        require('../../assets/models/dummy_test_model.ptl'),
-      );
-
-      let model = await torch.jit._loadForMobile<TestModule>(model_url);
-      let lastTime = performance.now();
-
-      for (let i = 0; i < 1000; i++) {
-        await model.bump(1);
-      }
-      let totalTime = performance.now() - lastTime;
-      console.log('average time for bump: ', totalTime / 1000);
-      console.log(model);
-
-      let pi = await model.get_pi();
-      console.log('pi: ', pi);
-
-      let piSync = model.get_piSync();
-      console.log('piSync: ', piSync);
-    },
-  },
-  {
-    name: 'non-Tensor model input',
-    testFunc: async () => {
-      console.log('------Test non-Tensor model input-------');
-      let model_url = await MobileModel.download(
-        require('../../assets/models/dummy_test_model.ptl'),
-      );
-      let model = await torch.jit._loadForMobile(model_url);
-      let inputStrings = ['tensor', 'bool', 'integer', 'double', 'other'];
-      for (const inputString of inputStrings) {
-        let output = model.forwardSync<
-          string | number | boolean | Tensor,
-          string
-        >(inputString, torch.tensor([1, 2, 3]), true, 3, 4.5);
-        console.log(output);
-      }
-      for (const inputString of inputStrings) {
-        let output = await model.forward<
-          string | number | boolean | Tensor,
-          string
-        >(inputString, torch.tensor([1, 2, 3]), true, 3, 4.5);
-        console.log(output);
-      }
-    },
-  },
-  {
-    name: 'empty model input',
-    testFunc: async () => {
-      console.log('------Catch error on  empty model input-------');
-      let model_url = await MobileModel.download(
-        'https://github.com/liuyinglao/TestData/raw/main/input_test_module.ptl',
-      );
-      let model = await torch.jit._loadForMobile(model_url);
-      try {
-        await model.forward();
-      } catch (e) {
-        console.log('verified error can be caught with empty input');
-      }
-    },
-  },
-  {
-    name: 'jsi setup',
-    testFunc: () => {
-      console.log('-----Test jsi setup-------');
-      console.log(Platform.OS);
-      console.log(torch);
-      const size = [3, 3, 3];
-      let tensor = torch.rand(size, {dtype: torch.float64});
-      let printOptions = ['data'];
-      printTensor(tensor, printOptions);
-
-      let startTime = performance.now();
-      let data = new Float32Array(tensor.data());
-      let result = argmax(Array.from(data));
-      let delta = performance.now() - startTime;
-      console.log('argmax (js)', result);
-      console.log('elapsed time (js)', delta, 'ms');
-
-      startTime = performance.now();
-      result = tensor.argmax().item();
-      delta = performance.now() - startTime;
-      console.log('argmax (c++)', result);
-      console.log('elapsed time (c++)', delta, 'ms');
-      printTensor(tensor, ['shape', 'stride', 'dtype']);
     },
   },
   {
@@ -429,17 +455,27 @@ const testUnitList = [
     },
   },
   {
-    name: 'torch.arange',
-    testFunc: () => {
-      console.log('---Test torch.arange---');
-      let printOptions = ['data'];
-      printTensor(torch.arange(5), printOptions);
-      printTensor(torch.arange(1, 4), printOptions);
-      printTensor(torch.arange(1, 2.5, 0.5), printOptions);
+    name: 'torch.linspace',
+    testFunc: async () => {
+      console.log('------Test torch.linspace-------');
+      const t1 = torch.linspace(-5, 5, 4);
+      printTensor(t1);
+      const t2 = torch.linspace(-5, 5, 4, {dtype: torch.float32});
+      printTensor(t2);
     },
   },
   {
-    name: 'torch.randit',
+    name: 'torch.logspace',
+    testFunc: async () => {
+      console.log('------Test torch.logspace-------');
+      const tensor1 = torch.logspace(-2, 2, 3, {base: 2});
+      const tensor2 = torch.logspace(-2, 2, 5, {base: 10, dtype: torch.int});
+      printTensor(tensor1);
+      printTensor(tensor2);
+    },
+  },
+  {
+    name: 'torch.randint',
     testFunc: () => {
       console.log('---Test torch.randint---');
       let printOptions = ['shape', 'data'];
@@ -447,6 +483,28 @@ const testUnitList = [
       printTensor(torch.randint(10, [2, 2]), printOptions);
       printTensor(torch.randint(3, 10, [2, 2]), printOptions);
       printTensor(torch.randint(3, 10, [2, 2, 2]), printOptions);
+    },
+  },
+  {
+    name: 'torch.randn',
+    testFunc: async () => {
+      console.log('------Test torch.randn-------');
+      const tensor1 = torch.randn([4]);
+      const tensor2 = torch.randn([2, 3]);
+      const tensor3 = torch.randn([2, 3], {dtype: torch.float32});
+      printTensor(tensor1);
+      printTensor(tensor2);
+      printTensor(tensor3);
+    },
+  },
+  {
+    name: 'torch.randperm',
+    testFunc: async () => {
+      console.log('------Test torch.randperm-------');
+      const t1 = torch.randperm(10, {dtype: torch.int32});
+      printTensor(t1);
+      const t2 = torch.randperm(10, {dtype: torch.float});
+      console.log(t2.dtype);
     },
   },
   {
@@ -465,49 +523,7 @@ const testUnitList = [
     },
   },
   {
-    name: 'tensor.add',
-    testFunc: () => {
-      console.log('---Test tensor.add---');
-      const addTensor1 = torch.rand([1, 2]);
-      printTensor(addTensor1);
-      const addTensor2 = addTensor1.add(2);
-      printTensor(addTensor2);
-      printTensor(addTensor1.add(addTensor2));
-    },
-  },
-  {
-    name: 'tensor.sub',
-    testFunc: () => {
-      console.log('---Test tensor.sub---');
-      const subTensor1 = torch.arange(2);
-      printTensor(subTensor1);
-      const subTensor2 = subTensor1.sub(2);
-      printTensor(subTensor2);
-      printTensor(subTensor1.sub(subTensor2));
-    },
-  },
-  {
-    name: 'tensor.mul',
-    testFunc: () => {
-      console.log('---Test tensor.mul---');
-      let tensor1 = torch.arange(10);
-      printTensor(tensor1);
-      let tensor2 = tensor1.mul(2);
-      printTensor(tensor2);
-      printTensor(tensor2.mul(tensor1));
-    },
-  },
-  {
-    name: 'tensor.softmax',
-    testFunc: () => {
-      console.log('---Test tensor.softmax---');
-      let softmaxTensor1 = torch.arange(2);
-      printTensor(softmaxTensor1);
-      printTensor(softmaxTensor1.softmax(0));
-    },
-  },
-  {
-    name: 'tensor.tensor',
+    name: 'torch.tensor',
     testFunc: () => {
       console.log('---Test torch.tensor---');
       let printOptions = ['shape', 'data', 'dtype'];
@@ -539,31 +555,8 @@ const testUnitList = [
       printTensor(torch.tensor(1, {dtype: torch.int}), printOptions);
     },
   },
-  {
-    name: 'tensor.div',
-    testFunc: () => {
-      console.log('---Test tensor.div---');
-      let divTensor = torch.arange(1, 10);
-      printTensor(divTensor);
-      printTensor(divTensor.div(2));
-      printTensor(divTensor.div(2, {roundingMode: 'floor'}));
-      printTensor(divTensor.div(divTensor));
-      printTensor(divTensor.div(divTensor, {roundingMode: 'floor'}));
-    },
-  },
-  {
-    name: 'tensor.abs',
-    testFunc: () => {
-      console.log('---Test tensor.abs---');
-      let absTensor = torch.tensor([
-        [-2, -1],
-        [0, 1],
-      ]);
-      printTensor(absTensor);
-      let tensorAbsOutput = absTensor.abs();
-      printTensor(tensorAbsOutput);
-    },
-  },
+
+  // api tests for torchvision.* functions
   {
     name: 'torchvision.centercrop',
     testFunc: () => {
@@ -577,26 +570,14 @@ const testUnitList = [
     },
   },
   {
-    name: 'tensor.topk',
+    name: 'torchvision.grayscale',
     testFunc: () => {
-      console.log('---Test tensor.topk---');
-      let topkTensor = torch.arange(10, 20);
-      console.log(topkTensor.data());
-      let [values, indices] = topkTensor.topk(3);
-      console.log(values.data());
-      console.log(indices.data());
-    },
-  },
-  {
-    name: 'torchvision.resize',
-    testFunc: () => {
-      console.log('---Test torchvision.resize---');
-      let tensor8 = torch.rand([1, 3, 100, 100]);
-      let resize = torchvision.transforms.resize(20);
-      console.log('log resize: ', resize.forward);
-      let tensor9 = resize.forward(tensor8);
-      console.log('original shape: ', tensor8.shape);
-      console.log('transformed shape: ', tensor9.shape);
+      console.log('---Test torchvision.grayscale---');
+      const tensor11 = torch.rand([1, 3, 5, 5]);
+      const grayscale = torchvision.transforms.grayscale();
+      console.log('log grayscale: ', grayscale.forward);
+      const grayscaled = grayscale(tensor11);
+      printTensor(grayscaled);
     },
   },
   {
@@ -616,22 +597,51 @@ const testUnitList = [
     },
   },
   {
-    name: 'torchvision.grayscale',
+    name: 'torchvision.resize',
     testFunc: () => {
-      console.log('---Test torchvision.grayscale---');
-      const tensor11 = torch.rand([1, 3, 5, 5]);
-      const grayscale = torchvision.transforms.grayscale();
-      console.log('log grayscale: ', grayscale.forward);
-      const grayscaled = grayscale(tensor11);
-      printTensor(grayscaled);
+      console.log('---Test torchvision.resize---');
+      let tensor8 = torch.rand([1, 3, 100, 100]);
+      let resize = torchvision.transforms.resize(20);
+      console.log('log resize: ', resize.forward);
+      let tensor9 = resize.forward(tensor8);
+      console.log('original shape: ', tensor8.shape);
+      console.log('transformed shape: ', tensor9.shape);
     },
   },
+
+  // api tests for other functionalities
   {
     name: 'async function',
     testFunc: async () => {
       console.log('---Test async function that returns HostObject---');
       const asyncResult = await (async () => torch.rand([3]))();
       console.log(asyncResult && asyncResult.data());
+    },
+  },
+  {
+    name: 'jsi setup',
+    testFunc: () => {
+      console.log('-----Test jsi setup-------');
+      console.log(Platform.OS);
+      console.log(torch);
+      const size = [3, 3, 3];
+      let tensor = torch.rand(size, {dtype: torch.float64});
+      let printOptions = ['data'];
+      printTensor(tensor, printOptions);
+
+      let startTime = performance.now();
+      let data = new Float32Array(tensor.data());
+      let result = argmax(Array.from(data));
+      let delta = performance.now() - startTime;
+      console.log('argmax (js)', result);
+      console.log('elapsed time (js)', delta, 'ms');
+
+      startTime = performance.now();
+      result = tensor.argmax().item();
+      delta = performance.now() - startTime;
+      console.log('argmax (c++)', result);
+      console.log('elapsed time (c++)', delta, 'ms');
+      printTensor(tensor, ['shape', 'stride', 'dtype']);
     },
   },
 ];

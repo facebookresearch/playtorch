@@ -54,8 +54,6 @@ type TestModule = Module & {
   merge_tupleSync: (tuple1: ComplexTuple, tuple2: ComplexTuple) => ComplexTuple;
 };
 
-const PRINTABLE_LENGTH = 20;
-
 function argmax(array: number[]): number {
   let max = -Number.MAX_VALUE;
   let ret = -1;
@@ -69,7 +67,6 @@ function argmax(array: number[]): number {
 }
 
 function printTensor(tensor: Tensor, options: string[] = []) {
-  const tensorData = tensor.data();
   const logArray = [];
 
   if (options.includes('shape')) {
@@ -82,10 +79,9 @@ function printTensor(tensor: Tensor, options: string[] = []) {
     logArray.push(`Data Type: ${tensor.dtype}`);
   }
 
-  const tensorDataStr =
-    tensorData.length > PRINTABLE_LENGTH ? tensor.toString() : `${tensorData}`;
+  const tensorDataStr = tensor.toString();
   logArray.push(tensorDataStr);
-  const logText = logArray.join(', ');
+  const logText = `Tensor: {${logArray.join('\n')}}`;
   console.log(logText);
 }
 
@@ -350,6 +346,16 @@ const testUnitList = [
           throw e;
         }
       }
+    },
+  },
+  {
+    name: 'tensor.flip',
+    testFunc: async () => {
+      console.log('------Test tensor.flip-------');
+      const t1 = torch.arange(1, 10).reshape([3, 3]);
+      printTensor(t1, ['shape', 'dtype', 'stride']);
+      const t2 = t1.flip([0, 1]);
+      printTensor(t2, ['shape', 'dtype', 'stride']);
     },
   },
   {

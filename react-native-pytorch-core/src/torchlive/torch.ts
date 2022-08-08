@@ -247,6 +247,14 @@ export interface Tensor {
    */
   dtype: Dtype;
   /**
+   * Returns a new view of the tensor expanded to a larger size.
+   *
+   * {@link https://pytorch.org/docs/stable/generated/torch.Tensor.expand.html}
+   *
+   * @param sizes The expanded size, eg: ([3, 4]).
+   */
+  expand(sizes: number[]): Tensor;
+  /**
    * Reverse the order of a n-D tensor along given axis in dims.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.flip.html}
@@ -462,14 +470,6 @@ export interface Torch {
    */
   empty(size: number[], options?: TensorOptions): Tensor;
   /**
-   * Returns a new view of the tensor expanded to a larger size.
-   *
-   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.expand.html}
-   *
-   * @param sizes The expanded size, eg: ([3, 4]).
-   */
-  expand(sizes: number[]): Tensor;
-  /**
    * Returns a tensor filled with ones on the diagonal, and zeroes elsewhere.
    * The shape of the tensor is defined by the arguments n and m.
    *
@@ -496,15 +496,43 @@ export interface Torch {
    */
   fromBlob(blob: any, sizes?: number[], options?: TensorOptions): Tensor;
   /**
+   * Creates a tensor of size `size` filled with `fillValue`. The tensor’s dtype is default to be `torch.float32`,
+   * unless specified with `options`.
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.full.html}
+   *
+   * @param size  A list of integers defining the shape of the output tensor.
+   * @param fillValue The value to fill the output tensor with.
+   * @param options Object to customizing dtype, etc. default to be {dtype: torch.float32}
+   */
+  full(size: number[], fillValue: number, options?: TensorOptions): Tensor;
+  /**
+   * Creates a one-dimensional tensor of size steps whose values are evenly spaced from `start` to `end`,
+   * inclusive.
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.linspace.html}
+   *
+   * @param start Starting value for the set of points
+   * @param end Ending value for the set of points
+   * @param steps Size of the constructed tensor
+   * @param options Object to customizing dtype. default to be {dtype: torch.float32}
+   */
+  linspace(
+    start: number,
+    end: number,
+    steps: number,
+    options?: TensorOptions,
+  ): Tensor;
+  /**
    * Returns a one-dimensional tensor of size steps whose values are evenly spaced from
    * base^start to base^end, inclusive, on a logarithmic scale with base.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.logspace.html}
    *
-   * @param start starting value for the set of points
-   * @param end ending value for the set of points
-   * @param steps size of the constructed tensor
-   * @param options object to customizing base and dtype. default to be {base: 10, dtype: torch.float32}
+   * @param start Starting value for the set of points
+   * @param end Ending value for the set of points
+   * @param steps Size of the constructed tensor
+   * @param options Object to customizing base and dtype. default to be {base: 10, dtype: torch.float32}
    */
   logspace(
     start: number,
@@ -561,6 +589,15 @@ export interface Torch {
    * @param options Tensor options.
    */
   randn(size: number[], options?: TensorOptions): Tensor;
+  /**
+   * Returns a random permutation of integers from 0 to n - 1
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.randperm.html}
+   *
+   * @param n The upper bound (exclusive)
+   * @param options Object to customizing dtype, etc. default to be {dtype: torch.int64}.
+   */
+  randperm(n: number, options?: TensorOptions): Tensor;
   /**
    * Constructs a tensor with no autograd history.
    *

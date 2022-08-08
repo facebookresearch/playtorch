@@ -132,6 +132,74 @@ const Testunit = ({name, testFunc}: TestUnitItem) => {
 
 const testUnitList = [
   {
+    name: 'tensor.expand',
+    testFunc: async () => {
+      console.log('------Test tensor.expand-------');
+      const t1 = torch.randint(0, 5, [3, 1, 5]);
+      printTensor(t1, ['shape', 'dtype', 'stride']);
+      const t2 = t1.expand([3, 4, 5]);
+      printTensor(t2, ['shape', 'dtype', 'stride']);
+      const t3 = t1.expand([2, 3, 4, 5]);
+      printTensor(t3, ['shape', 'dtype', 'stride']);
+      try {
+        t1.expand([6, 2, 5]);
+      } catch (e) {
+        if (e instanceof Error) {
+          console.log(
+            `caught exception when expanding at non-singular dimernsion: ${e.message.slice(
+              0,
+              200,
+            )}...`,
+          );
+        } else {
+          throw e;
+        }
+      }
+    },
+  },
+  {
+    name: 'tensor.full',
+    testFunc: async () => {
+      console.log('------Test tensor.full-------');
+      const t1 = torch.full([2, 3], 1);
+      printTensor(t1, ['shape', 'dtype', 'stride']);
+      const t2 = torch.full([2, 3], 1.5, {dtype: torch.float64});
+      printTensor(t2, ['shape', 'dtype', 'stride']);
+    },
+  },
+  {
+    name: 'tensor.argmin',
+    testFunc: async () => {
+      console.log('------Test tensor.argmin-------');
+      const t1 = torch.randn([2, 3]);
+      printTensor(t1, ['shape', 'dtype', 'stride']);
+      const minIndex = t1.argmin();
+      printTensor(minIndex, ['shape', 'dtype', 'stride']);
+      const minIndexRow = t1.argmin({dim: 0, keepdim: true});
+      printTensor(minIndexRow, ['shape', 'dtype', 'stride']);
+    },
+  },
+  {
+    name: 'torch.linspace',
+    testFunc: async () => {
+      console.log('------Test torch.linspace-------');
+      const t1 = torch.linspace(-5, 5, 4);
+      printTensor(t1);
+      const t2 = torch.linspace(-5, 5, 4, {dtype: torch.float32});
+      printTensor(t2);
+    },
+  },
+  {
+    name: 'torch.randperm',
+    testFunc: async () => {
+      console.log('------Test torch.randperm-------');
+      const t1 = torch.randperm(10, {dtype: torch.int32});
+      printTensor(t1);
+      const t2 = torch.randperm(10, {dtype: torch.float});
+      console.log(t2.dtype);
+    },
+  },
+  {
     name: 'torch.cat',
     testFunc: async () => {
       console.log('------Test torch.cat-------');

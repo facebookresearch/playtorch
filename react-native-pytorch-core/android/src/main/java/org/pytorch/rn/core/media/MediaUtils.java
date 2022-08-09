@@ -64,6 +64,7 @@ public class MediaUtils {
     buffer.get(data);
 
     int n = 0;
+    int[] pixels = new int[width * height];
     bitmap.setPremultiplied(true);
     for (int i = 0; i < width * height; i++) {
       int a = (int) (hasAlpha ? (data[n + 3] & 0xff) : 255);
@@ -74,13 +75,10 @@ public class MediaUtils {
         n++;
       }
 
-      int x = i / width;
-      int y = i % width;
-
-      int color = (hasAlpha ? Color.argb(a, r, g, b) : Color.rgb(r, g, b));
-      bitmap.setPixel(y, x, color);
+      pixels[i] = (hasAlpha ? Color.argb(a, r, g, b) : Color.rgb(r, g, b));
     }
 
+    bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
     return bitmap;
   }
 

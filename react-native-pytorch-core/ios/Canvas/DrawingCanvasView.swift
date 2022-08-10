@@ -26,6 +26,7 @@ class DrawingCanvasView: UIView {
     var sublayers = [LayerData]()
     let scaleText = UIScreen.main.scale
     var shapeLayers = [ShapeLayerData]()
+    var needsClear = false
 
     override public init(frame: CGRect) {
         super.init(frame: frame)
@@ -122,22 +123,23 @@ class DrawingCanvasView: UIView {
     }
 
     func invalidate() {
-        // Swift has value semantics, which means the following will create a new array
-        // for the sublayers that can be used in the main loop even though the original
-        // array is cleared.
-        // https://developer.apple.com/swift/blog/?id=10
         let sublayers = self.sublayers
         self.sublayers.removeAll()
+        let needClear = self.needsClear
+        self.needsClear = false
 
-        RunLoop.main.perform {
-            self.layer.sublayers?.removeAll()
+        DispatchQueue.main.async {
+            if needClear {
+                self.layer.sublayers?.removeAll()
+            }
             self.renderLayers(allLayerData: sublayers, layer: self.layer)
-            self.layer.needsDisplay()
+            self.layer.layoutIfNeeded()
         }
     }
 
     func clear() {
         sublayers.removeAll()
+        needsClear = true
     }
 
     func clearRect(x: CGFloat, y: CGFloat, width: CGFloat, height: CGFloat) { // doesn't work yet

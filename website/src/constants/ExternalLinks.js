@@ -11,6 +11,7 @@ const ExternalLinks = {
   APP_STORE: 'https://apps.apple.com/app/playtorch/id1632121045',
   DISCORD: 'https://discord.gg/sQkXTqEt33',
   GITHUB: 'https://github.com/facebookresearch/playtorch',
+  GITHUB_ISSUES: 'https://github.com/facebookresearch/playtorch/issues',
   GOOGLE_PLAY_STORE:
     'https://play.google.com/store/apps/details?id=dev.playtorch',
   TWITTER: 'https://twitter.com/playtorch',

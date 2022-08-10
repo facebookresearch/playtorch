@@ -378,8 +378,8 @@ export interface Tensor {
    */
   to(options: TensorOptions): Tensor;
   /**
-   * Returns the k largest elements of the given input tensor along a given
-   * dimension.
+   * Returns a list of two Tensors where the first represents the k largest elements of the given input tensor,
+   * and the second represents the indices of the k largest elements.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.topk.html}
    *

@@ -58,6 +58,13 @@ export interface Blob {
 
 export interface Media {
   /**
+   *
+   * @deprecated This function will be removed in the next release. Use `imageFromTensor` instead.
+   * ```typescript
+   * const tensor = torch.fromBlob(blob, [imageHeight, imageWidth, channels]);
+   * const image = media.imageFromTensor(tensor);
+   * ```
+   *
    * Converts a [[Blob]] into an [[Image]]. The blob should be in RGB format.
    * The width and height input should match the blob size.
    * i.e. `blob.getDirectSize()` equals `width * height * 3`.
@@ -72,6 +79,11 @@ export interface Media {
   /**
    * Converts a [[Tensor]] into an [[Image]]. The tensor should be in CHW (channels,
    * height, width) format, with uint8 type.
+   *
+   * There are some assumptions made about the input tensor:
+   * - If the tensor has 4 channels, it is assumed to be RGBA.
+   * - If the tensor has 3 channels, it is assumed to be RGB.
+   * - If the tensor has 1 channel, it is assumed to be grayscale.
    *
    * @param tensor [[Tensor]] to turn into an [[Image]].
    * @returns An [[Image]] object created from the [[Tensor]].

@@ -16,6 +16,11 @@ public class MediaToBlob: NSObject {
       case unknownUnwrappedObject
   }
 
+  // Keep blob type constants in sync with cxx/src/torchlive/media/Blob.h
+  static let kBlobTypeImageRGB = "image/x-playtorch-rgb"
+  static let kBlobTypeImageRGBA = "image/x-playtorch-rgba"
+  static let kBlobTypeAudio = "audio/x-playtorch"
+
   @objc
   public init(refId: String) throws {
       super.init()
@@ -62,12 +67,12 @@ public class MediaToBlob: NSObject {
       }
 
       mBuffer = Data(buffer)
-      mBlobType = "image/x-playtorch-rgb"
+      mBlobType = MediaToBlob.kBlobTypeImageRGB
   }
 
   private func audioToBlob(audio: IAudio) {
       mBuffer = audio.getData()
-      mBlobType = "audio/x-playtorch"
+      mBlobType = MediaToBlob.kBlobTypeAudio
   }
 
   @objc

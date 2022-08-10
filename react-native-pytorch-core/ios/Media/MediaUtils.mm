@@ -11,6 +11,8 @@
 #import <vector>
 #import "cxx/src/torchlive/media/Blob.h"
 
+using namespace torchlive::media;
+
 #pragma mark - Image
 
 UIImage *MediaUtilsImageFromBlob(const torchlive::media::Blob& blob,
@@ -18,9 +20,9 @@ UIImage *MediaUtilsImageFromBlob(const torchlive::media::Blob& blob,
                                  double height)
 {
   int channel;
-  if (blob.getType() == "image/x-playtorch-rgb") {
+  if (blob.getType() == Blob::kBlobTypeImageRGB) {
     channel = 3;
-  } else if (blob.getType() == "image/x-playtorch-rgba") {
+  } else if (blob.getType() == Blob::kBlobTypeImageRGBA) {
     channel = 4;
   } else {
     throw std::runtime_error("Image from blob error - unsupported blob type: " + blob.getType());

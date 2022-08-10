@@ -76,9 +76,9 @@ jsi::Value imageFromTensorImpl(
   std::string blobType;
 
   if (channel == 3) {
-    blobType = "image/x-playtorch-rgb";
+    blobType = Blob::kBlobTypeImageRGB;
   } else if (channel == 4) {
-    blobType = "image/x-playtorch-rgba";
+    blobType = Blob::kBlobTypeImageRGBA;
   } else {
     throw jsi::JSError(
         runtime,

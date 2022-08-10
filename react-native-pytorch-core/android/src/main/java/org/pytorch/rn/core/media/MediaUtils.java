@@ -41,9 +41,9 @@ public class MediaUtils {
       final ByteBuffer buffer, final double width, final double height, final String type) {
     buffer.order(ByteOrder.nativeOrder());
     boolean hasAlpha = false;
-    if ("image/x-playtorch-rgba".equals(type)) {
+    if (BlobUtils.kBlobTypeImageRGBA.equals(type)) {
       hasAlpha = true;
-    } else if ("image/x-playtorch-rgb".equals(type)) {
+    } else if (BlobUtils.kBlobTypeImageRGB.equals(type)) {
       hasAlpha = false;
     } else {
       throw new UnsupportedOperationException("Cannot create image from blob with type: " + type);

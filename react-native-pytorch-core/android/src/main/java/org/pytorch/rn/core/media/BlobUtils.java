@@ -18,6 +18,11 @@ import org.pytorch.rn.core.javascript.JSContext;
 
 public class BlobUtils {
 
+  // Keep blob type constants in sync with cxx/src/torchlive/media/Blob.h
+  @DoNotStrip public static final String kBlobTypeImageRGB = "image/x-playtorch-rgb";
+  @DoNotStrip public static final String kBlobTypeImageRGBA = "image/x-playtorch-rgba";
+  @DoNotStrip public static final String kBlobTypeAudio = "audio/x-playtorch";
+
   @DoNotStrip
   @Keep
   public static ByteBuffer nativeJSRefToByteBuffer(final String refId) {
@@ -41,9 +46,9 @@ public class BlobUtils {
     final JSContext.NativeJSRef nativeJSRef = JSContext.getRef(refId);
     final Object obj = nativeJSRef.getObject();
     if (obj instanceof IImage) {
-      return "image/x-playtorch-rgb";
+      return kBlobTypeImageRGB;
     } else if (obj instanceof IAudio) {
-      return "audio/x-playtorch";
+      return kBlobTypeAudio;
     }
     throw new UnsupportedOperationException(
         "Cannot get type for class: " + obj.getClass().getName());

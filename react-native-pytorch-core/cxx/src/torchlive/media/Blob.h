@@ -15,6 +15,13 @@ namespace media {
 
 class Blob {
  public:
+  // Keep blob type constants in sync with
+  // iOS: ios/media/MediaToBlob.swift
+  // Android: android/src/main/java/org/pytorch/rn/core/media/BlobUtils.java
+  static constexpr const char* kBlobTypeImageRGB = "image/x-playtorch-rgb";
+  static constexpr const char* kBlobTypeImageRGBA = "image/x-playtorch-rgba";
+  static constexpr const char* kBlobTypeAudio = "audio/x-playtorch";
+
   Blob(
       std::unique_ptr<uint8_t[]>&& buffer,
       size_t byteLength,

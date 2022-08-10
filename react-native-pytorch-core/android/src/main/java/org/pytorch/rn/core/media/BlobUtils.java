@@ -19,6 +19,7 @@ import org.pytorch.rn.core.javascript.JSContext;
 public class BlobUtils {
 
   // Keep blob type constants in sync with cxx/src/torchlive/media/Blob.h
+  @DoNotStrip public static final String kBlobTypeImageGrayscale = "image/x-playtorch-grayscale";
   @DoNotStrip public static final String kBlobTypeImageRGB = "image/x-playtorch-rgb";
   @DoNotStrip public static final String kBlobTypeImageRGBA = "image/x-playtorch-rgba";
   @DoNotStrip public static final String kBlobTypeAudio = "audio/x-playtorch";

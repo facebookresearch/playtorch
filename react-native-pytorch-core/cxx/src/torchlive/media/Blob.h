@@ -18,6 +18,8 @@ class Blob {
   // Keep blob type constants in sync with
   // iOS: ios/media/MediaToBlob.swift
   // Android: android/src/main/java/org/pytorch/rn/core/media/BlobUtils.java
+  static constexpr const char* kBlobTypeImageGrayscale =
+      "image/x-playtorch-grayscale";
   static constexpr const char* kBlobTypeImageRGB = "image/x-playtorch-rgb";
   static constexpr const char* kBlobTypeImageRGBA = "image/x-playtorch-rgba";
   static constexpr const char* kBlobTypeAudio = "audio/x-playtorch";

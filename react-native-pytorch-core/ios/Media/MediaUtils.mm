@@ -19,52 +19,70 @@ UIImage *MediaUtilsImageFromBlob(const torchlive::media::Blob& blob,
                                  double width,
                                  double height)
 {
-  int channel;
-  if (blob.getType() == Blob::kBlobTypeImageRGB) {
-    channel = 3;
+  int channels;
+  if (blob.getType() == Blob::kBlobTypeImageGrayscale) {
+    channels = 1;
+  } else if (blob.getType() == Blob::kBlobTypeImageRGB) {
+    channels = 3;
   } else if (blob.getType() == Blob::kBlobTypeImageRGBA) {
-    channel = 4;
+    channels = 4;
   } else {
     throw std::runtime_error("Image from blob error - unsupported blob type: " + blob.getType());
   }
 
   // blob size check with data format
-  if (blob.getDirectSize() != static_cast<int>(width * height * channel)) {
+  if (blob.getDirectSize() != static_cast<int>(width * height * channels)) {
     throw std::runtime_error("Image from blob error - mismatched sizes, blob size (" + std::to_string(blob.getDirectSize()) + ") != width ("
-                             + std::to_string(width) + ") * height (" + std::to_string(height) + ") * channel (" + std::to_string(channel) + ")");
+                             + std::to_string(width) + ") * height (" + std::to_string(height) + ") * channels (" + std::to_string(channels) + ")");
   }
 
-  // Add alpha
-  std::vector<uint8_t> buffer;
-  buffer.reserve(width * height * 4);
-  auto p = blob.getDirectBytes();
-  for (auto i = 0; i < width * height; i++) {
-    uint8_t alpha = (channel == 4 ? *(p + 3) : 255);
-    uint8_t red = *(p++) * alpha / 255;
-    uint8_t green = *(p++) * alpha / 255;
-    uint8_t blue = *(p++) * alpha / 255;
-    if (channel == 4) {
-      p++;
+  UIImage *image;
+  CGColorSpaceRef colorSpace;
+  CGContextRef bitmapContext;
+  if (channels == 1) {
+    // Grayscale with 1 channel
+    colorSpace = CGColorSpaceCreateDeviceGray();
+    bitmapContext = CGBitmapContextCreate(blob.getDirectBytes(),
+                                          width,
+                                          height,
+                                          8,
+                                          width,
+                                          colorSpace,
+                                          kCGImageAlphaNone | kCGBitmapByteOrderDefault);
+  } else {
+    // Add alpha
+    std::vector<uint8_t> buffer;
+    buffer.reserve(width * height * 4);
+    auto p = blob.getDirectBytes();
+    for (auto i = 0; i < width * height; i++) {
+      uint8_t alpha = (channels == 4 ? *(p + 3) : 255);
+      uint8_t red = *(p++) * alpha / 255;
+      uint8_t green = *(p++) * alpha / 255;
+      uint8_t blue = *(p++) * alpha / 255;
+      if (channels == 4) {
+        p++;
+      }
+      buffer.push_back(red);    // R
+      buffer.push_back(green);  // G
+      buffer.push_back(blue);   // B
+      buffer.push_back(alpha);  // A
     }
-    buffer.push_back(red);    // R
-    buffer.push_back(green);  // G
-    buffer.push_back(blue);   // B
-    buffer.push_back(alpha);  // A
+
+    colorSpace = CGColorSpaceCreateDeviceRGB();
+    bitmapContext = CGBitmapContextCreate(buffer.data(),
+                                          width,
+                                          height,
+                                          8,
+                                          4 * width,
+                                          colorSpace,
+                                          kCGImageAlphaPremultipliedLast | kCGBitmapByteOrderDefault);
   }
 
-  CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
-  CGContextRef bitmapContext = CGBitmapContextCreate(buffer.data(),
-                                                     width,
-                                                     height,
-                                                     8,
-                                                     4 * width,
-                                                     colorSpace,
-                                                     kCGImageAlphaPremultipliedLast | kCGBitmapByteOrderDefault);
   CFRelease(colorSpace);
   CGImageRef cgImage = CGBitmapContextCreateImage(bitmapContext);
   CGContextRelease(bitmapContext);
 
-  UIImage *image = [UIImage imageWithCGImage:cgImage];
+  image = [UIImage imageWithCGImage:cgImage];
   CGImageRelease(cgImage);
 
   return image;;

@@ -68,21 +68,23 @@ jsi::Value imageFromTensorImpl(
   if (sizes.size() != 3 || tensor.dtype() != torch_::kUInt8) {
     throw jsi::JSError(
         runtime,
-        "input tensor must be of shape (channel, height, width) with dtype uint8");
+        "input tensor must be of shape (channels, height, width) with dtype uint8");
   }
-  auto channel = sizes.at(0);
+  auto channels = sizes.at(0);
   auto height = sizes.at(1);
   auto width = sizes.at(2);
   std::string blobType;
 
-  if (channel == 3) {
+  if (channels == 1) {
+    blobType = Blob::kBlobTypeImageGrayscale;
+  } else if (channels == 3) {
     blobType = Blob::kBlobTypeImageRGB;
-  } else if (channel == 4) {
+  } else if (channels == 4) {
     blobType = Blob::kBlobTypeImageRGBA;
   } else {
     throw jsi::JSError(
         runtime,
-        "input tensor must be of shape (3, height, width) or (4, height, width)");
+        "input tensor must be of shape (1, height, width) or (3, height, width) or (4, height, width)");
   }
 
   // Switch to MemoryFormat::ChannelsLast, it requires a rank 4 tensor to work

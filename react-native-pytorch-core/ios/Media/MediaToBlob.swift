@@ -17,6 +17,7 @@ public class MediaToBlob: NSObject {
   }
 
   // Keep blob type constants in sync with cxx/src/torchlive/media/Blob.h
+  static let kBlobTypeImageGrayscale = "image/x-playtorch-grayscale"
   static let kBlobTypeImageRGB = "image/x-playtorch-rgb"
   static let kBlobTypeImageRGBA = "image/x-playtorch-rgba"
   static let kBlobTypeAudio = "audio/x-playtorch"

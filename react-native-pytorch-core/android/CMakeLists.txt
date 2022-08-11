@@ -23,6 +23,7 @@ add_library(
         ../cxx/src/torchlive/torchlive.cpp
         ../cxx/src/torchlive/common/BaseHostObject.cpp
         ../cxx/src/torchlive/experimental/ExperimentalNamespace.cpp
+        ../cxx/src/torchlive/filesystem/FilesystemNamespace.cpp
         ../cxx/src/torchlive/media/Blob.cpp
         ../cxx/src/torchlive/media/BlobHostObject.cpp
         ../cxx/src/torchlive/media/MediaNamespace.cpp

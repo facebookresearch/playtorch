@@ -91,8 +91,8 @@ export function setClassPath(
   const finalBuildGradle = buildGradle.replace(
     /dependencies\s?{/,
     `dependencies {
-    implementation 'org.pytorch:pytorch_android_lite:1.10.0'
-    implementation 'org.pytorch:pytorch_android_torchvision_lite:1.10.0'
+    implementation 'org.pytorch:pytorch_android_lite:1.12.2'
+    implementation 'org.pytorch:pytorch_android_torchvision_lite:1.12.2'
 `,
   );
 

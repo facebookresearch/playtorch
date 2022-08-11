@@ -1,0 +1,112 @@
+/**
+ * Copyright (c) Meta Platforms, Inc. and affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ *
+ * @format
+ */
+
+.heroBanner {
+  padding: 0;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.headRow {
+  margin-top: 2rem;
+  margin-bottom: 4rem;
+  height: 30vh;
+  display: flex;
+}
+
+.headContent {
+  align-self: center;
+}
+
+.socialIconButton {
+  display: inline-block;
+  padding: 10px;
+}
+
+.socialIconButtonInner {
+  padding: 32px 18px;
+  background-color: black;
+  display: flex;
+  flex-direction: row;
+  height: 48px;
+  width: 240px;
+  border-radius: 41px;
+  align-items: center;
+  justify-content: center;
+}
+
+.socialIconLabel {
+  text-transform: uppercase;
+  color: white;
+  font-weight: 600;
+}
+
+.title {
+  color: var(--ifm-color-gray-0);
+  font-size: 4rem;
+  font-weight: 600;
+  white-space: nowrap;
+  margin: 0;
+  padding: 0;
+}
+
+.subtitle {
+  font-size: 1.8rem;
+  line-height: 2.5rem;
+  color: var(--ifm-color-gray-0);
+  margin: 0;
+  margin-top: 2rem;
+}
+
+.social {
+  height: 3rem;
+  margin-top: 2rem;
+}
+
+.socialIcon {
+  display: inline-block;
+  margin-right: 1.8rem;
+  width: 2rem;
+  height: 2rem;
+}
+
+/* Mobile */
+@media only screen and (max-width: 768px) {
+  .headRow {
+    margin-bottom: 4rem;
+    height: 60vh;
+  }
+
+  .headContent {
+    text-align: center;
+  }
+
+  .title {
+    font-size: 10vw;
+  }
+
+  .subtitle {
+    font-size: 1.2rem;
+    line-height: 2rem;
+    padding: 0.5rem;
+    margin-top: 0.8rem;
+  }
+
+  .social {
+    margin-top: 1rem;
+  }
+
+  .socialIcon {
+    display: inline-block;
+    margin-right: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
+  }
+}

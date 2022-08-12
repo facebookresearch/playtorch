@@ -39,8 +39,8 @@ def safeExtGet(prop, fallback) {
 }
 
 android {
-  compileSdkVersion safeExtGet('PyTorchCore_compileSdkVersion', 30)
-  buildToolsVersion safeExtGet('PyTorchCore_buildToolsVersion', '30.0.2')
+  compileSdkVersion safeExtGet('PyTorchCore_compileSdkVersion', Integer.parseInt(appRnMinorVersion) < 68 ? 30 : 31)
+  buildToolsVersion safeExtGet('PyTorchCore_buildToolsVersion', Integer.parseInt(appRnMinorVersion) < 68 ? '30.0.2' : '31.0.0')
   defaultConfig {
     minSdkVersion safeExtGet('PyTorchCore_minSdkVersion', 21)
     targetSdkVersion safeExtGet('PyTorchCore_targetSdkVersion', 30)
@@ -122,8 +122,22 @@ dependencies {
   //noinspection GradleDynamicVersion
   extractJNI("com.facebook.fbjni:fbjni:+")
 
-  def rnAAR = fileTree("${rootDir}/../node_modules/react-native/android").matching({ it.include "**/**/*.aar" }).singleFile
-  extractJNI(files(rnAAR))
+  def nodeModules = "${rootDir}/../node_modules"
+
+  // For now we use the release version of the jni library
+  // we will look back on this once we figure out how to
+  // get the buildType duing configuration stage
+  def buildType = "release"
+
+  if(Integer.parseInt(appRnMinorVersion)  < 69) {
+      def rnAAR = fileTree("${nodeModules}/react-native/android").matching({ it.include "**/**/*.aar" }).singleFile
+      extractJNI(files(rnAAR))
+  } else {
+      // React Native 0.69
+      def rnAarMatcher = "**/react-native/**/*${buildType}.aar"
+      def rnAAR = fileTree("${nodeModules}/react-native/android").matching({ it.include rnAarMatcher }).singleFile
+      extractJNI(files(rnAAR))
+  }
 
   extractForNativeBuild("org.pytorch:pytorch_android_lite:${pytorchLiteVersion}")
 

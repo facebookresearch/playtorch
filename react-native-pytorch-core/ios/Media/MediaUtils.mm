@@ -36,19 +36,25 @@ UIImage *MediaUtilsImageFromBlob(const torchlive::media::Blob& blob,
                              + std::to_string(width) + ") * height (" + std::to_string(height) + ") * channels (" + std::to_string(channels) + ")");
   }
 
-  UIImage *image;
-  CGColorSpaceRef colorSpace;
-  CGContextRef bitmapContext;
   if (channels == 1) {
     // Grayscale with 1 channel
-    colorSpace = CGColorSpaceCreateDeviceGray();
-    bitmapContext = CGBitmapContextCreate(blob.getDirectBytes(),
-                                          width,
-                                          height,
-                                          8,
-                                          width,
-                                          colorSpace,
-                                          kCGImageAlphaNone | kCGBitmapByteOrderDefault);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceGray();
+    CGContextRef bitmapContext = CGBitmapContextCreate(blob.getDirectBytes(),
+                                                       width,
+                                                       height,
+                                                       8,
+                                                       width,
+                                                       colorSpace,
+                                                       kCGImageAlphaNone | kCGBitmapByteOrderDefault);
+
+    CGColorSpaceRelease(colorSpace);
+    CGImageRef cgImage = CGBitmapContextCreateImage(bitmapContext);
+    CGContextRelease(bitmapContext);
+
+    UIImage *image = [UIImage imageWithCGImage:cgImage];
+    CGImageRelease(cgImage);
+
+    return image;
   } else {
     // Add alpha
     std::vector<uint8_t> buffer;
@@ -68,24 +74,24 @@ UIImage *MediaUtilsImageFromBlob(const torchlive::media::Blob& blob,
       buffer.push_back(alpha);  // A
     }
 
-    colorSpace = CGColorSpaceCreateDeviceRGB();
-    bitmapContext = CGBitmapContextCreate(buffer.data(),
-                                          width,
-                                          height,
-                                          8,
-                                          4 * width,
-                                          colorSpace,
-                                          kCGImageAlphaPremultipliedLast | kCGBitmapByteOrderDefault);
+    CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+    CGContextRef bitmapContext = CGBitmapContextCreate(buffer.data(),
+                                                       width,
+                                                       height,
+                                                       8,
+                                                       4 * width,
+                                                       colorSpace,
+                                                       kCGImageAlphaPremultipliedLast | kCGBitmapByteOrderDefault);
+
+    CGColorSpaceRelease(colorSpace);
+    CGImageRef cgImage = CGBitmapContextCreateImage(bitmapContext);
+    CGContextRelease(bitmapContext);
+
+    UIImage *image = [UIImage imageWithCGImage:cgImage];
+    CGImageRelease(cgImage);
+
+    return image;
   }
-
-  CFRelease(colorSpace);
-  CGImageRef cgImage = CGBitmapContextCreateImage(bitmapContext);
-  CGContextRelease(bitmapContext);
-
-  image = [UIImage imageWithCGImage:cgImage];
-  CGImageRelease(cgImage);
-
-  return image;;
 }
 
 #pragma mark - Audio

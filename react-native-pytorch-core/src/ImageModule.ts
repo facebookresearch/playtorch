@@ -21,9 +21,6 @@ const {resolveAssetSource} = RNImage;
 const {PyTorchCoreImageModule: ImageModule} = NativeModules;
 
 /**
- * An image is a high-level data type, which can be used for model inference
- * with [[MobileModel.execute]] or it can be drawn on a [[Canvas.drawImage]].
- *
  * An [[Image]] object in JavaScript is a reference to a native image object
  * wrapped in [[NativeJSRef]]. The image data is not transferred over the React
  * Native Bridge, but it offers functions to manipulate the image. All
@@ -200,13 +197,12 @@ export const ImageUtil = {
    * ```
    *
    * ```typescript
-   * const {result: {image: imageRef}} = MobileModel.execute<ImageToImageResult>(model, {image});
    * const wrappedImage: Image = await ImageUtil.fromJSRef(imageRef);
    * // do something with wrappedImage
    * wrappedImage.release();
    * ```
    *
-   * @param imageRef The Native JS Object Reference ID of the image. You usually get those from image to image models.
+   * @param imageRef The Native JS Object Reference ID of the image.
    * @returns an [[Image]].
    **/
   fromJSRef(imageRef: NativeJSRef): Image {

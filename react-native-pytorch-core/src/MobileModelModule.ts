@@ -69,6 +69,8 @@ export interface MobileModel {
    */
   download(modelPath: ModelPath): Promise<string>;
   /**
+   * @deprecated The function will be removed in 0.2.2, please consider using `torch.jit._loadForMobile`.
+   *
    * Preload a model. If a model is not preloaded, it will be loaded during the
    * first inference call. However, the first inference time will therefore
    * take significantly longer. This function allows to preload a model ahead
@@ -79,6 +81,8 @@ export interface MobileModel {
   preload(modelPath: ModelPath): Promise<void>;
 
   /**
+   * @deprecated The function will be removed in 0.2.2, please consider using `torch.jit._loadForMobile`.
+   *
    * Unload all model. If any model were loaded previously, they will be discarded.
    * This function allows to load a new version of a model without restarting the
    * app.
@@ -86,6 +90,8 @@ export interface MobileModel {
   unload(): Promise<void>;
 
   /**
+   * @deprecated The function will be removed in 0.2.2, please consider using `Module.forward`.
+   *
    * Run inference on a model.
    *
    * ```typescript

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="131.8" height="20" viewBox="0 0 1318 200" role="img" aria-label="Open in PlayTorch">
+  <title>Open in PlayTorch</title>
+  <linearGradient id="a" x2="0" y2="100%">
+    <stop offset="0" stop-opacity=".1" stop-color="#EEE"/>
+    <stop offset="1" stop-opacity=".1"/>
+  </linearGradient>
+  <mask id="m"><rect width="1318" height="200" rx="30" fill="#FFF"/></mask>
+  <g mask="url(#m)">
+    <rect width="212" height="200" fill="#555"/>
+    <rect width="1106" height="200" fill="#08C" x="212"/>
+    <rect width="1318" height="200" fill="url(#a)"/>
+  </g>
+  <g aria-hidden="true" fill="#fff" text-anchor="start" font-family="Verdana,DejaVu Sans,sans-serif" font-size="110">
+    <text x="172" y="148" textLength="0" fill="#000" opacity="0.25"/>
+    <text x="162" y="138" textLength="0"/>
+    <text x="267" y="148" textLength="1006" fill="#000" opacity="0.25">Open in PlayTorch</text>
+    <text x="257" y="138" textLength="1006">Open in PlayTorch</text>
+  </g>
+  <image x="40" y="35" width="130" height="130" xlink:href="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz48c3ZnIGlkPSJMYXllcl8yIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxNTEuMjkgMTI2Ljk4Ij48ZGVmcz48c3R5bGU+LmNscy0xe2ZpbGw6IzkxMWU5ZTt9LmNscy0ye2ZpbGw6IzYyMDBlYTt9LmNscy0ze2ZpbGw6IzdhMGZjNDt9PC9zdHlsZT48L2RlZnM+PGcgaWQ9IkxheWVyXzEtMiI+PGc+PHBvbHlnb24gY2xhc3M9ImNscy0xIiBwb2ludHM9IjgzLjEgMTI2Ljk4IDAgNzkuMTggMTkuNDggNjcuODQgMTAyLjU5IDExNS42NCA4My4xIDEyNi45OCIvPjxwb2x5Z29uIGNsYXNzPSJjbHMtMiIgcG9pbnRzPSIxMzEuODEgNjQuNzggMzguOTcgMTEuMzQgNTguNDUgMCAxNTEuMjkgNTMuNDQgMTUxLjI5IDg3LjI5IDEzMS44MSA5OC42MyAxMzEuODEgNjQuNzgiLz48cG9seWdvbiBjbGFzcz0iY2xzLTMiIHBvaW50cz0iMzkuMDcgMzMuOTUgMTkuNTkgNDUuMzQgMTAyLjY5IDkzLjE4IDEwMi41OSAxMTUuNjQgMTIyLjA3IDEwNC4zIDEyMi4xOCA4MS43OSAzOS4wNyAzMy45NSIvPjwvZz48L2c+PC9zdmc+"/>
+</svg>

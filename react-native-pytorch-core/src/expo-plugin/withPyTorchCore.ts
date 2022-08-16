@@ -12,7 +12,6 @@ import {
   withAppBuildGradle,
   createRunOncePlugin,
   ExportedConfigWithProps,
-  withProjectBuildGradle,
 } from '@expo/config-plugins';
 
 // Keeping the name, and version in sync with it's package.
@@ -21,16 +20,6 @@ const pkg = require('react-native-pytorch-core/package.json');
 type Props = {};
 
 const withPyTorch: ConfigPlugin<Props> = (config, _props = {}) => {
-  config = withProjectBuildGradle(config, innerConfig => {
-    if (innerConfig.modResults.language === 'groovy') {
-      innerConfig.modResults.contents = setProjectRepositories(
-        innerConfig,
-        innerConfig.modResults.contents,
-      );
-    }
-    return innerConfig;
-  });
-
   config = withAppBuildGradle(config, innerConfig => {
     if (innerConfig.modResults.language === 'groovy') {
       innerConfig.modResults.contents = setClassPath(
@@ -44,23 +33,6 @@ const withPyTorch: ConfigPlugin<Props> = (config, _props = {}) => {
   return config;
 };
 
-export function setProjectRepositories(
-  _config: Pick<ExportedConfigWithProps, 'android'>,
-  buildGradle: string,
-) {
-  const finalBuildGradle = buildGradle.replace(
-    /allprojects\s*?{\n\s*?repositories\s*?{/,
-    `allprojects {
-    repositories {
-        maven {
-          url("https://oss.sonatype.org/content/repositories/snapshots")
-        }
-        `,
-  );
-
-  return finalBuildGradle;
-}
-
 /**
  * Adding the Google Services plugin
  * NOTE(brentvatne): string replacement is a fragile approach! we need a
@@ -70,7 +42,7 @@ export function setClassPath(
   _config: Pick<ExportedConfigWithProps, 'android'>,
   buildGradle: string,
 ) {
-  buildGradle = buildGradle.replace(
+  let mutatedBuildGradle = buildGradle.replace(
     /android\s?{/,
     `android {
     /**
@@ -84,19 +56,48 @@ export function setClassPath(
     packagingOptions {
         pickFirst '**/*.so'
     }
+    sourceSets {
+        main {
+            jniLibs.srcDirs += ["$buildDir/extra-jniLibs/jni"]
+        }
+    }
+    configurations {
+        extraJNILibs
+    }
 `,
   );
 
-  //
-  const finalBuildGradle = buildGradle.replace(
+  mutatedBuildGradle = mutatedBuildGradle.replace(
     /dependencies\s?{/,
-    `dependencies {
-    implementation 'org.pytorch:pytorch_android_lite:1.12.2'
-    implementation 'org.pytorch:pytorch_android_torchvision_lite:1.12.2'
+    `
+// Extract JNI shared libraries as project libraries. This assumes the target directory, $buildDir/extra-jniLibs, is added to the jniLibs.srcDirs configuration.
+task extraJNILibs {
+  doLast {
+    configurations.extraJNILibs.files.each {
+      def file = it.absoluteFile
+
+      copy {
+        from zipTree(file)
+        into "$buildDir/extra-jniLibs" // temp location instead of "src/main/jniLibs"
+        include "jni/**/*"
+      }
+    }
+  }
+}
+
+tasks.whenTaskAdded { task ->
+  if (task.name == 'mergeDebugJniLibFolders' || task.name == 'mergeReleaseJniLibFolders') {
+    task.dependsOn(extraJNILibs)
+  }
+}
+
+dependencies {
+    // Used to control the version of libfbjni.so packaged into the APK
+    extraJNILibs("com.facebook.fbjni:fbjni:0.2.2")
 `,
   );
 
-  return finalBuildGradle;
+  return mutatedBuildGradle;
 }
 
 // A helper method that wraps `withRunOnce` and appends items to `pluginHistory`.

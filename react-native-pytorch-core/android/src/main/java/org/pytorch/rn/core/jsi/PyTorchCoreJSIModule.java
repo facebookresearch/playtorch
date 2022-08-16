@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import com.facebook.react.bridge.JavaScriptContextHolder;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
+import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.RuntimeExecutor;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.turbomodule.core.CallInvokerHolderImpl;
@@ -40,6 +41,14 @@ public class PyTorchCoreJSIModule extends ReactContextBaseJavaModule {
   @NonNull
   public String getName() {
     return NAME;
+  }
+
+  @ReactMethod(isBlockingSynchronousMethod = true)
+  public boolean install() {
+    ReactApplicationContext reactContext = getReactApplicationContext();
+    JavaScriptContextHolder contextHolder = reactContext.getJavaScriptContextHolder();
+    installLib(contextHolder);
+    return true;
   }
 
   private native void nativeInstall(

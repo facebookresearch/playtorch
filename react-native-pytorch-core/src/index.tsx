@@ -7,6 +7,9 @@
  * @format
  */
 
+// The lazy JSI install needs to be called first!
+import './install-jsi';
+
 export {Audio, AudioUtil} from './audio/AudioModule';
 export {Camera, CameraFacing} from './CameraView';
 export {Canvas, CanvasRenderingContext2D} from './CanvasView';

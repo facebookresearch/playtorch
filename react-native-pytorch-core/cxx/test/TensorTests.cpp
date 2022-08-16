@@ -703,6 +703,66 @@ TEST_F(TorchliveTensorRuntimeTest, TorchTopkTest) {
 
   EXPECT_THROW(eval("torch.arange(10, 20).topk()"), facebook::jsi::JSError);
   EXPECT_THROW(eval("torch.empty(1, 2).topk([1])"), facebook::jsi::JSError);
+
+  std::string tensorTopkColValid =
+      R"(
+      const tensor = torch.arange(1, 13).reshape(3, 4);
+      const [values, indices] = tensor.topk(2, {dim: 1});
+      expectedIndices = torch.tensor([[3, 2], [3, 2], [3, 2]]);
+      expectedValues = torch.tensor([[4, 3], [8, 7], [12, 11]]);
+      (JSON.stringify(values.data()) === JSON.stringify(expectedValues.data()) && JSON.stringify(indices.data()) === JSON.stringify(expectedIndices.data()));
+    )";
+  EXPECT_TRUE(eval(tensorTopkColValid).getBool());
+
+  std::string tensorTopkRowValid =
+      R"(
+      const tensor = torch.arange(1, 13).reshape(4, 3);
+      const [values, indices] = tensor.topk(2, {dim: 0});
+      expectedIndices = torch.tensor([[3, 3, 3], [2, 2, 2]]);
+      expectedValues = torch.tensor([[10, 11, 12], [7, 8, 9]]);
+      (JSON.stringify(values.data()) === JSON.stringify(expectedValues.data()) && JSON.stringify(indices.data()) === JSON.stringify(expectedIndices.data()));
+    )";
+  EXPECT_TRUE(eval(tensorTopkRowValid).getBool());
+
+  std::string tensorMinkValid =
+      R"(
+          const tensor = torch.arange(10, 20);
+          const [values, indices] = tensor.topk(3, {largest: false});
+          (values[0].item() == 10 && values[1].item() == 11 && values[2].item() == 12) && (indices[0].item() == 0 && indices[1].item() == 1 && indices[2].item() == 2);
+        )";
+  EXPECT_TRUE(eval(tensorMinkValid).getBool());
+
+  std::string tensorTopkUnsorted =
+      R"(
+          const tensor = torch.tensor([7, 1, 5, 6, 2, 10]);
+          const [values, indices] = tensor.topk(3, {sorted: true});
+          (values[0].item() == 10 && values[1].item() == 7 && values[2].item() == 6) && (indices[0].item() == 5 && indices[1].item() == 0 && indices[2].item() == 3);
+        )";
+  EXPECT_TRUE(eval(tensorTopkUnsorted).getBool());
+
+  std::string tensorTopkAllValid =
+      R"(
+      const tensor = torch.tensor([[4, 8], [6, 2], [9, 1], [3, 5]]);
+      const [values, indices] = tensor.topk(2, {dim: 0, sorted: true, largest: false});
+      expectedIndices = torch.tensor([[3, 2], [0, 1]]);
+      expectedValues = torch.tensor([[3, 1], [4, 2]]);
+      (JSON.stringify(values.data()) === JSON.stringify(expectedValues.data()) && JSON.stringify(indices.data()) === JSON.stringify(expectedIndices.data()));
+    )";
+  EXPECT_TRUE(eval(tensorTopkAllValid).getBool());
+
+  EXPECT_THROW(
+      eval("torch.arange(10, 20).topk(3, {dim: 1})"), facebook::jsi::JSError);
+
+  EXPECT_THROW(
+      eval("torch.arange(10, 20).topk(3, {dim: [0]})"), facebook::jsi::JSError);
+
+  EXPECT_THROW(
+      eval("torch.arange(10, 20).topk(3, {largest: 1})"),
+      facebook::jsi::JSError);
+
+  EXPECT_THROW(
+      eval("torch.arange(10, 20).topk(3, {sorted: 1})"),
+      facebook::jsi::JSError);
 }
 
 TEST_F(TorchliveTensorRuntimeTest, TorchToTest) {

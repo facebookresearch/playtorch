@@ -582,7 +582,33 @@ jsi::Value topkImpl(
   args.requireNumArguments(1);
 
   auto k = args[0].asNumber();
-  auto resultTuple = args.thisAsHostObject<TensorHostObject>()->tensor.topk(k);
+
+  auto dimValue = args.keywordValue(1, "dim");
+  int64_t dim = -1;
+  if (!dimValue.isUndefined()) {
+    dim = dimValue.asNumber();
+  }
+
+  auto largestValue = args.keywordValue(1, "largest");
+  bool largest = true;
+  if (largestValue.isBool()) {
+    largest = largestValue.getBool();
+  } else if (!largestValue.isUndefined()) {
+    throw jsi::JSError(
+        runtime, "expect 'largest' to be boolean, but another type is given.");
+  }
+
+  auto sortedValue = args.keywordValue(1, "sorted");
+  bool sorted = true;
+  if (sortedValue.isBool()) {
+    sorted = sortedValue.getBool();
+  } else if (!sortedValue.isUndefined()) {
+    throw jsi::JSError(
+        runtime, "expect 'sorted' to be boolean, but another type is given.");
+  }
+
+  auto resultTuple = args.thisAsHostObject<TensorHostObject>()->tensor.topk(
+      k, dim, largest, sorted);
   auto values = utils::helpers::createFromHostObject<TensorHostObject>(
       runtime, std::get<0>(resultTuple));
   /**

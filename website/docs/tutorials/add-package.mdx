@@ -16,16 +16,6 @@ If you have an existing React Native project and you want to add ML capabilities
 yarn add react-native-pytorch-core
 ```
 
-:::caution
-
-If you are on React Native 0.68+, you will have to use the `nightly` version of the core package. A fix has been added in commit [fix RN0.68 can't build with react-native-pytorch-core](https://github.com/facebookresearch/playtorch/commit/2cf281fea6fca9e2615b46045a3b13fb08eb93c5), which is currently only available in the `nightly` version.
-
-```shell
-yarn add react-native-pytorch-core@nightly
-```
-
-:::
-
 On iOS you are done, but Android requires the following additional steps for the `react-native-pytorch-core` package to work.
 
 ## Additional Assets for Metro
@@ -74,24 +64,6 @@ Without the increased memory, the packaging process might fail with the followin
 Execution failed for task ':app:packageDebug'.
 > A failure occurred while executing com.android.build.gradle.tasks.PackageAndroidArtifact$IncrementalSplitterRunnable
    > java.lang.OutOfMemoryError (no error message)
-```
-
-### Sonatype Repository
-
-The PyTorch Mobile for Android dependencies are in the Sonatype repository. Add the repository url to the `allprojects > repositories`.
-
-```shell title="./android/build.gradle"
-allprojects {
-    repositories {
-        // ...
-
-        maven {
-          url("https://oss.sonatype.org/content/repositories/snapshots")
-        }
-
-        // ...
-    }
-}
 ```
 
 ### Update app build.gradle
@@ -182,106 +154,6 @@ tasks.whenTaskAdded { task ->
 }
 
 // ...
-```
-
-### Configure JavaScript Interface for React Native app
-
-Last, add the `PyTorchCoreJSIModulePackage` to the `ReactNativeHost` in the app's `MainApplication.java`.
-
-:::info
-
-**JavaScript Interface (JSI)**
-
-A lightweight and VM-independent layer that helps in communication between JavaScript and native platforms easier and faster. It supports Webkit JSC, Custom JSC, and [Hermes](https://hermesengine.dev/).
-
-**JSI Documentation**
-
-The [jsi.h](https://github.com/facebook/hermes/blob/main/API/jsi/jsi/jsi.h) in the Hermes GitHub repository and has a really well-documented C++ header, which is a great place to learn more about JSI.
-
-PlayTorch uses the JavaScript Interface (JSI) to expose PyTorch Mobile C++ functions
-
-:::
-
-```java title="./android/app/src/main/java/<your-package-path>/MainApplication.java"
-import com.facebook.react.bridge.JSIModulePackage;
-import org.pytorch.rn.core.jsi.PyTorchCoreJSIModulePackage;
-
-// ...
-
-      new ReactNativeHostWrapper(
-          this,
-          new ReactNativeHost(this) {
-            // ...
-
-            @Override
-            protected JSIModulePackage getJSIModulePackage() {
-              return new PyTorchCoreJSIModulePackage();
-            }
-          });
-```
-
-Great! You are done if you don't use other React Native packages that rely on JSI, otherwise continue!
-
-#### Configure multiple React Native packages using JSI
-
-If you use other React Native packages with JSI packages, you will have to create a `JSIModulePackage` that combines all of them. For example, if you use React Reanimated and PlayTorch Core create a `CustomJSIModulePackage` and return this in the `ReactNativeHost` implementation.
-
-```java title="./android/app/src/main/java/<your-package-path>/CustomJSIModulePackage.java"
-package <your-package-path>;
-
-import androidx.annotation.Keep;
-import com.facebook.proguard.annotations.DoNotStrip;
-import com.facebook.react.bridge.JSIModulePackage;
-import com.facebook.react.bridge.JSIModuleSpec;
-import com.facebook.react.bridge.JavaScriptContextHolder;
-import com.facebook.react.bridge.ReactApplicationContext;
-import com.facebook.soloader.SoLoader;
-import com.swmansion.reanimated.ReanimatedJSIModulePackage;
-import java.util.List;
-import org.pytorch.rn.core.jsi.PyTorchCoreJSIModulePackage;
-
-/**
- * This is a custom JSIModulePackage that combines ReanimatedJSIModulePackage and
- * PyTorchCoreJSIModulePackage. It is needed because the ReactNativeHostWrapper only supports
- * returning a single JSIModulePackage.
- */
-@DoNotStrip
-@Keep
-public class CustomJSIModulePackage implements JSIModulePackage {
-
-  @DoNotStrip
-  @Keep
-  @Override
-  public List<JSIModuleSpec> getJSIModules(
-      ReactApplicationContext reactApplicationContext, JavaScriptContextHolder jsContext) {
-    ReanimatedJSIModulePackage reaJSIModulePackage = new ReanimatedJSIModulePackage();
-    PyTorchCoreJSIModulePackage ptlJSIModulePackage = new PyTorchCoreJSIModulePackage();
-
-    List<JSIModuleSpec> retList =
-        reaJSIModulePackage.getJSIModules(reactApplicationContext, jsContext);
-    ptlJSIModulePackage.getJSIModules(reactApplicationContext, jsContext);
-
-    return retList;
-  }
-}
-```
-
-```java title="./android/app/src/main/java/<your-package-path>/MainApplication.java"
-// ...
-import com.facebook.react.bridge.JSIModulePackage;
-
-      new ReactNativeHostWrapper(
-          this,
-          new ReactNativeHost(this) {
-            // ...
-
-            @Override
-            protected JSIModulePackage getJSIModulePackage() {
-              // The CustomJSIModulePackage combines JSIModulePackage from different React Native
-              // packages (e.g., Reanimated2 and PlayTorch).
-              return new CustomJSIModulePackage();
-            }
-          });
 ```
 
 That should be all necessary Gradle build configuration changes!

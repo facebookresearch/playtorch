@@ -17,7 +17,6 @@ import {ImageClassificationModels} from '../Models';
 import ModelSelector from '../components/ModelSelector';
 import useImageModelInference from '../useImageModelInference';
 import type {ModelInfo} from 'react-native-pytorch-core';
-import ModelPreloader from '../components/ModelPreloader';
 
 export default function CameraExample() {
   const isFocused = useIsFocused();
@@ -36,7 +35,7 @@ export default function CameraExample() {
   );
 
   return (
-    <ModelPreloader modelInfos={ImageClassificationModels}>
+    <>
       {isFocused && (
         <Camera
           hideCaptureButton={true}
@@ -54,7 +53,7 @@ export default function CameraExample() {
       <View style={styles.info}>
         <ImageClassInfo imageClass={imageClass} metrics={metrics} />
       </View>
-    </ModelPreloader>
+    </>
   );
 }
 

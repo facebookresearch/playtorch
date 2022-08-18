@@ -33,7 +33,6 @@ import {
   PTLColors as colors,
   PTLFontSizes as fontsizes,
 } from '../components/UISettings';
-import ModelPreloader from '../components/ModelPreloader';
 import {MultiClassClassificationModels} from '../Models';
 
 // Must be specified as hex to be parsed correctly.
@@ -406,7 +405,7 @@ export default function MNISTExample() {
   }
 
   return (
-    <ModelPreloader modelInfos={MultiClassClassificationModels}>
+    <>
       <Canvas
         style={StyleSheet.absoluteFill}
         onContext2D={setCtx}
@@ -439,7 +438,7 @@ export default function MNISTExample() {
             : ''}
         </Text>
       </View>
-    </ModelPreloader>
+    </>
   );
 }
 

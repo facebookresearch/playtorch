@@ -17,7 +17,6 @@ import ModelSelector from '../components/ModelSelector';
 import PredefinedImageList from '../components/PredefinedImageList';
 import useImageModelInference from '../useImageModelInference';
 import type {ModelInfo} from 'react-native-pytorch-core';
-import ModelPreloader from '../components/ModelPreloader';
 
 export default function PhotosExample() {
   const [activeModelInfo, setActiveModelInfo] = useState<ModelInfo>(
@@ -42,7 +41,7 @@ export default function PhotosExample() {
   const [lastURL, setLastURL] = useState<string>();
 
   return (
-    <ModelPreloader modelInfos={ImageClassificationModels}>
+    <>
       <View style={styles.container}>
         <PredefinedImageList onSelectImage={handleImageURL} />
 
@@ -70,7 +69,7 @@ export default function PhotosExample() {
           />
         </View>
       </View>
-    </ModelPreloader>
+    </>
   );
 }
 

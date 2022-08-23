@@ -83,4 +83,4 @@ Read our [**Contributing Guide**][contribute] to learn about our development pro
 ## License
 PlayTorch is MIT licensed, as found in the [LICENSE][license] file.
 
-[license]: LICENSE.md
+[license]: LICENSE

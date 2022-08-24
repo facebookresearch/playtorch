@@ -18,7 +18,6 @@ import {
 } from 'react-native';
 import {NLPModels} from '../Models';
 import useNLPQAModelInference from '../useNLPQAModelInference';
-import ModelPreloader from '../components/ModelPreloader';
 import {ScrollView} from 'react-native-gesture-handler';
 
 import {PTLColors as colors, PTLTextBoxStyle} from '../components/UISettings';
@@ -34,7 +33,7 @@ export default function NLPExample() {
     useNLPQAModelInference(NLPModels[0]);
 
   return (
-    <ModelPreloader modelInfos={NLPModels}>
+    <>
       <ScrollView style={styles.container}>
         <DoubleLineRow label="Source Text">
           <TextInput
@@ -83,7 +82,7 @@ export default function NLPExample() {
           )}
         </DoubleLineRow>
       </ScrollView>
-    </ModelPreloader>
+    </>
   );
 }
 

@@ -14,11 +14,7 @@ export {Audio, AudioUtil} from './audio/AudioModule';
 export {Camera, CameraFacing} from './CameraView';
 export {Canvas, CanvasRenderingContext2D} from './CanvasView';
 export {Image, ImageUtil} from './ImageModule';
-export {
-  MobileModel,
-  ModelResult,
-  ModelResultMetrics,
-} from './MobileModelModule';
+export {MobileModel, ModelResultMetrics} from './MobileModelModule';
 export {ModelInfo, ModelPath} from './Models';
 
 // Export torchlive torch object and types

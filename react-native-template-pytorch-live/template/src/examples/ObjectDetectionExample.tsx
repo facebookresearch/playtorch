@@ -22,7 +22,6 @@ import {
   PTLFontSizes as fontsizes,
 } from '../components/UISettings';
 import {HintText, IconButton} from '../components/UIComponents';
-import ModelPreloader from '../components/ModelPreloader';
 import {ObjectDetectionModels} from '../Models';
 
 const objectColors = [
@@ -143,7 +142,7 @@ export default function ObjectDetectionExample() {
   }
 
   return (
-    <ModelPreloader modelInfos={ObjectDetectionModels}>
+    <>
       <View style={styles.container}>
         <Canvas
           style={styles.canvas}
@@ -172,7 +171,7 @@ export default function ObjectDetectionExample() {
           />
         )}
       </View>
-    </ModelPreloader>
+    </>
   );
 }
 

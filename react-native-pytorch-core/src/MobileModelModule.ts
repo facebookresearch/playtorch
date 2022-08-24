@@ -10,10 +10,7 @@
 import {NativeModules} from 'react-native';
 import {getModelUri, ModelPath} from './Models';
 
-const {
-  PyTorchCoreMobileModelModule: MobileModelModule,
-  PyTorchCoreModelLoaderModule: ModelLoaderModule,
-} = NativeModules;
+const {PyTorchCoreModelLoaderModule: ModelLoaderModule} = NativeModules;
 
 export interface ModelResultMetrics {
   /**
@@ -35,25 +32,6 @@ export interface ModelResultMetrics {
 }
 
 /**
- * Result of model inference. Each model result has the inference time and the
- * model result. The model result depends on the model and is therefore
- * specified as a generic type (i.e., template).
- *
- * @template T Model result type
- */
-export interface ModelResult<T> {
-  /**
-   * The model result.
-   */
-  result: T;
-
-  /**
-   * The model result metrics, e.g., including inference time in milliseconds.
-   */
-  metrics: ModelResultMetrics;
-}
-
-/**
  * @packageDocumentation
  *
  * The `MobileModel` is the core module providing functions to run model
@@ -66,73 +44,15 @@ export interface MobileModel {
    * same path as a result.
    *
    * @param modelPath The model path as require or uri (i.e., `require`).
+   *
+   * @deprecated Use third-party file downloader (e.g., expo-file-system or react-native-fs)
    */
   download(modelPath: ModelPath): Promise<string>;
-  /**
-   * @deprecated The function will be removed in 0.2.2, please consider using `torch.jit._loadForMobile`.
-   *
-   * Preload a model. If a model is not preloaded, it will be loaded during the
-   * first inference call. However, the first inference time will therefore
-   * take significantly longer. This function allows to preload a model ahead
-   * of time before running the first inference.
-   *
-   * @param modelPath The model path as require or uri (i.e., `require`).
-   */
-  preload(modelPath: ModelPath): Promise<void>;
-
-  /**
-   * @deprecated The function will be removed in 0.2.2, please consider using `torch.jit._loadForMobile`.
-   *
-   * Unload all model. If any model were loaded previously, they will be discarded.
-   * This function allows to load a new version of a model without restarting the
-   * app.
-   */
-  unload(): Promise<void>;
-
-  /**
-   * @deprecated The function will be removed in 0.2.2, please consider using `Module.forward`.
-   *
-   * Run inference on a model.
-   *
-   * ```typescript
-   * const classificationModel = require('../models/mobilenet_v3_small.ptl');
-   *
-   * // or
-   *
-   * const classificationModel = require('https://example.com/models/mobilenet_v3_small.ptl');
-   *
-   * const image: Image = await ImageUtils.fromURL('https://image.url');
-   *
-   * const { result: {maxIdx} } = await MobileModel.execute(
-   *   classificationModel,
-   *   {
-   *     image,
-   *   }
-   * );
-   *
-   * const topClass = ImageClasses(scores);
-   * ```
-   *
-   * @param modelPath The model path as require or uri (i.e., `require`).
-   * @param params The input parameters for the model.
-   */
-  execute<T>(modelPath: ModelPath, params: any): Promise<ModelResult<T>>;
 }
 
 export const MobileModel: MobileModel = {
   async download(modelPath: ModelPath): Promise<string> {
     const uri = getModelUri(modelPath);
     return await ModelLoaderModule.download(uri);
-  },
-  async preload(modelPath: ModelPath): Promise<void> {
-    const uri = getModelUri(modelPath);
-    return await MobileModelModule.preload(uri);
-  },
-  async unload(): Promise<void> {
-    return await MobileModelModule.unload();
-  },
-  async execute<T>(modelPath: ModelPath, params: any): Promise<ModelResult<T>> {
-    const uri = getModelUri(modelPath);
-    return await MobileModelModule.execute(uri, params);
   },
 };

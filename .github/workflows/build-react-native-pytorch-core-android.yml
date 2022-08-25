@@ -1,0 +1,244 @@
+name: Test Library on Android build of various RN Versions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/build-react-native-pytorch-core-android.yml'
+      - '.github/actions/init-react-native-vanila-template/action.yml'
+      - 'react-native-pytorch-core/android/**'
+      - 'react-native-pytorch-core/cxx/**'
+      - 'react-native-template-pytorch-live/template/android/**'
+      - 'react-native-pytorch-core/package.json'
+      - 'react-native-pytorch-core/yarn.lock'
+      - 'react-native-template-pytorch-live/template/yarn.lock'
+  pull_request:
+    paths:
+      - '.github/workflows/build-react-native-pytorch-core.yml'
+      - '.github/actions/init-react-native-vanila-template/action.yml'
+      - 'react-native-pytorch-core/android/**'
+      - 'react-native-pytorch-core/cxx/**'
+      - 'react-native-template-pytorch-live/template/android/**'
+      - 'react-native-pytorch-core/package.json'
+      - 'react-native-pytorch-core/yarn.lock'
+      - 'react-native-template-pytorch-live/template/yarn.lock'
+
+  workflow_dispatch:
+
+jobs:
+  build_with_rn64:
+    name: Install Library on RN 0.64 Template
+    runs-on: macOS-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - uses: actions/setup-node@v3
+        with:
+            node-version: 16
+      - name: download vanilla template
+        run: npx react-native init myrn64 --version 0.64
+      - name: install react-native-pytorch-core
+        run: yarn add file:./../react-native-pytorch-core
+        working-directory: ./myrn64
+      - name: add pickFirst
+        env:
+          prior: 'android {'
+          append: "packagingOptions {pickFirst '**/*.so'}"
+        run: nl=$'\n' && sed -i '' "/${prior}/a\\${nl}${append}${nl}" build.gradle
+        working-directory: ./myrn64/android/app
+      - name: enlarge jvm capacity
+        env:
+          prior: 'FLIPPER_VERSION'
+          append: "org.gradle.jvmargs=-Xmx8192m"
+        run: nl=$'\n' && sed -i '' "/${prior}/a\\${nl}${append}${nl}" gradle.properties
+        working-directory: ./myrn64/android
+      - name: build android debug
+        run: ./gradlew assembleDebug
+        working-directory: ./myrn64/android
+      - name: build android release
+        run: ./gradlew assembleRelease
+        working-directory: ./myrn64/android
+
+  build_with_rn65:
+    name: Install Library on RN 0.65 Template
+    runs-on: macOS-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - uses: actions/setup-node@v3
+        with:
+            node-version: 16
+      - name: download vanilla template
+        run: npx react-native init myrn65 --version 0.65
+      - name: install react-native-pytorch-core
+        run: yarn add file:./../react-native-pytorch-core
+        working-directory: ./myrn65
+      - name: add pickFirst
+        env:
+          prior: 'android {'
+          append: "packagingOptions {pickFirst '**/*.so'}"
+        run: nl=$'\n' && sed -i '' "/${prior}/a\\${nl}${append}${nl}" build.gradle
+        working-directory: ./myrn65/android/app
+      - name: enlarge jvm capacity
+        env:
+          prior: 'FLIPPER_VERSION'
+          append: "org.gradle.jvmargs=-Xmx8192m"
+        run: nl=$'\n' && sed -i '' "/${prior}/a\\${nl}${append}${nl}" gradle.properties
+        working-directory: ./myrn65/android
+      - name: build android debug
+        run: ./gradlew assembleDebug
+        working-directory: ./myrn65/android
+      - name: build android release
+        run: ./gradlew assembleRelease
+        working-directory: ./myrn65/android
+
+  build_with_rn66:
+    name: Install Library on RN 0.66 Template
+    runs-on: macOS-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - uses: actions/setup-node@v3
+        with:
+            node-version: 16
+      - name: download vanilla template
+        run: npx react-native init myrn66 --version 0.66
+      - name: install react-native-pytorch-core
+        run: yarn add file:./../react-native-pytorch-core
+        working-directory: ./myrn66
+      - name: add pickFirst
+        env:
+          prior: 'android {'
+          append: "packagingOptions {pickFirst '**/*.so'}"
+        run: nl=$'\n' && sed -i '' "/${prior}/a\\${nl}${append}${nl}" build.gradle
+        working-directory: ./myrn66/android/app
+      - name: enlarge jvm capacity
+        env:
+          prior: 'FLIPPER_VERSION'
+          append: "org.gradle.jvmargs=-Xmx8192m"
+        run: nl=$'\n' && sed -i '' "/${prior}/a\\${nl}${append}${nl}" gradle.properties
+        working-directory: ./myrn66/android
+      - name: build android debug
+        run: ./gradlew assembleDebug
+        working-directory: ./myrn66/android
+      - name: build android release
+        run: ./gradlew assembleRelease
+        working-directory: ./myrn66/android
+
+  build_with_rn67:
+    name: Install Library on RN 0.67 Template
+    runs-on: macOS-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      - uses: actions/setup-node@v3
+        with:
+            node-version: 16
+      - name: download vanilla template
+        run: npx react-native init myrn67 --version 0.67
+      - name: install react-native-pytorch-core
+        run: yarn add file:./../react-native-pytorch-core
+        working-directory: ./myrn67
+      - name: add pickFirst
+        env:
+          prior: 'android {'
+          append: "packagingOptions {pickFirst '**/*.so'}"
+        run: nl=$'\n' && sed -i '' "/${prior}/a\\${nl}${append}${nl}" build.gradle
+        working-directory: ./myrn67/android/app
+      - name: enlarge jvm capacity
+        env:
+          prior: 'FLIPPER_VERSION'
+          append: "org.gradle.jvmargs=-Xmx8192m"
+        run: nl=$'\n' && sed -i '' "/${prior}/a\\${nl}${append}${nl}" gradle.properties
+        working-directory: ./myrn67/android
+      - name: build android debug
+        run: ./gradlew assembleDebug
+        working-directory: ./myrn67/android
+      - name: build android release
+        run: ./gradlew assembleRelease
+        working-directory: ./myrn67/android
+
+  build_with_rn68:
+    name: Install Library on RN 0.68 Template
+    runs-on: macOS-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup JDK 1.11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+      - uses: actions/setup-node@v3
+        with:
+            node-version: 16
+      - name: download vanilla template
+        run: npx react-native init myrn68 --version 0.68
+      - name: install react-native-pytorch-core
+        run: yarn add file:./../react-native-pytorch-core
+        working-directory: ./myrn68
+      - name: add pickFirst
+        run: nl=$'\n' && sed -i '' "/android {/a\\${nl}packagingOptions {pickFirst '**/*.so'}${nl}" build.gradle
+        working-directory: ./myrn68/android/app
+      - name: build android debug
+        run: ./gradlew assembleDebug
+        working-directory: ./myrn68/android
+      - name: build android release
+        run: ./gradlew assembleRelease
+        working-directory: ./myrn68/android
+
+  build_with_rn69:
+    name: Install Library on RN 0.69 Template
+    runs-on: macOS-latest
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup JDK 1.11
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.11
+      - uses: actions/setup-node@v3
+        with:
+            node-version: 16
+      - name: download vanilla template
+        run: npx react-native init myrn69 --version 0.69
+      - name: install react-native-pytorch-core
+        run: yarn add file:./../react-native-pytorch-core
+        working-directory: ./myrn69
+      - name: add pickFirst
+        run: nl=$'\n' && prior='android {' && append="packagingOptions {pickFirst '**/*.so'}" && sed -i '' "/${prior}/a\\${nl}${append}${nl}" build.gradle
+        working-directory: ./myrn69/android/app
+
+      - name: build android debug
+        run: ./gradlew assembleDebug
+        working-directory: ./myrn69/android
+      - name: build android release
+        run: ./gradlew assembleRelease
+        working-directory: ./myrn69/android

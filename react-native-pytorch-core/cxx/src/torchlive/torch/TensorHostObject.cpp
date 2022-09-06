@@ -705,7 +705,7 @@ jsi::Value TensorHostObject::get(
   int idx = -1;
   try {
     idx = std::stoi(name.c_str());
-  } catch (const std::exception& e) {
+  } catch (...) {
     // Cannot parse name value to int. This can happen when the name in bracket
     // or dot notion is not an int (e.g., tensor['foo']).
     // Let's ignore this exception here since this function will return

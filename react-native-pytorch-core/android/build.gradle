@@ -123,7 +123,7 @@ dependencies {
   // get the buildType duing configuration stage
   def buildType = "release"
 
-  if(Integer.parseInt(appRnMinorVersion)  < 69) {
+  if (Integer.parseInt(appRnMinorVersion) < 69) {
       def rnAAR = fileTree("${nodeModules}/react-native/android").matching({ it.include "**/**/*.aar" }).singleFile
       extractJNI(files(rnAAR))
   } else {

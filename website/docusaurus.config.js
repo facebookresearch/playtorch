@@ -7,7 +7,7 @@
  * @format
  */
 
-const {fbContent} = require('internaldocs-fb-helpers');
+const {fbContent} = require('docusaurus-plugin-internaldocs-fb/internal');
 const katex = require('rehype-katex');
 const math = require('remark-math');
 const npm2yarn = require('@docusaurus/remark-plugin-npm2yarn');

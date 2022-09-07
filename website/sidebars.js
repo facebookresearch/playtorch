@@ -18,7 +18,8 @@
  Create as many sidebars as you want.
  */
 
-const fbContent = require('internaldocs-fb-helpers').fbContent;
+const fbContent =
+  require('docusaurus-plugin-internaldocs-fb/internal').fbContent;
 
 module.exports = {
   docs: [

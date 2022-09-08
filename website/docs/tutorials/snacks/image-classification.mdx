@@ -421,6 +421,8 @@ export default async function classifyImage(image) {
 
 Since we are initializing the model the first time we run the `classifyImage` function, it will be slower. Subsequent runs will go much faster since they don't have to download the model or load it into memory.
 
+If you do not wish to upload your model to a publicly accessible server, you may instead place the file in a directory of your choice and replace the line `const filePath = await MobileModel.download(MODEL_URL);` with `const filePath = await MobileModel.download(require('./path/to/model.ptl'));`.
+
 :::
 
 Now that we are actually running the model, let's try it out in the PlayTorch app again and see what it logs. You should see a class label in the logs which is a word or list of words.

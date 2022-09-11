@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => "12.0" }
-  s.source       = { :git => "https://github.com/pytorch/live.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/facebookresearch/playtorch.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift,cpp}", "cxx/src/**/*.{h,cpp}"
 
@@ -45,6 +45,5 @@ Pod::Spec.new do |s|
   s.dependency "React-callinvoker"
   s.dependency "React"
   s.dependency "React-Core"
-  s.dependency "SwiftyJSON", '~> 5.0'
   s.dependency "LibTorch-Lite", "~> 1.12.0"
 end

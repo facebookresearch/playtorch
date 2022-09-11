@@ -6,23 +6,20 @@
 
 <h3>
   Build your AI powered mobile prototypes in minutes:
-  <a href="https://playtorch.dev/docs/tutorials/get-started">Get Started</a>
+  <a href="https://playtorch.dev/docs/next/tutorials/get-started/">Get Started</a>
   <span> · </span>
   <a href="https://playtorch.dev/docs/tutorials/snacks/image-classification/">Tutorials</a>
   <span> · </span>
-  <a href="https://playtorch.dev/docs/api/cli">API</a>
+  <a href="https://playtorch.dev/docs/next/api/core/">API</a>
 </h3>
 
 <p>&nbsp;</p>
 
-[![Torchlive CLI](https://github.com/facebookresearch/playtorch/actions/workflows/build-cli.yml/badge.svg)](https://github.com/facebookresearch/playtorch/actions/workflows/build-cli.yml) [![Build Android Template App](https://github.com/facebookresearch/playtorch/actions/workflows/build-template-android.yml/badge.svg)](https://github.com/facebookresearch/playtorch/actions/workflows/build-template-android.yml) [![Build iOS Template App](https://github.com/facebookresearch/playtorch/actions/workflows/build-template-ios.yml/badge.svg)](https://github.com/facebookresearch/playtorch/actions/workflows/build-template-ios.yml)
+[![Build Android Template App](https://github.com/facebookresearch/playtorch/actions/workflows/build-template-android.yml/badge.svg)](https://github.com/facebookresearch/playtorch/actions/workflows/build-template-android.yml) [![Build iOS Template App](https://github.com/facebookresearch/playtorch/actions/workflows/build-template-ios.yml/badge.svg)](https://github.com/facebookresearch/playtorch/actions/workflows/build-template-ios.yml)
 
 <p>
   <a href="https://www.npmjs.org/package/react-native-pytorch-core">
     <img src="https://img.shields.io/npm/v/react-native-pytorch-core?label=react-native-pytorch-core" alt="Current React Native PyTorch Core npm package version." />
-  </a>
-  <a href="https://www.npmjs.org/package/torchlive-cli">
-    <img src="https://img.shields.io/npm/v/torchlive-cli?label=torchlive-cli" alt="Current PlayTorch CLI npm package version." />
   </a>
   <a href="https://www.npmjs.org/package/react-native-template-pytorch-live">
     <img src="https://img.shields.io/npm/v/react-native-template-pytorch-live?label=react-native-template-pytorch-live" alt="Current React Native PlayTorch template npm package version." />
@@ -39,7 +36,7 @@
 
 [PlayTorch](https://playtorch.dev/) is a set of tools to build AI-powered experiences for mobile.
 
-This monorepo includes the PlayTorch command line interface (i.e., `torchlive-cli`), a React Native package to run on-device inference with PyTorch Mobile, and a React Native template with examples ready to be deployed on mobile devices.
+This monorepo includes the PlayTorch React Native package to run on-device inference with PyTorch Mobile and a React Native template with examples ready to be deployed on mobile devices.
 
 ## Contents
 - [Requirements](#-requirements)
@@ -49,7 +46,7 @@ This monorepo includes the PlayTorch command line interface (i.e., `torchlive-cl
 - [License](#license)
 
 ## 📋 Requirements
-PlayTorch apps may target Android 10.0 (API 21) and iOS 12.0 or newer. You may use Windows, macOS, or Linux as your development operating system, though building and running the torchlive-cli is limited to macOS.
+PlayTorch apps may target Android 10.0 (API 21) and iOS 12.0 or newer. You may use Windows, macOS, or Linux as your development operating system.
 
 ## 🎉 Building your first PlayTorch app
 Follow the [Getting Started guide](https://playtorch.dev/docs/tutorials/get-started). We also have a few tutorials for you to keep going after getting started:

@@ -5,36 +5,6 @@ on:
     types: [published]
 
 jobs:
-  publish-npm-cli:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./torchlive-cli
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14
-          registry-url: https://registry.npmjs.org/
-      - name: Update package.json version to $GITHUB_REF_NAME
-        run: npm version $GITHUB_REF_NAME
-      - name: Install Dependencies
-        run: yarn install --frozen-lockfile
-      - name: Test Build
-        run: yarn run build
-      - name: Unit Test
-        run: yarn run test
-      - name: Publish To NPM latest
-        if: github.event.release.prerelease == false
-        run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-      - name: Publish To NPM next
-        if: github.event.release.prerelease == true
-        run: npm publish --tag next
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-
   publish-npm-core:
     runs-on: ubuntu-latest
     defaults:

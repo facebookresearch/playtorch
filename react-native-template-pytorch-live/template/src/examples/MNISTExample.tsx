@@ -296,6 +296,11 @@ export default function MNISTExample() {
       animator.start(() => {
         const trail = trailRef.current;
         if (trail != null) {
+          // The canvas context requires clearing after the change in
+          // https://github.com/facebookresearch/playtorch/commit/78221e8da9b3229bce63204629633eb602bba86c
+          // Without ctx.clear(), the app will run out of memory and crash.
+          ctx.clear();
+
           // Here we use `layout` to get the canvas size
           const size = [layout?.width || 0, layout?.height || 0];
 

@@ -228,8 +228,6 @@ export interface CanvasRenderingContext2D {
 
   /**
    * Clears the entire canvas to be transparent.
-   *
-   * @deprecated This function will be removed in the beta release.
    */
   clear(): void;
 

@@ -287,6 +287,11 @@ export default function MNIST() {
       animationHandleRef.current = requestAnimationFrame(() => {
         const trail = trailRef.current;
         if (trail != null) {
+          // The canvas context requires clearing after the change in
+          // https://github.com/facebookresearch/playtorch/commit/78221e8da9b3229bce63204629633eb602bba86c
+          // Without ctx.clear(), the app will run out of memory and crash.
+          ctx.clear();
+
           // fill background by drawing a rect
           ctx.fillStyle = COLOR_CANVAS_BACKGROUND;
           ctx.fillRect(0, 0, canvasSize, canvasSize);

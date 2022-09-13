@@ -19,31 +19,6 @@ jobs:
     outputs:
       nightly_version: ${{ steps.calculate.outputs.nightly_version }}
 
-  publish-npm-cli:
-    runs-on: ubuntu-latest
-    needs: [version]
-    defaults:
-      run:
-        working-directory: ./torchlive-cli
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v2
-        with:
-          node-version: 14
-          registry-url: https://registry.npmjs.org/
-      - name: Update package.json version to "${{ needs.version.outputs.nightly_version }}"
-        run: npm version ${{ needs.version.outputs.nightly_version }}
-      - name: Install Dependencies
-        run: yarn install --frozen-lockfile
-      - name: Test Build
-        run: yarn run build
-      - name: Unit Test
-        run: yarn run test
-      - name: Publish To NPM
-        run: npm publish --tag nightly
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-
   publish-npm-core:
     runs-on: ubuntu-latest
     needs: [version]

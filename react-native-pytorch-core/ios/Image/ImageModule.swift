@@ -179,7 +179,10 @@ public class ImageModule: NSObject {
       if let cgImage = image.cgImage {
         let bitmapImage = Image(image: cgImage)
         let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
-        return ref["ID"]! as NSString
+        guard let refID = ref["ID"] as? NSString else {
+            return nil
+        }
+        return refID
       } else {
         return nil
       }

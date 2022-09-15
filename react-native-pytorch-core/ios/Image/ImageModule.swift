@@ -38,7 +38,7 @@ public class ImageModule: NSObject {
         let url = URL(fileURLWithPath: path)
         do {
             let data = try Data(contentsOf: url)
-            guard let uiImage = UIImage(data: data), let cgImage = uiImage.cgImage else {
+            guard let uiImage = UIImage(data: data), let cgImage = uiImage.forceSameOrientation().cgImage else {
                 reject(RCTErrorUnspecified, "Couldn't load image \(path)", nil)
                 return
             }
@@ -57,7 +57,7 @@ public class ImageModule: NSObject {
         DispatchQueue.main.sync {
             if let dictionary = assetImage as? [AnyHashable: Any] {
                 let uiImage = Macros.toUIImage(dictionary)
-                if let cgImage = uiImage.cgImage {
+                if let cgImage = uiImage.forceSameOrientation().cgImage {
                     let bitmapImage = Image(image: cgImage)
                     let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
                     resolve(ref)

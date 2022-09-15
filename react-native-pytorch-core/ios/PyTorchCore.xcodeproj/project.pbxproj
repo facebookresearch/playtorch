@@ -7,11 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		383DF34928D18D2500C4E953 /* UIImage+Orientation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 383DF34828D18D2500C4E953 /* UIImage+Orientation.swift */; };
 		38411DDD284081CE009E56F3 /* JSContextUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38411DDC284081CE009E56F3 /* JSContextUtils.swift */; };
 		384255BF26E17D3F00274872 /* ImageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 384255BE26E17D3F00274872 /* ImageData.swift */; };
 		3861445D282A3880007990F5 /* UIImage+Resize.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3861445C282A3880007990F5 /* UIImage+Resize.swift */; };
-		386E479727AF9DCF00839701 /* MediaToBlobCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E479627AF9DCF00839701 /* MediaToBlobCache.swift */; };
-		386E479927AF9E0300839701 /* BlobUtils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 386E479827AF9E0300839701 /* BlobUtils.swift */; };
 		387E703C26E16F43003BB6F5 /* CanvasManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E701826E16F43003BB6F5 /* CanvasManager.swift */; };
 		387E703D26E16F43003BB6F5 /* DrawingCanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E701926E16F43003BB6F5 /* DrawingCanvasView.swift */; };
 		387E703E26E16F43003BB6F5 /* CanvasRenderingContext2D.swift in Sources */ = {isa = PBXBuildFile; fileRef = 387E701A26E16F43003BB6F5 /* CanvasRenderingContext2D.swift */; };
@@ -54,11 +53,10 @@
 
 /* Begin PBXFileReference section */
 		134814201AA4EA6300B7C361 /* libPyTorchCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPyTorchCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		383DF34828D18D2500C4E953 /* UIImage+Orientation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Orientation.swift"; sourceTree = "<group>"; };
 		38411DDC284081CE009E56F3 /* JSContextUtils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = JSContextUtils.swift; sourceTree = "<group>"; };
 		384255BE26E17D3F00274872 /* ImageData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageData.swift; sourceTree = "<group>"; };
 		3861445C282A3880007990F5 /* UIImage+Resize.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Resize.swift"; sourceTree = "<group>"; };
-		386E479627AF9DCF00839701 /* MediaToBlobCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediaToBlobCache.swift; sourceTree = "<group>"; };
-		386E479827AF9E0300839701 /* BlobUtils.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlobUtils.swift; sourceTree = "<group>"; };
 		387E701826E16F43003BB6F5 /* CanvasManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasManager.swift; sourceTree = "<group>"; };
 		387E701926E16F43003BB6F5 /* DrawingCanvasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DrawingCanvasView.swift; sourceTree = "<group>"; };
 		387E701A26E16F43003BB6F5 /* CanvasRenderingContext2D.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasRenderingContext2D.swift; sourceTree = "<group>"; };
@@ -106,15 +104,6 @@
 				134814201AA4EA6300B7C361 /* libPyTorchCore.a */,
 			);
 			name = Products;
-			sourceTree = "<group>";
-		};
-		386E479327AF9DA200839701 /* Media */ = {
-			isa = PBXGroup;
-			children = (
-				386E479627AF9DCF00839701 /* MediaToBlobCache.swift */,
-				386E479827AF9E0300839701 /* BlobUtils.swift */,
-			);
-			path = Media;
 			sourceTree = "<group>";
 		};
 		387E701726E16F43003BB6F5 /* Canvas */ = {
@@ -168,6 +157,7 @@
 				387E703A26E16F43003BB6F5 /* Macros.h */,
 				387E703826E16F43003BB6F5 /* Macros.m */,
 				3861445C282A3880007990F5 /* UIImage+Resize.swift */,
+				383DF34828D18D2500C4E953 /* UIImage+Orientation.swift */,
 			);
 			path = Image;
 			sourceTree = "<group>";
@@ -185,7 +175,6 @@
 		58B511D21A9E6C8500147676 = {
 			isa = PBXGroup;
 			children = (
-				386E479327AF9DA200839701 /* Media */,
 				3884B0B9288FB2D900F7CF6E /* ML */,
 				387E702026E16F43003BB6F5 /* Camera */,
 				387E701726E16F43003BB6F5 /* Canvas */,
@@ -255,12 +244,12 @@
 			files = (
 				387E704526E16F43003BB6F5 /* CameraManager.m in Sources */,
 				3884B0C0288FB2D900F7CF6E /* ModelUtils.swift in Sources */,
+				383DF34928D18D2500C4E953 /* UIImage+Orientation.swift in Sources */,
 				387E704726E16F43003BB6F5 /* CameraManager.swift in Sources */,
 				387E704226E16F43003BB6F5 /* ShapeLayer.swift in Sources */,
 				387E705626E16F43003BB6F5 /* ImageModule.m in Sources */,
 				387E704826E16F43003BB6F5 /* JSContext.swift in Sources */,
 				387E705526E16F43003BB6F5 /* Macros.m in Sources */,
-				386E479727AF9DCF00839701 /* MediaToBlobCache.swift in Sources */,
 				38C0DDB426E59EDD003007B6 /* ImageUtils.swift in Sources */,
 				3861445D282A3880007990F5 /* UIImage+Resize.swift in Sources */,
 				387E704626E16F43003BB6F5 /* CameraView.swift in Sources */,
@@ -282,7 +271,6 @@
 				387E705726E16F43003BB6F5 /* ImageModule.swift in Sources */,
 				3884B0BF288FB2D900F7CF6E /* ModelLoaderModule.m in Sources */,
 				3884B0C1288FB2D900F7CF6E /* ModelLoaderModule.swift in Sources */,
-				386E479927AF9E0300839701 /* BlobUtils.swift in Sources */,
 				387E705426E16F43003BB6F5 /* BitmapImage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -70,10 +70,8 @@ module.exports = {
           label: 'FAQ',
         },
         {
-          href: 'https://github.com/facebookresearch/playtorch',
+          type: 'custom-githubButton',
           position: 'right',
-          className: 'header-github-link',
-          'aria-label': 'GitHub repository',
         },
       ],
     },

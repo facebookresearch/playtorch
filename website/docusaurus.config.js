@@ -156,14 +156,20 @@ module.exports = {
           rehypePlugins: [katex],
           editUrl: fbContent({
             internal:
-              'https://www.internalfb.com/code/fbsource/xplat/pytorch/live/website',
+              'https://www.internalfb.com/intern/diffusion/FBS/browse/master/xplat/playtorch/playtorch-github/website/',
             external:
-              'https://github.com/facebookresearch/playtorch/edit/main/website',
+              'https://github.com/facebookresearch/playtorch/blob/main/website',
           }),
         },
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
+        staticDocsProject: 'playtorch',
+        trackingFile: 'xplat/staticdocs/WATCHED_FILES',
+        'remark-code-snippets': {
+          baseDir: '..',
+        },
+        enableEditor: true,
         gtag: {
           trackingID: 'G-703RV77NHN',
         },

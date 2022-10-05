@@ -512,6 +512,66 @@ TEST_F(TorchliveTensorRuntimeTest, TensorMulTest) {
   EXPECT_THROW(eval("torch.arrange(3, 4).mul('foo')"), facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorMatmulTest) {
+  std::string matMul2Dx1D =
+      R"(
+          const x = torch.randn([3, 4]);
+          const y = torch.randn([4]);
+          const z = x.matmul(y);
+          z.size()[0] === 3;
+        )";
+  EXPECT_TRUE(eval(matMul2Dx1D).getBool());
+
+  std::string matMul2Dx2D =
+      R"(
+          const x = torch.randn([3, 4]);
+          const y = torch.randn([4, 2]);
+          const z = x.matmul(y);
+          z.size()[0] === 3 && z.size()[1] === 2;
+        )";
+  EXPECT_TRUE(eval(matMul2Dx2D).getBool());
+
+  std::string matMul3Dx1D =
+      R"(
+          const x = torch.randn([10, 3, 4]);
+          const y = torch.randn([4]);
+          const z = x.matmul(y);
+          z.size()[0] === 10 && z.size()[1] === 3;
+        )";
+  EXPECT_TRUE(eval(matMul3Dx1D).getBool());
+
+  std::string matMul3Dx2D =
+      R"(
+          const x = torch.randn([10, 3, 4]);
+          const y = torch.randn([4, 5]);
+          const z = x.matmul(y);
+          z.size()[0] === 10 && z.size()[1] === 3 && z.size()[2] === 5;
+        )";
+  EXPECT_TRUE(eval(matMul3Dx2D).getBool());
+
+  std::string matMulShapeMismatch =
+      R"(
+          const x = torch.randn([10, 3]);
+          const y = torch.randn([10, 3]);
+          const z = x.matmul(y);
+        )";
+  EXPECT_THROW(eval(matMulShapeMismatch), facebook::jsi::JSError);
+
+  std::string matMulWithNumber =
+      R"(
+          const x = torch.randn([10, 3]);
+          const z = x.matmul(3);
+        )";
+  EXPECT_THROW(eval(matMulWithNumber), facebook::jsi::JSError);
+
+  std::string matMulWithString =
+      R"(
+          const x = torch.randn([10, 3]);
+          const z = x.matmul('foo');
+        )";
+  EXPECT_THROW(eval(matMulWithString), facebook::jsi::JSError);
+}
+
 TEST_F(TorchliveTensorRuntimeTest, TensorPermuteTest) {
   std::string tensorPermute =
       R"(

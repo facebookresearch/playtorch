@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-web/dist/exports/Image/index.js b/node_modules/react-native-web/dist/exports/Image/index.js
+index 5c25ebf..ffc5d54 100644
+--- a/node_modules/react-native-web/dist/exports/Image/index.js
++++ b/node_modules/react-native-web/dist/exports/Image/index.js
+@@ -141,7 +141,7 @@ function resolveAssetUri(source) {
+     }
+ 
+     var scaleSuffix = scale !== 1 ? "@" + scale + "x" : '';
+-    uri = asset ? asset.httpServerLocation + "/" + asset.name + scaleSuffix + "." + asset.type : '';
++    uri = asset ? asset.httpServerLocation + "/" + asset.name + scaleSuffix + (asset.type ? ("." + asset.type) : '') : '';
+   } else if (typeof source === 'string') {
+     uri = source;
+   } else if (source && typeof source.uri === 'string') {

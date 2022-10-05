@@ -1,0 +1,19 @@
+diff --git a/node_modules/react-native-paper/src/components/Snackbar.tsx b/node_modules/react-native-paper/src/components/Snackbar.tsx
+index 2088e7e..2b9ecfb 100644
+--- a/node_modules/react-native-paper/src/components/Snackbar.tsx
++++ b/node_modules/react-native-paper/src/components/Snackbar.tsx
+@@ -207,14 +207,7 @@ const Snackbar = ({
+         }
+         {...rest}
+       >
+-        <Text
+-          style={[
+-            styles.content,
+-            { marginRight: action ? 0 : 16, color: colors.surface },
+-          ]}
+-        >
+           {children}
+-        </Text>
+         {action ? (
+           <Button
+             onPress={() => {

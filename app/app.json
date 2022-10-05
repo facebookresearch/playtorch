@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "PlayTorch",
+    "slug": "playtorch",
+    "version": "0.0.0",
+    "owner": "playtorch",
+    "orientation": "portrait",
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "dev.playtorch"
+    },
+    "android": {
+      "package": "dev.playtorch"
+    },
+    "extra": {
+      "cloudEnv": "production"
+    },
+    "plugins": ["react-native-pytorch-core"],
+    "scheme": "playtorch"
+  }
+}

@@ -279,6 +279,14 @@ export interface Tensor {
    */
   reshape(shape: number[]): Tensor;
   /**
+   * Performs matrix multiplication with other tensor.
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.matmul.html}
+   *
+   * @param other tensor matrix multiplied this tensor.
+   */
+  matmul(other: Tensor): Tensor;
+  /**
    * Multiplies input by other scalar or tensor.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.mul.html}

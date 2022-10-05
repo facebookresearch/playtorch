@@ -386,6 +386,19 @@ jsi::Value itemImpl(
   }
 }
 
+jsi::Value matmulImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto thisTensor = args.thisAsHostObject<TensorHostObject>()->tensor;
+  const auto otherTensor = args.asHostObject<TensorHostObject>(0)->tensor;
+  return utils::helpers::createFromHostObject<TensorHostObject>(
+      runtime, torch_::matmul(thisTensor, otherTensor));
+}
+
 jsi::Value mulImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -656,6 +669,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "div", 1, divImpl);
   setPropertyHostFunction(runtime, "flip", 1, flipImpl);
   setPropertyHostFunction(runtime, "item", 0, itemImpl);
+  setPropertyHostFunction(runtime, "matmul", 1, matmulImpl);
   setPropertyHostFunction(runtime, "mul", 1, mulImpl);
   setPropertyHostFunction(runtime, "permute", 1, permuteImpl);
   setPropertyHostFunction(runtime, "reshape", 1, reshapeImpl);

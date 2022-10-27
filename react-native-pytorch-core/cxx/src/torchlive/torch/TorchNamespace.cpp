@@ -174,7 +174,6 @@ jsi::Value fromBlobImpl(
   auto tensorOptions =
       utils::helpers::parseTensorOptions(runtime, arguments, 2, count);
   auto blob = blobHostObject->blob.get();
-  auto size = blob->getDirectSize();
   uint8_t* const buffer = blob->getDirectBytes();
   if (!tensorOptions.has_dtype()) {
     // explicitly set to default uint8 dtype

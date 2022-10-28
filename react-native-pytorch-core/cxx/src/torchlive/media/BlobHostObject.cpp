@@ -28,7 +28,7 @@ jsi::Value BlobObjectWithNoData(jsi::Runtime& runtime) {
 
 } // namespace
 
-jsi::Value arrayBufferImpl(
+static jsi::Value arrayBufferImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
     const jsi::Value* arguments,
@@ -56,7 +56,7 @@ jsi::Value arrayBufferImpl(
   return promiseValue;
 }
 
-jsi::Value sliceImpl(
+static jsi::Value sliceImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
     const jsi::Value* arguments,

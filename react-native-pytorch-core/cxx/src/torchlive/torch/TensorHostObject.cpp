@@ -743,9 +743,8 @@ jsi::Function TensorHostObject::createToString(jsi::Runtime& runtime) {
                           const jsi::Value& thisValue,
                           const jsi::Value* arguments,
                           size_t count) -> jsi::Value {
-    auto tensor = this->tensor;
     std::ostringstream stream;
-    stream << tensor;
+    stream << this->tensor;
     std::string tensor_string = stream.str();
     auto val = jsi::String::createFromUtf8(runtime, tensor_string);
     return jsi::Value(std::move(val));
@@ -760,8 +759,7 @@ jsi::Function TensorHostObject::createSize(jsi::Runtime& runtime) {
                       const jsi::Value& thisValue,
                       const jsi::Value* arguments,
                       size_t count) -> jsi::Value {
-    auto tensor = this->tensor;
-    torch_::IntArrayRef dims = tensor.sizes();
+    torch_::IntArrayRef dims = this->tensor.sizes();
     jsi::Array jsShape = jsi::Array(runtime, dims.size());
     for (int i = 0; i < dims.size(); i++) {
       jsShape.setValueAtIndex(runtime, i, jsi::Value((int)dims[i]));

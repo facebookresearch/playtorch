@@ -20,7 +20,7 @@ using namespace utils::helpers;
 
 namespace audio {
 
-Value audioFromBytesImpl(
+static Value audioFromBytesImpl(
     Runtime& runtime,
     const Value& thisValue,
     const Value* arguments,
@@ -61,7 +61,7 @@ Value audioFromBytesImpl(
   return promiseValue;
 }
 
-Value audioRemoveWAVHeaderImpl(
+static Value audioRemoveWAVHeaderImpl(
     Runtime& runtime,
     const Value& thisValue,
     const Value* arguments,

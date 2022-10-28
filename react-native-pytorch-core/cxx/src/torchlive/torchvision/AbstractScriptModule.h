@@ -9,8 +9,12 @@
 
 #include <jsi/jsi.h>
 
+// Suppress deprecated-declarations error to support Clang/C++17
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #include <torch/csrc/jit/mobile/module.h>
 #include <torch/script.h>
+#pragma clang diagnostic pop
 
 // Namespace alias for torch to avoid namespace conflicts with torchlive::torch
 namespace torch_ = torch;

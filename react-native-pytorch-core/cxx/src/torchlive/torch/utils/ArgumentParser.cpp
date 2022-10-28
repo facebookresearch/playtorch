@@ -69,6 +69,10 @@ void ArgumentParser::requireNumArguments(size_t minArgCount) const {
   }
 }
 
+bool ArgumentParser::atLeastNumArguments(size_t minArgCount) const {
+  return count_ >= minArgCount;
+}
+
 ::torch::TensorOptions ArgumentParser::tensorOptions(size_t idx) const {
   return helpers::parseTensorOptions(runtime_, args_, idx, count_);
 }

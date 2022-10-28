@@ -226,6 +226,9 @@ argument_string_templates = {
         """            auto ${name}Value = args.keywordValue(${options_index}, "${name}");
             auto ${name} = ${name}Value.isUndefined() ? ${default} : ${name}Value.getBool();"""
     ),
+    "int64_t_required": Template(
+        "            auto ${name} = args.asInteger(${arg_index});"
+    ),
 }
 
 
@@ -311,6 +314,7 @@ jsi_type_mappings = {
     "const at::Tensor &": "HostObject",
     "c10::optional<int64_t>": "Number",
     "bool": "Bool",
+    "int64_t": "Number",
 }
 
 check_argument_types_template = {

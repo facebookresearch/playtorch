@@ -39,7 +39,6 @@ std::string getSyncMethodPrefix(const std::string& propName) {
 
   return propName.substr(0, prefixLength);
 }
-} // namespace
 
 MethodAsyncTask createMethodAsyncTask(
     torch_::jit::mobile::Module& m,
@@ -92,6 +91,7 @@ MethodAsyncTask createMethodAsyncTask(
         return utils::converter::ivalueToJSIValue(runtime, value);
       });
 }
+} // namespace
 
 ModuleHostObject::ModuleHostObject(
     jsi::Runtime& rt,

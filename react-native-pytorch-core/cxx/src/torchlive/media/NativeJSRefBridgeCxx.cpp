@@ -6,7 +6,7 @@
  */
 
 #ifdef __ANDROID__
-#elif defined(TARGET_OS_IPHONE)
+#elif __APPLE__
 #else
 
 #include "NativeJSRefBridge.h"

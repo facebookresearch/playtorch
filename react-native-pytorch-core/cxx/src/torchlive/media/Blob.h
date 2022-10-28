@@ -29,7 +29,7 @@ class Blob {
       size_t byteLength,
       const std::string& type = "");
 
-  uint8_t* const getDirectBytes() const;
+  uint8_t* getDirectBytes() const;
   size_t getDirectSize() const noexcept;
   const std::string& getType() const noexcept;
 

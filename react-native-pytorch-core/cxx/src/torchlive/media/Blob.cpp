@@ -16,7 +16,7 @@ Blob::Blob(
     const std::string& type)
     : buffer_(std::move(buffer)), byteLength_(byteLength), type_(type) {}
 
-uint8_t* const Blob::getDirectBytes() const {
+uint8_t* Blob::getDirectBytes() const {
   return buffer_.get();
 }
 

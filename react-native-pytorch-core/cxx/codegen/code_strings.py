@@ -212,22 +212,33 @@ argument_string_templates = {
         """            auto ${name} = args.asHostObject<TensorHostObject>(${arg_index})->tensor;"""
     ),
     "const at::Scalar &": Template(
-        """            auto ${name}Value = args.keywordValue(${arg_index}, "${name}");
+        """            auto ${name}Value = args.keywordValue(${options_index}, "${name}");
             auto ${name} = ${name}Value.isUndefined() ? at::Scalar(${default}) : at::Scalar(${name}Value.asNumber());"""
     ),
     "const at::Scalar &_required": Template(
         """            auto ${name} = args[${arg_index}].asNumber();"""
     ),
+    "c10::optional<int64_t>": Template(
+        """            auto ${name}Value = args.keywordValue(${options_index}, "${name}");
+            c10::optional<int64_t> ${name} = ${name}Value.isUndefined() ? ${default} : (c10::optional<int64_t>) ${name}Value.asNumber();"""
+    ),
+    "bool": Template(
+        """            auto ${name}Value = args.keywordValue(${options_index}, "${name}");
+            auto ${name} = ${name}Value.isUndefined() ? ${default} : ${name}Value.getBool();"""
+    ),
 }
 
 
-def get_argument_string(argument: Argument, index: int) -> str:
+def get_argument_string(argument: Argument, index: int, options_index: int) -> str:
     try:
         substitutions = {
             "arg_index": index - 1,
             "name": argument.name,
             "default": argument.default,
+            "options_index": options_index,
         }
+        if isinstance(substitutions["default"], bool):
+            substitutions["default"] = "true" if substitutions["default"] else "false"
         argument_string_key = argument.type_
         if index == 0:
             argument_string_key += "_self"
@@ -252,6 +263,11 @@ returns_type_templates = {
             ${return_type} ${returns_name} = ${self}->tensor.${operator_name}(${arguments});
             return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(${returns_name}));"""
     ),
+    "at::Tensor_cast_to_int32": Template(
+        """
+            ${return_type} ${returns_name} = ${self}->tensor.${operator_name}(${arguments}).to(torch_::TensorOptions().dtype(torch_::kInt32));
+            return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(${returns_name}));"""
+    ),
     "at::Scalar": Template(
         """
             auto ${returns_name} = ${self}->tensor.${operator_name}(${arguments});
@@ -266,9 +282,12 @@ returns_type_templates = {
 }
 
 
-def get_returns_string(op: OpInfo) -> str:
+def get_returns_string(op: OpInfo, cast_to_int32=False) -> str:
     try:
-        return returns_type_templates[op.returns_type].substitute(
+        returns_string_key = op.returns_type
+        if cast_to_int32:
+            returns_string_key += "_cast_to_int32"
+        return returns_type_templates[returns_string_key].substitute(
             {
                 "return_type": op.returns_type,
                 "returns_name": op.returns_name,
@@ -287,15 +306,24 @@ def get_returns_string(op: OpInfo) -> str:
         return error_template.substitute({"return_type": op.returns_type})
 
 
-jsi_type_mappings = {"const at::Scalar &": "Number", "const at::Tensor &": "HostObject"}
+jsi_type_mappings = {
+    "const at::Scalar &": "Number",
+    "const at::Tensor &": "HostObject",
+    "c10::optional<int64_t>": "Number",
+    "bool": "Bool",
+}
 
 check_argument_types_template = {
     "Number_required": Template("args[${idx}].isNumber()"),
     "Number": Template(
-        '(args.keywordValue(${idx}, "${name}").isUndefined() || args.keywordValue(${idx}, "${name}").isNumber())'
+        '(args.keywordValue(${options_index}, "${name}").isUndefined() || args.keywordValue(${options_index}, "${name}").isNumber())'
     ),
     "HostObject_required": Template(
         "args[${idx}].isObject() && args[${idx}].asObject(runtime).isHostObject<${HostObjectType}>(runtime)"
+    ),
+    "Bool_required": Template("args[${idx}].isBool()"),
+    "Bool": Template(
+        '(args.keywordValue(${options_index}, "${name}").isUndefined() || args.keywordValue(${options_index}, "${name}").isBool())'
     ),
 }
 
@@ -306,7 +334,11 @@ def get_check_argument_types_string(op: OpInfo):
     ]
     for i in range(1, len(op.arguments)):  # first argument is always self
         arg = op.arguments[i]
-        substitutions = {"idx": i - 1, "name": arg.name}
+        substitutions = {
+            "idx": i - 1,
+            "name": arg.name,
+            "options_index": op.options_index,
+        }
         try:
             jsi_type = jsi_type_mappings[arg.type_]
             if jsi_type == "HostObject":

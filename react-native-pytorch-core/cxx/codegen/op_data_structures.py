@@ -66,3 +66,21 @@ class OpInfo:
         return OpInfo(
             name, schema_order_cpp_signature, arguments, returns_name, returns_type
         )
+
+
+class OpGroup:
+    name: str
+    ops: [OpInfo]
+    min_num_required: int
+    implemented: bool  # initially False, will be set to true if OpInfo.implemented for every op in ops
+
+    def __init__(self, op: OpInfo):
+        self.name = op.name
+        self.ops = [op]
+        self.min_num_required = op.num_required
+        self.implemented = False
+
+    def add_op(self, op: OpInfo):
+        self.ops.append(op)
+        if op.num_required < self.min_num_required:
+            self.min_num_required = op.num_required

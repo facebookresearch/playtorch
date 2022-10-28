@@ -14,9 +14,7 @@ from ..codegen.test_code_strings import (
     gen_cpp_func_add1,
     gen_cpp_func_impl_add,
     gen_cpp_func_impl_item,
-    gen_cpp_func_impl_reshape,
     gen_cpp_func_item,
-    gen_cpp_func_reshape,
 )
 
 
@@ -79,18 +77,16 @@ class DataStructuresTest(TestCase):
                     ops_dict[op.name] = OpGroup(op)
         self.assertEqual(gen_cpp_func(ops_dict["add"].ops[0]), gen_cpp_func_add0)
         self.assertEqual(gen_cpp_func(ops_dict["add"].ops[1]), gen_cpp_func_add1)
-        self.assertEqual(gen_cpp_func(ops_dict["reshape"].ops[0]), gen_cpp_func_reshape)
         self.assertEqual(gen_cpp_func(ops_dict["item"].ops[0]), gen_cpp_func_item)
         self.assertEqual(ops_dict["add"].ops[0].implemented, True)
         self.assertEqual(ops_dict["add"].ops[1].implemented, True)
-        self.assertEqual(ops_dict["reshape"].ops[0].implemented, False)
         self.assertEqual(ops_dict["item"].ops[0].implemented, True)
 
     def test_gen_cpp_func_impl(self):
         ops_dict = {}
         # add is fully implemented, reshape has argument not implemented
         # no example of all arguments implemented but return type implemented exists playtorch v0.2.2
-        tensor_ops = ["add", "reshape", "item"]
+        tensor_ops = ["add", "item"]
         for op in ops_decl:
             if "Tensor" in op["method_of"] and op["operator_name"] in tensor_ops:
                 op = OpInfo.from_dict(op)
@@ -99,17 +95,13 @@ class DataStructuresTest(TestCase):
                 else:
                     ops_dict[op.name] = OpGroup(op)
         self.assertEqual(gen_cpp_func_impl(ops_dict["add"]), gen_cpp_func_impl_add)
-        self.assertEqual(
-            gen_cpp_func_impl(ops_dict["reshape"]), gen_cpp_func_impl_reshape
-        )
         self.assertEqual(gen_cpp_func_impl(ops_dict["item"]), gen_cpp_func_impl_item)
         self.assertEqual(ops_dict["add"].implemented, True)
-        self.assertEqual(ops_dict["reshape"].implemented, False)
         self.assertEqual(ops_dict["item"].implemented, True)
 
     def test_gen_cpp_file(self):
         ops_dict = {}
-        tensor_ops = ["add", "sub", "mul", "reshape", "item"]
+        tensor_ops = ["add", "sub", "mul", "item"]
         for op in ops_decl:
             if "Tensor" in op["method_of"] and op["operator_name"] in tensor_ops:
                 op = OpInfo.from_dict(op)

@@ -39,20 +39,6 @@ gen_cpp_func_add1 = """
     }
 """
 
-gen_cpp_func_reshape = """
-    if(false) {
-        try {
-            auto self = args.thisAsHostObject<TensorHostObject>();
-            throw facebook::jsi::JSError(runtime, "Argument parsing for type at::IntArrayRef has not been implemented yet");
-
-        } catch (jsi::JSError& error) {
-        // Arguments do not match signature at::Tensor (const at::Tensor &, at::IntArrayRef)
-        } catch (std::exception& ex) {
-            throw std::move(ex);
-        }
-    }
-"""
-
 gen_cpp_func_item = """
     if(args.atLeastNumArguments(0)) {
         try {
@@ -115,30 +101,6 @@ jsi::Value addImpl(
         }
     }
     throw facebook::jsi::JSError(runtime, "Arguments for op add do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)");
-  }
-"""
-
-gen_cpp_func_impl_reshape = """
-
-jsi::Value reshapeImpl(
-  jsi::Runtime& runtime,
-  const jsi::Value& thisValue,
-  const jsi::Value* arguments,
-  size_t count) {
-    utils::ArgumentParser args(runtime, thisValue, arguments, count);
-    args.requireNumArguments(1);
-    if(false) {
-        try {
-            auto self = args.thisAsHostObject<TensorHostObject>();
-            throw facebook::jsi::JSError(runtime, "Argument parsing for type at::IntArrayRef has not been implemented yet");
-
-        } catch (jsi::JSError& error) {
-        // Arguments do not match signature at::Tensor (const at::Tensor &, at::IntArrayRef)
-        } catch (std::exception& ex) {
-            throw std::move(ex);
-        }
-    }
-    throw facebook::jsi::JSError(runtime, "Arguments for op reshape do not match any of the following signatures:at::Tensor (const at::Tensor &, at::IntArrayRef)");
   }
 """
 
@@ -387,7 +349,6 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
     setPropertyHostFunction(runtime, "add", 1, addImpl);
     setPropertyHostFunction(runtime, "item", 0, itemImpl);
     setPropertyHostFunction(runtime, "mul", 1, mulImpl);
-    setPropertyHostFunction(runtime, "reshape", 1, TensorHostObjectDeprecated::reshapeImpl);
     setPropertyHostFunction(runtime, "sub", 1, subImpl);
 }
 

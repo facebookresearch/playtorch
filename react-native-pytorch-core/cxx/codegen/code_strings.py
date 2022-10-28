@@ -229,6 +229,11 @@ argument_string_templates = {
     "int64_t_required": Template(
         "            auto ${name} = args.asInteger(${arg_index});"
     ),
+    "at::IntArrayRef_required": Template(
+        """            std::vector<int64_t> vector;
+            utils::helpers::parseSize(runtime, arguments, ${arg_index}, count, &vector);
+            auto ${name} = c10::ArrayRef<int64_t>(vector);"""
+    ),
 }
 
 
@@ -315,6 +320,7 @@ jsi_type_mappings = {
     "c10::optional<int64_t>": "Number",
     "bool": "Bool",
     "int64_t": "Number",
+    "at::IntArrayRef": "Array",
 }
 
 check_argument_types_template = {
@@ -328,6 +334,9 @@ check_argument_types_template = {
     "Bool_required": Template("args[${idx}].isBool()"),
     "Bool": Template(
         '(args.keywordValue(${options_index}, "${name}").isUndefined() || args.keywordValue(${options_index}, "${name}").isBool())'
+    ),
+    "Array_required": Template(
+        "(args[${idx}].isNumber() || (args[${idx}].isObject() && args[${idx}].asObject(runtime).isArray(runtime)))"
     ),
 }
 

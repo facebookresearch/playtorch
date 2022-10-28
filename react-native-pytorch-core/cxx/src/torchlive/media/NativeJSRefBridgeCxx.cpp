@@ -26,6 +26,12 @@ std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
   return std::make_unique<torchlive::media::Blob>(std::move(data), size);
 }
 
+std::unique_ptr<torchlive::media::Blob> toBlob(std::shared_ptr<IImage> image) {
+  size_t const size = 0;
+  auto data = std::unique_ptr<uint8_t[]>(0);
+  return std::make_unique<torchlive::media::Blob>(std::move(data), size);
+}
+
 } // namespace media
 
 namespace experimental {

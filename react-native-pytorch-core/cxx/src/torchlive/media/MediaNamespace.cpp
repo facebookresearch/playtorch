@@ -128,6 +128,11 @@ jsi::Value toBlobImpl(
     const auto& tensor =
         obj.asHostObject<torchlive::torch::TensorHostObject>(runtime)->tensor;
     blob = tensorToBlob(tensor);
+  } else if (obj.isHostObject<torchlive::media::ImageHostObject>(runtime)) {
+    const auto& image =
+        obj.asHostObject<torchlive::media::ImageHostObject>(runtime)
+            ->getImage();
+    blob = torchlive::media::toBlob(image);
   } else {
     const auto ID_PROP = jsi::PropNameID::forUtf8(runtime, std::string("ID"));
     if (!obj.hasProperty(runtime, ID_PROP)) {

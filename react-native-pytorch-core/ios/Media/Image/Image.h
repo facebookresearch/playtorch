@@ -35,8 +35,9 @@ public:
 
   void close() const override;
 
-private:
   UIImage *image_;
+
+private:
   std::string id_;
 };
 

@@ -45,6 +45,45 @@ std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
   return std::make_unique<torchlive::media::Blob>(std::move(data), size, std::string([type UTF8String]));
 }
 
+std::unique_ptr<torchlive::media::Blob> toBlob(std::shared_ptr<IImage> image) {
+  std::shared_ptr<Image> derivedImage = std::dynamic_pointer_cast<Image>(image);
+  UIImage* uiImage = derivedImage->image_;
+
+  size_t dataSize = size_t(4 * uiImage.size.width * uiImage.size.height);
+  uint8_t* imageData = (uint8_t*)malloc(dataSize);
+
+  CGColorSpaceRef colorSpace = CGColorSpaceCreateDeviceRGB();
+
+  CGImageRef imageRef = [uiImage CGImage];
+  CGContextRef bitmap = CGBitmapContextCreate(
+      imageData,
+      uiImage.size.width,
+      uiImage.size.height,
+      8,
+      uiImage.size.width * 4,
+      colorSpace,
+      kCGImageAlphaPremultipliedLast);
+  CGContextDrawImage(
+      bitmap, CGRectMake(0, 0, uiImage.size.width, uiImage.size.height), imageRef);
+
+  CGContextRelease(bitmap);
+  CGColorSpaceRelease(colorSpace);
+
+  size_t finalDataSize = size_t(3 * uiImage.size.width * uiImage.size.height);
+  uint8_t* buffer = (uint8_t*)malloc(finalDataSize);
+  for (size_t i = 0; i < uiImage.size.width * uiImage.size.height; i++) {
+    buffer[i * 3 + 0] = imageData[i * 4 + 0]; // R
+    buffer[i * 3 + 1] = imageData[i * 4 + 1]; // G
+    buffer[i * 3 + 2] = imageData[i * 4 + 2]; // B
+  }
+
+  auto data = std::unique_ptr<uint8_t[]>(new uint8_t[finalDataSize]);
+  std::memcpy(data.get(), buffer, finalDataSize);
+  std::string blobType = Blob::kBlobTypeImageRGB;
+  return std::make_unique<torchlive::media::Blob>(
+      std::move(data), dataSize, blobType);
+}
+
 } // namespace media
 
 namespace experimental {

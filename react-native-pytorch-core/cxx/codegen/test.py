@@ -6,10 +6,10 @@
 from unittest import TestCase
 
 from ..codegen.mock_dict import ops_decl
-
 from ..codegen.op_data_structures import OpGroup, OpInfo
-from ..codegen.playtorch_codegen import gen_cpp_func, gen_cpp_func_impl
+from ..codegen.playtorch_codegen import gen_cpp_file, gen_cpp_func, gen_cpp_func_impl
 from ..codegen.test_code_strings import (
+    cpp_file_str,
     gen_cpp_func_add0,
     gen_cpp_func_add1,
     gen_cpp_func_impl_add,
@@ -106,3 +106,15 @@ class DataStructuresTest(TestCase):
         self.assertEqual(ops_dict["add"].implemented, True)
         self.assertEqual(ops_dict["reshape"].implemented, False)
         self.assertEqual(ops_dict["item"].implemented, True)
+
+    def test_gen_cpp_file(self):
+        ops_dict = {}
+        tensor_ops = ["add", "sub", "mul", "reshape", "item"]
+        for op in ops_decl:
+            if "Tensor" in op["method_of"] and op["operator_name"] in tensor_ops:
+                op = OpInfo.from_dict(op)
+                if op.name in ops_dict:
+                    ops_dict[op.name].ops.append(op)
+                else:
+                    ops_dict[op.name] = OpGroup(op)
+        self.assertEqual(gen_cpp_file(ops_dict), cpp_file_str)

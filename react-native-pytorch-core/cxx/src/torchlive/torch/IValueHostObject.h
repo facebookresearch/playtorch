@@ -9,7 +9,12 @@
 
 #include <jsi/jsi.h>
 
+// Suppress deprecated-declarations error to support Clang/C++17
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #include <torch/script.h>
+#pragma clang diagnostic pop
+
 #include "../common/BaseHostObject.h"
 
 namespace torchlive {

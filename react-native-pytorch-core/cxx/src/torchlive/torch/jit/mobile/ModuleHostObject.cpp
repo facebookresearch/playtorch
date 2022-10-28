@@ -5,7 +5,12 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+// Suppress deprecated-declarations error to support Clang/C++17
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #include <torch/csrc/jit/mobile/module.h>
+#pragma clang diagnostic pop
+
 #include <utility>
 
 #include "../../../torchlive.h"

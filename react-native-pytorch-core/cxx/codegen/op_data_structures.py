@@ -32,6 +32,7 @@ class OpInfo:
     schema_order_cpp_signature: str
     arguments: [Argument]
     num_required: int
+    options_index: int
     returns_name: str
     returns_type: str
     arg_types: [str]
@@ -50,6 +51,12 @@ class OpInfo:
         self.arguments = arguments
         self.num_required = sum(
             [1 if arg.default is None else 0 for arg in arguments[1:]]
+        )
+        self.options_index = self.num_required - sum(
+            [
+                1 if arg.kwarg_only and arg.default is None else 0
+                for arg in arguments[1:]
+            ]
         )
         self.returns_name = returns_name
         self.returns_type = returns_type

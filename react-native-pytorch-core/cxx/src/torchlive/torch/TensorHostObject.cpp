@@ -118,6 +118,84 @@ jsi::Value addImpl(
       "Arguments for op add do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)");
 }
 
+jsi::Value argmaxImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  if (args.atLeastNumArguments(0) &&
+      (args.keywordValue(0, "dim").isUndefined() ||
+       args.keywordValue(0, "dim").isNumber()) &&
+      (args.keywordValue(0, "keepdim").isUndefined() ||
+       args.keywordValue(0, "keepdim").isBool())) {
+    try {
+      auto self = args.thisAsHostObject<TensorHostObject>();
+      auto dimValue = args.keywordValue(0, "dim");
+      c10::optional<int64_t> dim = dimValue.isUndefined()
+          ? c10::nullopt
+          : (c10::optional<int64_t>)dimValue.asNumber();
+      auto keepdimValue = args.keywordValue(0, "keepdim");
+      auto keepdim =
+          keepdimValue.isUndefined() ? false : keepdimValue.getBool();
+
+      at::Tensor result =
+          self->tensor.argmax(dim, keepdim)
+              .to(torch_::TensorOptions().dtype(torch_::kInt32));
+      return utils::helpers::createFromHostObject<TensorHostObject>(
+          runtime, std::move(result));
+    } catch (jsi::JSError& error) {
+      // Arguments do not match signature at::Tensor (const at::Tensor &,
+      // c10::optional<int64_t>, bool)
+    } catch (std::exception& ex) {
+      throw std::move(ex);
+    }
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op argmax do not match any of the following signatures:at::Tensor (const at::Tensor &, c10::optional<int64_t>, bool)");
+}
+
+jsi::Value argminImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  if (args.atLeastNumArguments(0) &&
+      (args.keywordValue(0, "dim").isUndefined() ||
+       args.keywordValue(0, "dim").isNumber()) &&
+      (args.keywordValue(0, "keepdim").isUndefined() ||
+       args.keywordValue(0, "keepdim").isBool())) {
+    try {
+      auto self = args.thisAsHostObject<TensorHostObject>();
+      auto dimValue = args.keywordValue(0, "dim");
+      c10::optional<int64_t> dim = dimValue.isUndefined()
+          ? c10::nullopt
+          : (c10::optional<int64_t>)dimValue.asNumber();
+      auto keepdimValue = args.keywordValue(0, "keepdim");
+      auto keepdim =
+          keepdimValue.isUndefined() ? false : keepdimValue.getBool();
+
+      at::Tensor result =
+          self->tensor.argmin(dim, keepdim)
+              .to(torch_::TensorOptions().dtype(torch_::kInt32));
+      return utils::helpers::createFromHostObject<TensorHostObject>(
+          runtime, std::move(result));
+    } catch (jsi::JSError& error) {
+      // Arguments do not match signature at::Tensor (const at::Tensor &,
+      // c10::optional<int64_t>, bool)
+    } catch (std::exception& ex) {
+      throw std::move(ex);
+    }
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op argmin do not match any of the following signatures:at::Tensor (const at::Tensor &, c10::optional<int64_t>, bool)");
+}
+
 jsi::Value itemImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -320,10 +398,8 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
       tensor(t) {
   setPropertyHostFunction(runtime, "abs", 0, absImpl);
   setPropertyHostFunction(runtime, "add", 1, addImpl);
-  setPropertyHostFunction(
-      runtime, "argmax", 0, TensorHostObjectDeprecated::argmaxImpl);
-  setPropertyHostFunction(
-      runtime, "argmin", 0, TensorHostObjectDeprecated::argminImpl);
+  setPropertyHostFunction(runtime, "argmax", 0, argmaxImpl);
+  setPropertyHostFunction(runtime, "argmin", 0, argminImpl);
   setPropertyHostFunction(
       runtime, "clamp", 0, TensorHostObjectDeprecated::clampImpl);
   setPropertyHostFunction(

@@ -37,8 +37,9 @@ class Image : public IImage {
 
   void close() const override;
 
- private:
   facebook::jni::global_ref<JIImage> image_;
+
+ private:
   std::string id_;
 };
 

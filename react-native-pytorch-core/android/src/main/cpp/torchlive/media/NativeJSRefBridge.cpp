@@ -80,6 +80,27 @@ std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
       std::move(data), size, type->toStdString());
 }
 
+std::unique_ptr<torchlive::media::Blob> toBlob(std::shared_ptr<IImage> image) {
+  std::shared_ptr<Image> derivedImage = std::dynamic_pointer_cast<Image>(image);
+
+  auto mediaUtilsClass = getMediaUtilsClass();
+  auto imageToByteBufferMethod =
+      mediaUtilsClass
+          ->getStaticMethod<local_ref<JByteBuffer>(alias_ref<JIImage>)>(
+              "imageToByteBuffer");
+
+  local_ref<JByteBuffer> buffer =
+      imageToByteBufferMethod(mediaUtilsClass, derivedImage->image_);
+
+  uint8_t* const bytes = buffer->getDirectBytes();
+  size_t const size = buffer->getDirectSize();
+  auto data = std::make_unique<uint8_t[]>(size);
+  std::memcpy(data.get(), bytes, size);
+  std::string blobType = Blob::kBlobTypeImageRGB;
+  return std::make_unique<torchlive::media::Blob>(
+      std::move(data), size, blobType);
+}
+
 } // namespace media
 
 namespace experimental {

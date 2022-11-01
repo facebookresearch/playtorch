@@ -23,6 +23,8 @@ imageFromBlob(const Blob& blob, double width, double height);
 
 std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId);
 
+std::unique_ptr<torchlive::media::Blob> toBlob(std::shared_ptr<IImage> image);
+
 } // namespace media
 
 namespace experimental {

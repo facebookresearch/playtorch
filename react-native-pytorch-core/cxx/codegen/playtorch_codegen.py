@@ -3,6 +3,8 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+from copy import copy
+
 from ..codegen.code_strings import cpp_code_strings, ts_code_strings
 from ..codegen.op_data_structures import Argument, OpGroup, OpInfo
 from ..codegen.tensor_interface_deprecated import tensor_interface_deprecated
@@ -12,13 +14,22 @@ bigint_error_ops = ["item"]
 js_only_ops = ["data"]
 
 
+def remove_self(arguments: [Argument]):
+    if arguments[0].name == "self":
+        return arguments[1:]
+    self_index = [arg.name for arg in arguments].index("self")
+    new_arguments = copy(arguments)
+    new_arguments.pop(self_index)
+    return new_arguments
+
+
 def get_check_argument_types_string(op: OpInfo):
     condition_list = [
         cpp_code_strings.at_least_num_arguments_template.substitute(
             {"num_args": op.num_required}
         )
     ]
-    for i, arg in enumerate(op.arguments[1:]):  # first argument is always self
+    for i, arg in enumerate(remove_self(op.arguments)):  # first argument is always self
         substitutions = {"name": arg.name}
         try:
             if arg.is_kwarg():
@@ -81,10 +92,11 @@ def get_returns_string(op: OpInfo) -> str:
                     "return_type": op.returns[0].type_,
                     "returns_name": op.returns[0].name,
                     "operator_name": op.name,
-                    "arguments": ", ".join([arg.name for arg in op.arguments[1:]])
+                    "arguments": ", ".join(
+                        [arg.name for arg in remove_self(op.arguments)]
+                    )
                     if len(op.arguments) > 1
                     else "",
-                    "self": op.arguments[0].name,
                 }
             )
         else:
@@ -96,10 +108,11 @@ def get_returns_string(op: OpInfo) -> str:
                     {
                         "return_type": intermediate_return_type,
                         "operator_name": op.name,
-                        "arguments": ", ".join([arg.name for arg in op.arguments[1:]])
+                        "arguments": ", ".join(
+                            [arg.name for arg in remove_self(op.arguments)]
+                        )
                         if len(op.arguments) > 1
                         else "",
-                        "self": op.arguments[0].name,
                     }
                 )
             )
@@ -128,11 +141,11 @@ def gen_cpp_func(op: OpInfo):
     arguments_string = "\n".join(
         [
             get_argument_string(arg, op.options_index if arg.is_kwarg() else i)
-            for i, arg in enumerate(op.arguments[1:])
+            for i, arg in enumerate(remove_self(op.arguments))
         ]
     )
     all_args_implemented = True
-    for argument in op.arguments[1:]:
+    for argument in remove_self(op.arguments):
         if not argument.implemented:
             all_args_implemented = False
             break
@@ -160,11 +173,7 @@ def gen_cpp_func_impl(op_group: OpGroup) -> str:
             {"op_name": op_group.name}
         )
     op_group.ops.sort(key=lambda op: op.num_required, reverse=True)
-    if any([not op.arguments[0].name == "self" for op in op_group.ops]):
-        return ""
-    function_string += cpp_code_strings.get_self_template.substitute(
-        {"name": op_group.ops[0].arguments[0].name}
-    )
+    function_string += cpp_code_strings.get_self_string
     for op in op_group.ops:
         function_string += gen_cpp_func(op)
     signatures_string = ", ".join(
@@ -224,7 +233,7 @@ def gen_cpp_code(ops, deprecated_tensor_ops: [str]) -> str:
 def gen_ts_arguments_string(op: OpInfo) -> str:
     argument_strings = []
     options = []
-    for arg in op.arguments[1 : op.options_index + 1]:
+    for arg in remove_self(op.arguments)[: op.options_index + 1]:
         if arg.default is None:
             argument_strings.append(
                 ts_code_strings.arg_template.substitute(
@@ -264,7 +273,7 @@ def gen_ts_arguments_string(op: OpInfo) -> str:
                     if any(
                         [
                             arg.default is None
-                            for arg in op.arguments[op.options_index + 1 :]
+                            for arg in remove_self(op.arguments)[op.options_index + 1 :]
                         ]
                     )
                     else "?",
@@ -277,7 +286,7 @@ def gen_ts_arguments_string(op: OpInfo) -> str:
 
 def gen_ts_params_string(op: OpInfo) -> str:
     params = []
-    for arg in op.arguments[1 : op.options_index + 1]:
+    for arg in remove_self(op.arguments)[: op.options_index + 1]:
         params.append(
             ts_code_strings.param_template.substitute(
                 {
@@ -286,7 +295,7 @@ def gen_ts_params_string(op: OpInfo) -> str:
                 }
             )
         )
-    for arg in op.arguments[op.options_index + 1 :]:
+    for arg in remove_self(op.arguments)[op.options_index + 1 :]:
         params.append(
             ts_code_strings.param_template.substitute(
                 {

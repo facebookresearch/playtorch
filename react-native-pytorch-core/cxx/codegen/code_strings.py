@@ -69,9 +69,7 @@ cpp_set_property_host_function_template = Template(
 cpp_tensor_host_object_end = "}\n\n"
 
 
-cpp_get_self_template = Template(
-    """auto ${name} = args.thisAsHostObject<TensorHostObject>();"""
-)
+cpp_get_self_string = """auto self = args.thisAsHostObject<TensorHostObject>();"""
 
 cpp_positional_argument_string_templates = {
     "const at::Tensor &": Template(
@@ -114,7 +112,7 @@ cpp_required_kword_argument_string_templates = {
 
 cpp_returns_type_templates = {
     "at::Tensor": Template(
-        """${return_type} ${returns_name} = ${self}->tensor.${operator_name}(${arguments});
+        """${return_type} ${returns_name} = self->tensor.${operator_name}(${arguments});
 if(${returns_name}.dtype() == utils::constants::getDtypeFromString("int64")) {
   ${returns_name} = ${returns_name}.to(c10::ScalarType::Int);
 }
@@ -122,14 +120,14 @@ return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move
     ),
     "at::Tensor &": Template(
         """
-            auto ${returns_name}Return = ${self}->tensor.${operator_name}(${arguments});
+            auto ${returns_name}Return = self->tensor.${operator_name}(${arguments});
             if(${returns_name}Return.dtype() == utils::constants::getDtypeFromString("int64")) {
                 ${returns_name}Return = ${returns_name}Return.to(c10::ScalarType::Int);
             }
             return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(${returns_name}Return));"""
     ),
     "at::Scalar": Template(
-        """auto ${returns_name} = ${self}->tensor.${operator_name}(${arguments});
+        """auto ${returns_name} = self->tensor.${operator_name}(${arguments});
 if (${returns_name}.isIntegral(/*includeBool=*/false)) {
   return jsi::Value(${returns_name}.toInt());
 } else if (${returns_name}.isFloatingPoint()) {
@@ -140,7 +138,7 @@ if (${returns_name}.isIntegral(/*includeBool=*/false)) {
     ),
     "null": Template(
         """
-          ${self}->tensor.${operator_name}(${arguments});
+          self->tensor.${operator_name}(${arguments});
           return jsi::Value::null();"""
     ),
 }
@@ -154,7 +152,7 @@ cpp_check_argument_type_templates = {
 
 intermediate_return_value_template = Template(
     """
-        ${return_type} intermediateTuple = ${self}->tensor.${operator_name}(${arguments});"""
+        ${return_type} intermediateTuple = self->tensor.${operator_name}(${arguments});"""
 )
 
 unwrap_intermediate_return_type_templates = {
@@ -214,7 +212,7 @@ class CppCodeStrings:
     tensor_host_object_start: str
     set_property_host_function_template: Template
     file_end: str
-    get_self_template: Template
+    get_self_string: Template
     positional_argument_string_templates: Dict[str, Template]
     kword_argument_string_templates: Dict[str, Template]
     required_kword_argument_string_templates: Dict[str, Template]
@@ -240,7 +238,7 @@ class CppCodeStrings:
             cpp_set_property_host_function_template
         )
         self.tensor_host_object_end = cpp_tensor_host_object_end
-        self.get_self_template = cpp_get_self_template
+        self.get_self_string = cpp_get_self_string
         self.positional_argument_string_templates = (
             cpp_positional_argument_string_templates
         )

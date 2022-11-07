@@ -1172,6 +1172,32 @@ TEST_F(TorchliveTensorRuntimeTest, TensorItemTest) {
       facebook::jsi::JSError);
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorPolygammaTest) {
+  std::string tensorPolygamma =
+      R"(
+        const tensor = torch.tensor([1, 0.5]);
+        const output = tensor.polygamma(1).to({dtype: torch.int});
+        output[0].item() == 1 && output[1].item() == 4;
+      )";
+  EXPECT_TRUE(eval(tensorPolygamma).getBool());
+
+  std::string tensorPolygamma1 =
+      R"(
+        const tensor = torch.tensor([1, 0.5]);
+        const output = tensor.polygamma(2).to({dtype: torch.int});
+        output[0].item() == -2 && output[1].item() == -16;
+      )";
+  EXPECT_TRUE(eval(tensorPolygamma1).getBool());
+
+  std::string tensorPolygamma2 =
+      R"(
+        const tensor = torch.tensor([1, 0.5]);
+        const output = tensor.polygamma(3).to({dtype: torch.int});
+        output[0].item() == 6 && output[1].item() == 97;
+      )";
+  EXPECT_TRUE(eval(tensorPolygamma2).getBool());
+}
+
 TEST_F(TorchliveTensorRuntimeTest, TensorSqrtTest) {
   std::string tensorSqrtForNegative =
       R"(

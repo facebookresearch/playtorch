@@ -4925,6 +4925,30 @@ jsi::Value hardshrinkImpl(
       "Arguments for op hardshrink do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &)");
 }
 
+jsi::Value hardshrinkBackwardImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isScalar(1)) {
+    auto gradOut = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto lambd = args.asScalar(1);
+    at::Tensor result = self->tensor.hardshrink_backward(gradOut, lambd);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op hardshrink_backward do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &)");
+}
+
 jsi::Value heavisideImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -7467,6 +7491,28 @@ jsi::Value permuteImpl(
       "Arguments for op permute do not match any of the following signatures:at::Tensor (const at::Tensor &, at::IntArrayRef)");
 }
 
+jsi::Value polygammaImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isInt64(0)) {
+    auto n = args.asInt64(0);
+    at::Tensor result = self->tensor.polygamma(n);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op polygamma do not match any of the following signatures:at::Tensor (int64_t, const at::Tensor &)");
+}
+
 jsi::Value polygamma_Impl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -7597,6 +7643,42 @@ jsi::Value preluImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op prelu do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value preluBackwardImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isHostObject<TensorHostObject>(1)) {
+    auto gradOutput = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto weight = args.asHostObject<TensorHostObject>(1)->tensor;
+
+    ::std::tuple<at::Tensor, at::Tensor> intermediateTuple =
+        self->tensor.prelu_backward(gradOutput, weight);
+    auto result0Tensor = std::get<0>(intermediateTuple);
+    if (result0Tensor.dtype() ==
+        utils::constants::getDtypeFromString("int64")) {
+      result0Tensor = result0Tensor.to(c10::ScalarType::Int);
+    }
+    auto result0 = utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, result0Tensor);
+    auto result1Tensor = std::get<1>(intermediateTuple);
+    if (result1Tensor.dtype() ==
+        utils::constants::getDtypeFromString("int64")) {
+      result1Tensor = result1Tensor.to(c10::ScalarType::Int);
+    }
+    auto result1 = utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, result1Tensor);
+    return jsi::Array::createWithElements(runtime, result0, result1);
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op prelu_backward do not match any of the following signatures:::std::tuple<at::Tensor,at::Tensor> (const at::Tensor &, const at::Tensor &, const at::Tensor &)");
 }
 
 jsi::Value putImpl(
@@ -10089,6 +10171,30 @@ jsi::Value viewAsImpl(
       "Arguments for op view_as do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value whereImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isHostObject<TensorHostObject>(1)) {
+    auto condition = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto other = args.asHostObject<TensorHostObject>(1)->tensor;
+    at::Tensor result = self->tensor.where(condition, other);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op where do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value xlogyImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -10405,7 +10511,8 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "gt", 1, gtImpl);
   setPropertyHostFunction(runtime, "gt_", 1, gt_Impl);
   setPropertyHostFunction(runtime, "hardshrink", 0, hardshrinkImpl);
-
+  setPropertyHostFunction(
+      runtime, "hardshrinkBackward", 2, hardshrinkBackwardImpl);
   setPropertyHostFunction(runtime, "heaviside", 1, heavisideImpl);
   setPropertyHostFunction(runtime, "heaviside_", 1, heaviside_Impl);
   setPropertyHostFunction(runtime, "histc", 0, histcImpl);
@@ -10526,11 +10633,13 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
 
   setPropertyHostFunction(runtime, "permute", 1, permuteImpl);
 
+  setPropertyHostFunction(runtime, "polygamma", 1, polygammaImpl);
   setPropertyHostFunction(runtime, "polygamma_", 1, polygamma_Impl);
   setPropertyHostFunction(runtime, "positive", 0, positiveImpl);
   setPropertyHostFunction(runtime, "pow", 1, powImpl);
   setPropertyHostFunction(runtime, "pow_", 1, pow_Impl);
   setPropertyHostFunction(runtime, "prelu", 1, preluImpl);
+  setPropertyHostFunction(runtime, "preluBackward", 2, preluBackwardImpl);
 
   setPropertyHostFunction(runtime, "put", 2, putImpl);
   setPropertyHostFunction(runtime, "put_", 2, put_Impl);
@@ -10662,6 +10771,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
 
   setPropertyHostFunction(runtime, "viewAs", 1, viewAsImpl);
 
+  setPropertyHostFunction(runtime, "where", 2, whereImpl);
   setPropertyHostFunction(runtime, "xlogy", 1, xlogyImpl);
   setPropertyHostFunction(runtime, "xlogy_", 1, xlogy_Impl);
   setPropertyHostFunction(runtime, "zero_", 0, zero_Impl);

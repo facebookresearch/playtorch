@@ -144,6 +144,64 @@ jsi::Value argminImpl(
       "Arguments for op argmin do not match any of the following signatures:at::Tensor (const at::Tensor &, c10::optional<int64_t>, bool)");
 }
 
+jsi::Value divImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isStringKwarg(1, "roundingMode", true)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto roundingMode =
+        c10::optional<c10::string_view>(args.asStringKwarg(1, "roundingMode"));
+    at::Tensor result = self->tensor.div(other, roundingMode);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
+  }
+
+  if (args.atLeastNumArguments(2) && args.isScalar(0) &&
+      args.isStringKwarg(1, "roundingMode", true)) {
+    auto other = args.asScalar(0);
+    auto roundingMode =
+        c10::optional<c10::string_view>(args.asStringKwarg(1, "roundingMode"));
+    at::Tensor result = self->tensor.div(other, roundingMode);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+    at::Tensor result = self->tensor.div(other);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+    at::Tensor result = self->tensor.div(other);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op div do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, c10::optional<c10::string_view>), at::Tensor (const at::Tensor &, const at::Scalar &, c10::optional<c10::string_view>), at::Tensor (const at::Tensor &, const at::Tensor &), at::Tensor (const at::Tensor &, const at::Scalar &)");
+}
+
 jsi::Value expandImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -422,8 +480,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
       runtime, "contiguous", 0, TensorHostObjectDeprecated::contiguousImpl);
   setPropertyHostFunction(
       runtime, "data", 0, TensorHostObjectDeprecated::dataImpl);
-  setPropertyHostFunction(
-      runtime, "div", 1, TensorHostObjectDeprecated::divImpl);
+  setPropertyHostFunction(runtime, "div", 1, divImpl);
   setPropertyHostFunction(runtime, "expand", 1, expandImpl);
   setPropertyHostFunction(runtime, "flip", 1, flipImpl);
   setPropertyHostFunction(runtime, "item", 0, itemImpl);

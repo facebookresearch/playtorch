@@ -6,6 +6,7 @@
  */
 
 #include <cmath>
+#include <exception>
 
 #include "../TensorHostObject.h"
 #include "ArgumentParser.h"
@@ -126,6 +127,18 @@ bool ArgumentParser::isIntArrayRef(size_t idx) const {
       (args_[0].isObject() && args_[0].asObject(runtime_).isArray(runtime_));
 }
 
+bool ArgumentParser::isStringKwarg(
+    size_t idx,
+    const std::string& keyword,
+    bool required) const {
+  try {
+    asStringKwarg(idx, keyword);
+  } catch (std::exception& ex) {
+    return required ? false : keywordValue(idx, keyword).isUndefined();
+  }
+  return true;
+}
+
 at::Scalar ArgumentParser::asScalar(size_t idx) const {
   return at::Scalar(args_[idx].asNumber());
 }
@@ -202,6 +215,12 @@ std::shared_ptr<std::vector<int64_t>> ArgumentParser::asIntArrayRefPtr(
   std::shared_ptr<std::vector<int64_t>> vector(new std::vector<int64_t>);
   utils::helpers::parseIntArrayRef(runtime_, args_, idx, count_, vector);
   return vector;
+}
+
+std::string ArgumentParser::asStringKwarg(
+    size_t idx,
+    const std::string& keyword) const {
+  return keywordValue(idx, keyword).asString(runtime_).utf8(runtime_);
 }
 
 } // namespace utils

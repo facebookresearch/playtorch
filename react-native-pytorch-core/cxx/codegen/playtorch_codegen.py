@@ -3,8 +3,9 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
-from ..codegen.code_strings import cpp_code_strings
+from ..codegen.code_strings import cpp_code_strings, ts_code_strings
 from ..codegen.op_data_structures import Argument, OpGroup, OpInfo
+from ..codegen.tensor_interface_deprecated import tensor_interface_deprecated
 
 bigint_error_ops = ["item"]
 
@@ -173,7 +174,6 @@ def gen_cpp_code(ops) -> str:
         )
         for op_name in sorted_ops
     ]
-
     generated_code = cpp_code_strings.start_namespace
     generated_code += "\n".join(function_impls)
     generated_code += cpp_code_strings.end_namespace
@@ -181,3 +181,111 @@ def gen_cpp_code(ops) -> str:
     generated_code += "\n".join(set_property_host_functions)
     generated_code += cpp_code_strings.tensor_host_object_end
     return generated_code
+
+
+def gen_ts_arguments_string(arguments: [Argument]) -> str:
+    argument_strings = []
+    options = []
+    for arg in arguments[1:]:
+        if arg.default is None:
+            argument_strings.append(
+                ts_code_strings.arg_template.substitute(
+                    {
+                        "name": arg.name,
+                        "type": ts_code_strings.required_argument_type_mappings[
+                            arg.type_
+                        ],
+                    }
+                )
+            )
+        else:
+            options.append(
+                ts_code_strings.arg_template.substitute(
+                    {
+                        "name": arg.name + "?",
+                        "type": ts_code_strings.optional_argument_type_mappings[
+                            arg.type_
+                        ],
+                    }
+                )
+            )
+    if len(options) > 0:
+        argument_strings.append(
+            ts_code_strings.options_template.substitute(
+                {"optional_arguments": ", ".join(options)}
+            )
+        )
+    return "(" + ", ".join(argument_strings) + ")"
+
+
+def gen_ts_params_string(arguments: [Argument]) -> str:
+    params = []
+    for arg in arguments[1:]:
+        if arg.default is None:
+            params.append(
+                ts_code_strings.param_template.substitute(
+                    {
+                        "name": arg.name,
+                        "description": "",
+                    }
+                )
+            )
+        else:
+            params.append(
+                ts_code_strings.param_template.substitute(
+                    {
+                        "name": "options." + arg.name,
+                        "description": "",
+                    }
+                )
+            )
+    return "\n".join(params)
+
+
+def gen_ts_tensor_interface(ops) -> str:
+    sorted_ops = list(ops.keys())
+    sorted_ops.append("shape")
+    sorted_ops.append("dtype")
+    sorted_ops.append("size")
+    sorted_ops.sort()
+    sorted_ops.append("index")
+    file_string = ts_code_strings.start_interface
+    for op_name in sorted_ops:
+        if op_name in ops:
+            try:
+                link = (
+                    ts_code_strings.special_case_links[op_name]
+                    if op_name in ts_code_strings.special_case_links
+                    else ts_code_strings.link_template.substitute({"name": op_name})
+                )
+                tmp_file_string = ts_code_strings.definition_template_header.substitute(
+                    {
+                        "description": ts_code_strings.op_descriptions[op_name]
+                        if op_name in ts_code_strings.op_descriptions
+                        else "",
+                        "link": link,
+                    }
+                )
+                for i, op in enumerate(ops[op_name].ops):
+                    return_type = (
+                        ts_code_strings.return_type_mappings[op.name]
+                        if op.name in ts_code_strings.return_type_mappings
+                        else ts_code_strings.return_type_mappings[op.returns[0].type_]
+                    )
+                    if i > 0:
+                        tmp_file_string += """\n  /**\n"""
+                    tmp_file_string += gen_ts_params_string(op.arguments)
+                    tmp_file_string += ts_code_strings.declaration_template.substitute(
+                        {
+                            "name": op_name,
+                            "arguments": gen_ts_arguments_string(op.arguments),
+                            "return_type": return_type,
+                        }
+                    )
+                file_string += tmp_file_string
+            except KeyError:
+                file_string += tensor_interface_deprecated[op_name]
+        else:
+            file_string += tensor_interface_deprecated[op_name]
+    file_string += ts_code_strings.end_interface
+    return file_string

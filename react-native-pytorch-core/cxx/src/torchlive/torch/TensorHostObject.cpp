@@ -144,6 +144,30 @@ jsi::Value argminImpl(
       "Arguments for op argmin do not match any of the following signatures:at::Tensor (const at::Tensor &, c10::optional<int64_t>, bool)");
 }
 
+jsi::Value contiguousImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0) &&
+      args.isMemoryFormatKwarg(0, "memoryFormat", false)) {
+    auto memoryFormat = args.asMemoryFormatKwarg(
+        0, "memoryFormat", at::MemoryFormat::Contiguous);
+    at::Tensor result = self->tensor.contiguous(memoryFormat);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op contiguous do not match any of the following signatures:at::Tensor (const at::Tensor &, at::MemoryFormat)");
+}
+
 jsi::Value divImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -476,8 +500,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "argmin", 0, argminImpl);
   setPropertyHostFunction(
       runtime, "clamp", 0, TensorHostObjectDeprecated::clampImpl);
-  setPropertyHostFunction(
-      runtime, "contiguous", 0, TensorHostObjectDeprecated::contiguousImpl);
+  setPropertyHostFunction(runtime, "contiguous", 0, contiguousImpl);
   setPropertyHostFunction(
       runtime, "data", 0, TensorHostObjectDeprecated::dataImpl);
   setPropertyHostFunction(runtime, "div", 1, divImpl);

@@ -93,6 +93,30 @@ bool ArgumentParser::isScalarKwarg(
   }
 }
 
+bool ArgumentParser::isBoolKwarg(
+    size_t idx,
+    const std::string& keyword,
+    bool required) const {
+  jsi::Value val = keywordValue(idx, keyword);
+  if (!required) {
+    return val.isUndefined() || val.isBool();
+  } else {
+    return val.isBool();
+  }
+}
+
+bool ArgumentParser::isC10OptionalInt64Kwarg(
+    size_t idx,
+    const std::string& keyword,
+    bool required) const {
+  jsi::Value val = keywordValue(idx, keyword);
+  if (!required) {
+    return val.isUndefined() || val.isNumber();
+  } else {
+    return val.isNumber();
+  }
+}
+
 at::Scalar ArgumentParser::asScalar(size_t idx) const {
   return at::Scalar(args_[idx].asNumber());
 }
@@ -113,6 +137,48 @@ at::Scalar ArgumentParser::asScalarKwarg(
     at::Scalar defaultValue) const {
   try {
     return asScalarKwarg(idx, keyword);
+  } catch (facebook::jsi::JSError& error) {
+    return defaultValue;
+  }
+}
+
+bool ArgumentParser::asBoolKwarg(size_t idx, const std::string& keyword) const {
+  auto boolValue = keywordValue(idx, keyword);
+  if (boolValue.isUndefined()) {
+    throw facebook::jsi::JSError(runtime_, "required boolValue undefined");
+  } else {
+    return boolValue.getBool();
+  }
+}
+
+bool ArgumentParser::asBoolKwarg(
+    size_t idx,
+    const std::string& keyword,
+    bool defaultValue) const {
+  try {
+    return asBoolKwarg(idx, keyword);
+  } catch (facebook::jsi::JSError& error) {
+    return defaultValue;
+  }
+}
+
+c10::optional<int64_t> ArgumentParser::asC10OptionalInt64Kwarg(
+    size_t idx,
+    const std::string& keyword) const {
+  auto value = keywordValue(idx, keyword);
+  if (value.isUndefined()) {
+    throw facebook::jsi::JSError(runtime_, "required number undefined");
+  } else {
+    return (c10::optional<int64_t>)value.asNumber();
+  }
+}
+
+c10::optional<int64_t> ArgumentParser::asC10OptionalInt64Kwarg(
+    size_t idx,
+    const std::string& keyword,
+    c10::optional<int64_t> defaultValue) const {
+  try {
+    return asC10OptionalInt64Kwarg(idx, keyword);
   } catch (facebook::jsi::JSError& error) {
     return defaultValue;
   }

@@ -415,8 +415,7 @@ export interface Tensor {
    * specified position.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.unsqueeze.html}
-   *
-   * @param dim The index at which to insert the singleton dimension.
+   * @param dim
    */
   unsqueeze(dim: number): Tensor;
   /**

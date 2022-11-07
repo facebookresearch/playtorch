@@ -9,6 +9,7 @@
 
 #include <jsi/jsi.h>
 #include <cstddef>
+#include <exception>
 #include <string>
 
 // Suppress deprecated-declarations error to support Clang/C++17
@@ -81,6 +82,10 @@ class ArgumentParser {
   bool isIntArrayRef(size_t idx) const;
   bool isStringKwarg(size_t idx, const std::string& keyword, bool required)
       const;
+  bool isMemoryFormatKwarg(
+      size_t idx,
+      const std::string& keyword,
+      bool required) const;
 
   at::Scalar asScalar(size_t idx) const;
   at::Scalar asScalarKwarg(size_t idx, const std::string& keyword) const;
@@ -101,6 +106,12 @@ class ArgumentParser {
   int64_t asInt64(size_t idx) const;
   std::shared_ptr<std::vector<int64_t>> asIntArrayRefPtr(size_t idx) const;
   std::string asStringKwarg(size_t idx, const std::string& keyword) const;
+  at::MemoryFormat asMemoryFormatKwarg(size_t idx, const std::string& keyword)
+      const;
+  at::MemoryFormat asMemoryFormatKwarg(
+      size_t idx,
+      const std::string& keyword,
+      at::MemoryFormat defaultValue) const;
 
  private:
   facebook::jsi::Runtime& runtime_;

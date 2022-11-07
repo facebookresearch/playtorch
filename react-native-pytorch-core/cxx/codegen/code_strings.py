@@ -95,6 +95,9 @@ cpp_kword_argument_string_templates = {
     "bool": Template(
         """auto ${name} = args.asBoolKwarg(${arg_index}, "${name}", ${default});"""
     ),
+    "at::MemoryFormat": Template(
+        """auto ${name} = args.asMemoryFormatKwarg(${arg_index}, "${name}", at::${default});"""
+    ),
 }
 
 cpp_required_kword_argument_string_templates = {
@@ -143,6 +146,9 @@ cpp_check_kword_argument_type_templates = {
     "bool": Template('args.isBoolKwarg(${idx}, "${name}", ${required})'),
     "c10::optional<c10::string_view>": Template(
         'args.isStringKwarg(${idx}, "${name}", ${required})'
+    ),
+    "at::MemoryFormat": Template(
+        'args.isMemoryFormatKwarg(${idx}, "${name}", ${required})'
     ),
 }
 

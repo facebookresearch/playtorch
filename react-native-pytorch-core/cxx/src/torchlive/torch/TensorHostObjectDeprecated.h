@@ -91,44 +91,6 @@ class TensorHostObjectDeprecated {
         runtime, std::move(tensor));
   }
 
-  static jsi::Value contiguousImpl(
-      jsi::Runtime& runtime,
-      const jsi::Value& thisValue,
-      const jsi::Value* arguments,
-      size_t count) {
-    /*
-    Note that memory format is not a positional argument:
-
-    >>> torch.ones(3).contiguous(torch.contiguous_format)
-    Traceback (most recent call last):
-      File "<stdin>", line 1, in <module>
-    TypeError: contiguous() takes 0 positional arguments but 1 was given
-    */
-    utils::ArgumentParser args(runtime, thisValue, arguments, count);
-
-    torch_::Tensor tensor;
-    auto memoryFormatValue = args.keywordValue(0, "memoryFormat");
-    if (memoryFormatValue.isUndefined()) {
-      tensor = args.thisAsHostObject<TensorHostObject>()->tensor.contiguous();
-    } else {
-      auto memoryFormatArg = memoryFormatValue.asString(runtime).utf8(runtime);
-      c10::MemoryFormat memoryFormat;
-      if (memoryFormatArg == utils::constants::CHANNELS_LAST) {
-        memoryFormat = c10::MemoryFormat::ChannelsLast;
-      } else if (memoryFormatArg == utils::constants::CONTIGUOUS_FORMAT) {
-        memoryFormat = c10::MemoryFormat::Contiguous;
-      } else if (memoryFormatArg == utils::constants::PRESERVE_FORMAT) {
-        memoryFormat = c10::MemoryFormat::Preserve;
-      } else {
-        throw jsi::JSError(runtime, "unknown memory format " + memoryFormatArg);
-      }
-      tensor = args.thisAsHostObject<TensorHostObject>()->tensor.contiguous(
-          memoryFormat);
-    }
-    return utils::helpers::createFromHostObject<TensorHostObject>(
-        runtime, std::move(tensor));
-  }
-
   static jsi::Value dataImpl(
       jsi::Runtime& runtime,
       const jsi::Value& thisValue,

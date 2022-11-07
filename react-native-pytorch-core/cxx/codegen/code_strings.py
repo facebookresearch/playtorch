@@ -53,8 +53,10 @@ ${get_returns_string}
 )
 
 cpp_throw_error_template = Template(
-    '            throw facebook::jsi::JSError(runtime, "Arguments for op ${op_name} do not match any of the following signatures:${signatures}");'
+    '    throw facebook::jsi::JSError(runtime, "Arguments for op ${op_name} do not match any of the following signatures:${signatures}");'
 )
+
+cpp_function_implementation_end = "  }"
 
 argument_string_templates = {
     "const at::Tensor &_self": Template(

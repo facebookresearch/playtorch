@@ -78,6 +78,7 @@ cpp_positional_argument_string_templates = {
         """            auto ${name} = args.asHostObject<TensorHostObject>(${arg_index})->tensor;"""
     ),
     "const at::Scalar &": Template("""auto ${name} = args.asScalar(${arg_index});"""),
+    "int64_t": Template("""auto ${name} = args.asInt64(${arg_index});"""),
 }
 
 cpp_kword_argument_string_templates = {
@@ -121,6 +122,7 @@ if (${returns_name}.isIntegral(/*includeBool=*/false)) {
 cpp_check_argument_type_templates = {
     "const at::Scalar &": Template("args.isScalar(${idx})"),
     "const at::Tensor &": Template("args.isHostObject<TensorHostObject>(${idx})"),
+    "int64_t": Template("args.isInt64(${idx})"),
 }
 
 cpp_check_kword_argument_type_templates = {

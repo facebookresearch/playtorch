@@ -121,6 +121,11 @@ bool ArgumentParser::isInt64(size_t idx) const {
   return args_[idx].isNumber();
 }
 
+bool ArgumentParser::isIntArrayRef(size_t idx) const {
+  return args_[0].isNumber() ||
+      (args_[0].isObject() && args_[0].asObject(runtime_).isArray(runtime_));
+}
+
 at::Scalar ArgumentParser::asScalar(size_t idx) const {
   return at::Scalar(args_[idx].asNumber());
 }
@@ -190,6 +195,13 @@ c10::optional<int64_t> ArgumentParser::asC10OptionalInt64Kwarg(
 
 int64_t ArgumentParser::asInt64(size_t idx) const {
   return asInteger(idx);
+}
+
+std::shared_ptr<std::vector<int64_t>> ArgumentParser::asIntArrayRefPtr(
+    size_t idx) const {
+  std::shared_ptr<std::vector<int64_t>> vector(new std::vector<int64_t>);
+  utils::helpers::parseIntArrayRef(runtime_, args_, idx, count_, vector);
+  return vector;
 }
 
 } // namespace utils

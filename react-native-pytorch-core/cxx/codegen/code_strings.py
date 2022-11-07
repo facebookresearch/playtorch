@@ -9,6 +9,41 @@ from ..codegen.op_data_structures import Argument, OpInfo
 
 # TensorHostObject.cpp
 
+cpp_file_start = """#include <c10/core/MemoryFormat.h>
+#include <c10/util/Optional.h>
+
+#include "TensorHostObject.h"
+#include "TensorHostObjectDeprecated.h"
+#include "utils/ArgumentParser.h"
+#include "utils/constants.h"
+#include "utils/helpers.h"
+
+// Namespace alias for torch to avoid namespace conflicts with torchlive::torch
+namespace torch_ = torch;
+
+namespace torchlive {
+namespace torch {
+
+// TensorHostObject Method Names
+static const std::string SIZE = "size";
+static const std::string TOSTRING = "toString";
+
+// TensorHostObject Property Names
+static const std::string DATA = "data";
+static const std::string DTYPE = "dtype";
+static const std::string SHAPE = "shape";
+
+// TensorHostObject Properties
+static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
+
+// TensorHostObject Methods
+static const std::vector<std::string> METHODS = {SIZE, TOSTRING};
+
+using namespace facebook;
+
+"""
+cpp_start_namespace = """namespace {"""
+
 cpp_function_implementation_start = Template(
     """
 
@@ -57,6 +92,117 @@ cpp_throw_error_template = Template(
 )
 
 cpp_function_implementation_end = "  }"
+
+cpp_end_namespace = "\n}\n"
+
+# new
+
+tensor_host_object_start = """
+TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
+  : BaseHostObject(runtime),
+  size_(createSize(runtime)),
+  toString_(createToString(runtime)),
+  tensor(t) {
+"""
+
+set_property_host_function_template = Template(
+    """    setPropertyHostFunction(runtime, "${operator_name}", ${num_required_args}, ${namespace}${operator_name}Impl);
+"""
+)
+
+
+cpp_file_end = """}
+
+TensorHostObject::~TensorHostObject() {}
+
+std::vector<jsi::PropNameID> TensorHostObject::getPropertyNames(
+  jsi::Runtime& runtime) {
+    auto result = BaseHostObject::getPropertyNames(runtime);
+    for (std::string property : PROPERTIES) {
+      result.push_back(jsi::PropNameID::forUtf8(runtime, property));
+    }
+    for (std::string method : METHODS) {
+      result.push_back(jsi::PropNameID::forUtf8(runtime, method));
+    }
+    return result;
+}
+
+jsi::Value TensorHostObject::get(
+  jsi::Runtime& runtime,
+  const jsi::PropNameID& propNameId) {
+      auto name = propNameId.utf8(runtime);
+
+      if (name == DTYPE) {
+        return jsi::String::createFromUtf8(
+          runtime,
+          utils::constants::getStringFromDtype(
+            caffe2::typeMetaToScalarType(this->tensor.dtype())));
+      } else if (name == SHAPE) {
+        return this->size_.call(runtime);
+      } else if (name == SIZE) {
+        return jsi::Value(runtime, size_);
+      } else if (name == TOSTRING) {
+        return jsi::Value(runtime, toString_);
+      }
+
+      int idx = -1;
+      try {
+        idx = std::stoi(name.c_str());
+      } catch (...) {
+        // Cannot parse name value to int. This can happen when the name in bracket
+        // or dot notion is not an int (e.g., tensor['foo']).
+        // Let's ignore this exception here since this function will return
+        // undefined if it reaches the function end.
+      }
+      // Check if index is within bounds of dimension 0
+      if (idx >= 0 && idx < this->tensor.size(0)) {
+        auto outputTensor = this->tensor.index({idx});
+        auto tensorHostObject =
+        std::make_shared<torchlive::torch::TensorHostObject>(
+          runtime, std::move(outputTensor));
+        return jsi::Object::createFromHostObject(runtime, tensorHostObject);
+      }
+
+      return BaseHostObject::get(runtime, propNameId);
+    }
+
+jsi::Function TensorHostObject::createToString(jsi::Runtime& runtime) {
+  auto toStringFunc = [this](
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) -> jsi::Value {
+      auto tensor = this->tensor;
+      std::ostringstream stream;
+      stream << tensor;
+      std::string tensor_string = stream.str();
+      auto val = jsi::String::createFromUtf8(runtime, tensor_string);
+      return jsi::Value(std::move(val));
+    };
+    return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, TOSTRING), 0, toStringFunc);
+  }
+
+jsi::Function TensorHostObject::createSize(jsi::Runtime& runtime) {
+  auto sizeFunc = [this](
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) -> jsi::Value {
+      auto tensor = this->tensor;
+      torch_::IntArrayRef dims = tensor.sizes();
+      jsi::Array jsShape = jsi::Array(runtime, dims.size());
+      for (int i = 0; i < dims.size(); i++) {
+        jsShape.setValueAtIndex(runtime, i, jsi::Value((int)dims[i]));
+      }
+      return jsShape;
+    };
+    return jsi::Function::createFromHostFunction(
+      runtime, jsi::PropNameID::forUtf8(runtime, SIZE), 0, sizeFunc);
+  }
+} // namespace torch
+} // namespace torchlive
+"""
 
 argument_string_templates = {
     "const at::Tensor &_self": Template(

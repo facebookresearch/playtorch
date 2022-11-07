@@ -244,56 +244,6 @@ class TensorHostObjectDeprecated {
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(tensor));
   };
-
-  static jsi::Value topkImpl(
-      jsi::Runtime& runtime,
-      const jsi::Value& thisValue,
-      const jsi::Value* arguments,
-      size_t count) {
-    utils::ArgumentParser args(runtime, thisValue, arguments, count);
-    args.requireNumArguments(1);
-
-    auto k = args[0].asNumber();
-
-    auto dimValue = args.keywordValue(1, "dim");
-    int64_t dim = -1;
-    if (!dimValue.isUndefined()) {
-      dim = dimValue.asNumber();
-    }
-
-    auto largestValue = args.keywordValue(1, "largest");
-    bool largest = true;
-    if (largestValue.isBool()) {
-      largest = largestValue.getBool();
-    } else if (!largestValue.isUndefined()) {
-      throw jsi::JSError(
-          runtime,
-          "expect 'largest' to be boolean, but another type is given.");
-    }
-
-    auto sortedValue = args.keywordValue(1, "sorted");
-    bool sorted = true;
-    if (sortedValue.isBool()) {
-      sorted = sortedValue.getBool();
-    } else if (!sortedValue.isUndefined()) {
-      throw jsi::JSError(
-          runtime, "expect 'sorted' to be boolean, but another type is given.");
-    }
-
-    auto resultTuple = args.thisAsHostObject<TensorHostObject>()->tensor.topk(
-        k, dim, largest, sorted);
-    auto values = utils::helpers::createFromHostObject<TensorHostObject>(
-        runtime, std::get<0>(resultTuple));
-    /**
-     * NOTE: We need to convert the int64 type to int32 since Hermes does not
-     * support Int64 data types yet.
-     */
-    auto indicesInt64Tensor = std::get<1>(resultTuple);
-    auto indices = utils::helpers::createFromHostObject<TensorHostObject>(
-        runtime, indicesInt64Tensor.to(c10::ScalarType::Int));
-
-    return jsi::Array::createWithElements(runtime, values, indices);
-  };
 };
 } // namespace torch
 } // namespace torchlive

@@ -404,12 +404,10 @@ export interface Tensor {
    * and the second represents the indices of the k largest elements.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.topk.html}
-   *
-   * @param k The k in "top-k"
-   * @param options topk Options as keywords argument in pytorch
-   * @param options.dim The dimension to sort along. If dim is not given, the last dimension of the input is chosen.
-   * @param options.largest Controls whether to return largest or smallest elements. It is set to True by default.
-   * @param options.sorted Controls whether to return the elements in sorted order. It is set to True by default.
+   * @param k
+   * @param options.dim
+   * @param options.largest
+   * @param options.sorted
    */
   topk(
     k: number,

@@ -12,9 +12,7 @@ from typing import Dict
 cpp_start_namespace = """namespace {"""
 
 cpp_function_implementation_start = Template(
-    """
-
-jsi::Value ${operator_name}Impl(
+    """jsi::Value ${operator_name}Impl(
   jsi::Runtime& runtime,
   const jsi::Value& thisValue,
   const jsi::Value* arguments,
@@ -49,10 +47,10 @@ if(${check_argument_types}) {
 )
 
 cpp_throw_error_template = Template(
-    '    throw facebook::jsi::JSError(runtime, "Arguments for op ${op_name} do not match any of the following signatures:${signatures}");'
+    'throw facebook::jsi::JSError(runtime, "Arguments for op ${op_name} do not match any of the following signatures:${signatures}");'
 )
 
-cpp_function_implementation_end = "  }"
+cpp_function_implementation_end = "}"
 
 cpp_end_namespace = "\n} // namespace\n"
 
@@ -65,53 +63,49 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
 """
 
 cpp_set_property_host_function_template = Template(
-    """    setPropertyHostFunction(runtime, "${operator_name}", ${num_required_args}, ${namespace}${operator_name}Impl);"""
+    """setPropertyHostFunction(runtime, "${operator_name}", ${num_required_args}, ${namespace}${operator_name}Impl);"""
 )
 
 cpp_tensor_host_object_end = "}\n\n"
 
 
 cpp_get_self_template = Template(
-    """            auto ${name} = args.thisAsHostObject<TensorHostObject>();"""
+    """auto ${name} = args.thisAsHostObject<TensorHostObject>();"""
 )
 
 cpp_positional_argument_string_templates = {
     "const at::Tensor &": Template(
         """            auto ${name} = args.asHostObject<TensorHostObject>(${arg_index})->tensor;"""
     ),
-    "const at::Scalar &": Template(
-        """            auto ${name} = args.asScalar(${arg_index});"""
-    ),
+    "const at::Scalar &": Template("""auto ${name} = args.asScalar(${arg_index});"""),
 }
 
 cpp_kword_argument_string_templates = {
     "const at::Scalar &": Template(
-        """            auto ${name} = args.asScalarKwarg(${arg_index}, "${name}", at::Scalar(${default}));"""
+        """auto ${name} = args.asScalarKwarg(${arg_index}, "${name}", at::Scalar(${default}));"""
     ),
 }
 
 cpp_required_kword_argument_string_templates = {
     "const at::Scalar &": Template(
-        """            auto ${name} = args.asScalarKwarg(${arg_index}, "${name}");"""
+        """auto ${name} = args.asScalarKwarg(${arg_index}, "${name}");"""
     ),
 }
 
 cpp_returns_type_templates = {
     "at::Tensor": Template(
-        """
-            ${return_type} ${returns_name} = ${self}->tensor.${operator_name}(${arguments});
-            return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(${returns_name}));"""
+        """${return_type} ${returns_name} = ${self}->tensor.${operator_name}(${arguments});
+return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(${returns_name}));"""
     ),
     "at::Scalar": Template(
-        """
-            auto ${returns_name} = ${self}->tensor.${operator_name}(${arguments});
-            if (${returns_name}.isIntegral(/*includeBool=*/false)) {
-                return jsi::Value(${returns_name}.toInt());
-            } else if (${returns_name}.isFloatingPoint()) {
-                return jsi::Value(${returns_name}.toDouble());
-            } else {
-                throw jsi::JSError(runtime, "unsupported dtype for item().");
-            }"""
+        """auto ${returns_name} = ${self}->tensor.${operator_name}(${arguments});
+if (${returns_name}.isIntegral(/*includeBool=*/false)) {
+  return jsi::Value(${returns_name}.toInt());
+} else if (${returns_name}.isFloatingPoint()) {
+  return jsi::Value(${returns_name}.toDouble());
+} else {
+  throw jsi::JSError(runtime, "unsupported dtype for item().");
+}"""
     ),
 }
 
@@ -127,7 +121,7 @@ cpp_check_kword_argument_type_templates = {
 }
 
 cpp_argument_string_error_template = Template(
-    '            throw facebook::jsi::JSError(runtime, "Argument parsing for type ${arg_type} has not been implemented yet");'
+    'throw facebook::jsi::JSError(runtime, "Argument parsing for type ${arg_type} has not been implemented yet");'
 )
 
 cpp_returns_string_error_template = Template(

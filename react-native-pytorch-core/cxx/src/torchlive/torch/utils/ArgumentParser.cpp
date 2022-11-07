@@ -10,6 +10,7 @@
 
 #include "../TensorHostObject.h"
 #include "ArgumentParser.h"
+#include "constants.h"
 #include "helpers.h"
 
 namespace torchlive {
@@ -139,6 +140,18 @@ bool ArgumentParser::isStringKwarg(
   return true;
 }
 
+bool ArgumentParser::isMemoryFormatKwarg(
+    size_t idx,
+    const std::string& keyword,
+    bool required) const {
+  try {
+    asMemoryFormatKwarg(idx, keyword);
+  } catch (std::exception& ex) {
+    return required ? false : keywordValue(idx, keyword).isUndefined();
+  }
+  return true;
+}
+
 at::Scalar ArgumentParser::asScalar(size_t idx) const {
   return at::Scalar(args_[idx].asNumber());
 }
@@ -221,6 +234,32 @@ std::string ArgumentParser::asStringKwarg(
     size_t idx,
     const std::string& keyword) const {
   return keywordValue(idx, keyword).asString(runtime_).utf8(runtime_);
+}
+
+at::MemoryFormat ArgumentParser::asMemoryFormatKwarg(
+    size_t idx,
+    const std::string& keyword) const {
+  auto memoryFormatString = asStringKwarg(idx, keyword);
+  if (memoryFormatString == utils::constants::CHANNELS_LAST) {
+    return c10::MemoryFormat::ChannelsLast;
+  } else if (memoryFormatString == utils::constants::CONTIGUOUS_FORMAT) {
+    return c10::MemoryFormat::Contiguous;
+  } else if (memoryFormatString == utils::constants::PRESERVE_FORMAT) {
+    return c10::MemoryFormat::Preserve;
+  } else {
+    throw jsi::JSError(runtime_, "unknown memory format ");
+  }
+}
+
+at::MemoryFormat ArgumentParser::asMemoryFormatKwarg(
+    size_t idx,
+    const std::string& keyword,
+    at::MemoryFormat defaultValue) const {
+  try {
+    return asMemoryFormatKwarg(idx, keyword);
+  } catch (std::exception& ex) {
+    return defaultValue;
+  }
 }
 
 } // namespace utils

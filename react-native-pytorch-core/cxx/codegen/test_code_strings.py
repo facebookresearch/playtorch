@@ -19,7 +19,7 @@ gen_cpp_func_add0 = """
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &)
         } catch (std::exception& ex) {
-            throw std::move(ex);
+            throw facebook::jsi::JSError(runtime, ex.what());
         }
     }
 """
@@ -40,7 +40,7 @@ gen_cpp_func_add1 = """
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)
         } catch (std::exception& ex) {
-            throw std::move(ex);
+            throw facebook::jsi::JSError(runtime, ex.what());
         }
     }
 """
@@ -75,7 +75,7 @@ gen_cpp_func_item = """
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Scalar (const at::Tensor &)
         } catch (std::exception& ex) {
-            throw std::move(ex);
+            throw facebook::jsi::JSError(runtime, ex.what());
         }
     }
 """
@@ -104,7 +104,7 @@ jsi::Value addImpl(
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &)
         } catch (std::exception& ex) {
-            throw std::move(ex);
+            throw facebook::jsi::JSError(runtime, ex.what());
         }
     }
 
@@ -123,7 +123,7 @@ jsi::Value addImpl(
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)
         } catch (std::exception& ex) {
-            throw std::move(ex);
+            throw facebook::jsi::JSError(runtime, ex.what());
         }
     }
     throw facebook::jsi::JSError(runtime, "Arguments for op add do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)");
@@ -188,7 +188,7 @@ jsi::Value itemImpl(
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Scalar (const at::Tensor &)
         } catch (std::exception& ex) {
-            throw std::move(ex);
+            throw facebook::jsi::JSError(runtime, ex.what());
         }
     }
     throw facebook::jsi::JSError(runtime, "Arguments for op item do not match any of the following signatures:at::Scalar (const at::Tensor &)");
@@ -251,7 +251,7 @@ jsi::Value addImpl(
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &)
         } catch (std::exception& ex) {
-            throw std::move(ex);
+            throw facebook::jsi::JSError(runtime, ex.what());
         }
     }
 
@@ -270,7 +270,7 @@ jsi::Value addImpl(
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)
         } catch (std::exception& ex) {
-            throw std::move(ex);
+            throw facebook::jsi::JSError(runtime, ex.what());
         }
     }
     throw facebook::jsi::JSError(runtime, "Arguments for op add do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)");
@@ -309,7 +309,7 @@ jsi::Value itemImpl(
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Scalar (const at::Tensor &)
         } catch (std::exception& ex) {
-            throw std::move(ex);
+            throw facebook::jsi::JSError(runtime, ex.what());
         }
     }
     throw facebook::jsi::JSError(runtime, "Arguments for op item do not match any of the following signatures:at::Scalar (const at::Tensor &)");
@@ -336,7 +336,7 @@ jsi::Value mulImpl(
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Tensor &)
         } catch (std::exception& ex) {
-            throw std::move(ex);
+            throw facebook::jsi::JSError(runtime, ex.what());
         }
     }
 
@@ -353,7 +353,7 @@ jsi::Value mulImpl(
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Scalar &)
         } catch (std::exception& ex) {
-            throw std::move(ex);
+            throw facebook::jsi::JSError(runtime, ex.what());
         }
     }
     throw facebook::jsi::JSError(runtime, "Arguments for op mul do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &), at::Tensor (const at::Tensor &, const at::Scalar &)");
@@ -382,7 +382,7 @@ jsi::Value subImpl(
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &)
         } catch (std::exception& ex) {
-            throw std::move(ex);
+            throw facebook::jsi::JSError(runtime, ex.what());
         }
     }
 
@@ -401,7 +401,7 @@ jsi::Value subImpl(
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)
         } catch (std::exception& ex) {
-            throw std::move(ex);
+            throw facebook::jsi::JSError(runtime, ex.what());
         }
     }
     throw facebook::jsi::JSError(runtime, "Arguments for op sub do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)");

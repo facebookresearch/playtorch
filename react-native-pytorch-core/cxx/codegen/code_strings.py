@@ -216,3 +216,148 @@ class CppCodeStrings:
 
 
 cpp_code_strings = CppCodeStrings()
+
+# torch.ts
+
+op_descriptions = {
+    "abs": """Computes the absolute value of each element in input.""",
+    "add": """Add a scalar or tensor to this tensor.""",
+    "argmax": """Returns the indices of the maximum value of all elements in the input
+   * tensor.""",
+    "argmin": """Returns the indices of the minimum value(s) of the flattened tensor or along a dimension""",
+    "clamp": """Clamps all elements in input into the range `[ min, max ]`.
+   *
+   * If `min` is `undefined`, there is no lower bound. Or, if `max` is `undefined` there is no upper bound.
+   """,
+    "contiguous": """Returns a contiguous in memory tensor containing the same data as this
+   * tensor. If this tensor is already in the specified memory format, this
+   * function returns this tensor.""",
+    "data": """Returns the tensor data as `TypedArray` buffer.
+   *
+   * A valid TypeScript expression is as follows:
+   *
+   * ```typescript
+   * torch.rand([2, 3]).data()[3];
+   * ```
+   *
+   * :::note
+   *
+   * The function only exists in JavaScript.
+   *
+   * :::
+   *
+   * @experimental""",
+    "div": """Divides each element of the input input by the corresponding element of
+   * other.""",
+    "dtype": """A dtype is an string that represents the data type of a torch.Tensor.""",
+    "expand": """Returns a new view of the tensor expanded to a larger size.""",
+    "flip": """Reverse the order of a n-D tensor along given axis in dims.""",
+    "item": """Returns the value of this tensor as a `number`. This only works for
+   * tensors with one element.""",
+    "reshape": """Returns a tensor with the same data and number of elements as input, but
+   * with the specified shape.""",
+    "matmul": """Performs matrix multiplication with other tensor.""",
+    "mul": """Multiplies input by other scalar or tensor.""",
+    "permute": """Returns a view of the original tensor input with its dimensions permuted.""",
+    "shape": """Returns the size of the tensor.""",
+    "size": """Returns the size of the tensor.""",
+    "softmax": """Applies a softmax function. It is applied to all slices along dim, and
+   * will re-scale them so that the elements lie in the range `[0, 1]` and sum
+   * to `1`.""",
+    "sqrt": """Computes the square-root value of each element in input.""",
+    "squeeze": """Returns a tensor with all the dimensions of input of size 1 removed.""",
+    "stride": """Returns the stride of the tensor.""",
+    "sub": """Subtracts other from input.""",
+    "sum": """Returns the sum of all elements in the input tensor.""",
+    "to": """Performs Tensor conversion.""",
+    "topk": """Returns a list of two Tensors where the first represents the k largest elements of the given input tensor,
+   * and the second represents the indices of the k largest elements.""",
+    "unsqueeze": """Returns a new tensor with a dimension of size one inserted at the
+   * specified position.""",
+    "index": """Access tensor with index.""",
+}
+
+ts_return_type_mappings = {
+    "data": "TypedArray",
+    "at::Tensor": "Tensor",
+    "at::Scalar": "number",
+}
+
+required_ts_argument_type_mappings = {
+    "const at::Tensor &": "Tensor",
+    "const at::Scalar &": "Scalar",
+}
+
+optional_ts_argument_type_mappings = {
+    "const at::Scalar &": "Number",
+}
+
+ts_start_interface = "export interface Tensor {"
+
+ts_definition_template_header = Template(
+    """
+  /**
+   * ${description}
+   *
+   * {@link ${link}}
+"""
+)
+
+ts_declaration_template = Template(
+    """
+   */
+  ${name}${arguments}: ${return_type};"""
+)
+
+ts_link_template = Template(
+    "https://pytorch.org/docs/1.12/generated/torch.Tensor.${name}.html"
+)
+
+special_case_links = {
+    "data": "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray",
+    "dtype": "https://pytorch.org/docs/1.12/tensor_attributes.html",
+    "softmax": "https://pytorch.org/docs/1.12/generated/torch.nn.functional.softmax.html",
+    "index": "https://pytorch.org/cppdocs/notes/tensor_indexing.html",
+}
+
+
+ts_param_template = Template("   * @param ${name} ${description}")
+ts_arg_template = Template("${name}: ${type}")
+ts_options_template = Template("options?: {${optional_arguments}}")
+
+ts_end_interface = "\n} // Tensor\n"
+
+
+@dataclass
+class TSCodeStrings:
+    op_descriptions: Dict[str, str]
+    return_type_mappings: Dict[str, str]
+    required_argument_type_mappings: Dict[str, str]
+    optional_argument_type_mappings: Dict[str, str]
+    start_interface: str
+    definition_template_header: Template
+    declaration_template: Template
+    link_template: Template
+    special_case_links: Dict[str, str]
+    param_template: Template
+    arg_template: Template
+    options_template: Template
+    end_interface: str
+
+    def __init__(self):
+        self.op_descriptions = op_descriptions
+        self.return_type_mappings = ts_return_type_mappings
+        self.required_argument_type_mappings = required_ts_argument_type_mappings
+        self.optional_argument_type_mappings = optional_ts_argument_type_mappings
+        self.start_interface = ts_start_interface
+        self.definition_template_header = ts_definition_template_header
+        self.declaration_template = ts_declaration_template
+        self.link_template = ts_link_template
+        self.special_case_links = special_case_links
+        self.param_template = ts_param_template
+        self.arg_template = ts_arg_template
+        self.options_template = ts_options_template
+        self.end_interface = ts_end_interface
+
+
+ts_code_strings = TSCodeStrings()

@@ -37,6 +37,8 @@ class Argument:
     def __init__(self, argInfo):
         self.annotation = argInfo["annotation"] if "annotation" in argInfo else None
         self.default = argInfo["default"] if "default" in argInfo else None
+        if isinstance(self.default, bool):
+            self.default = "true" if self.default else "false"
         self.kwarg_only = argInfo["kwarg_only"] if "kwarg_only" in argInfo else False
         self.dynamic_type = argInfo["dynamic_type"]
         self.is_nullable = argInfo["is_nullable"] if "is_nullable" in argInfo else False

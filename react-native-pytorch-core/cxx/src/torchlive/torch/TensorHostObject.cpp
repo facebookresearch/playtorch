@@ -465,6 +465,45 @@ jsi::Value subImpl(
       "Arguments for op sub do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)");
 }
 
+jsi::Value topkImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isInt64(0) &&
+      args.isInt64Kwarg(1, "dim", false) &&
+      args.isBoolKwarg(1, "largest", false) &&
+      args.isBoolKwarg(1, "sorted", false)) {
+    auto k = args.asInt64(0);
+    auto dim = args.asInt64Kwarg(1, "dim", -1);
+    auto largest = args.asBoolKwarg(1, "largest", true);
+    auto sorted = args.asBoolKwarg(1, "sorted", true);
+
+    ::std::tuple<at::Tensor, at::Tensor> intermediateTuple =
+        self->tensor.topk(k, dim, largest, sorted);
+    auto valuesTensor = std::get<0>(intermediateTuple);
+    if (valuesTensor.dtype() == utils::constants::getDtypeFromString("int64")) {
+      valuesTensor = valuesTensor.to(c10::ScalarType::Int);
+    }
+    auto values = utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, valuesTensor);
+    auto indicesTensor = std::get<1>(intermediateTuple);
+    if (indicesTensor.dtype() ==
+        utils::constants::getDtypeFromString("int64")) {
+      indicesTensor = indicesTensor.to(c10::ScalarType::Int);
+    }
+    auto indices = utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, indicesTensor);
+    return jsi::Array::createWithElements(runtime, values, indices);
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op topk do not match any of the following signatures:::std::tuple<at::Tensor,at::Tensor> (const at::Tensor &, int64_t, int64_t, bool, bool)");
+}
+
 jsi::Value unsqueezeImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -522,8 +561,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(
       runtime, "sum", 0, TensorHostObjectDeprecated::sumImpl);
   setPropertyHostFunction(runtime, "to", 0, TensorHostObjectDeprecated::toImpl);
-  setPropertyHostFunction(
-      runtime, "topk", 1, TensorHostObjectDeprecated::topkImpl);
+  setPropertyHostFunction(runtime, "topk", 1, topkImpl);
   setPropertyHostFunction(runtime, "unsqueeze", 1, unsqueezeImpl);
 }
 

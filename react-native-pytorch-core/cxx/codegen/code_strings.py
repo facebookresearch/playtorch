@@ -98,6 +98,9 @@ cpp_kword_argument_string_templates = {
     "at::MemoryFormat": Template(
         """auto ${name} = args.asMemoryFormatKwarg(${arg_index}, "${name}", at::${default});"""
     ),
+    "int64_t": Template(
+        """auto ${name} = args.asInt64Kwarg(${arg_index}, "${name}", ${default});"""
+    ),
 }
 
 cpp_required_kword_argument_string_templates = {
@@ -136,6 +139,29 @@ cpp_check_argument_type_templates = {
     "at::IntArrayRef": Template("args.isIntArrayRef(${idx})"),
 }
 
+intermediate_return_value_template = Template(
+    """
+        ${return_type} intermediateTuple = ${self}->tensor.${operator_name}(${arguments});"""
+)
+
+unwrap_intermediate_return_type_templates = {
+    "at::Tensor": Template(
+        """
+            auto ${returns_name}Tensor = std::get<${returns_index}>(intermediateTuple);
+            if(${returns_name}Tensor.dtype() == utils::constants::getDtypeFromString("int64")) {
+                ${returns_name}Tensor = ${returns_name}Tensor.to(c10::ScalarType::Int);
+            }
+            auto ${returns_name} = utils::helpers::createFromHostObject<TensorHostObject>(runtime, ${returns_name}Tensor);"""
+    )
+}
+
+combine_intermediate_return_types_templates = {
+    "::std::tuple<at::Tensor,at::Tensor>": Template(
+        """
+        return jsi::Array::createWithElements(runtime, ${returns_names});"""
+    )
+}
+
 cpp_check_kword_argument_type_templates = {
     "const at::Scalar &": Template(
         'args.isScalarKwarg(${idx}, "${name}", ${required})'
@@ -150,6 +176,7 @@ cpp_check_kword_argument_type_templates = {
     "at::MemoryFormat": Template(
         'args.isMemoryFormatKwarg(${idx}, "${name}", ${required})'
     ),
+    "int64_t": Template('args.isInt64Kwarg(${idx}, "${name}", ${required})'),
 }
 
 cpp_argument_string_error_template = Template(
@@ -183,6 +210,8 @@ class CppCodeStrings:
     check_kword_argument_type_templates: Dict[str, Template]
     argument_string_error_template: Template
     returns_string_error_template: Template
+    intermediate_return_value_template: Template
+    unwrap_intermediate_return_type_templates: Template
 
     def __init__(self):
         self.start_namespace = cpp_start_namespace
@@ -213,6 +242,13 @@ class CppCodeStrings:
         )
         self.argument_string_error_template = cpp_argument_string_error_template
         self.returns_string_error_template = cpp_returns_string_error_template
+        self.intermediate_return_value_template = intermediate_return_value_template
+        self.unwrap_intermediate_return_type_templates = (
+            unwrap_intermediate_return_type_templates
+        )
+        self.combine_intermediate_return_types_templates = (
+            combine_intermediate_return_types_templates
+        )
 
 
 cpp_code_strings = CppCodeStrings()
@@ -281,6 +317,7 @@ ts_return_type_mappings = {
     "data": "TypedArray",
     "at::Tensor": "Tensor",
     "at::Scalar": "number",
+    "::std::tuple<at::Tensor, at::Tensor>": "[Tensor, Tensor]",
 }
 
 required_ts_argument_type_mappings = {
@@ -296,6 +333,7 @@ optional_ts_argument_type_mappings = {
     "c10::optional<int64_t>": "number",
     "bool": "boolean",
     "at::MemoryFormat": "MemoryFormat",
+    "int64_t": "number",
 }
 
 ts_start_interface = "export interface Tensor {"

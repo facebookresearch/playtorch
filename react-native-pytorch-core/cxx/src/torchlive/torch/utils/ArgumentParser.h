@@ -79,6 +79,8 @@ class ArgumentParser {
       const std::string& keyword,
       bool required) const;
   bool isInt64(size_t idx) const;
+  bool isInt64Kwarg(size_t idx, const std::string& keyword, bool required)
+      const;
   bool isIntArrayRef(size_t idx) const;
   bool isStringKwarg(size_t idx, const std::string& keyword, bool required)
       const;
@@ -104,6 +106,11 @@ class ArgumentParser {
       const std::string& keyword,
       c10::optional<int64_t> defaultValue) const;
   int64_t asInt64(size_t idx) const;
+  int64_t asInt64Kwarg(size_t idx, const std::string& keyword) const;
+  int64_t asInt64Kwarg(
+      size_t idx,
+      const std::string& keyword,
+      int64_t defaultValue) const;
   std::shared_ptr<std::vector<int64_t>> asIntArrayRefPtr(size_t idx) const;
   std::string asStringKwarg(size_t idx, const std::string& keyword) const;
   at::MemoryFormat asMemoryFormatKwarg(size_t idx, const std::string& keyword)

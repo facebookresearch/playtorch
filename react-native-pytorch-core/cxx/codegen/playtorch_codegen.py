@@ -73,21 +73,54 @@ def get_argument_string(argument: Argument, index: int) -> str:
 
 def get_returns_string(op: OpInfo) -> str:
     try:
-        return cpp_code_strings.returns_type_templates[op.returns[0].type_].substitute(
-            {
-                "return_type": op.returns[0].type_,
-                "returns_name": op.returns[0].name,
-                "operator_name": op.name,
-                "arguments": ", ".join([arg.name for arg in op.arguments[1:]])
-                if len(op.arguments) > 1
-                else "",
-                "self": op.arguments[0].name,
-            }
-        )
+        if len(op.returns) == 1:
+            return cpp_code_strings.returns_type_templates[
+                op.returns[0].type_
+            ].substitute(
+                {
+                    "return_type": op.returns[0].type_,
+                    "returns_name": op.returns[0].name,
+                    "operator_name": op.name,
+                    "arguments": ", ".join([arg.name for arg in op.arguments[1:]])
+                    if len(op.arguments) > 1
+                    else "",
+                    "self": op.arguments[0].name,
+                }
+            )
+        else:
+            intermediate_return_type = (
+                "::std::tuple<" + ",".join(r.type_ for r in op.returns) + ">"
+            )
+            return_string = (
+                cpp_code_strings.intermediate_return_value_template.substitute(
+                    {
+                        "return_type": intermediate_return_type,
+                        "operator_name": op.name,
+                        "arguments": ", ".join([arg.name for arg in op.arguments[1:]])
+                        if len(op.arguments) > 1
+                        else "",
+                        "self": op.arguments[0].name,
+                    }
+                )
+            )
+            for i, r in enumerate(op.returns):
+                return_string += (
+                    cpp_code_strings.unwrap_intermediate_return_type_templates[
+                        r.type_
+                    ].substitute({"returns_name": r.name, "returns_index": i})
+                )
+            return_string += (
+                cpp_code_strings.combine_intermediate_return_types_templates[
+                    intermediate_return_type
+                ].substitute({"returns_names": ", ".join([r.name for r in op.returns])})
+            )
+            return return_string
     except KeyError:
         op.implemented = False
         error_template = cpp_code_strings.returns_string_error_template
-        return error_template.substitute({"return_type": op.returns_type})
+        return error_template.substitute(
+            {"return_type": op.returns[0].type_ if len(op.returns) == 1 else ""}
+        )
 
 
 def gen_cpp_func(op: OpInfo):
@@ -285,11 +318,21 @@ def gen_ts_tensor_interface(ops) -> str:
                     }
                 )
                 for i, op in enumerate(ops[op_name].ops):
-                    return_type = (
-                        ts_code_strings.return_type_mappings[op.name]
-                        if op.name in ts_code_strings.return_type_mappings
-                        else ts_code_strings.return_type_mappings[op.returns[0].type_]
-                    )
+                    if op.name in ts_code_strings.return_type_mappings:
+                        return_type = ts_code_strings.return_type_mappings[op.name]
+                    else:
+                        return_type_key = (
+                            op.returns[0].type_
+                            if len(op.returns) == 1
+                            else "::std::tuple<"
+                            + ", ".join([r.type_ for r in op.returns])
+                            + ">"
+                        )
+                        return_type = (
+                            ts_code_strings.return_type_mappings[return_type_key]
+                            if len(op.returns) > 0
+                            else "null"
+                        )
                     if i > 0:
                         tmp_file_string += """\n  /**\n"""
                     tmp_file_string += gen_ts_params_string(op)

@@ -183,10 +183,10 @@ def gen_cpp_code(ops) -> str:
     return generated_code
 
 
-def gen_ts_arguments_string(arguments: [Argument]) -> str:
+def gen_ts_arguments_string(op: OpInfo) -> str:
     argument_strings = []
     options = []
-    for arg in arguments[1:]:
+    for arg in op.arguments[1 : op.options_index + 1]:
         if arg.default is None:
             argument_strings.append(
                 ts_code_strings.arg_template.substitute(
@@ -198,47 +198,65 @@ def gen_ts_arguments_string(arguments: [Argument]) -> str:
                     }
                 )
             )
-        else:
-            options.append(
-                ts_code_strings.arg_template.substitute(
-                    {
-                        "name": arg.name + "?",
-                        "type": ts_code_strings.optional_argument_type_mappings[
-                            arg.type_
-                        ],
-                    }
-                )
+    for arg in op.arguments[op.options_index + 1 :]:
+        name = arg.name + ("?" if arg.default is not None else "")
+        key = (
+            arg.type_
+            if not arg.type_ == "c10::optional<c10::string_view>"
+            else arg.type_ + "_" + op.name + "_" + arg.name
+        )
+        type_ = (
+            ts_code_strings.optional_argument_type_mappings[key]
+            if arg.default is not None
+            else ts_code_strings.required_argument_type_mappings[key]
+        )
+        options.append(
+            ts_code_strings.arg_template.substitute(
+                {
+                    "name": name,
+                    "type": type_,
+                }
             )
+        )
     if len(options) > 0:
         argument_strings.append(
             ts_code_strings.options_template.substitute(
-                {"optional_arguments": ", ".join(options)}
+                {
+                    "question_mark": ""
+                    if any(
+                        [
+                            arg.default is None
+                            for arg in op.arguments[op.options_index + 1 :]
+                        ]
+                    )
+                    else "?",
+                    "optional_arguments": ", ".join(options),
+                }
             )
         )
     return "(" + ", ".join(argument_strings) + ")"
 
 
-def gen_ts_params_string(arguments: [Argument]) -> str:
+def gen_ts_params_string(op: OpInfo) -> str:
     params = []
-    for arg in arguments[1:]:
-        if arg.default is None:
-            params.append(
-                ts_code_strings.param_template.substitute(
-                    {
-                        "name": arg.name,
-                        "description": "",
-                    }
-                )
+    for arg in op.arguments[1 : op.options_index + 1]:
+        params.append(
+            ts_code_strings.param_template.substitute(
+                {
+                    "name": arg.name,
+                    "description": "",
+                }
             )
-        else:
-            params.append(
-                ts_code_strings.param_template.substitute(
-                    {
-                        "name": "options." + arg.name,
-                        "description": "",
-                    }
-                )
+        )
+    for arg in op.arguments[op.options_index + 1 :]:
+        params.append(
+            ts_code_strings.param_template.substitute(
+                {
+                    "name": "options." + arg.name,
+                    "description": "",
+                }
             )
+        )
     return "\n".join(params)
 
 
@@ -274,11 +292,11 @@ def gen_ts_tensor_interface(ops) -> str:
                     )
                     if i > 0:
                         tmp_file_string += """\n  /**\n"""
-                    tmp_file_string += gen_ts_params_string(op.arguments)
+                    tmp_file_string += gen_ts_params_string(op)
                     tmp_file_string += ts_code_strings.declaration_template.substitute(
                         {
                             "name": op_name,
-                            "arguments": gen_ts_arguments_string(op.arguments),
+                            "arguments": gen_ts_arguments_string(op),
                             "return_type": return_type,
                         }
                     )

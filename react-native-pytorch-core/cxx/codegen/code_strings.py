@@ -287,6 +287,7 @@ required_ts_argument_type_mappings = {
     "const at::Tensor &": "Tensor",
     "const at::Scalar &": "Scalar",
     "int64_t": "number",
+    "at::IntArrayRef": "number[]",
 }
 
 optional_ts_argument_type_mappings = {

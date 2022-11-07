@@ -286,6 +286,7 @@ ts_return_type_mappings = {
 required_ts_argument_type_mappings = {
     "const at::Tensor &": "Tensor",
     "const at::Scalar &": "Scalar",
+    "int64_t": "number",
 }
 
 optional_ts_argument_type_mappings = {

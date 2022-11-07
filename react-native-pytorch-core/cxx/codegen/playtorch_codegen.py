@@ -160,6 +160,8 @@ def gen_cpp_func_impl(op_group: OpGroup) -> str:
             {"op_name": op_group.name}
         )
     op_group.ops.sort(key=lambda op: op.num_required, reverse=True)
+    if any([not op.arguments[0].name == "self" for op in op_group.ops]):
+        return ""
     function_string += cpp_code_strings.get_self_template.substitute(
         {"name": op_group.ops[0].arguments[0].name}
     )
@@ -183,14 +185,15 @@ def gen_cpp_func_impl(op_group: OpGroup) -> str:
     return function_string
 
 
-def gen_cpp_code(ops) -> str:
+def gen_cpp_code(ops, deprecated_tensor_ops: [str]) -> str:
     sorted_ops = list(ops.keys())
     sorted_ops.sort()
     function_impls = [gen_cpp_func_impl(ops[op_name]) for op_name in sorted_ops]
 
     function_impls = [
         function_impls[i]
-        if ops[sorted_ops[i]].implemented and sorted_ops[i] not in js_only_ops
+        if (ops[sorted_ops[i]].implemented or sorted_ops[i] in deprecated_tensor_ops)
+        and sorted_ops[i] not in js_only_ops
         else ""
         for i in range(len(sorted_ops))
     ]
@@ -205,6 +208,8 @@ def gen_cpp_code(ops) -> str:
                 "num_required_args": ops[op_name].min_num_required,
             }
         )
+        if (ops[op_name].implemented or op_name in deprecated_tensor_ops)
+        else ""
         for op_name in sorted_ops
     ]
     generated_code = cpp_code_strings.start_namespace
@@ -293,27 +298,38 @@ def gen_ts_params_string(op: OpInfo) -> str:
     return "\n".join(params)
 
 
-def gen_ts_tensor_interface(ops) -> str:
+def gen_ts_tensor_interface(ops, deprecated_tensor_ops: [str]) -> str:
     sorted_ops = list(ops.keys())
-    sorted_ops.append("shape")
-    sorted_ops.append("dtype")
-    sorted_ops.append("size")
+    properties = ["shape", "dtype", "size"]
+    sorted_ops += properties
+    sorted_ops.remove("index")
     sorted_ops.sort()
     sorted_ops.append("index")
+    properties.append("index")
     file_string = ts_code_strings.start_interface
     for op_name in sorted_ops:
-        if op_name in ops:
+        if (
+            op_name not in deprecated_tensor_ops
+            and op_name not in properties
+            and not ops[op_name].implemented
+        ):
+            continue
+        if (
+            op_name in ops and op_name not in deprecated_tensor_ops
+        ):  # deprecated tensor ops are more descriptive
             try:
                 link = (
                     ts_code_strings.special_case_links[op_name]
                     if op_name in ts_code_strings.special_case_links
-                    else ts_code_strings.link_template.substitute({"name": op_name})
+                    else ts_code_strings.link_template.substitute(
+                        {"name": ops[op_name].ops[0].name}
+                    )  # not camelCase
                 )
                 tmp_file_string = ts_code_strings.definition_template_header.substitute(
                     {
                         "description": ts_code_strings.op_descriptions[op_name]
                         if op_name in ts_code_strings.op_descriptions
-                        else "",
+                        else "@experimental",
                         "link": link,
                     }
                 )
@@ -338,14 +354,19 @@ def gen_ts_tensor_interface(ops) -> str:
                     tmp_file_string += gen_ts_params_string(op)
                     tmp_file_string += ts_code_strings.declaration_template.substitute(
                         {
-                            "name": op_name,
+                            "name": ops[op_name].name,
                             "arguments": gen_ts_arguments_string(op),
                             "return_type": return_type,
                         }
                     )
                 file_string += tmp_file_string
             except KeyError:
-                file_string += tensor_interface_deprecated[op_name]
+                ops[op_name].implemented = False
+                file_string += (
+                    tensor_interface_deprecated[op_name]
+                    if op_name in tensor_interface_deprecated
+                    else ""
+                )
         else:
             file_string += tensor_interface_deprecated[op_name]
     file_string += ts_code_strings.end_interface

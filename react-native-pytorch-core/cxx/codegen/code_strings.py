@@ -130,6 +130,11 @@ if (${returns_name}.isIntegral(/*includeBool=*/false)) {
   throw jsi::JSError(runtime, "unsupported dtype for item().");
 }"""
     ),
+    "null": Template(
+        """
+          ${self}->tensor.${operator_name}(${arguments});
+          return jsi::Value::null();"""
+    ),
 }
 
 cpp_check_argument_type_templates = {
@@ -318,6 +323,7 @@ ts_return_type_mappings = {
     "at::Tensor": "Tensor",
     "at::Scalar": "number",
     "::std::tuple<at::Tensor, at::Tensor>": "[Tensor, Tensor]",
+    "null": "null",
 }
 
 required_ts_argument_type_mappings = {

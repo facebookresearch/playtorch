@@ -8,6 +8,8 @@
 #pragma once
 
 #include <jsi/jsi.h>
+#include <cstddef>
+#include <string>
 
 // Suppress deprecated-declarations error to support Clang/C++17
 #pragma clang diagnostic push
@@ -70,6 +72,11 @@ class ArgumentParser {
   bool isScalar(size_t idx) const;
   bool isScalarKwarg(size_t idx, const std::string& keyword, bool required)
       const;
+  bool isBoolKwarg(size_t idx, const std::string& keyword, bool required) const;
+  bool isC10OptionalInt64Kwarg(
+      size_t idx,
+      const std::string& keyword,
+      bool required) const;
 
   at::Scalar asScalar(size_t idx) const;
   at::Scalar asScalarKwarg(size_t idx, const std::string& keyword) const;
@@ -77,6 +84,16 @@ class ArgumentParser {
       size_t idx,
       const std::string& keyword,
       at::Scalar defaultValue) const;
+  bool asBoolKwarg(size_t idx, const std::string& keyword) const;
+  bool asBoolKwarg(size_t idx, const std::string& keyword, bool defaultValue)
+      const;
+  c10::optional<int64_t> asC10OptionalInt64Kwarg(
+      size_t idx,
+      const std::string& keyword) const;
+  c10::optional<int64_t> asC10OptionalInt64Kwarg(
+      size_t idx,
+      const std::string& keyword,
+      c10::optional<int64_t> defaultValue) const;
 
  private:
   facebook::jsi::Runtime& runtime_;

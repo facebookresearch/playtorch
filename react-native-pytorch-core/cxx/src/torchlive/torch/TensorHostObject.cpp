@@ -47,6 +47,9 @@ jsi::Value absImpl(
   auto self = args.thisAsHostObject<TensorHostObject>();
   if (args.atLeastNumArguments(0)) {
     at::Tensor result = self->tensor.abs();
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(result));
   }
@@ -68,6 +71,9 @@ jsi::Value addImpl(
     auto other = args.asHostObject<TensorHostObject>(0)->tensor;
     auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
     at::Tensor result = self->tensor.add(other, alpha);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(result));
   }
@@ -77,12 +83,65 @@ jsi::Value addImpl(
     auto other = args.asScalar(0);
     auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
     at::Tensor result = self->tensor.add(other, alpha);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(result));
   }
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op add do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)");
+}
+
+jsi::Value argmaxImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0) &&
+      args.isC10OptionalInt64Kwarg(0, "dim", false) &&
+      args.isBoolKwarg(0, "keepdim", false)) {
+    auto dim = args.asC10OptionalInt64Kwarg(0, "dim", c10::nullopt);
+    auto keepdim = args.asBoolKwarg(0, "keepdim", false);
+    at::Tensor result = self->tensor.argmax(dim, keepdim);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op argmax do not match any of the following signatures:at::Tensor (const at::Tensor &, c10::optional<int64_t>, bool)");
+}
+
+jsi::Value argminImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0) &&
+      args.isC10OptionalInt64Kwarg(0, "dim", false) &&
+      args.isBoolKwarg(0, "keepdim", false)) {
+    auto dim = args.asC10OptionalInt64Kwarg(0, "dim", c10::nullopt);
+    auto keepdim = args.asBoolKwarg(0, "keepdim", false);
+    at::Tensor result = self->tensor.argmin(dim, keepdim);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op argmin do not match any of the following signatures:at::Tensor (const at::Tensor &, c10::optional<int64_t>, bool)");
 }
 
 jsi::Value itemImpl(
@@ -130,6 +189,9 @@ jsi::Value matmulImpl(
   if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
     auto other = args.asHostObject<TensorHostObject>(0)->tensor;
     at::Tensor result = self->tensor.matmul(other);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(result));
   }
@@ -149,6 +211,9 @@ jsi::Value mulImpl(
   if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
     auto other = args.asHostObject<TensorHostObject>(0)->tensor;
     at::Tensor result = self->tensor.mul(other);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(result));
   }
@@ -156,6 +221,9 @@ jsi::Value mulImpl(
   if (args.atLeastNumArguments(1) && args.isScalar(0)) {
     auto other = args.asScalar(0);
     at::Tensor result = self->tensor.mul(other);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(result));
   }
@@ -174,6 +242,9 @@ jsi::Value sqrtImpl(
   auto self = args.thisAsHostObject<TensorHostObject>();
   if (args.atLeastNumArguments(0)) {
     at::Tensor result = self->tensor.sqrt();
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(result));
   }
@@ -195,6 +266,9 @@ jsi::Value subImpl(
     auto other = args.asHostObject<TensorHostObject>(0)->tensor;
     auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
     at::Tensor result = self->tensor.sub(other, alpha);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(result));
   }
@@ -204,6 +278,9 @@ jsi::Value subImpl(
     auto other = args.asScalar(0);
     auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
     at::Tensor result = self->tensor.sub(other, alpha);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(result));
   }
@@ -221,10 +298,8 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
       tensor(t) {
   setPropertyHostFunction(runtime, "abs", 0, absImpl);
   setPropertyHostFunction(runtime, "add", 1, addImpl);
-  setPropertyHostFunction(
-      runtime, "argmax", 0, TensorHostObjectDeprecated::argmaxImpl);
-  setPropertyHostFunction(
-      runtime, "argmin", 0, TensorHostObjectDeprecated::argminImpl);
+  setPropertyHostFunction(runtime, "argmax", 0, argmaxImpl);
+  setPropertyHostFunction(runtime, "argmin", 0, argminImpl);
   setPropertyHostFunction(
       runtime, "clamp", 0, TensorHostObjectDeprecated::clampImpl);
   setPropertyHostFunction(

@@ -5,33 +5,9 @@
 
 from unittest import TestCase
 
-from ..codegen.op_data_structures import OpInfo
+from ..codegen.mock_dict import ops_decl
 
-ops_decl = []
-ops_decl.append(
-    {
-        "name": "_cast_Byte",
-        "schema_order_cpp_signature": "at::Tensor (const at::Tensor &, bool)",
-        "schema_order_arguments": [
-            {
-                "annotation": None,
-                "dynamic_type": "at::Tensor",
-                "is_nullable": False,
-                "name": "self",
-                "type": "const at::Tensor &",
-            },
-            {
-                "annotation": None,
-                "default": False,
-                "dynamic_type": "bool",
-                "is_nullable": False,
-                "name": "non_blocking",
-                "type": "bool",
-            },
-        ],
-        "returns": [{"name": "result", "type": "at::Tensor"}],
-    }
-)
+from ..codegen.op_data_structures import OpGroup, OpInfo
 
 
 class DataStructuresTest(TestCase):
@@ -57,3 +33,24 @@ class DataStructuresTest(TestCase):
         self.assertEqual(op_info.arguments[0].kwarg_only, False)
         self.assertEqual(op_info.arguments[0].default, None)
         self.assertEqual(op_info.arguments[1].default, False)
+
+    def test_op_group(self):
+        ops_dict = {}
+        tensor_ops = ["add", "sub", "mul", "reshape", "item"]
+        for op in ops_decl:
+            if "Tensor" in op["method_of"] and op["operator_name"] in tensor_ops:
+                op = OpInfo.from_dict(op)
+                if op.name in ops_dict:
+                    ops_dict[op.name].ops.append(op)
+                else:
+                    ops_dict[op.name] = OpGroup(op)
+        self.assertEqual(len(ops_dict["add"].ops), 2)
+        self.assertEqual(ops_dict["add"].min_num_required, 1)
+        self.assertEqual(len(ops_dict["sub"].ops), 2)
+        self.assertEqual(ops_dict["sub"].min_num_required, 1)
+        self.assertEqual(len(ops_dict["mul"].ops), 2)
+        self.assertEqual(ops_dict["mul"].min_num_required, 1)
+        self.assertEqual(len(ops_dict["reshape"].ops), 1)
+        self.assertEqual(ops_dict["reshape"].min_num_required, 1)
+        self.assertEqual(len(ops_dict["item"].ops), 1)
+        self.assertEqual(ops_dict["item"].min_num_required, 0)

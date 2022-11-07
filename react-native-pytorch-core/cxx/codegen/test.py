@@ -31,7 +31,7 @@ class DataStructuresTest(TestCase):
         self.assertEqual(op_info.arguments[0].implemented, False)
         self.assertEqual(op_info.arguments[0].kwarg_only, False)
         self.assertEqual(op_info.arguments[0].default, None)
-        self.assertEqual(op_info.arguments[1].default, False)
+        self.assertEqual(op_info.arguments[1].default, "false")
 
     def test_op_group(self):
         ops_dict = {}

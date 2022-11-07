@@ -18,6 +18,7 @@
     "!android/build",
     "!ios/build",
     "!cxx/test",
+    "!cxx/codegen",
     "!**/__tests__",
     "!**/__fixtures__",
     "!**/__mocks__",

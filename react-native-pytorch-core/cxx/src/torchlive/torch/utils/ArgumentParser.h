@@ -77,6 +77,7 @@ class ArgumentParser {
       size_t idx,
       const std::string& keyword,
       bool required) const;
+  bool isInt64(size_t idx) const;
 
   at::Scalar asScalar(size_t idx) const;
   at::Scalar asScalarKwarg(size_t idx, const std::string& keyword) const;
@@ -94,6 +95,7 @@ class ArgumentParser {
       size_t idx,
       const std::string& keyword,
       c10::optional<int64_t> defaultValue) const;
+  int64_t asInt64(size_t idx) const;
 
  private:
   facebook::jsi::Runtime& runtime_;

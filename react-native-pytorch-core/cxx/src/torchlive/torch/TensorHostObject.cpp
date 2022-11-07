@@ -289,6 +289,28 @@ jsi::Value subImpl(
       "Arguments for op sub do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)");
 }
 
+jsi::Value unsqueezeImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isInt64(0)) {
+    auto dim = args.asInt64(0);
+    at::Tensor result = self->tensor.unsqueeze(dim);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op unsqueeze do not match any of the following signatures:at::Tensor (const at::Tensor &, int64_t)");
+}
+
 } // namespace
 
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
@@ -332,8 +354,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "to", 0, TensorHostObjectDeprecated::toImpl);
   setPropertyHostFunction(
       runtime, "topk", 1, TensorHostObjectDeprecated::topkImpl);
-  setPropertyHostFunction(
-      runtime, "unsqueeze", 1, TensorHostObjectDeprecated::unsqueezeImpl);
+  setPropertyHostFunction(runtime, "unsqueeze", 1, unsqueezeImpl);
 }
 
 TensorHostObject::~TensorHostObject() {}

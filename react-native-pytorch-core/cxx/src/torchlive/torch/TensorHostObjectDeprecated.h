@@ -424,22 +424,6 @@ class TensorHostObjectDeprecated {
 
     return jsi::Array::createWithElements(runtime, values, indices);
   };
-
-  static jsi::Value unsqueezeImpl(
-      jsi::Runtime& runtime,
-      const jsi::Value& thisValue,
-      const jsi::Value* arguments,
-      size_t count) {
-    utils::ArgumentParser args(runtime, thisValue, arguments, count);
-    args.requireNumArguments(1);
-
-    auto dim = args.asInteger(0);
-    auto tensor =
-        args.thisAsHostObject<TensorHostObject>()->tensor.unsqueeze(dim);
-
-    return utils::helpers::createFromHostObject<TensorHostObject>(
-        runtime, std::move(tensor));
-  }
 };
 } // namespace torch
 } // namespace torchlive

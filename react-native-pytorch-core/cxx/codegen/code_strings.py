@@ -120,6 +120,14 @@ if(${returns_name}.dtype() == utils::constants::getDtypeFromString("int64")) {
 }
 return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(${returns_name}));"""
     ),
+    "at::Tensor &": Template(
+        """
+            auto ${returns_name}Return = ${self}->tensor.${operator_name}(${arguments});
+            if(${returns_name}Return.dtype() == utils::constants::getDtypeFromString("int64")) {
+                ${returns_name}Return = ${returns_name}Return.to(c10::ScalarType::Int);
+            }
+            return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(${returns_name}Return));"""
+    ),
     "at::Scalar": Template(
         """auto ${returns_name} = ${self}->tensor.${operator_name}(${arguments});
 if (${returns_name}.isIntegral(/*includeBool=*/false)) {
@@ -321,6 +329,7 @@ op_descriptions = {
 ts_return_type_mappings = {
     "data": "TypedArray",
     "at::Tensor": "Tensor",
+    "at::Tensor &": "Tensor",
     "at::Scalar": "number",
     "::std::tuple<at::Tensor, at::Tensor>": "[Tensor, Tensor]",
     "null": "null",
@@ -328,6 +337,7 @@ ts_return_type_mappings = {
 
 required_ts_argument_type_mappings = {
     "const at::Tensor &": "Tensor",
+    "at::Tensor &": "Tensor",
     "const at::Scalar &": "Scalar",
     "int64_t": "number",
     "at::IntArrayRef": "number[]",

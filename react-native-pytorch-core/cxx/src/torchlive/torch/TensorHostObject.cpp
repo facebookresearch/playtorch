@@ -69,6 +69,176 @@ jsi::Value _And_Impl(
       "Arguments for op __and__ do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value _Iand_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.__iand__(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.__iand__(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op __iand__ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value _Ilshift_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.__ilshift__(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.__ilshift__(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op __ilshift__ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value _Ior_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.__ior__(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.__ior__(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op __ior__ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value _Irshift_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.__irshift__(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.__irshift__(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op __irshift__ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value _Ixor_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.__ixor__(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.__ixor__(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op __ixor__ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value _Lshift_Impl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -444,6 +614,27 @@ jsi::Value absImpl(
       "Arguments for op abs do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value abs_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.abs_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op abs_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value absoluteImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -463,6 +654,27 @@ jsi::Value absoluteImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op absolute do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value absolute_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.absolute_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op absolute_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value acosImpl(
@@ -486,6 +698,27 @@ jsi::Value acosImpl(
       "Arguments for op acos do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value acos_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.acos_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op acos_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value acoshImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -505,6 +738,27 @@ jsi::Value acoshImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op acosh do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value acosh_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.acosh_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op acosh_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value addImpl(
@@ -543,6 +797,44 @@ jsi::Value addImpl(
       "Arguments for op add do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)");
 }
 
+jsi::Value add_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0) &&
+      args.isScalarKwarg(1, "alpha", false)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
+
+    auto selfReturn = self->tensor.add_(other, alpha);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isScalar(0) &&
+      args.isScalarKwarg(1, "alpha", false)) {
+    auto other = args.asScalar(0);
+    auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
+
+    auto selfReturn = self->tensor.add_(other, alpha);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op add_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Scalar &, const at::Scalar &)");
+}
+
 jsi::Value addbmmImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -571,6 +863,35 @@ jsi::Value addbmmImpl(
       "Arguments for op addbmm do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Scalar &, const at::Scalar &)");
 }
 
+jsi::Value addbmm_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isHostObject<TensorHostObject>(1) &&
+      args.isScalarKwarg(2, "beta", false) &&
+      args.isScalarKwarg(2, "alpha", false)) {
+    auto batch1 = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto batch2 = args.asHostObject<TensorHostObject>(1)->tensor;
+    auto beta = args.asScalarKwarg(2, "beta", at::Scalar(1));
+    auto alpha = args.asScalarKwarg(2, "alpha", at::Scalar(1));
+
+    auto selfReturn = self->tensor.addbmm_(batch1, batch2, beta, alpha);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op addbmm_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Scalar &, const at::Scalar &)");
+}
+
 jsi::Value addcdivImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -597,6 +918,33 @@ jsi::Value addcdivImpl(
       "Arguments for op addcdiv do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Scalar &)");
 }
 
+jsi::Value addcdiv_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isHostObject<TensorHostObject>(1) &&
+      args.isScalarKwarg(2, "value", false)) {
+    auto tensor1 = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto tensor2 = args.asHostObject<TensorHostObject>(1)->tensor;
+    auto value = args.asScalarKwarg(2, "value", at::Scalar(1));
+
+    auto selfReturn = self->tensor.addcdiv_(tensor1, tensor2, value);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op addcdiv_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Scalar &)");
+}
+
 jsi::Value addcmulImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -621,6 +969,33 @@ jsi::Value addcmulImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op addcmul do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Scalar &)");
+}
+
+jsi::Value addcmul_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isHostObject<TensorHostObject>(1) &&
+      args.isScalarKwarg(2, "value", false)) {
+    auto tensor1 = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto tensor2 = args.asHostObject<TensorHostObject>(1)->tensor;
+    auto value = args.asScalarKwarg(2, "value", at::Scalar(1));
+
+    auto selfReturn = self->tensor.addcmul_(tensor1, tensor2, value);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op addcmul_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Scalar &)");
 }
 
 jsi::Value addmmImpl(
@@ -651,6 +1026,35 @@ jsi::Value addmmImpl(
       "Arguments for op addmm do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Scalar &, const at::Scalar &)");
 }
 
+jsi::Value addmm_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isHostObject<TensorHostObject>(1) &&
+      args.isScalarKwarg(2, "beta", false) &&
+      args.isScalarKwarg(2, "alpha", false)) {
+    auto mat1 = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto mat2 = args.asHostObject<TensorHostObject>(1)->tensor;
+    auto beta = args.asScalarKwarg(2, "beta", at::Scalar(1));
+    auto alpha = args.asScalarKwarg(2, "alpha", at::Scalar(1));
+
+    auto selfReturn = self->tensor.addmm_(mat1, mat2, beta, alpha);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op addmm_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Scalar &, const at::Scalar &)");
+}
+
 jsi::Value addmvImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -679,6 +1083,35 @@ jsi::Value addmvImpl(
       "Arguments for op addmv do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Scalar &, const at::Scalar &)");
 }
 
+jsi::Value addmv_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isHostObject<TensorHostObject>(1) &&
+      args.isScalarKwarg(2, "beta", false) &&
+      args.isScalarKwarg(2, "alpha", false)) {
+    auto mat = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto vec = args.asHostObject<TensorHostObject>(1)->tensor;
+    auto beta = args.asScalarKwarg(2, "beta", at::Scalar(1));
+    auto alpha = args.asScalarKwarg(2, "alpha", at::Scalar(1));
+
+    auto selfReturn = self->tensor.addmv_(mat, vec, beta, alpha);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op addmv_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Scalar &, const at::Scalar &)");
+}
+
 jsi::Value addrImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -705,6 +1138,35 @@ jsi::Value addrImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op addr do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Scalar &, const at::Scalar &)");
+}
+
+jsi::Value addr_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isHostObject<TensorHostObject>(1) &&
+      args.isScalarKwarg(2, "beta", false) &&
+      args.isScalarKwarg(2, "alpha", false)) {
+    auto vec1 = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto vec2 = args.asHostObject<TensorHostObject>(1)->tensor;
+    auto beta = args.asScalarKwarg(2, "beta", at::Scalar(1));
+    auto alpha = args.asScalarKwarg(2, "alpha", at::Scalar(1));
+
+    auto selfReturn = self->tensor.addr_(vec1, vec2, beta, alpha);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op addr_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Scalar &, const at::Scalar &)");
 }
 
 jsi::Value adjointImpl(
@@ -848,6 +1310,27 @@ jsi::Value arccosImpl(
       "Arguments for op arccos do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value arccos_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.arccos_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op arccos_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value arccoshImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -867,6 +1350,27 @@ jsi::Value arccoshImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op arccosh do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value arccosh_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.arccosh_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op arccosh_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value arcsinImpl(
@@ -890,6 +1394,27 @@ jsi::Value arcsinImpl(
       "Arguments for op arcsin do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value arcsin_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.arcsin_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op arcsin_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value arcsinhImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -909,6 +1434,27 @@ jsi::Value arcsinhImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op arcsinh do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value arcsinh_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.arcsinh_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op arcsinh_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value arctanImpl(
@@ -954,6 +1500,50 @@ jsi::Value arctan2Impl(
       "Arguments for op arctan2 do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value arctan2_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.arctan2_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op arctan2_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value arctan_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.arctan_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op arctan_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value arctanhImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -973,6 +1563,27 @@ jsi::Value arctanhImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op arctanh do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value arctanh_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.arctanh_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op arctanh_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value argmaxImpl(
@@ -1127,6 +1738,27 @@ jsi::Value asinImpl(
       "Arguments for op asin do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value asin_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.asin_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op asin_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value asinhImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -1146,6 +1778,27 @@ jsi::Value asinhImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op asinh do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value asinh_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.asinh_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op asinh_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value atanImpl(
@@ -1191,6 +1844,50 @@ jsi::Value atan2Impl(
       "Arguments for op atan2 do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value atan2_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.atan2_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op atan2_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value atan_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.atan_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op atan_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value atanhImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -1210,6 +1907,27 @@ jsi::Value atanhImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op atanh do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value atanh_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.atanh_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op atanh_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value baddbmmImpl(
@@ -1238,6 +1956,35 @@ jsi::Value baddbmmImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op baddbmm do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Scalar &, const at::Scalar &)");
+}
+
+jsi::Value baddbmm_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isHostObject<TensorHostObject>(1) &&
+      args.isScalarKwarg(2, "beta", false) &&
+      args.isScalarKwarg(2, "alpha", false)) {
+    auto batch1 = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto batch2 = args.asHostObject<TensorHostObject>(1)->tensor;
+    auto beta = args.asScalarKwarg(2, "beta", at::Scalar(1));
+    auto alpha = args.asScalarKwarg(2, "alpha", at::Scalar(1));
+
+    auto selfReturn = self->tensor.baddbmm_(batch1, batch2, beta, alpha);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op baddbmm_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, const at::Tensor &, const at::Scalar &, const at::Scalar &)");
 }
 
 jsi::Value bitwiseAndImpl(
@@ -1272,6 +2019,40 @@ jsi::Value bitwiseAndImpl(
       "Arguments for op bitwise_and do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value bitwiseAnd_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.bitwise_and_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.bitwise_and_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op bitwise_and_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value bitwiseLeftShiftImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -1304,6 +2085,40 @@ jsi::Value bitwiseLeftShiftImpl(
       "Arguments for op bitwise_left_shift do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &), at::Tensor (const at::Tensor &, const at::Scalar &)");
 }
 
+jsi::Value bitwiseLeftShift_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.bitwise_left_shift_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.bitwise_left_shift_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op bitwise_left_shift_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &), at::Tensor & (at::Tensor &, const at::Scalar &)");
+}
+
 jsi::Value bitwiseNotImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -1323,6 +2138,27 @@ jsi::Value bitwiseNotImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op bitwise_not do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value bitwiseNot_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.bitwise_not_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op bitwise_not_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value bitwiseOrImpl(
@@ -1357,6 +2193,40 @@ jsi::Value bitwiseOrImpl(
       "Arguments for op bitwise_or do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value bitwiseOr_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.bitwise_or_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.bitwise_or_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op bitwise_or_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value bitwiseRightShiftImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -1389,6 +2259,40 @@ jsi::Value bitwiseRightShiftImpl(
       "Arguments for op bitwise_right_shift do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &), at::Tensor (const at::Tensor &, const at::Scalar &)");
 }
 
+jsi::Value bitwiseRightShift_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.bitwise_right_shift_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.bitwise_right_shift_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op bitwise_right_shift_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &), at::Tensor & (at::Tensor &, const at::Scalar &)");
+}
+
 jsi::Value bitwiseXorImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -1419,6 +2323,40 @@ jsi::Value bitwiseXorImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op bitwise_xor do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value bitwiseXor_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.bitwise_xor_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.bitwise_xor_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op bitwise_xor_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
 }
 
 jsi::Value bmmImpl(
@@ -1506,6 +2444,27 @@ jsi::Value ceilImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op ceil do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value ceil_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.ceil_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op ceil_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value choleskyImpl(
@@ -1638,6 +2597,40 @@ jsi::Value clampMaxImpl(
       "Arguments for op clamp_max do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value clampMax_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto max = args.asScalar(0);
+
+    auto selfReturn = self->tensor.clamp_max_(max);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto max = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.clamp_max_(max);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op clamp_max_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value clampMinImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -1668,6 +2661,40 @@ jsi::Value clampMinImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op clamp_min do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value clampMin_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto min = args.asScalar(0);
+
+    auto selfReturn = self->tensor.clamp_min_(min);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto min = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.clamp_min_(min);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op clamp_min_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
 }
 
 jsi::Value coalesceImpl(
@@ -1754,6 +2781,27 @@ jsi::Value conjPhysicalImpl(
       "Arguments for op conj_physical do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value conjPhysical_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.conj_physical_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op conj_physical_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value contiguousImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -1776,6 +2824,31 @@ jsi::Value contiguousImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op contiguous do not match any of the following signatures:at::Tensor (const at::Tensor &, at::MemoryFormat)");
+}
+
+jsi::Value copy_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0) &&
+      args.isBoolKwarg(1, "nonBlocking", false)) {
+    auto src = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto nonBlocking = args.asBoolKwarg(1, "nonBlocking", false);
+
+    auto selfReturn = self->tensor.copy_(src, nonBlocking);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op copy_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, bool)");
 }
 
 jsi::Value copysignImpl(
@@ -1808,6 +2881,40 @@ jsi::Value copysignImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op copysign do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &), at::Tensor (const at::Tensor &, const at::Scalar &)");
+}
+
+jsi::Value copysign_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.copysign_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.copysign_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op copysign_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &), at::Tensor & (at::Tensor &, const at::Scalar &)");
 }
 
 jsi::Value corrcoefImpl(
@@ -1852,6 +2959,27 @@ jsi::Value cosImpl(
       "Arguments for op cos do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value cos_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.cos_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op cos_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value coshImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -1871,6 +2999,27 @@ jsi::Value coshImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op cosh do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value cosh_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.cosh_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op cosh_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value countNonzeroImpl(
@@ -1973,6 +3122,27 @@ jsi::Value deg2radImpl(
       "Arguments for op deg2rad do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value deg2rad_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.deg2rad_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op deg2rad_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value dequantizeImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -2034,6 +3204,27 @@ jsi::Value detachImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op detach do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value detach_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.detach_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op detach_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value diagImpl(
@@ -2155,6 +3346,27 @@ jsi::Value digammaImpl(
       "Arguments for op digamma do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value digamma_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.digamma_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op digamma_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value distImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -2237,6 +3449,68 @@ jsi::Value divImpl(
       "Arguments for op div do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, c10::optional<c10::string_view>), at::Tensor (const at::Tensor &, const at::Scalar &, c10::optional<c10::string_view>), at::Tensor (const at::Tensor &, const at::Tensor &), at::Tensor (const at::Tensor &, const at::Scalar &)");
 }
 
+jsi::Value div_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isStringKwarg(1, "roundingMode", true)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto roundingMode =
+        c10::optional<c10::string_view>(args.asStringKwarg(1, "roundingMode"));
+
+    auto selfReturn = self->tensor.div_(other, roundingMode);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(2) && args.isScalar(0) &&
+      args.isStringKwarg(1, "roundingMode", true)) {
+    auto other = args.asScalar(0);
+    auto roundingMode =
+        c10::optional<c10::string_view>(args.asStringKwarg(1, "roundingMode"));
+
+    auto selfReturn = self->tensor.div_(other, roundingMode);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.div_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.div_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op div_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, c10::optional<c10::string_view>), at::Tensor & (at::Tensor &, const at::Scalar &, c10::optional<c10::string_view>), at::Tensor & (at::Tensor &, const at::Tensor &), at::Tensor & (at::Tensor &, const at::Scalar &)");
+}
+
 jsi::Value divideImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -2295,6 +3569,68 @@ jsi::Value divideImpl(
       "Arguments for op divide do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, c10::optional<c10::string_view>), at::Tensor (const at::Tensor &, const at::Scalar &, c10::optional<c10::string_view>), at::Tensor (const at::Tensor &, const at::Tensor &), at::Tensor (const at::Tensor &, const at::Scalar &)");
 }
 
+jsi::Value divide_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isStringKwarg(1, "roundingMode", true)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto roundingMode =
+        c10::optional<c10::string_view>(args.asStringKwarg(1, "roundingMode"));
+
+    auto selfReturn = self->tensor.divide_(other, roundingMode);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(2) && args.isScalar(0) &&
+      args.isStringKwarg(1, "roundingMode", true)) {
+    auto other = args.asScalar(0);
+    auto roundingMode =
+        c10::optional<c10::string_view>(args.asStringKwarg(1, "roundingMode"));
+
+    auto selfReturn = self->tensor.divide_(other, roundingMode);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.divide_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.divide_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op divide_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, c10::optional<c10::string_view>), at::Tensor & (at::Tensor &, const at::Scalar &, c10::optional<c10::string_view>), at::Tensor & (at::Tensor &, const at::Tensor &), at::Tensor & (at::Tensor &, const at::Scalar &)");
+}
+
 jsi::Value dotImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -2349,6 +3685,40 @@ jsi::Value eqImpl(
       "Arguments for op eq do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value eq_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.eq_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.eq_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op eq_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value erfImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -2368,6 +3738,27 @@ jsi::Value erfImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op erf do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value erf_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.erf_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op erf_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value erfcImpl(
@@ -2391,6 +3782,27 @@ jsi::Value erfcImpl(
       "Arguments for op erfc do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value erfc_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.erfc_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op erfc_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value erfinvImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -2410,6 +3822,27 @@ jsi::Value erfinvImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op erfinv do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value erfinv_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.erfinv_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op erfinv_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value expImpl(
@@ -2452,6 +3885,48 @@ jsi::Value exp2Impl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op exp2 do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value exp2_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.exp2_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op exp2_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
+jsi::Value exp_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.exp_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op exp_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value expandImpl(
@@ -2522,6 +3997,86 @@ jsi::Value expm1Impl(
       "Arguments for op expm1 do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value expm1_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.expm1_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op expm1_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
+jsi::Value fillDiagonal_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0) &&
+      args.isBoolKwarg(1, "wrap", false)) {
+    auto fillValue = args.asScalar(0);
+    auto wrap = args.asBoolKwarg(1, "wrap", false);
+
+    auto selfReturn = self->tensor.fill_diagonal_(fillValue, wrap);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op fill_diagonal_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &, bool)");
+}
+
+jsi::Value fill_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto value = args.asScalar(0);
+
+    auto selfReturn = self->tensor.fill_(value);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto value = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.fill_(value);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op fill_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value fixImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -2541,6 +4096,27 @@ jsi::Value fixImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op fix do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value fix_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.fix_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op fix_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value flipImpl(
@@ -2640,6 +4216,40 @@ jsi::Value floatPowerImpl(
       "Arguments for op float_power do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &), at::Tensor (const at::Tensor &, const at::Scalar &)");
 }
 
+jsi::Value floatPower_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto exponent = args.asScalar(0);
+
+    auto selfReturn = self->tensor.float_power_(exponent);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto exponent = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.float_power_(exponent);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op float_power_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value floorImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -2691,6 +4301,61 @@ jsi::Value floorDivideImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op floor_divide do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &), at::Tensor (const at::Tensor &, const at::Scalar &)");
+}
+
+jsi::Value floorDivide_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.floor_divide_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.floor_divide_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op floor_divide_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &), at::Tensor & (at::Tensor &, const at::Scalar &)");
+}
+
+jsi::Value floor_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.floor_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op floor_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value fmaxImpl(
@@ -2769,6 +4434,40 @@ jsi::Value fmodImpl(
       "Arguments for op fmod do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value fmod_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.fmod_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.fmod_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op fmod_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value fracImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -2788,6 +4487,27 @@ jsi::Value fracImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op frac do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value frac_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.frac_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op frac_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value frexpImpl(
@@ -2844,6 +4564,29 @@ jsi::Value gcdImpl(
       "Arguments for op gcd do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value gcd_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.gcd_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op gcd_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value geImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -2874,6 +4617,40 @@ jsi::Value geImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op ge do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value ge_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.ge_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.ge_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op ge_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
 }
 
 jsi::Value geqrfImpl(
@@ -2992,6 +4769,74 @@ jsi::Value greaterEqualImpl(
       "Arguments for op greater_equal do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value greaterEqual_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.greater_equal_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.greater_equal_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op greater_equal_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value greater_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.greater_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.greater_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op greater_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value gtImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -3022,6 +4867,40 @@ jsi::Value gtImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op gt do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value gt_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.gt_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.gt_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op gt_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
 }
 
 jsi::Value hardshrinkImpl(
@@ -3066,6 +4945,29 @@ jsi::Value heavisideImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op heaviside do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value heaviside_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto values = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.heaviside_(values);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op heaviside_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &)");
 }
 
 jsi::Value histcImpl(
@@ -3116,6 +5018,29 @@ jsi::Value hypotImpl(
       "Arguments for op hypot do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value hypot_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.hypot_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op hypot_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value i0Impl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -3135,6 +5060,27 @@ jsi::Value i0Impl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op i0 do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value i0_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.i0_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op i0_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value igammaImpl(
@@ -3159,6 +5105,29 @@ jsi::Value igammaImpl(
       "Arguments for op igamma do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value igamma_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.igamma_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op igamma_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value igammacImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -3179,6 +5148,58 @@ jsi::Value igammacImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op igammac do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value igammac_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.igammac_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op igammac_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value indexAdd_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(3);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(3) && args.isInt64(0) &&
+      args.isHostObject<TensorHostObject>(1) &&
+      args.isHostObject<TensorHostObject>(2) &&
+      args.isScalarKwarg(3, "alpha", false)) {
+    auto dim = args.asInt64(0);
+    auto index = args.asHostObject<TensorHostObject>(1)->tensor;
+    auto source = args.asHostObject<TensorHostObject>(2)->tensor;
+    auto alpha = args.asScalarKwarg(3, "alpha", at::Scalar(1));
+
+    auto selfReturn = self->tensor.index_add_(dim, index, source, alpha);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op index_add_ do not match any of the following signatures:at::Tensor & (at::Tensor &, int64_t, const at::Tensor &, const at::Tensor &, const at::Scalar &)");
 }
 
 jsi::Value indicesImpl(
@@ -3470,6 +5491,29 @@ jsi::Value lcmImpl(
       "Arguments for op lcm do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value lcm_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.lcm_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op lcm_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value ldexpImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -3490,6 +5534,29 @@ jsi::Value ldexpImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op ldexp do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value ldexp_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.ldexp_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op ldexp_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &)");
 }
 
 jsi::Value leImpl(
@@ -3522,6 +5589,40 @@ jsi::Value leImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op le do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value le_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.le_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.le_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op le_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
 }
 
 jsi::Value lerpImpl(
@@ -3558,6 +5659,44 @@ jsi::Value lerpImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op lerp do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value lerp_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isScalar(1)) {
+    auto end = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto weight = args.asScalar(1);
+
+    auto selfReturn = self->tensor.lerp_(end, weight);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isHostObject<TensorHostObject>(1)) {
+    auto end = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto weight = args.asHostObject<TensorHostObject>(1)->tensor;
+
+    auto selfReturn = self->tensor.lerp_(end, weight);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op lerp_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &, const at::Tensor &)");
 }
 
 jsi::Value lessImpl(
@@ -3624,6 +5763,74 @@ jsi::Value lessEqualImpl(
       "Arguments for op less_equal do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value lessEqual_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.less_equal_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.less_equal_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op less_equal_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value less_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.less_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.less_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op less_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value lgammaImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -3643,6 +5850,27 @@ jsi::Value lgammaImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op lgamma do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value lgamma_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.lgamma_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op lgamma_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value logImpl(
@@ -3687,6 +5915,27 @@ jsi::Value log10Impl(
       "Arguments for op log10 do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value log10_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.log10_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op log10_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value log1pImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -3708,6 +5957,27 @@ jsi::Value log1pImpl(
       "Arguments for op log1p do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value log1p_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.log1p_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op log1p_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value log2Impl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -3727,6 +5997,48 @@ jsi::Value log2Impl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op log2 do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value log2_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.log2_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op log2_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
+jsi::Value log_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.log_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op log_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value logaddexpImpl(
@@ -3816,6 +6128,29 @@ jsi::Value logicalAndImpl(
       "Arguments for op logical_and do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value logicalAnd_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.logical_and_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op logical_and_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value logicalNotImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -3835,6 +6170,27 @@ jsi::Value logicalNotImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op logical_not do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value logicalNot_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.logical_not_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op logical_not_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value logicalOrImpl(
@@ -3859,6 +6215,29 @@ jsi::Value logicalOrImpl(
       "Arguments for op logical_or do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value logicalOr_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.logical_or_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op logical_or_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value logicalXorImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -3879,6 +6258,29 @@ jsi::Value logicalXorImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op logical_xor do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value logicalXor_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.logical_xor_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op logical_xor_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &)");
 }
 
 jsi::Value ltImpl(
@@ -3911,6 +6313,40 @@ jsi::Value ltImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op lt do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value lt_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.lt_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.lt_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op lt_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
 }
 
 jsi::Value luSolveImpl(
@@ -4015,6 +6451,44 @@ jsi::Value maskedFillImpl(
       "Arguments for op masked_fill do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value maskedFill_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isScalar(1)) {
+    auto mask = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto value = args.asScalar(1);
+
+    auto selfReturn = self->tensor.masked_fill_(mask, value);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isHostObject<TensorHostObject>(1)) {
+    auto mask = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto value = args.asHostObject<TensorHostObject>(1)->tensor;
+
+    auto selfReturn = self->tensor.masked_fill_(mask, value);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op masked_fill_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value maskedScatterImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -4037,6 +6511,31 @@ jsi::Value maskedScatterImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op masked_scatter do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value maskedScatter_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isHostObject<TensorHostObject>(1)) {
+    auto mask = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto source = args.asHostObject<TensorHostObject>(1)->tensor;
+
+    auto selfReturn = self->tensor.masked_scatter_(mask, source);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op masked_scatter_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, const at::Tensor &)");
 }
 
 jsi::Value maskedSelectImpl(
@@ -4340,6 +6839,40 @@ jsi::Value mulImpl(
       "Arguments for op mul do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &), at::Tensor (const at::Tensor &, const at::Scalar &)");
 }
 
+jsi::Value mul_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.mul_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.mul_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op mul_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &), at::Tensor & (at::Tensor &, const at::Scalar &)");
+}
+
 jsi::Value multiplyImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -4370,6 +6903,40 @@ jsi::Value multiplyImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op multiply do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &), at::Tensor (const at::Tensor &, const at::Scalar &)");
+}
+
+jsi::Value multiply_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.multiply_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.multiply_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op multiply_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &), at::Tensor & (at::Tensor &, const at::Scalar &)");
 }
 
 jsi::Value mvImpl(
@@ -4414,6 +6981,29 @@ jsi::Value mvlgammaImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op mvlgamma do not match any of the following signatures:at::Tensor (const at::Tensor &, int64_t)");
+}
+
+jsi::Value mvlgamma_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isInt64(0)) {
+    auto p = args.asInt64(0);
+
+    auto selfReturn = self->tensor.mvlgamma_(p);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op mvlgamma_ do not match any of the following signatures:at::Tensor & (at::Tensor &, int64_t)");
 }
 
 jsi::Value narrowImpl(
@@ -4511,6 +7101,40 @@ jsi::Value neImpl(
       "Arguments for op ne do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value ne_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.ne_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.ne_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op ne_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value negImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -4530,6 +7154,27 @@ jsi::Value negImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op neg do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value neg_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.neg_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op neg_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value negativeImpl(
@@ -4553,6 +7198,27 @@ jsi::Value negativeImpl(
       "Arguments for op negative do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value negative_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.negative_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op negative_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value nextafterImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -4573,6 +7239,29 @@ jsi::Value nextafterImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op nextafter do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value nextafter_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.nextafter_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op nextafter_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &)");
 }
 
 jsi::Value nonzeroImpl(
@@ -4626,6 +7315,40 @@ jsi::Value notEqualImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op not_equal do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
+}
+
+jsi::Value notEqual_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.not_equal_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.not_equal_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op not_equal_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
 }
 
 jsi::Value numpyTImpl(
@@ -4744,6 +7467,29 @@ jsi::Value permuteImpl(
       "Arguments for op permute do not match any of the following signatures:at::Tensor (const at::Tensor &, at::IntArrayRef)");
 }
 
+jsi::Value polygamma_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isInt64(0)) {
+    auto n = args.asInt64(0);
+
+    auto selfReturn = self->tensor.polygamma_(n);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op polygamma_ do not match any of the following signatures:at::Tensor & (at::Tensor &, int64_t)");
+}
+
 jsi::Value positiveImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -4797,6 +7543,40 @@ jsi::Value powImpl(
       "Arguments for op pow do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &), at::Tensor (const at::Tensor &, const at::Scalar &)");
 }
 
+jsi::Value pow_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto exponent = args.asScalar(0);
+
+    auto selfReturn = self->tensor.pow_(exponent);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto exponent = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.pow_(exponent);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op pow_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value preluImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -4843,6 +7623,33 @@ jsi::Value putImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op put do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Tensor &, bool)");
+}
+
+jsi::Value put_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isHostObject<TensorHostObject>(0) &&
+      args.isHostObject<TensorHostObject>(1) &&
+      args.isBoolKwarg(2, "accumulate", false)) {
+    auto index = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto source = args.asHostObject<TensorHostObject>(1)->tensor;
+    auto accumulate = args.asBoolKwarg(2, "accumulate", false);
+
+    auto selfReturn = self->tensor.put_(index, source, accumulate);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op put_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, const at::Tensor &, bool)");
 }
 
 jsi::Value qPerChannelScalesImpl(
@@ -4940,6 +7747,27 @@ jsi::Value rad2degImpl(
       "Arguments for op rad2deg do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value rad2deg_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.rad2deg_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op rad2deg_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value ravelImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -4982,6 +7810,27 @@ jsi::Value reciprocalImpl(
       "Arguments for op reciprocal do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value reciprocal_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.reciprocal_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op reciprocal_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value reluImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -5001,6 +7850,27 @@ jsi::Value reluImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op relu do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value relu_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.relu_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op relu_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value remainderImpl(
@@ -5035,6 +7905,40 @@ jsi::Value remainderImpl(
       "Arguments for op remainder do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Tensor &)");
 }
 
+jsi::Value remainder_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.remainder_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.remainder_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op remainder_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value renormImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -5058,6 +7962,32 @@ jsi::Value renormImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op renorm do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Scalar &, int64_t, const at::Scalar &)");
+}
+
+jsi::Value renorm_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(3);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(3) && args.isScalar(0) && args.isInt64(1) &&
+      args.isScalar(2)) {
+    auto p = args.asScalar(0);
+    auto dim = args.asInt64(1);
+    auto maxnorm = args.asScalar(2);
+
+    auto selfReturn = self->tensor.renorm_(p, dim, maxnorm);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op renorm_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Scalar &, int64_t, const at::Scalar &)");
 }
 
 jsi::Value repeatImpl(
@@ -5125,6 +8055,30 @@ jsi::Value repeatInterleaveImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op repeat_interleave do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, c10::optional<int64_t>, c10::optional<int64_t>), at::Tensor (const at::Tensor &, int64_t, c10::optional<int64_t>, c10::optional<int64_t>)");
+}
+
+jsi::Value requiresGrad_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0) &&
+      args.isBoolKwarg(0, "requiresGrad", false)) {
+    auto requiresGrad = args.asBoolKwarg(0, "requiresGrad", true);
+
+    auto selfReturn = self->tensor.requires_grad_(requiresGrad);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op requires_grad_ do not match any of the following signatures:at::Tensor & (at::Tensor &, bool)");
 }
 
 jsi::Value reshapeImpl(
@@ -5256,6 +8210,54 @@ jsi::Value rsqrtImpl(
       "Arguments for op rsqrt do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value rsqrt_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.rsqrt_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op rsqrt_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
+jsi::Value scatterAdd_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(3);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(3) && args.isInt64(0) &&
+      args.isHostObject<TensorHostObject>(1) &&
+      args.isHostObject<TensorHostObject>(2)) {
+    auto dim = args.asInt64(0);
+    auto index = args.asHostObject<TensorHostObject>(1)->tensor;
+    auto src = args.asHostObject<TensorHostObject>(2)->tensor;
+
+    auto selfReturn = self->tensor.scatter_add_(dim, index, src);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op scatter_add_ do not match any of the following signatures:at::Tensor & (at::Tensor &, int64_t, const at::Tensor &, const at::Tensor &)");
+}
+
 jsi::Value selectScatterImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -5302,6 +8304,27 @@ jsi::Value sgnImpl(
       "Arguments for op sgn do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value sgn_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.sgn_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op sgn_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value sigmoidImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -5323,6 +8346,27 @@ jsi::Value sigmoidImpl(
       "Arguments for op sigmoid do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value sigmoid_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.sigmoid_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op sigmoid_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value signImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -5342,6 +8386,27 @@ jsi::Value signImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op sign do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value sign_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.sign_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op sign_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value signbitImpl(
@@ -5386,6 +8451,27 @@ jsi::Value sinImpl(
       "Arguments for op sin do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value sin_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.sin_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op sin_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value sincImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -5407,6 +8493,27 @@ jsi::Value sincImpl(
       "Arguments for op sinc do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value sinc_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.sinc_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op sinc_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value sinhImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -5426,6 +8533,27 @@ jsi::Value sinhImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op sinh do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value sinh_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.sinh_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op sinh_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value sliceImpl(
@@ -5610,6 +8738,27 @@ jsi::Value sqrtImpl(
       "Arguments for op sqrt do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value sqrt_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.sqrt_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op sqrt_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value squareImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -5629,6 +8778,27 @@ jsi::Value squareImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op square do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value square_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.square_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op square_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value squeezeImpl(
@@ -5750,6 +8920,44 @@ jsi::Value subImpl(
       "Arguments for op sub do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)");
 }
 
+jsi::Value sub_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0) &&
+      args.isScalarKwarg(1, "alpha", false)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
+
+    auto selfReturn = self->tensor.sub_(other, alpha);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isScalar(0) &&
+      args.isScalarKwarg(1, "alpha", false)) {
+    auto other = args.asScalar(0);
+    auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
+
+    auto selfReturn = self->tensor.sub_(other, alpha);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op sub_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Scalar &, const at::Scalar &)");
+}
+
 jsi::Value subtractImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -5784,6 +8992,44 @@ jsi::Value subtractImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op subtract do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)");
+}
+
+jsi::Value subtract_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0) &&
+      args.isScalarKwarg(1, "alpha", false)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
+
+    auto selfReturn = self->tensor.subtract_(other, alpha);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isScalar(0) &&
+      args.isScalarKwarg(1, "alpha", false)) {
+    auto other = args.asScalar(0);
+    auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
+
+    auto selfReturn = self->tensor.subtract_(other, alpha);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op subtract_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &, const at::Scalar &), at::Tensor & (at::Tensor &, const at::Scalar &, const at::Scalar &)");
 }
 
 jsi::Value sumImpl(
@@ -5870,6 +9116,30 @@ jsi::Value swapaxesImpl(
       "Arguments for op swapaxes do not match any of the following signatures:at::Tensor (const at::Tensor &, int64_t, int64_t)");
 }
 
+jsi::Value swapaxes_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isInt64(0) && args.isInt64(1)) {
+    auto axis0 = args.asInt64(0);
+    auto axis1 = args.asInt64(1);
+
+    auto selfReturn = self->tensor.swapaxes_(axis0, axis1);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op swapaxes_ do not match any of the following signatures:at::Tensor & (at::Tensor &, int64_t, int64_t)");
+}
+
 jsi::Value swapdimsImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -5891,6 +9161,30 @@ jsi::Value swapdimsImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op swapdims do not match any of the following signatures:at::Tensor (const at::Tensor &, int64_t, int64_t)");
+}
+
+jsi::Value swapdims_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isInt64(0) && args.isInt64(1)) {
+    auto dim0 = args.asInt64(0);
+    auto dim1 = args.asInt64(1);
+
+    auto selfReturn = self->tensor.swapdims_(dim0, dim1);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op swapdims_ do not match any of the following signatures:at::Tensor & (at::Tensor &, int64_t, int64_t)");
 }
 
 jsi::Value symeigImpl(
@@ -5952,6 +9246,27 @@ jsi::Value tImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op t do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value t_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.t_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op t_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value takeImpl(
@@ -6021,6 +9336,27 @@ jsi::Value tanImpl(
       "Arguments for op tan do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value tan_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.tan_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op tan_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 jsi::Value tanhImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -6040,6 +9376,27 @@ jsi::Value tanhImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op tanh do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value tanh_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.tanh_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op tanh_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value tileImpl(
@@ -6310,6 +9667,30 @@ jsi::Value traceImpl(
       "Arguments for op trace do not match any of the following signatures:at::Tensor (const at::Tensor &)");
 }
 
+jsi::Value transpose_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(2) && args.isInt64(0) && args.isInt64(1)) {
+    auto dim0 = args.asInt64(0);
+    auto dim1 = args.asInt64(1);
+
+    auto selfReturn = self->tensor.transpose_(dim0, dim1);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op transpose_ do not match any of the following signatures:at::Tensor & (at::Tensor &, int64_t, int64_t)");
+}
+
 jsi::Value triangularSolveImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -6375,6 +9756,29 @@ jsi::Value trilImpl(
       "Arguments for op tril do not match any of the following signatures:at::Tensor (const at::Tensor &, int64_t)");
 }
 
+jsi::Value tril_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0) && args.isInt64Kwarg(0, "diagonal", false)) {
+    auto diagonal = args.asInt64Kwarg(0, "diagonal", 0);
+
+    auto selfReturn = self->tensor.tril_(diagonal);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op tril_ do not match any of the following signatures:at::Tensor & (at::Tensor &, int64_t)");
+}
+
 jsi::Value triuImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -6395,6 +9799,29 @@ jsi::Value triuImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op triu do not match any of the following signatures:at::Tensor (const at::Tensor &, int64_t)");
+}
+
+jsi::Value triu_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0) && args.isInt64Kwarg(0, "diagonal", false)) {
+    auto diagonal = args.asInt64Kwarg(0, "diagonal", 0);
+
+    auto selfReturn = self->tensor.triu_(diagonal);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op triu_ do not match any of the following signatures:at::Tensor & (at::Tensor &, int64_t)");
 }
 
 jsi::Value trueDivideImpl(
@@ -6429,6 +9856,40 @@ jsi::Value trueDivideImpl(
       "Arguments for op true_divide do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &), at::Tensor (const at::Tensor &, const at::Scalar &)");
 }
 
+jsi::Value trueDivide_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.true_divide_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.true_divide_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op true_divide_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &), at::Tensor & (at::Tensor &, const at::Scalar &)");
+}
+
 jsi::Value truncImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -6448,6 +9909,27 @@ jsi::Value truncImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op trunc do not match any of the following signatures:at::Tensor (const at::Tensor &)");
+}
+
+jsi::Value trunc_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.trunc_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op trunc_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
 }
 
 jsi::Value typeAsImpl(
@@ -6517,6 +9999,29 @@ jsi::Value unsqueezeImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op unsqueeze do not match any of the following signatures:at::Tensor (const at::Tensor &, int64_t)");
+}
+
+jsi::Value unsqueeze_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isInt64(0)) {
+    auto dim = args.asInt64(0);
+
+    auto selfReturn = self->tensor.unsqueeze_(dim);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op unsqueeze_ do not match any of the following signatures:at::Tensor & (at::Tensor &, int64_t)");
 }
 
 jsi::Value valuesImpl(
@@ -6616,6 +10121,61 @@ jsi::Value xlogyImpl(
       "Arguments for op xlogy do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &), at::Tensor (const at::Tensor &, const at::Scalar &)");
 }
 
+jsi::Value xlogy_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+
+    auto selfReturn = self->tensor.xlogy_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
+
+    auto selfReturn = self->tensor.xlogy_(other);
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op xlogy_ do not match any of the following signatures:at::Tensor & (at::Tensor &, const at::Tensor &), at::Tensor & (at::Tensor &, const at::Scalar &)");
+}
+
+jsi::Value zero_Impl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(0)) {
+    auto selfReturn = self->tensor.zero_();
+    if (selfReturn.dtype() == utils::constants::getDtypeFromString("int64")) {
+      selfReturn = selfReturn.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(selfReturn));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op zero_ do not match any of the following signatures:at::Tensor & (at::Tensor &)");
+}
+
 } // namespace
 
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
@@ -6624,7 +10184,11 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
       toString_(createToString(runtime)),
       tensor(t) {
   setPropertyHostFunction(runtime, "_And_", 1, _And_Impl);
-
+  setPropertyHostFunction(runtime, "_Iand_", 1, _Iand_Impl);
+  setPropertyHostFunction(runtime, "_Ilshift_", 1, _Ilshift_Impl);
+  setPropertyHostFunction(runtime, "_Ior_", 1, _Ior_Impl);
+  setPropertyHostFunction(runtime, "_Irshift_", 1, _Irshift_Impl);
+  setPropertyHostFunction(runtime, "_Ixor_", 1, _Ixor_Impl);
   setPropertyHostFunction(runtime, "_Lshift_", 1, _Lshift_Impl);
   setPropertyHostFunction(runtime, "_Or_", 1, _Or_Impl);
   setPropertyHostFunction(runtime, "_Rshift_", 1, _Rshift_Impl);
@@ -6649,27 +10213,27 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "_values", 0, _valuesImpl);
 
   setPropertyHostFunction(runtime, "abs", 0, absImpl);
-
+  setPropertyHostFunction(runtime, "abs_", 0, abs_Impl);
   setPropertyHostFunction(runtime, "absolute", 0, absoluteImpl);
-
+  setPropertyHostFunction(runtime, "absolute_", 0, absolute_Impl);
   setPropertyHostFunction(runtime, "acos", 0, acosImpl);
-
+  setPropertyHostFunction(runtime, "acos_", 0, acos_Impl);
   setPropertyHostFunction(runtime, "acosh", 0, acoshImpl);
-
+  setPropertyHostFunction(runtime, "acosh_", 0, acosh_Impl);
   setPropertyHostFunction(runtime, "add", 1, addImpl);
-
+  setPropertyHostFunction(runtime, "add_", 1, add_Impl);
   setPropertyHostFunction(runtime, "addbmm", 2, addbmmImpl);
-
+  setPropertyHostFunction(runtime, "addbmm_", 2, addbmm_Impl);
   setPropertyHostFunction(runtime, "addcdiv", 2, addcdivImpl);
-
+  setPropertyHostFunction(runtime, "addcdiv_", 2, addcdiv_Impl);
   setPropertyHostFunction(runtime, "addcmul", 2, addcmulImpl);
-
+  setPropertyHostFunction(runtime, "addcmul_", 2, addcmul_Impl);
   setPropertyHostFunction(runtime, "addmm", 2, addmmImpl);
-
+  setPropertyHostFunction(runtime, "addmm_", 2, addmm_Impl);
   setPropertyHostFunction(runtime, "addmv", 2, addmvImpl);
-
+  setPropertyHostFunction(runtime, "addmv_", 2, addmv_Impl);
   setPropertyHostFunction(runtime, "addr", 2, addrImpl);
-
+  setPropertyHostFunction(runtime, "addr_", 2, addr_Impl);
   setPropertyHostFunction(runtime, "adjoint", 0, adjointImpl);
   setPropertyHostFunction(runtime, "alias", 0, aliasImpl);
   setPropertyHostFunction(runtime, "alignAs", 1, alignAsImpl);
@@ -6678,18 +10242,19 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "angle", 0, angleImpl);
 
   setPropertyHostFunction(runtime, "arccos", 0, arccosImpl);
-
+  setPropertyHostFunction(runtime, "arccos_", 0, arccos_Impl);
   setPropertyHostFunction(runtime, "arccosh", 0, arccoshImpl);
-
+  setPropertyHostFunction(runtime, "arccosh_", 0, arccosh_Impl);
   setPropertyHostFunction(runtime, "arcsin", 0, arcsinImpl);
-
+  setPropertyHostFunction(runtime, "arcsin_", 0, arcsin_Impl);
   setPropertyHostFunction(runtime, "arcsinh", 0, arcsinhImpl);
-
+  setPropertyHostFunction(runtime, "arcsinh_", 0, arcsinh_Impl);
   setPropertyHostFunction(runtime, "arctan", 0, arctanImpl);
   setPropertyHostFunction(runtime, "arctan2", 1, arctan2Impl);
-
+  setPropertyHostFunction(runtime, "arctan2_", 1, arctan2_Impl);
+  setPropertyHostFunction(runtime, "arctan_", 0, arctan_Impl);
   setPropertyHostFunction(runtime, "arctanh", 0, arctanhImpl);
-
+  setPropertyHostFunction(runtime, "arctanh_", 0, arctanh_Impl);
   setPropertyHostFunction(runtime, "argmax", 0, argmaxImpl);
   setPropertyHostFunction(runtime, "argmin", 0, argminImpl);
 
@@ -6698,34 +10263,39 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "asStridedScatter", 3, asStridedScatterImpl);
 
   setPropertyHostFunction(runtime, "asin", 0, asinImpl);
-
+  setPropertyHostFunction(runtime, "asin_", 0, asin_Impl);
   setPropertyHostFunction(runtime, "asinh", 0, asinhImpl);
-
+  setPropertyHostFunction(runtime, "asinh_", 0, asinh_Impl);
   setPropertyHostFunction(runtime, "atan", 0, atanImpl);
   setPropertyHostFunction(runtime, "atan2", 1, atan2Impl);
-
+  setPropertyHostFunction(runtime, "atan2_", 1, atan2_Impl);
+  setPropertyHostFunction(runtime, "atan_", 0, atan_Impl);
   setPropertyHostFunction(runtime, "atanh", 0, atanhImpl);
-
+  setPropertyHostFunction(runtime, "atanh_", 0, atanh_Impl);
   setPropertyHostFunction(runtime, "baddbmm", 2, baddbmmImpl);
+  setPropertyHostFunction(runtime, "baddbmm_", 2, baddbmm_Impl);
 
   setPropertyHostFunction(runtime, "bitwiseAnd", 1, bitwiseAndImpl);
-
+  setPropertyHostFunction(runtime, "bitwiseAnd_", 1, bitwiseAnd_Impl);
   setPropertyHostFunction(runtime, "bitwiseLeftShift", 1, bitwiseLeftShiftImpl);
-
+  setPropertyHostFunction(
+      runtime, "bitwiseLeftShift_", 1, bitwiseLeftShift_Impl);
   setPropertyHostFunction(runtime, "bitwiseNot", 0, bitwiseNotImpl);
-
+  setPropertyHostFunction(runtime, "bitwiseNot_", 0, bitwiseNot_Impl);
   setPropertyHostFunction(runtime, "bitwiseOr", 1, bitwiseOrImpl);
-
+  setPropertyHostFunction(runtime, "bitwiseOr_", 1, bitwiseOr_Impl);
   setPropertyHostFunction(
       runtime, "bitwiseRightShift", 1, bitwiseRightShiftImpl);
-
+  setPropertyHostFunction(
+      runtime, "bitwiseRightShift_", 1, bitwiseRightShift_Impl);
   setPropertyHostFunction(runtime, "bitwiseXor", 1, bitwiseXorImpl);
-
+  setPropertyHostFunction(runtime, "bitwiseXor_", 1, bitwiseXor_Impl);
   setPropertyHostFunction(runtime, "bmm", 1, bmmImpl);
   setPropertyHostFunction(runtime, "broadcastTo", 1, broadcastToImpl);
 
   setPropertyHostFunction(runtime, "ccolIndices", 0, ccolIndicesImpl);
   setPropertyHostFunction(runtime, "ceil", 0, ceilImpl);
+  setPropertyHostFunction(runtime, "ceil_", 0, ceil_Impl);
 
   setPropertyHostFunction(runtime, "cholesky", 0, choleskyImpl);
   setPropertyHostFunction(runtime, "choleskyInverse", 0, choleskyInverseImpl);
@@ -6734,23 +10304,24 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(
       runtime, "clamp", 0, TensorHostObjectDeprecated::clampImpl);
   setPropertyHostFunction(runtime, "clampMax", 1, clampMaxImpl);
-
+  setPropertyHostFunction(runtime, "clampMax_", 1, clampMax_Impl);
   setPropertyHostFunction(runtime, "clampMin", 1, clampMinImpl);
+  setPropertyHostFunction(runtime, "clampMin_", 1, clampMin_Impl);
 
   setPropertyHostFunction(runtime, "coalesce", 0, coalesceImpl);
   setPropertyHostFunction(runtime, "colIndices", 0, colIndicesImpl);
   setPropertyHostFunction(runtime, "conj", 0, conjImpl);
   setPropertyHostFunction(runtime, "conjPhysical", 0, conjPhysicalImpl);
-
+  setPropertyHostFunction(runtime, "conjPhysical_", 0, conjPhysical_Impl);
   setPropertyHostFunction(runtime, "contiguous", 0, contiguousImpl);
-
+  setPropertyHostFunction(runtime, "copy_", 1, copy_Impl);
   setPropertyHostFunction(runtime, "copysign", 1, copysignImpl);
-
+  setPropertyHostFunction(runtime, "copysign_", 1, copysign_Impl);
   setPropertyHostFunction(runtime, "corrcoef", 0, corrcoefImpl);
   setPropertyHostFunction(runtime, "cos", 0, cosImpl);
-
+  setPropertyHostFunction(runtime, "cos_", 0, cos_Impl);
   setPropertyHostFunction(runtime, "cosh", 0, coshImpl);
-
+  setPropertyHostFunction(runtime, "cosh_", 0, cosh_Impl);
   setPropertyHostFunction(runtime, "countNonzero", 1, countNonzeroImpl);
 
   setPropertyHostFunction(runtime, "cross", 1, crossImpl);
@@ -6759,11 +10330,12 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(
       runtime, "data", 0, TensorHostObjectDeprecated::dataImpl);
   setPropertyHostFunction(runtime, "deg2rad", 0, deg2radImpl);
+  setPropertyHostFunction(runtime, "deg2rad_", 0, deg2rad_Impl);
 
   setPropertyHostFunction(runtime, "dequantize", 0, dequantizeImpl);
   setPropertyHostFunction(runtime, "det", 0, detImpl);
   setPropertyHostFunction(runtime, "detach", 0, detachImpl);
-
+  setPropertyHostFunction(runtime, "detach_", 0, detach_Impl);
   setPropertyHostFunction(runtime, "diag", 0, diagImpl);
   setPropertyHostFunction(runtime, "diagEmbed", 0, diagEmbedImpl);
   setPropertyHostFunction(runtime, "diagflat", 0, diagflatImpl);
@@ -6771,71 +10343,83 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "diagonalScatter", 1, diagonalScatterImpl);
 
   setPropertyHostFunction(runtime, "digamma", 0, digammaImpl);
-
+  setPropertyHostFunction(runtime, "digamma_", 0, digamma_Impl);
   setPropertyHostFunction(runtime, "dist", 1, distImpl);
   setPropertyHostFunction(runtime, "div", 1, divImpl);
-
+  setPropertyHostFunction(runtime, "div_", 1, div_Impl);
   setPropertyHostFunction(runtime, "divide", 1, divideImpl);
-
+  setPropertyHostFunction(runtime, "divide_", 1, divide_Impl);
   setPropertyHostFunction(runtime, "dot", 1, dotImpl);
 
   setPropertyHostFunction(runtime, "eq", 1, eqImpl);
+  setPropertyHostFunction(runtime, "eq_", 1, eq_Impl);
 
   setPropertyHostFunction(runtime, "erf", 0, erfImpl);
-
+  setPropertyHostFunction(runtime, "erf_", 0, erf_Impl);
   setPropertyHostFunction(runtime, "erfc", 0, erfcImpl);
-
+  setPropertyHostFunction(runtime, "erfc_", 0, erfc_Impl);
   setPropertyHostFunction(runtime, "erfinv", 0, erfinvImpl);
-
+  setPropertyHostFunction(runtime, "erfinv_", 0, erfinv_Impl);
   setPropertyHostFunction(runtime, "exp", 0, expImpl);
   setPropertyHostFunction(runtime, "exp2", 0, exp2Impl);
-
+  setPropertyHostFunction(runtime, "exp2_", 0, exp2_Impl);
+  setPropertyHostFunction(runtime, "exp_", 0, exp_Impl);
   setPropertyHostFunction(runtime, "expand", 1, expandImpl);
   setPropertyHostFunction(runtime, "expandAs", 1, expandAsImpl);
   setPropertyHostFunction(runtime, "expm1", 0, expm1Impl);
+  setPropertyHostFunction(runtime, "expm1_", 0, expm1_Impl);
 
+  setPropertyHostFunction(runtime, "fillDiagonal_", 1, fillDiagonal_Impl);
+  setPropertyHostFunction(runtime, "fill_", 1, fill_Impl);
   setPropertyHostFunction(runtime, "fix", 0, fixImpl);
+  setPropertyHostFunction(runtime, "fix_", 0, fix_Impl);
 
   setPropertyHostFunction(runtime, "flip", 1, flipImpl);
   setPropertyHostFunction(runtime, "fliplr", 0, fliplrImpl);
   setPropertyHostFunction(runtime, "flipud", 0, flipudImpl);
   setPropertyHostFunction(runtime, "floatPower", 1, floatPowerImpl);
-
+  setPropertyHostFunction(runtime, "floatPower_", 1, floatPower_Impl);
   setPropertyHostFunction(runtime, "floor", 0, floorImpl);
   setPropertyHostFunction(runtime, "floorDivide", 1, floorDivideImpl);
-
+  setPropertyHostFunction(runtime, "floorDivide_", 1, floorDivide_Impl);
+  setPropertyHostFunction(runtime, "floor_", 0, floor_Impl);
   setPropertyHostFunction(runtime, "fmax", 1, fmaxImpl);
   setPropertyHostFunction(runtime, "fmin", 1, fminImpl);
   setPropertyHostFunction(runtime, "fmod", 1, fmodImpl);
-
+  setPropertyHostFunction(runtime, "fmod_", 1, fmod_Impl);
   setPropertyHostFunction(runtime, "frac", 0, fracImpl);
-
+  setPropertyHostFunction(runtime, "frac_", 0, frac_Impl);
   setPropertyHostFunction(runtime, "frexp", 0, frexpImpl);
 
   setPropertyHostFunction(runtime, "gcd", 1, gcdImpl);
-
+  setPropertyHostFunction(runtime, "gcd_", 1, gcd_Impl);
   setPropertyHostFunction(runtime, "ge", 1, geImpl);
+  setPropertyHostFunction(runtime, "ge_", 1, ge_Impl);
 
   setPropertyHostFunction(runtime, "geqrf", 0, geqrfImpl);
   setPropertyHostFunction(runtime, "ger", 1, gerImpl);
   setPropertyHostFunction(runtime, "greater", 1, greaterImpl);
   setPropertyHostFunction(runtime, "greaterEqual", 1, greaterEqualImpl);
-
+  setPropertyHostFunction(runtime, "greaterEqual_", 1, greaterEqual_Impl);
+  setPropertyHostFunction(runtime, "greater_", 1, greater_Impl);
   setPropertyHostFunction(runtime, "gt", 1, gtImpl);
-
+  setPropertyHostFunction(runtime, "gt_", 1, gt_Impl);
   setPropertyHostFunction(runtime, "hardshrink", 0, hardshrinkImpl);
 
   setPropertyHostFunction(runtime, "heaviside", 1, heavisideImpl);
-
+  setPropertyHostFunction(runtime, "heaviside_", 1, heaviside_Impl);
   setPropertyHostFunction(runtime, "histc", 0, histcImpl);
 
   setPropertyHostFunction(runtime, "hypot", 1, hypotImpl);
-
+  setPropertyHostFunction(runtime, "hypot_", 1, hypot_Impl);
   setPropertyHostFunction(runtime, "i0", 0, i0Impl);
-
+  setPropertyHostFunction(runtime, "i0_", 0, i0_Impl);
   setPropertyHostFunction(runtime, "igamma", 1, igammaImpl);
-
+  setPropertyHostFunction(runtime, "igamma_", 1, igamma_Impl);
   setPropertyHostFunction(runtime, "igammac", 1, igammacImpl);
+  setPropertyHostFunction(runtime, "igammac_", 1, igammac_Impl);
+
+  setPropertyHostFunction(runtime, "indexAdd_", 3, indexAdd_Impl);
 
   setPropertyHostFunction(runtime, "indices", 0, indicesImpl);
   setPropertyHostFunction(runtime, "inner", 1, innerImpl);
@@ -6853,46 +10437,50 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "kron", 1, kronImpl);
 
   setPropertyHostFunction(runtime, "lcm", 1, lcmImpl);
-
+  setPropertyHostFunction(runtime, "lcm_", 1, lcm_Impl);
   setPropertyHostFunction(runtime, "ldexp", 1, ldexpImpl);
-
+  setPropertyHostFunction(runtime, "ldexp_", 1, ldexp_Impl);
   setPropertyHostFunction(runtime, "le", 1, leImpl);
-
+  setPropertyHostFunction(runtime, "le_", 1, le_Impl);
   setPropertyHostFunction(runtime, "lerp", 2, lerpImpl);
-
+  setPropertyHostFunction(runtime, "lerp_", 2, lerp_Impl);
   setPropertyHostFunction(runtime, "less", 1, lessImpl);
   setPropertyHostFunction(runtime, "lessEqual", 1, lessEqualImpl);
-
+  setPropertyHostFunction(runtime, "lessEqual_", 1, lessEqual_Impl);
+  setPropertyHostFunction(runtime, "less_", 1, less_Impl);
   setPropertyHostFunction(runtime, "lgamma", 0, lgammaImpl);
-
+  setPropertyHostFunction(runtime, "lgamma_", 0, lgamma_Impl);
   setPropertyHostFunction(runtime, "log", 0, logImpl);
   setPropertyHostFunction(runtime, "log10", 0, log10Impl);
-
+  setPropertyHostFunction(runtime, "log10_", 0, log10_Impl);
   setPropertyHostFunction(runtime, "log1p", 0, log1pImpl);
-
+  setPropertyHostFunction(runtime, "log1p_", 0, log1p_Impl);
   setPropertyHostFunction(runtime, "log2", 0, log2Impl);
+  setPropertyHostFunction(runtime, "log2_", 0, log2_Impl);
 
+  setPropertyHostFunction(runtime, "log_", 0, log_Impl);
   setPropertyHostFunction(runtime, "logaddexp", 1, logaddexpImpl);
   setPropertyHostFunction(runtime, "logaddexp2", 1, logaddexp2Impl);
 
   setPropertyHostFunction(runtime, "logdet", 0, logdetImpl);
   setPropertyHostFunction(runtime, "logicalAnd", 1, logicalAndImpl);
-
+  setPropertyHostFunction(runtime, "logicalAnd_", 1, logicalAnd_Impl);
   setPropertyHostFunction(runtime, "logicalNot", 0, logicalNotImpl);
-
+  setPropertyHostFunction(runtime, "logicalNot_", 0, logicalNot_Impl);
   setPropertyHostFunction(runtime, "logicalOr", 1, logicalOrImpl);
-
+  setPropertyHostFunction(runtime, "logicalOr_", 1, logicalOr_Impl);
   setPropertyHostFunction(runtime, "logicalXor", 1, logicalXorImpl);
+  setPropertyHostFunction(runtime, "logicalXor_", 1, logicalXor_Impl);
 
   setPropertyHostFunction(runtime, "lt", 1, ltImpl);
-
+  setPropertyHostFunction(runtime, "lt_", 1, lt_Impl);
   setPropertyHostFunction(runtime, "luSolve", 2, luSolveImpl);
   setPropertyHostFunction(runtime, "mH", 0, mHImpl);
   setPropertyHostFunction(runtime, "mT", 0, mTImpl);
   setPropertyHostFunction(runtime, "maskedFill", 2, maskedFillImpl);
-
+  setPropertyHostFunction(runtime, "maskedFill_", 2, maskedFill_Impl);
   setPropertyHostFunction(runtime, "maskedScatter", 2, maskedScatterImpl);
-
+  setPropertyHostFunction(runtime, "maskedScatter_", 2, maskedScatter_Impl);
   setPropertyHostFunction(runtime, "maskedSelect", 1, maskedSelectImpl);
   setPropertyHostFunction(runtime, "matmul", 1, matmulImpl);
   setPropertyHostFunction(runtime, "matrixExp", 0, matrixExpImpl);
@@ -6908,26 +10496,29 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "movedim", 2, movedimImpl);
   setPropertyHostFunction(runtime, "msort", 0, msortImpl);
   setPropertyHostFunction(runtime, "mul", 1, mulImpl);
+  setPropertyHostFunction(runtime, "mul_", 1, mul_Impl);
 
   setPropertyHostFunction(runtime, "multiply", 1, multiplyImpl);
-
+  setPropertyHostFunction(runtime, "multiply_", 1, multiply_Impl);
   setPropertyHostFunction(runtime, "mv", 1, mvImpl);
   setPropertyHostFunction(runtime, "mvlgamma", 1, mvlgammaImpl);
+  setPropertyHostFunction(runtime, "mvlgamma_", 1, mvlgamma_Impl);
 
   setPropertyHostFunction(runtime, "narrow", 3, narrowImpl);
   setPropertyHostFunction(runtime, "narrowCopy", 3, narrowCopyImpl);
   setPropertyHostFunction(runtime, "ne", 1, neImpl);
-
+  setPropertyHostFunction(runtime, "ne_", 1, ne_Impl);
   setPropertyHostFunction(runtime, "neg", 0, negImpl);
-
+  setPropertyHostFunction(runtime, "neg_", 0, neg_Impl);
   setPropertyHostFunction(runtime, "negative", 0, negativeImpl);
+  setPropertyHostFunction(runtime, "negative_", 0, negative_Impl);
 
   setPropertyHostFunction(runtime, "nextafter", 1, nextafterImpl);
-
+  setPropertyHostFunction(runtime, "nextafter_", 1, nextafter_Impl);
   setPropertyHostFunction(runtime, "nonzero", 0, nonzeroImpl);
 
   setPropertyHostFunction(runtime, "notEqual", 1, notEqualImpl);
-
+  setPropertyHostFunction(runtime, "notEqual_", 1, notEqual_Impl);
   setPropertyHostFunction(runtime, "numpyT", 0, numpyTImpl);
   setPropertyHostFunction(runtime, "orgqr", 1, orgqrImpl);
   setPropertyHostFunction(runtime, "ormqr", 2, ormqrImpl);
@@ -6935,12 +10526,14 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
 
   setPropertyHostFunction(runtime, "permute", 1, permuteImpl);
 
+  setPropertyHostFunction(runtime, "polygamma_", 1, polygamma_Impl);
   setPropertyHostFunction(runtime, "positive", 0, positiveImpl);
   setPropertyHostFunction(runtime, "pow", 1, powImpl);
-
+  setPropertyHostFunction(runtime, "pow_", 1, pow_Impl);
   setPropertyHostFunction(runtime, "prelu", 1, preluImpl);
 
   setPropertyHostFunction(runtime, "put", 2, putImpl);
+  setPropertyHostFunction(runtime, "put_", 2, put_Impl);
 
   setPropertyHostFunction(
       runtime, "qPerChannelScales", 0, qPerChannelScalesImpl);
@@ -6950,19 +10543,22 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "qr", 0, qrImpl);
 
   setPropertyHostFunction(runtime, "rad2deg", 0, rad2degImpl);
+  setPropertyHostFunction(runtime, "rad2deg_", 0, rad2deg_Impl);
 
   setPropertyHostFunction(runtime, "ravel", 0, ravelImpl);
   setPropertyHostFunction(runtime, "reciprocal", 0, reciprocalImpl);
+  setPropertyHostFunction(runtime, "reciprocal_", 0, reciprocal_Impl);
 
   setPropertyHostFunction(runtime, "relu", 0, reluImpl);
-
+  setPropertyHostFunction(runtime, "relu_", 0, relu_Impl);
   setPropertyHostFunction(runtime, "remainder", 1, remainderImpl);
+  setPropertyHostFunction(runtime, "remainder_", 1, remainder_Impl);
 
   setPropertyHostFunction(runtime, "renorm", 3, renormImpl);
-
+  setPropertyHostFunction(runtime, "renorm_", 3, renorm_Impl);
   setPropertyHostFunction(runtime, "repeat", 1, repeatImpl);
   setPropertyHostFunction(runtime, "repeatInterleave", 1, repeatInterleaveImpl);
-
+  setPropertyHostFunction(runtime, "requiresGrad_", 0, requiresGrad_Impl);
   setPropertyHostFunction(runtime, "reshape", 1, reshapeImpl);
   setPropertyHostFunction(runtime, "reshapeAs", 1, reshapeAsImpl);
 
@@ -6971,21 +10567,25 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
 
   setPropertyHostFunction(runtime, "rowIndices", 0, rowIndicesImpl);
   setPropertyHostFunction(runtime, "rsqrt", 0, rsqrtImpl);
+  setPropertyHostFunction(runtime, "rsqrt_", 0, rsqrt_Impl);
+
+  setPropertyHostFunction(runtime, "scatterAdd_", 3, scatterAdd_Impl);
 
   setPropertyHostFunction(runtime, "selectScatter", 3, selectScatterImpl);
 
   setPropertyHostFunction(runtime, "sgn", 0, sgnImpl);
-
+  setPropertyHostFunction(runtime, "sgn_", 0, sgn_Impl);
   setPropertyHostFunction(runtime, "sigmoid", 0, sigmoidImpl);
-
+  setPropertyHostFunction(runtime, "sigmoid_", 0, sigmoid_Impl);
   setPropertyHostFunction(runtime, "sign", 0, signImpl);
-
+  setPropertyHostFunction(runtime, "sign_", 0, sign_Impl);
   setPropertyHostFunction(runtime, "signbit", 0, signbitImpl);
   setPropertyHostFunction(runtime, "sin", 0, sinImpl);
-
+  setPropertyHostFunction(runtime, "sin_", 0, sin_Impl);
   setPropertyHostFunction(runtime, "sinc", 0, sincImpl);
-
+  setPropertyHostFunction(runtime, "sinc_", 0, sinc_Impl);
   setPropertyHostFunction(runtime, "sinh", 0, sinhImpl);
+  setPropertyHostFunction(runtime, "sinh_", 0, sinh_Impl);
 
   setPropertyHostFunction(runtime, "slice", 0, sliceImpl);
   setPropertyHostFunction(runtime, "sliceScatter", 1, sliceScatterImpl);
@@ -6997,9 +10597,9 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "sparseMask", 1, sparseMaskImpl);
 
   setPropertyHostFunction(runtime, "sqrt", 0, sqrtImpl);
-
+  setPropertyHostFunction(runtime, "sqrt_", 0, sqrt_Impl);
   setPropertyHostFunction(runtime, "square", 0, squareImpl);
-
+  setPropertyHostFunction(runtime, "square_", 0, square_Impl);
   setPropertyHostFunction(
       runtime, "squeeze", 0, TensorHostObjectDeprecated::squeezeImpl);
 
@@ -7008,25 +10608,26 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(
       runtime, "stride", 1, TensorHostObjectDeprecated::strideImpl);
   setPropertyHostFunction(runtime, "sub", 1, subImpl);
-
+  setPropertyHostFunction(runtime, "sub_", 1, sub_Impl);
   setPropertyHostFunction(runtime, "subtract", 1, subtractImpl);
-
+  setPropertyHostFunction(runtime, "subtract_", 1, subtract_Impl);
   setPropertyHostFunction(
       runtime, "sum", 0, TensorHostObjectDeprecated::sumImpl);
   setPropertyHostFunction(runtime, "sumToSize", 1, sumToSizeImpl);
 
   setPropertyHostFunction(runtime, "swapaxes", 2, swapaxesImpl);
-
+  setPropertyHostFunction(runtime, "swapaxes_", 2, swapaxes_Impl);
   setPropertyHostFunction(runtime, "swapdims", 2, swapdimsImpl);
-
+  setPropertyHostFunction(runtime, "swapdims_", 2, swapdims_Impl);
   setPropertyHostFunction(runtime, "symeig", 0, symeigImpl);
   setPropertyHostFunction(runtime, "t", 0, tImpl);
-
+  setPropertyHostFunction(runtime, "t_", 0, t_Impl);
   setPropertyHostFunction(runtime, "take", 1, takeImpl);
   setPropertyHostFunction(runtime, "takeAlongDim", 1, takeAlongDimImpl);
   setPropertyHostFunction(runtime, "tan", 0, tanImpl);
-
+  setPropertyHostFunction(runtime, "tan_", 0, tan_Impl);
   setPropertyHostFunction(runtime, "tanh", 0, tanhImpl);
+  setPropertyHostFunction(runtime, "tanh_", 0, tanh_Impl);
 
   setPropertyHostFunction(runtime, "tile", 1, tileImpl);
   setPropertyHostFunction(runtime, "to", 0, TensorHostObjectDeprecated::toImpl);
@@ -7039,21 +10640,22 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "topk", 1, topkImpl);
   setPropertyHostFunction(runtime, "trace", 0, traceImpl);
 
+  setPropertyHostFunction(runtime, "transpose_", 2, transpose_Impl);
   setPropertyHostFunction(runtime, "triangularSolve", 1, triangularSolveImpl);
   setPropertyHostFunction(runtime, "tril", 0, trilImpl);
-
+  setPropertyHostFunction(runtime, "tril_", 0, tril_Impl);
   setPropertyHostFunction(runtime, "triu", 0, triuImpl);
-
+  setPropertyHostFunction(runtime, "triu_", 0, triu_Impl);
   setPropertyHostFunction(runtime, "trueDivide", 1, trueDivideImpl);
-
+  setPropertyHostFunction(runtime, "trueDivide_", 1, trueDivide_Impl);
   setPropertyHostFunction(runtime, "trunc", 0, truncImpl);
-
+  setPropertyHostFunction(runtime, "trunc_", 0, trunc_Impl);
   setPropertyHostFunction(runtime, "typeAs", 1, typeAsImpl);
 
   setPropertyHostFunction(runtime, "unfold", 3, unfoldImpl);
 
   setPropertyHostFunction(runtime, "unsqueeze", 1, unsqueezeImpl);
-
+  setPropertyHostFunction(runtime, "unsqueeze_", 1, unsqueeze_Impl);
   setPropertyHostFunction(runtime, "values", 0, valuesImpl);
 
   setPropertyHostFunction(runtime, "vdot", 1, vdotImpl);
@@ -7061,6 +10663,8 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "viewAs", 1, viewAsImpl);
 
   setPropertyHostFunction(runtime, "xlogy", 1, xlogyImpl);
+  setPropertyHostFunction(runtime, "xlogy_", 1, xlogy_Impl);
+  setPropertyHostFunction(runtime, "zero_", 0, zero_Impl);
 }
 
 TensorHostObject::~TensorHostObject() {}

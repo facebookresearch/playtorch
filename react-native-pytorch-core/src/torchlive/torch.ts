@@ -152,6 +152,61 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.__iand__.html}
+   * @param other
+   */
+  _Iand_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  _Iand_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.__ilshift__.html}
+   * @param other
+   */
+  _Ilshift_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  _Ilshift_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.__ior__.html}
+   * @param other
+   */
+  _Ior_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  _Ior_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.__irshift__.html}
+   * @param other
+   */
+  _Irshift_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  _Irshift_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.__ixor__.html}
+   * @param other
+   */
+  _Ixor_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  _Ixor_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.__lshift__.html}
    * @param other
    */
@@ -281,10 +336,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.abs_.html}
+
+   */
+  abs_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.absolute.html}
 
    */
   absolute(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.absolute_.html}
+
+   */
+  absolute_(): Tensor;
   /**
    * @experimental
    *
@@ -295,10 +364,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.acos_.html}
+
+   */
+  acos_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.acosh.html}
 
    */
   acosh(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.acosh_.html}
+
+   */
+  acosh_(): Tensor;
   /**
    * Add a scalar or tensor to this tensor.
    *
@@ -308,6 +391,19 @@ export interface Tensor {
    * @param options.alpha The multiplier for `other`. Default: `1`.
    */
   add(other: Scalar | Tensor, options?: {alpha?: Number}): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.add_.html}
+   * @param other
+   * @param options.alpha
+   */
+  add_(other: Tensor, options?: {alpha?: Number}): Tensor;
+  /**
+   * @param other
+   * @param options.alpha
+   */
+  add_(other: Scalar, options?: {alpha?: Number}): Tensor;
   /**
    * @experimental
    *
@@ -325,12 +421,39 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.addbmm_.html}
+   * @param batch1
+   * @param batch2
+   * @param options.beta
+   * @param options.alpha
+   */
+  addbmm_(
+    batch1: Tensor,
+    batch2: Tensor,
+    options?: {beta?: Number; alpha?: Number},
+  ): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.addcdiv.html}
    * @param tensor1
    * @param tensor2
    * @param options.value
    */
   addcdiv(tensor1: Tensor, tensor2: Tensor, options?: {value?: Number}): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.addcdiv_.html}
+   * @param tensor1
+   * @param tensor2
+   * @param options.value
+   */
+  addcdiv_(
+    tensor1: Tensor,
+    tensor2: Tensor,
+    options?: {value?: Number},
+  ): Tensor;
   /**
    * @experimental
    *
@@ -343,6 +466,19 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.addcmul_.html}
+   * @param tensor1
+   * @param tensor2
+   * @param options.value
+   */
+  addcmul_(
+    tensor1: Tensor,
+    tensor2: Tensor,
+    options?: {value?: Number},
+  ): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.addmm.html}
    * @param mat1
    * @param mat2
@@ -350,6 +486,20 @@ export interface Tensor {
    * @param options.alpha
    */
   addmm(
+    mat1: Tensor,
+    mat2: Tensor,
+    options?: {beta?: Number; alpha?: Number},
+  ): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.addmm_.html}
+   * @param mat1
+   * @param mat2
+   * @param options.beta
+   * @param options.alpha
+   */
+  addmm_(
     mat1: Tensor,
     mat2: Tensor,
     options?: {beta?: Number; alpha?: Number},
@@ -371,6 +521,20 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.addmv_.html}
+   * @param mat
+   * @param vec
+   * @param options.beta
+   * @param options.alpha
+   */
+  addmv_(
+    mat: Tensor,
+    vec: Tensor,
+    options?: {beta?: Number; alpha?: Number},
+  ): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.addr.html}
    * @param vec1
    * @param vec2
@@ -378,6 +542,20 @@ export interface Tensor {
    * @param options.alpha
    */
   addr(
+    vec1: Tensor,
+    vec2: Tensor,
+    options?: {beta?: Number; alpha?: Number},
+  ): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.addr_.html}
+   * @param vec1
+   * @param vec2
+   * @param options.beta
+   * @param options.alpha
+   */
+  addr_(
     vec1: Tensor,
     vec2: Tensor,
     options?: {beta?: Number; alpha?: Number},
@@ -428,10 +606,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.arccos_.html}
+
+   */
+  arccos_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.arccosh.html}
 
    */
   arccosh(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.arccosh_.html}
+
+   */
+  arccosh_(): Tensor;
   /**
    * @experimental
    *
@@ -442,10 +634,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.arcsin_.html}
+
+   */
+  arcsin_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.arcsinh.html}
 
    */
   arcsinh(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.arcsinh_.html}
+
+   */
+  arcsinh_(): Tensor;
   /**
    * @experimental
    *
@@ -463,10 +669,31 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.arctan2_.html}
+   * @param other
+   */
+  arctan2_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.arctan_.html}
+
+   */
+  arctan_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.arctanh.html}
 
    */
   arctanh(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.arctanh_.html}
+
+   */
+  arctanh_(): Tensor;
   /**
    * Returns the indices of the maximum value of all elements in the input
    * tensor.
@@ -533,10 +760,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.asin_.html}
+
+   */
+  asin_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.asinh.html}
 
    */
   asinh(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.asinh_.html}
+
+   */
+  asinh_(): Tensor;
   /**
    * @experimental
    *
@@ -554,10 +795,31 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.atan2_.html}
+   * @param other
+   */
+  atan2_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.atan_.html}
+
+   */
+  atan_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.atanh.html}
 
    */
   atanh(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.atanh_.html}
+
+   */
+  atanh_(): Tensor;
   /**
    * @experimental
    *
@@ -568,6 +830,20 @@ export interface Tensor {
    * @param options.alpha
    */
   baddbmm(
+    batch1: Tensor,
+    batch2: Tensor,
+    options?: {beta?: Number; alpha?: Number},
+  ): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.baddbmm_.html}
+   * @param batch1
+   * @param batch2
+   * @param options.beta
+   * @param options.alpha
+   */
+  baddbmm_(
     batch1: Tensor,
     batch2: Tensor,
     options?: {beta?: Number; alpha?: Number},
@@ -586,6 +862,17 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.bitwise_and_.html}
+   * @param other
+   */
+  bitwiseAnd_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  bitwiseAnd_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.bitwise_left_shift.html}
    * @param other
    */
@@ -597,10 +884,28 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.bitwise_left_shift_.html}
+   * @param other
+   */
+  bitwiseLeftShift_(other: Tensor): Tensor;
+  /**
+   * @param other
+   */
+  bitwiseLeftShift_(other: Scalar): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.bitwise_not.html}
 
    */
   bitwiseNot(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.bitwise_not_.html}
+
+   */
+  bitwiseNot_(): Tensor;
   /**
    * @experimental
    *
@@ -615,6 +920,17 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.bitwise_or_.html}
+   * @param other
+   */
+  bitwiseOr_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  bitwiseOr_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.bitwise_right_shift.html}
    * @param other
    */
@@ -626,6 +942,17 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.bitwise_right_shift_.html}
+   * @param other
+   */
+  bitwiseRightShift_(other: Tensor): Tensor;
+  /**
+   * @param other
+   */
+  bitwiseRightShift_(other: Scalar): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.bitwise_xor.html}
    * @param other
    */
@@ -634,6 +961,17 @@ export interface Tensor {
    * @param other
    */
   bitwiseXor(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.bitwise_xor_.html}
+   * @param other
+   */
+  bitwiseXor_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  bitwiseXor_(other: Tensor): Tensor;
   /**
    * @experimental
    *
@@ -662,6 +1000,13 @@ export interface Tensor {
 
    */
   ceil(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.ceil_.html}
+
+   */
+  ceil_(): Tensor;
   /**
    * @experimental
    *
@@ -720,6 +1065,17 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.clamp_max_.html}
+   * @param max
+   */
+  clampMax_(max: Scalar): Tensor;
+  /**
+   * @param max
+   */
+  clampMax_(max: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.clamp_min.html}
    * @param min
    */
@@ -728,6 +1084,17 @@ export interface Tensor {
    * @param min
    */
   clampMin(min: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.clamp_min_.html}
+   * @param min
+   */
+  clampMin_(min: Scalar): Tensor;
+  /**
+   * @param min
+   */
+  clampMin_(min: Tensor): Tensor;
   /**
    * @experimental
    *
@@ -757,6 +1124,13 @@ export interface Tensor {
    */
   conjPhysical(): Tensor;
   /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.conj_physical_.html}
+
+   */
+  conjPhysical_(): Tensor;
+  /**
    * Returns a contiguous in memory tensor containing the same data as this
    * tensor. If this tensor is already in the specified memory format, this
    * function returns this tensor.
@@ -769,6 +1143,14 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.copy_.html}
+   * @param src
+   * @param options.nonBlocking
+   */
+  copy_(src: Tensor, options?: {nonBlocking?: boolean}): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.copysign.html}
    * @param other
    */
@@ -777,6 +1159,17 @@ export interface Tensor {
    * @param other
    */
   copysign(other: Scalar): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.copysign_.html}
+   * @param other
+   */
+  copysign_(other: Tensor): Tensor;
+  /**
+   * @param other
+   */
+  copysign_(other: Scalar): Tensor;
   /**
    * @experimental
    *
@@ -794,10 +1187,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.cos_.html}
+
+   */
+  cos_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.cosh.html}
 
    */
   cosh(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.cosh_.html}
+
+   */
+  cosh_(): Tensor;
   /**
    * @experimental
    *
@@ -854,6 +1261,13 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.deg2rad_.html}
+
+   */
+  deg2rad_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.dequantize.html}
 
    */
@@ -872,6 +1286,13 @@ export interface Tensor {
 
    */
   detach(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.detach_.html}
+
+   */
+  detach_(): Tensor;
   /**
    * @experimental
    *
@@ -915,6 +1336,13 @@ export interface Tensor {
 
    */
   digamma(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.digamma_.html}
+
+   */
+  digamma_(): Tensor;
   /**
    * @experimental
    *
@@ -963,10 +1391,28 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.eq_.html}
+   * @param other
+   */
+  eq_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  eq_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.erf.html}
 
    */
   erf(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.erf_.html}
+
+   */
+  erf_(): Tensor;
   /**
    * @experimental
    *
@@ -977,10 +1423,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.erfc_.html}
+
+   */
+  erfc_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.erfinv.html}
 
    */
   erfinv(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.erfinv_.html}
+
+   */
+  erfinv_(): Tensor;
   /**
    * @experimental
    *
@@ -995,6 +1455,20 @@ export interface Tensor {
 
    */
   exp2(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.exp2_.html}
+
+   */
+  exp2_(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.exp_.html}
+
+   */
+  exp_(): Tensor;
   /**
    * Returns a new view of the tensor expanded to a larger size.
    *
@@ -1020,10 +1494,43 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.expm1_.html}
+
+   */
+  expm1_(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.fill_diagonal_.html}
+   * @param fillValue
+   * @param options.wrap
+   */
+  fillDiagonal_(fillValue: Scalar, options?: {wrap?: boolean}): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.fill_.html}
+   * @param value
+   */
+  fill_(value: Scalar): Tensor;
+  /**
+   * @param value
+   */
+  fill_(value: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.fix.html}
 
    */
   fix(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.fix_.html}
+
+   */
+  fix_(): Tensor;
   /**
    * Reverse the order of a n-D tensor along given axis in dims.
    *
@@ -1060,6 +1567,17 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.float_power_.html}
+   * @param exponent
+   */
+  floatPower_(exponent: Scalar): Tensor;
+  /**
+   * @param exponent
+   */
+  floatPower_(exponent: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.floor.html}
 
    */
@@ -1075,6 +1593,24 @@ export interface Tensor {
    * @param other
    */
   floorDivide(other: Scalar): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.floor_divide_.html}
+   * @param other
+   */
+  floorDivide_(other: Tensor): Tensor;
+  /**
+   * @param other
+   */
+  floorDivide_(other: Scalar): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.floor_.html}
+
+   */
+  floor_(): Tensor;
   /**
    * @experimental
    *
@@ -1103,10 +1639,28 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.fmod_.html}
+   * @param other
+   */
+  fmod_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  fmod_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.frac.html}
 
    */
   frac(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.frac_.html}
+
+   */
+  frac_(): Tensor;
   /**
    * @experimental
    *
@@ -1124,6 +1678,13 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.gcd_.html}
+   * @param other
+   */
+  gcd_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.ge.html}
    * @param other
    */
@@ -1132,6 +1693,17 @@ export interface Tensor {
    * @param other
    */
   ge(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.ge_.html}
+   * @param other
+   */
+  ge_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  ge_(other: Tensor): Tensor;
   /**
    * @experimental
    *
@@ -1171,6 +1743,28 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.greater_equal_.html}
+   * @param other
+   */
+  greaterEqual_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  greaterEqual_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.greater_.html}
+   * @param other
+   */
+  greater_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  greater_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.gt.html}
    * @param other
    */
@@ -1179,6 +1773,17 @@ export interface Tensor {
    * @param other
    */
   gt(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.gt_.html}
+   * @param other
+   */
+  gt_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  gt_(other: Tensor): Tensor;
   /**
    * @experimental
    *
@@ -1193,6 +1798,13 @@ export interface Tensor {
    * @param values
    */
   heaviside(values: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.heaviside_.html}
+   * @param values
+   */
+  heaviside_(values: Tensor): Tensor;
   /**
    * @experimental
    *
@@ -1212,10 +1824,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.hypot_.html}
+   * @param other
+   */
+  hypot_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.i0.html}
 
    */
   i0(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.i0_.html}
+
+   */
+  i0_(): Tensor;
   /**
    * @experimental
    *
@@ -1226,10 +1852,39 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.igamma_.html}
+   * @param other
+   */
+  igamma_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.igammac.html}
    * @param other
    */
   igammac(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.igammac_.html}
+   * @param other
+   */
+  igammac_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.index_add_.html}
+   * @param dim
+   * @param index
+   * @param source
+   * @param options.alpha
+   */
+  indexAdd_(
+    dim: number,
+    index: Tensor,
+    source: Tensor,
+    options?: {alpha?: Number},
+  ): Tensor;
   /**
    * @experimental
    *
@@ -1324,10 +1979,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.lcm_.html}
+   * @param other
+   */
+  lcm_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.ldexp.html}
    * @param other
    */
   ldexp(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.ldexp_.html}
+   * @param other
+   */
+  ldexp_(other: Tensor): Tensor;
   /**
    * @experimental
    *
@@ -1342,6 +2011,17 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.le_.html}
+   * @param other
+   */
+  le_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  le_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.lerp.html}
    * @param end
    * @param weight
@@ -1352,6 +2032,19 @@ export interface Tensor {
    * @param weight
    */
   lerp(end: Tensor, weight: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.lerp_.html}
+   * @param end
+   * @param weight
+   */
+  lerp_(end: Tensor, weight: Scalar): Tensor;
+  /**
+   * @param end
+   * @param weight
+   */
+  lerp_(end: Tensor, weight: Tensor): Tensor;
   /**
    * @experimental
    *
@@ -1377,10 +2070,39 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.less_equal_.html}
+   * @param other
+   */
+  lessEqual_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  lessEqual_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.less_.html}
+   * @param other
+   */
+  less_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  less_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.lgamma.html}
 
    */
   lgamma(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.lgamma_.html}
+
+   */
+  lgamma_(): Tensor;
   /**
    * @experimental
    *
@@ -1398,6 +2120,13 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.log10_.html}
+
+   */
+  log10_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.log1p.html}
 
    */
@@ -1405,10 +2134,31 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.log1p_.html}
+
+   */
+  log1p_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.log2.html}
 
    */
   log2(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.log2_.html}
+
+   */
+  log2_(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.log_.html}
+
+   */
+  log_(): Tensor;
   /**
    * @experimental
    *
@@ -1440,10 +2190,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.logical_and_.html}
+   * @param other
+   */
+  logicalAnd_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.logical_not.html}
 
    */
   logicalNot(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.logical_not_.html}
+
+   */
+  logicalNot_(): Tensor;
   /**
    * @experimental
    *
@@ -1454,10 +2218,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.logical_or_.html}
+   * @param other
+   */
+  logicalOr_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.logical_xor.html}
    * @param other
    */
   logicalXor(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.logical_xor_.html}
+   * @param other
+   */
+  logicalXor_(other: Tensor): Tensor;
   /**
    * @experimental
    *
@@ -1469,6 +2247,17 @@ export interface Tensor {
    * @param other
    */
   lt(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.lt_.html}
+   * @param other
+   */
+  lt_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  lt_(other: Tensor): Tensor;
   /**
    * @experimental
    *
@@ -1507,11 +2296,32 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.masked_fill_.html}
+   * @param mask
+   * @param value
+   */
+  maskedFill_(mask: Tensor, value: Scalar): Tensor;
+  /**
+   * @param mask
+   * @param value
+   */
+  maskedFill_(mask: Tensor, value: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.masked_scatter.html}
    * @param mask
    * @param source
    */
   maskedScatter(mask: Tensor, source: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.masked_scatter_.html}
+   * @param mask
+   * @param source
+   */
+  maskedScatter_(mask: Tensor, source: Tensor): Tensor;
   /**
    * @experimental
    *
@@ -1613,6 +2423,17 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.mul_.html}
+   * @param other
+   */
+  mul_(other: Tensor): Tensor;
+  /**
+   * @param other
+   */
+  mul_(other: Scalar): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.multiply.html}
    * @param other
    */
@@ -1621,6 +2442,17 @@ export interface Tensor {
    * @param other
    */
   multiply(other: Scalar): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.multiply_.html}
+   * @param other
+   */
+  multiply_(other: Tensor): Tensor;
+  /**
+   * @param other
+   */
+  multiply_(other: Scalar): Tensor;
   /**
    * @experimental
    *
@@ -1635,6 +2467,13 @@ export interface Tensor {
    * @param p
    */
   mvlgamma(p: number): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.mvlgamma_.html}
+   * @param p
+   */
+  mvlgamma_(p: number): Tensor;
   /**
    * @experimental
    *
@@ -1673,10 +2512,28 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.ne_.html}
+   * @param other
+   */
+  ne_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  ne_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.neg.html}
 
    */
   neg(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.neg_.html}
+
+   */
+  neg_(): Tensor;
   /**
    * @experimental
    *
@@ -1687,10 +2544,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.negative_.html}
+
+   */
+  negative_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.nextafter.html}
    * @param other
    */
   nextafter(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.nextafter_.html}
+   * @param other
+   */
+  nextafter_(other: Tensor): Tensor;
   /**
    * @experimental
    *
@@ -1709,6 +2580,17 @@ export interface Tensor {
    * @param other
    */
   notEqual(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.not_equal_.html}
+   * @param other
+   */
+  notEqual_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  notEqual_(other: Tensor): Tensor;
   /**
    * @experimental
    *
@@ -1755,6 +2637,13 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.polygamma_.html}
+   * @param n
+   */
+  polygamma_(n: number): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.positive.html}
 
    */
@@ -1773,6 +2662,17 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.pow_.html}
+   * @param exponent
+   */
+  pow_(exponent: Scalar): Tensor;
+  /**
+   * @param exponent
+   */
+  pow_(exponent: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.prelu.html}
    * @param weight
    */
@@ -1786,6 +2686,15 @@ export interface Tensor {
    * @param options.accumulate
    */
   put(index: Tensor, source: Tensor, options?: {accumulate?: boolean}): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.put_.html}
+   * @param index
+   * @param source
+   * @param options.accumulate
+   */
+  put_(index: Tensor, source: Tensor, options?: {accumulate?: boolean}): Tensor;
   /**
    * @experimental
    *
@@ -1817,6 +2726,13 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.rad2deg_.html}
+
+   */
+  rad2deg_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.ravel.html}
 
    */
@@ -1831,10 +2747,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.reciprocal_.html}
+
+   */
+  reciprocal_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.relu.html}
 
    */
   relu(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.relu_.html}
+
+   */
+  relu_(): Tensor;
   /**
    * @experimental
    *
@@ -1849,12 +2779,32 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.remainder_.html}
+   * @param other
+   */
+  remainder_(other: Scalar): Tensor;
+  /**
+   * @param other
+   */
+  remainder_(other: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.renorm.html}
    * @param p
    * @param dim
    * @param maxnorm
    */
   renorm(p: Scalar, dim: number, maxnorm: Scalar): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.renorm_.html}
+   * @param p
+   * @param dim
+   * @param maxnorm
+   */
+  renorm_(p: Scalar, dim: number, maxnorm: Scalar): Tensor;
   /**
    * @experimental
    *
@@ -1883,6 +2833,13 @@ export interface Tensor {
     repeats: number,
     options?: {dim?: number; outputSize?: number},
   ): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.requires_grad_.html}
+   * @param options.requiresGrad
+   */
+  requiresGrad_(options?: {requiresGrad?: boolean}): Tensor;
   /**
    * Returns a tensor with the same data and number of elements as input, but
    * with the specified shape.
@@ -1930,6 +2887,22 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.rsqrt_.html}
+
+   */
+  rsqrt_(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.scatter_add_.html}
+   * @param dim
+   * @param index
+   * @param src
+   */
+  scatterAdd_(dim: number, index: Tensor, src: Tensor): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.select_scatter.html}
    * @param src
    * @param dim
@@ -1943,6 +2916,13 @@ export interface Tensor {
 
    */
   sgn(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sgn_.html}
+
+   */
+  sgn_(): Tensor;
   /**
    * Returns the size of the tensor.
    *
@@ -1959,10 +2939,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sigmoid_.html}
+
+   */
+  sigmoid_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sign.html}
 
    */
   sign(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sign_.html}
+
+   */
+  sign_(): Tensor;
   /**
    * @experimental
    *
@@ -1980,6 +2974,13 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sin_.html}
+
+   */
+  sin_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sinc.html}
 
    */
@@ -1987,10 +2988,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sinc_.html}
+
+   */
+  sinc_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sinh.html}
 
    */
   sinh(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sinh_.html}
+
+   */
+  sinh_(): Tensor;
   /**
    * Returns the size of the tensor.
    *
@@ -2072,10 +3087,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sqrt_.html}
+
+   */
+  sqrt_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.square.html}
 
    */
   square(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.square_.html}
+
+   */
+  square_(): Tensor;
   /**
    * Returns a tensor with all the dimensions of input of size 1 removed.
    *
@@ -2124,6 +3153,19 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sub_.html}
+   * @param other
+   * @param options.alpha
+   */
+  sub_(other: Tensor, options?: {alpha?: Number}): Tensor;
+  /**
+   * @param other
+   * @param options.alpha
+   */
+  sub_(other: Scalar, options?: {alpha?: Number}): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.subtract.html}
    * @param other
    * @param options.alpha
@@ -2134,6 +3176,19 @@ export interface Tensor {
    * @param options.alpha
    */
   subtract(other: Scalar, options?: {alpha?: Number}): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.subtract_.html}
+   * @param other
+   * @param options.alpha
+   */
+  subtract_(other: Tensor, options?: {alpha?: Number}): Tensor;
+  /**
+   * @param other
+   * @param options.alpha
+   */
+  subtract_(other: Scalar, options?: {alpha?: Number}): Tensor;
   /**
    * Returns the sum of all elements in the input tensor.
    *
@@ -2168,11 +3223,27 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.swapaxes_.html}
+   * @param axis0
+   * @param axis1
+   */
+  swapaxes_(axis0: number, axis1: number): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.swapdims.html}
    * @param dim0
    * @param dim1
    */
   swapdims(dim0: number, dim1: number): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.swapdims_.html}
+   * @param dim0
+   * @param dim1
+   */
+  swapdims_(dim0: number, dim1: number): Tensor;
   /**
    * @experimental
    *
@@ -2188,6 +3259,13 @@ export interface Tensor {
 
    */
   t(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.t_.html}
+
+   */
+  t_(): Tensor;
   /**
    * @experimental
    *
@@ -2213,10 +3291,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.tan_.html}
+
+   */
+  tan_(): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.tanh.html}
 
    */
   tanh(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.tanh_.html}
+
+   */
+  tanh_(): Tensor;
   /**
    * @experimental
    *
@@ -2297,6 +3389,14 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.transpose_.html}
+   * @param dim0
+   * @param dim1
+   */
+  transpose_(dim0: number, dim1: number): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.triangular_solve.html}
    * @param A
    * @param options.upper
@@ -2317,10 +3417,24 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.tril_.html}
+   * @param options.diagonal
+   */
+  tril_(options?: {diagonal?: number}): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.triu.html}
    * @param options.diagonal
    */
   triu(options?: {diagonal?: number}): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.triu_.html}
+   * @param options.diagonal
+   */
+  triu_(options?: {diagonal?: number}): Tensor;
   /**
    * @experimental
    *
@@ -2335,10 +3449,28 @@ export interface Tensor {
   /**
    * @experimental
    *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.true_divide_.html}
+   * @param other
+   */
+  trueDivide_(other: Tensor): Tensor;
+  /**
+   * @param other
+   */
+  trueDivide_(other: Scalar): Tensor;
+  /**
+   * @experimental
+   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.trunc.html}
 
    */
   trunc(): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.trunc_.html}
+
+   */
+  trunc_(): Tensor;
   /**
    * @experimental
    *
@@ -2364,6 +3496,13 @@ export interface Tensor {
    * @param dim The index at which to insert the singleton dimension.
    */
   unsqueeze(dim: number): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.unsqueeze_.html}
+   * @param dim
+   */
+  unsqueeze_(dim: number): Tensor;
   /**
    * @experimental
    *
@@ -2396,6 +3535,24 @@ export interface Tensor {
    * @param other
    */
   xlogy(other: Scalar): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.xlogy_.html}
+   * @param other
+   */
+  xlogy_(other: Tensor): Tensor;
+  /**
+   * @param other
+   */
+  xlogy_(other: Scalar): Tensor;
+  /**
+   * @experimental
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.zero_.html}
+
+   */
+  zero_(): Tensor;
   /**
    * Access tensor with index.
    *

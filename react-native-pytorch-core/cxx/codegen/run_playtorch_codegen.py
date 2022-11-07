@@ -10,14 +10,12 @@ from pathlib import Path
 import yaml
 
 from ..codegen.op_data_structures import OpGroup, OpInfo
-from ..codegen.playtorch_codegen import gen_cpp_file
+from ..codegen.playtorch_codegen import gen_cpp_code
 
-xplat_path = Path().absolute()
-while not xplat_path.name.endswith("xplat"):
-    xplat_path = xplat_path.parent
-codegen_path = xplat_path.joinpath(
-    "playtorch/playtorch-github/react-native-pytorch-core/cxx/codegen"
-)
+react_native_pytorch_core_path = Path().absolute()
+while not react_native_pytorch_core_path.name.endswith("react-native-pytorch-core"):
+    react_native_pytorch_core_path = react_native_pytorch_core_path.parent
+codegen_path = react_native_pytorch_core_path.joinpath("cxx/codegen")
 
 try:
     with open(codegen_path.joinpath("Declarations.json")) as file:
@@ -69,9 +67,17 @@ for op in ops_decl:
         else:
             ops_dict[op.name] = OpGroup(op)
 
-with open(
-    codegen_path.parent.joinpath("src/torchlive/torch/TensorHostObject.cpp"),
-    "w",
-) as file:
-    file.write(gen_cpp_file(ops_dict))
-    file.close()
+tensor_host_object_cpp_path = react_native_pytorch_core_path.joinpath(
+    "cxx/src/torchlive/torch/TensorHostObject.cpp"
+)
+cpp_text = tensor_host_object_cpp_path.read_text()
+cpp_lines = cpp_text.split("\n")
+start_codegen_index = cpp_lines.index("namespace {")
+end_codegen_index = (
+    cpp_lines[start_codegen_index:].index("TensorHostObject::~TensorHostObject() {}")
+    + start_codegen_index
+)
+new_text = "\n".join(cpp_lines[:start_codegen_index])
+new_text += gen_cpp_code(ops_dict)
+new_text += "\n".join(cpp_lines[end_codegen_index:])
+tensor_host_object_cpp_path.write_text(new_text)

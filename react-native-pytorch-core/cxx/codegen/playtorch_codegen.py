@@ -149,7 +149,7 @@ def gen_cpp_func_impl(op_group: OpGroup) -> str:
     return function_string
 
 
-def gen_cpp_file(ops) -> str:
+def gen_cpp_code(ops) -> str:
     sorted_ops = list(ops.keys())
     sorted_ops.sort()
     function_impls = [gen_cpp_func_impl(ops[op_name]) for op_name in sorted_ops]
@@ -160,15 +160,6 @@ def gen_cpp_file(ops) -> str:
         else ""
         for i in range(len(sorted_ops))
     ]
-
-    file_string = cpp_code_strings.file_start
-
-    file_string += cpp_code_strings.start_namespace
-    for func_impl in function_impls:
-        file_string += func_impl
-    file_string += cpp_code_strings.end_namespace
-
-    file_string += cpp_code_strings.tensor_host_object_start
 
     set_property_host_functions = [
         cpp_code_strings.set_property_host_function_template.substitute(
@@ -182,7 +173,11 @@ def gen_cpp_file(ops) -> str:
         )
         for op_name in sorted_ops
     ]
-    for set_property_host_function in set_property_host_functions:
-        file_string += set_property_host_function
-    file_string += cpp_code_strings.file_end
-    return file_string
+
+    generated_code = cpp_code_strings.start_namespace
+    generated_code += "\n".join(function_impls)
+    generated_code += cpp_code_strings.end_namespace
+    generated_code += cpp_code_strings.tensor_host_object_start
+    generated_code += "\n".join(set_property_host_functions)
+    generated_code += cpp_code_strings.tensor_host_object_end
+    return generated_code

@@ -79,6 +79,10 @@ cpp_positional_argument_string_templates = {
     ),
     "const at::Scalar &": Template("""auto ${name} = args.asScalar(${arg_index});"""),
     "int64_t": Template("""auto ${name} = args.asInt64(${arg_index});"""),
+    "at::IntArrayRef": Template(
+        """auto ${name}Pointer = args.asIntArrayRefPtr(${arg_index});
+auto ${name} = c10::ArrayRef(*${name}Pointer);"""
+    ),
 }
 
 cpp_kword_argument_string_templates = {
@@ -123,6 +127,7 @@ cpp_check_argument_type_templates = {
     "const at::Scalar &": Template("args.isScalar(${idx})"),
     "const at::Tensor &": Template("args.isHostObject<TensorHostObject>(${idx})"),
     "int64_t": Template("args.isInt64(${idx})"),
+    "at::IntArrayRef": Template("args.isIntArrayRef(${idx})"),
 }
 
 cpp_check_kword_argument_type_templates = {

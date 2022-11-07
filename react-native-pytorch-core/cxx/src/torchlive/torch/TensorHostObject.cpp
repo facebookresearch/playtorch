@@ -144,6 +144,54 @@ jsi::Value argminImpl(
       "Arguments for op argmin do not match any of the following signatures:at::Tensor (const at::Tensor &, c10::optional<int64_t>, bool)");
 }
 
+jsi::Value expandImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isIntArrayRef(0) &&
+      args.isBoolKwarg(1, "implicit", false)) {
+    auto sizePointer = args.asIntArrayRefPtr(0);
+    auto size = c10::ArrayRef(*sizePointer);
+    auto implicit = args.asBoolKwarg(1, "implicit", false);
+    at::Tensor result = self->tensor.expand(size, implicit);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op expand do not match any of the following signatures:at::Tensor (const at::Tensor &, at::IntArrayRef, bool)");
+}
+
+jsi::Value flipImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isIntArrayRef(0)) {
+    auto dimsPointer = args.asIntArrayRefPtr(0);
+    auto dims = c10::ArrayRef(*dimsPointer);
+    at::Tensor result = self->tensor.flip(dims);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op flip do not match any of the following signatures:at::Tensor (const at::Tensor &, at::IntArrayRef)");
+}
+
 jsi::Value itemImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -230,6 +278,52 @@ jsi::Value mulImpl(
   throw facebook::jsi::JSError(
       runtime,
       "Arguments for op mul do not match any of the following signatures:at::Tensor (const at::Tensor &, const at::Tensor &), at::Tensor (const at::Tensor &, const at::Scalar &)");
+}
+
+jsi::Value permuteImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isIntArrayRef(0)) {
+    auto dimsPointer = args.asIntArrayRefPtr(0);
+    auto dims = c10::ArrayRef(*dimsPointer);
+    at::Tensor result = self->tensor.permute(dims);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op permute do not match any of the following signatures:at::Tensor (const at::Tensor &, at::IntArrayRef)");
+}
+
+jsi::Value reshapeImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isIntArrayRef(0)) {
+    auto shapePointer = args.asIntArrayRefPtr(0);
+    auto shape = c10::ArrayRef(*shapePointer);
+    at::Tensor result = self->tensor.reshape(shape);
+    if (result.dtype() == utils::constants::getDtypeFromString("int64")) {
+      result = result.to(c10::ScalarType::Int);
+    }
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
+  }
+  throw facebook::jsi::JSError(
+      runtime,
+      "Arguments for op reshape do not match any of the following signatures:at::Tensor (const at::Tensor &, at::IntArrayRef)");
 }
 
 jsi::Value sqrtImpl(
@@ -330,17 +424,13 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
       runtime, "data", 0, TensorHostObjectDeprecated::dataImpl);
   setPropertyHostFunction(
       runtime, "div", 1, TensorHostObjectDeprecated::divImpl);
-  setPropertyHostFunction(
-      runtime, "expand", 1, TensorHostObjectDeprecated::expandImpl);
-  setPropertyHostFunction(
-      runtime, "flip", 1, TensorHostObjectDeprecated::flipImpl);
+  setPropertyHostFunction(runtime, "expand", 1, expandImpl);
+  setPropertyHostFunction(runtime, "flip", 1, flipImpl);
   setPropertyHostFunction(runtime, "item", 0, itemImpl);
   setPropertyHostFunction(runtime, "matmul", 1, matmulImpl);
   setPropertyHostFunction(runtime, "mul", 1, mulImpl);
-  setPropertyHostFunction(
-      runtime, "permute", 1, TensorHostObjectDeprecated::permuteImpl);
-  setPropertyHostFunction(
-      runtime, "reshape", 1, TensorHostObjectDeprecated::reshapeImpl);
+  setPropertyHostFunction(runtime, "permute", 1, permuteImpl);
+  setPropertyHostFunction(runtime, "reshape", 1, reshapeImpl);
   setPropertyHostFunction(
       runtime, "softmax", 1, TensorHostObjectDeprecated::softmaxImpl);
   setPropertyHostFunction(runtime, "sqrt", 0, sqrtImpl);

@@ -77,5 +77,46 @@ bool ArgumentParser::atLeastNumArguments(size_t minArgCount) const {
   return helpers::parseTensorOptions(runtime_, args_, idx, count_);
 }
 
+bool ArgumentParser::isScalar(size_t idx) const {
+  return args_[idx].isNumber();
+}
+
+bool ArgumentParser::isScalarKwarg(
+    size_t idx,
+    const std::string& keyword,
+    bool required) const {
+  jsi::Value val = keywordValue(idx, keyword);
+  if (!required) {
+    return val.isUndefined() || val.isNumber();
+  } else {
+    return val.isNumber();
+  }
+}
+
+at::Scalar ArgumentParser::asScalar(size_t idx) const {
+  return at::Scalar(args_[idx].asNumber());
+}
+
+at::Scalar ArgumentParser::asScalarKwarg(size_t idx, const std::string& keyword)
+    const {
+  auto scalarValue = keywordValue(idx, keyword);
+  if (scalarValue.isUndefined()) {
+    throw facebook::jsi::JSError(runtime_, "scalarValue undefined");
+  } else {
+    return at::Scalar(scalarValue.asNumber());
+  }
+}
+
+at::Scalar ArgumentParser::asScalarKwarg(
+    size_t idx,
+    const std::string& keyword,
+    at::Scalar defaultValue) const {
+  try {
+    return asScalarKwarg(idx, keyword);
+  } catch (facebook::jsi::JSError& error) {
+    return defaultValue;
+  }
+}
+
 } // namespace utils
 } // namespace torchlive

@@ -202,11 +202,10 @@ export interface Tensor {
    * tensor. If this tensor is already in the specified memory format, this
    * function returns this tensor.
    *
-   * @param options.memoryFormat The desired memory format of returned Tensor. Default: torch.contiguousFormat.
-   *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.contiguous.html}
+   * @param options.memoryFormat
    */
-  contiguous(options?: {memoryFormat: MemoryFormat}): Tensor;
+  contiguous(options?: {memoryFormat?: MemoryFormat}): Tensor;
   /**
    * Returns the tensor data as `TypedArray` buffer.
    *

@@ -37,7 +37,6 @@ static const std::vector<std::string> METHODS = {SIZE, TOSTRING};
 
 using namespace facebook;
 namespace {
-
 jsi::Value absImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -68,7 +67,6 @@ jsi::Value addImpl(
       args.isScalarKwarg(1, "alpha", false)) {
     auto other = args.asHostObject<TensorHostObject>(0)->tensor;
     auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
-
     at::Tensor result = self->tensor.add(other, alpha);
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(result));
@@ -78,7 +76,6 @@ jsi::Value addImpl(
       args.isScalarKwarg(1, "alpha", false)) {
     auto other = args.asScalar(0);
     auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
-
     at::Tensor result = self->tensor.add(other, alpha);
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(result));
@@ -132,7 +129,6 @@ jsi::Value matmulImpl(
   auto self = args.thisAsHostObject<TensorHostObject>();
   if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
     auto other = args.asHostObject<TensorHostObject>(0)->tensor;
-
     at::Tensor result = self->tensor.matmul(other);
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(result));
@@ -152,7 +148,6 @@ jsi::Value mulImpl(
   auto self = args.thisAsHostObject<TensorHostObject>();
   if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
     auto other = args.asHostObject<TensorHostObject>(0)->tensor;
-
     at::Tensor result = self->tensor.mul(other);
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(result));
@@ -160,7 +155,6 @@ jsi::Value mulImpl(
 
   if (args.atLeastNumArguments(1) && args.isScalar(0)) {
     auto other = args.asScalar(0);
-
     at::Tensor result = self->tensor.mul(other);
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(result));
@@ -200,7 +194,6 @@ jsi::Value subImpl(
       args.isScalarKwarg(1, "alpha", false)) {
     auto other = args.asHostObject<TensorHostObject>(0)->tensor;
     auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
-
     at::Tensor result = self->tensor.sub(other, alpha);
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(result));
@@ -210,7 +203,6 @@ jsi::Value subImpl(
       args.isScalarKwarg(1, "alpha", false)) {
     auto other = args.asScalar(0);
     auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
-
     at::Tensor result = self->tensor.sub(other, alpha);
     return utils::helpers::createFromHostObject<TensorHostObject>(
         runtime, std::move(result));

@@ -11,7 +11,10 @@ gen_cpp_func_add0 = """
             auto alphaValue = args.keywordValue(1, "alpha");
             auto alpha = alphaValue.isUndefined() ? at::Scalar(1) : at::Scalar(alphaValue.asNumber());
 
-            at::Tensor result = self->tensor.add(other, alpha);
+            auto result = self->tensor.add(other, alpha);
+            if(result.dtype() == utils::constants::getDtypeFromString("int64")) {
+                result = result.to(c10::ScalarType::Int);
+            }
             return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(result));
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &)
@@ -29,7 +32,10 @@ gen_cpp_func_add1 = """
             auto alphaValue = args.keywordValue(1, "alpha");
             auto alpha = alphaValue.isUndefined() ? at::Scalar(1) : at::Scalar(alphaValue.asNumber());
 
-            at::Tensor result = self->tensor.add(other, alpha);
+            auto result = self->tensor.add(other, alpha);
+            if(result.dtype() == utils::constants::getDtypeFromString("int64")) {
+                result = result.to(c10::ScalarType::Int);
+            }
             return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(result));
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)
@@ -90,7 +96,10 @@ jsi::Value addImpl(
             auto alphaValue = args.keywordValue(1, "alpha");
             auto alpha = alphaValue.isUndefined() ? at::Scalar(1) : at::Scalar(alphaValue.asNumber());
 
-            at::Tensor result = self->tensor.add(other, alpha);
+            auto result = self->tensor.add(other, alpha);
+            if(result.dtype() == utils::constants::getDtypeFromString("int64")) {
+                result = result.to(c10::ScalarType::Int);
+            }
             return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(result));
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &)
@@ -106,7 +115,10 @@ jsi::Value addImpl(
             auto alphaValue = args.keywordValue(1, "alpha");
             auto alpha = alphaValue.isUndefined() ? at::Scalar(1) : at::Scalar(alphaValue.asNumber());
 
-            at::Tensor result = self->tensor.add(other, alpha);
+            auto result = self->tensor.add(other, alpha);
+            if(result.dtype() == utils::constants::getDtypeFromString("int64")) {
+                result = result.to(c10::ScalarType::Int);
+            }
             return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(result));
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)
@@ -231,7 +243,10 @@ jsi::Value addImpl(
             auto alphaValue = args.keywordValue(1, "alpha");
             auto alpha = alphaValue.isUndefined() ? at::Scalar(1) : at::Scalar(alphaValue.asNumber());
 
-            at::Tensor result = self->tensor.add(other, alpha);
+            auto result = self->tensor.add(other, alpha);
+            if(result.dtype() == utils::constants::getDtypeFromString("int64")) {
+                result = result.to(c10::ScalarType::Int);
+            }
             return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(result));
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &)
@@ -247,7 +262,10 @@ jsi::Value addImpl(
             auto alphaValue = args.keywordValue(1, "alpha");
             auto alpha = alphaValue.isUndefined() ? at::Scalar(1) : at::Scalar(alphaValue.asNumber());
 
-            at::Tensor result = self->tensor.add(other, alpha);
+            auto result = self->tensor.add(other, alpha);
+            if(result.dtype() == utils::constants::getDtypeFromString("int64")) {
+                result = result.to(c10::ScalarType::Int);
+            }
             return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(result));
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)
@@ -310,7 +328,10 @@ jsi::Value mulImpl(
             auto self = args.thisAsHostObject<TensorHostObject>();
             auto other = args.asHostObject<TensorHostObject>(0)->tensor;
 
-            at::Tensor result = self->tensor.mul(other);
+            auto result = self->tensor.mul(other);
+            if(result.dtype() == utils::constants::getDtypeFromString("int64")) {
+                result = result.to(c10::ScalarType::Int);
+            }
             return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(result));
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Tensor &)
@@ -324,7 +345,10 @@ jsi::Value mulImpl(
             auto self = args.thisAsHostObject<TensorHostObject>();
             auto other = args[0].asNumber();
 
-            at::Tensor result = self->tensor.mul(other);
+            auto result = self->tensor.mul(other);
+            if(result.dtype() == utils::constants::getDtypeFromString("int64")) {
+                result = result.to(c10::ScalarType::Int);
+            }
             return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(result));
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Scalar &)
@@ -350,7 +374,10 @@ jsi::Value subImpl(
             auto alphaValue = args.keywordValue(1, "alpha");
             auto alpha = alphaValue.isUndefined() ? at::Scalar(1) : at::Scalar(alphaValue.asNumber());
 
-            at::Tensor result = self->tensor.sub(other, alpha);
+            auto result = self->tensor.sub(other, alpha);
+            if(result.dtype() == utils::constants::getDtypeFromString("int64")) {
+                result = result.to(c10::ScalarType::Int);
+            }
             return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(result));
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Tensor &, const at::Scalar &)
@@ -366,7 +393,10 @@ jsi::Value subImpl(
             auto alphaValue = args.keywordValue(1, "alpha");
             auto alpha = alphaValue.isUndefined() ? at::Scalar(1) : at::Scalar(alphaValue.asNumber());
 
-            at::Tensor result = self->tensor.sub(other, alpha);
+            auto result = self->tensor.sub(other, alpha);
+            if(result.dtype() == utils::constants::getDtypeFromString("int64")) {
+                result = result.to(c10::ScalarType::Int);
+            }
             return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(result));
         } catch (jsi::JSError& error) {
         // Arguments do not match signature at::Tensor (const at::Tensor &, const at::Scalar &, const at::Scalar &)

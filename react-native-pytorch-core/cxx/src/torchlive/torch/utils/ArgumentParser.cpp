@@ -123,6 +123,18 @@ bool ArgumentParser::isInt64(size_t idx) const {
   return args_[idx].isNumber();
 }
 
+bool ArgumentParser::isInt64Kwarg(
+    size_t idx,
+    const std::string& keyword,
+    bool required) const {
+  jsi::Value val = keywordValue(idx, keyword);
+  if (!required) {
+    return val.isUndefined() || val.isNumber();
+  } else {
+    return val.isNumber();
+  }
+}
+
 bool ArgumentParser::isIntArrayRef(size_t idx) const {
   return args_[0].isNumber() ||
       (args_[0].isObject() && args_[0].asObject(runtime_).isArray(runtime_));
@@ -221,6 +233,20 @@ c10::optional<int64_t> ArgumentParser::asC10OptionalInt64Kwarg(
 
 int64_t ArgumentParser::asInt64(size_t idx) const {
   return asInteger(idx);
+}
+
+int64_t ArgumentParser::asInt64Kwarg(size_t idx, const std::string& keyword)
+    const {
+  return keywordValue(idx, keyword).asNumber();
+}
+
+int64_t ArgumentParser::asInt64Kwarg(
+    size_t idx,
+    const std::string& keyword,
+    int64_t defaultValue) const {
+  return keywordValue(idx, keyword).isUndefined()
+      ? defaultValue
+      : keywordValue(idx, keyword).asNumber();
 }
 
 std::shared_ptr<std::vector<int64_t>> ArgumentParser::asIntArrayRefPtr(

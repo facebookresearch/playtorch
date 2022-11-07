@@ -9,7 +9,7 @@ from pathlib import Path
 
 import yaml
 
-from ..codegen.op_data_structures import OpGroup, OpInfo
+from ..codegen.op_data_structures import camelCase, OpGroup, OpInfo
 from ..codegen.playtorch_codegen import gen_cpp_code, gen_ts_tensor_interface
 
 react_native_pytorch_core_path = Path().absolute()
@@ -35,7 +35,7 @@ except FileNotFoundError:
                 json.dumps(ops_decl)
             )  # so that next time we can load it quickly
 
-all_tensor_ops = [
+deprecated_tensor_ops = [
     "abs",
     "add",
     "argmax",
@@ -63,13 +63,14 @@ all_tensor_ops = [
     "unsqueeze",
 ]
 ops_dict = {}
-for op in ops_decl:
-    if "Tensor" in op["method_of"] and op["operator_name"] in all_tensor_ops:
-        op = OpInfo.from_dict(op)
-        if op.name in ops_dict:
-            ops_dict[op.name].ops.append(op)
+for op_dict in ops_decl:
+    if "Tensor" in op_dict["method_of"]:
+        op = OpInfo.from_dict(op_dict)
+        cc_op_name = camelCase(op.name)
+        if cc_op_name in ops_dict:
+            ops_dict[cc_op_name].ops.append(op)
         else:
-            ops_dict[op.name] = OpGroup(op)
+            ops_dict[cc_op_name] = OpGroup(op)
 
 # Generate TensorHostObject.cpp
 tensor_host_object_cpp_path = react_native_pytorch_core_path.joinpath(
@@ -83,7 +84,7 @@ end_codegen_index = (
     + start_codegen_index
 )
 new_text = "\n".join(cpp_lines[:start_codegen_index])
-new_text += gen_cpp_code(ops_dict)
+new_text += gen_cpp_code(ops_dict, deprecated_tensor_ops)
 new_text += "\n".join(cpp_lines[end_codegen_index:])
 tensor_host_object_cpp_path.write_text(new_text)
 
@@ -96,6 +97,6 @@ ts_end_codegen_index = (
     ts_lines[ts_start_codegen_index:].index("} // Tensor") + ts_start_codegen_index
 )
 ts_new_text = "\n".join(ts_lines[:ts_start_codegen_index])
-ts_new_text += gen_ts_tensor_interface(ops_dict)
+ts_new_text += gen_ts_tensor_interface(ops_dict, deprecated_tensor_ops)
 ts_new_text += "\n".join(ts_lines[ts_end_codegen_index + 1 :])
 torch_ts_path.write_text(ts_new_text)

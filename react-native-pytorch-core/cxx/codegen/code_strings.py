@@ -288,6 +288,7 @@ required_ts_argument_type_mappings = {
     "const at::Scalar &": "Scalar",
     "int64_t": "number",
     "at::IntArrayRef": "number[]",
+    "c10::optional<c10::string_view>_div_roundingMode": '"trunc" | "floor"',
 }
 
 optional_ts_argument_type_mappings = {
@@ -327,7 +328,7 @@ special_case_links = {
 
 ts_param_template = Template("   * @param ${name} ${description}")
 ts_arg_template = Template("${name}: ${type}")
-ts_options_template = Template("options?: {${optional_arguments}}")
+ts_options_template = Template("options${question_mark}: {${optional_arguments}}")
 
 ts_end_interface = "\n} // Tensor\n"
 

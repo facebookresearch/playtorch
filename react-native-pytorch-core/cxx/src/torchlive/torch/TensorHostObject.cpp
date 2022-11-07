@@ -36,7 +36,6 @@ static const std::vector<std::string> PROPERTIES = {DATA, DTYPE, SHAPE};
 static const std::vector<std::string> METHODS = {SIZE, TOSTRING};
 
 using namespace facebook;
-
 namespace {
 
 jsi::Value absImpl(

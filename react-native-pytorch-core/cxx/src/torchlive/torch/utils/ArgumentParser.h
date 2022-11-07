@@ -79,6 +79,8 @@ class ArgumentParser {
       bool required) const;
   bool isInt64(size_t idx) const;
   bool isIntArrayRef(size_t idx) const;
+  bool isStringKwarg(size_t idx, const std::string& keyword, bool required)
+      const;
 
   at::Scalar asScalar(size_t idx) const;
   at::Scalar asScalarKwarg(size_t idx, const std::string& keyword) const;
@@ -98,6 +100,7 @@ class ArgumentParser {
       c10::optional<int64_t> defaultValue) const;
   int64_t asInt64(size_t idx) const;
   std::shared_ptr<std::vector<int64_t>> asIntArrayRefPtr(size_t idx) const;
+  std::string asStringKwarg(size_t idx, const std::string& keyword) const;
 
  private:
   facebook::jsi::Runtime& runtime_;

@@ -117,6 +117,10 @@ bool ArgumentParser::isC10OptionalInt64Kwarg(
   }
 }
 
+bool ArgumentParser::isInt64(size_t idx) const {
+  return args_[idx].isNumber();
+}
+
 at::Scalar ArgumentParser::asScalar(size_t idx) const {
   return at::Scalar(args_[idx].asNumber());
 }
@@ -182,6 +186,10 @@ c10::optional<int64_t> ArgumentParser::asC10OptionalInt64Kwarg(
   } catch (facebook::jsi::JSError& error) {
     return defaultValue;
   }
+}
+
+int64_t ArgumentParser::asInt64(size_t idx) const {
+  return asInteger(idx);
 }
 
 } // namespace utils

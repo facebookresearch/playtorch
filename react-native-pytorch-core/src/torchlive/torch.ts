@@ -137,23 +137,27 @@ export type MemoryFormat =
 
 // Adopt the notion of a Scalar
 export type Scalar = number;
-
 export interface Tensor {
   /**
    * Computes the absolute value of each element in input.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.abs.html}
+
    */
   abs(): Tensor;
   /**
    * Add a scalar or tensor to this tensor.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.add.html}
-   *
-   * @param other Scalar or tensor to be added to each element in this tensor.
-   * @param options.alpha The multiplier for `other`. Default: `1`.
+   * @param other
+   * @param options.alpha
    */
-  add(other: Scalar | Tensor, options?: {alpha?: Number}): Tensor;
+  add(other: Tensor, options?: {alpha?: Number}): Tensor;
+  /**
+   * @param other
+   * @param options.alpha
+   */
+  add(other: Scalar, options?: {alpha?: Number}): Tensor;
   /**
    * Returns the indices of the maximum value of all elements in the input
    * tensor.
@@ -210,8 +214,6 @@ export interface Tensor {
   /**
    * Returns the tensor data as `TypedArray` buffer.
    *
-   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray}
-   *
    * A valid TypeScript expression is as follows:
    *
    * ```typescript
@@ -225,6 +227,9 @@ export interface Tensor {
    * :::
    *
    * @experimental
+   *
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray}
+
    */
   data(): TypedArray;
   /**
@@ -267,8 +272,35 @@ export interface Tensor {
    * tensors with one element.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.item.html}
+
    */
   item(): number;
+  /**
+   * Performs matrix multiplication with other tensor.
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.matmul.html}
+   * @param other
+   */
+  matmul(other: Tensor): Tensor;
+  /**
+   * Multiplies input by other scalar or tensor.
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.mul.html}
+   * @param other
+   */
+  mul(other: Tensor): Tensor;
+  /**
+   * @param other
+   */
+  mul(other: Scalar): Tensor;
+  /**
+   * Returns a view of the original tensor input with its dimensions permuted.
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.permute.html}
+   *
+   * @param dims The desired ordering of dimensions.
+   */
+  permute(dims: number[]): Tensor;
   /**
    * Returns a tensor with the same data and number of elements as input, but
    * with the specified shape.
@@ -278,30 +310,6 @@ export interface Tensor {
    * @param shape The new shape.
    */
   reshape(shape: number[]): Tensor;
-  /**
-   * Performs matrix multiplication with other tensor.
-   *
-   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.matmul.html}
-   *
-   * @param other tensor matrix multiplied this tensor.
-   */
-  matmul(other: Tensor): Tensor;
-  /**
-   * Multiplies input by other scalar or tensor.
-   *
-   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.mul.html}
-   *
-   * @param other Scalar or tensor multiplied with each element in this tensor.
-   */
-  mul(other: Scalar | Tensor): Tensor;
-  /**
-   * Returns a view of the original tensor input with its dimensions permuted.
-   *
-   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.permute.html}
-   *
-   * @param dims The desired ordering of dimensions.
-   */
-  permute(dims: number[]): Tensor;
   /**
    * Returns the size of the tensor.
    *
@@ -328,6 +336,7 @@ export interface Tensor {
    * Computes the square-root value of each element in input.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sqrt.html}
+
    */
   sqrt(): Tensor;
   /**
@@ -356,11 +365,15 @@ export interface Tensor {
    * Subtracts other from input.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sub.html}
-   *
-   * @param other The scalar or tensor to subtract from input.
-   * @param options.alpha The multiplier for `other`. Default: `1`.
+   * @param other
+   * @param options.alpha
    */
-  sub(other: Scalar | Tensor, options?: {alpha?: Number}): Tensor;
+  sub(other: Tensor, options?: {alpha?: Number}): Tensor;
+  /**
+   * @param other
+   * @param options.alpha
+   */
+  sub(other: Scalar, options?: {alpha?: Number}): Tensor;
   /**
    * Returns the sum of all elements in the input tensor.
    *
@@ -422,7 +435,7 @@ export interface Tensor {
    * {@link https://pytorch.org/cppdocs/notes/tensor_indexing.html}
    */
   [index: number]: Tensor;
-}
+} // Tensor
 
 export interface Torch {
   /**

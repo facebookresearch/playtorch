@@ -181,34 +181,6 @@ class TensorHostObjectDeprecated {
         .asObject(runtime);
   }
 
-  static jsi::Value divImpl(
-      jsi::Runtime& runtime,
-      const jsi::Value& thisValue,
-      const jsi::Value* arguments,
-      size_t count) {
-    utils::ArgumentParser args(runtime, thisValue, arguments, count);
-    args.requireNumArguments(1);
-    auto thiz = args.thisAsHostObject<TensorHostObject>();
-
-    auto roundingModeValue = args.keywordValue(1, "roundingMode");
-
-    c10::optional<c10::string_view> roundingMode;
-    if (!roundingModeValue.isUndefined()) {
-      roundingMode = roundingModeValue.asString(runtime).utf8(runtime);
-    }
-
-    torch_::Tensor tensor;
-    if (args[0].isNumber()) {
-      auto scalar = args[0].asNumber();
-      tensor = thiz->tensor.div(scalar, roundingMode);
-    } else {
-      auto otherTensor = args.asHostObject<TensorHostObject>(0)->tensor;
-      tensor = thiz->tensor.div(otherTensor, roundingMode);
-    }
-    return utils::helpers::createFromHostObject<TensorHostObject>(
-        runtime, std::move(tensor));
-  }
-
   static jsi::Value softmaxImpl(
       jsi::Runtime& runtime,
       const jsi::Value& thisValue,

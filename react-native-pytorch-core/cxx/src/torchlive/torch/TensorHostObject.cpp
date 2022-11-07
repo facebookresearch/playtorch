@@ -46,18 +46,11 @@ jsi::Value absImpl(
     size_t count) {
   utils::ArgumentParser args(runtime, thisValue, arguments, count);
   args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
   if (args.atLeastNumArguments(0)) {
-    try {
-      auto self = args.thisAsHostObject<TensorHostObject>();
-
-      at::Tensor result = self->tensor.abs();
-      return utils::helpers::createFromHostObject<TensorHostObject>(
-          runtime, std::move(result));
-    } catch (jsi::JSError& error) {
-      // Arguments do not match signature at::Tensor (const at::Tensor &)
-    } catch (std::exception& ex) {
-      throw std::move(ex);
-    }
+    at::Tensor result = self->tensor.abs();
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
   }
   throw facebook::jsi::JSError(
       runtime,
@@ -71,47 +64,25 @@ jsi::Value addImpl(
     size_t count) {
   utils::ArgumentParser args(runtime, thisValue, arguments, count);
   args.requireNumArguments(1);
-  if (args.atLeastNumArguments(1) && args[0].isObject() &&
-      args[0].asObject(runtime).isHostObject<TensorHostObject>(runtime) &&
-      (args.keywordValue(1, "alpha").isUndefined() ||
-       args.keywordValue(1, "alpha").isNumber())) {
-    try {
-      auto self = args.thisAsHostObject<TensorHostObject>();
-      auto other = args.asHostObject<TensorHostObject>(0)->tensor;
-      auto alphaValue = args.keywordValue(1, "alpha");
-      auto alpha = alphaValue.isUndefined() ? at::Scalar(1)
-                                            : at::Scalar(alphaValue.asNumber());
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0) &&
+      args.isScalarKwarg(1, "alpha", false)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
 
-      at::Tensor result = self->tensor.add(other, alpha);
-      return utils::helpers::createFromHostObject<TensorHostObject>(
-          runtime, std::move(result));
-    } catch (jsi::JSError& error) {
-      // Arguments do not match signature at::Tensor (const at::Tensor &, const
-      // at::Tensor &, const at::Scalar &)
-    } catch (std::exception& ex) {
-      throw std::move(ex);
-    }
+    at::Tensor result = self->tensor.add(other, alpha);
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
   }
 
-  if (args.atLeastNumArguments(1) && args[0].isNumber() &&
-      (args.keywordValue(1, "alpha").isUndefined() ||
-       args.keywordValue(1, "alpha").isNumber())) {
-    try {
-      auto self = args.thisAsHostObject<TensorHostObject>();
-      auto other = args[0].asNumber();
-      auto alphaValue = args.keywordValue(1, "alpha");
-      auto alpha = alphaValue.isUndefined() ? at::Scalar(1)
-                                            : at::Scalar(alphaValue.asNumber());
+  if (args.atLeastNumArguments(1) && args.isScalar(0) &&
+      args.isScalarKwarg(1, "alpha", false)) {
+    auto other = args.asScalar(0);
+    auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
 
-      at::Tensor result = self->tensor.add(other, alpha);
-      return utils::helpers::createFromHostObject<TensorHostObject>(
-          runtime, std::move(result));
-    } catch (jsi::JSError& error) {
-      // Arguments do not match signature at::Tensor (const at::Tensor &, const
-      // at::Scalar &, const at::Scalar &)
-    } catch (std::exception& ex) {
-      throw std::move(ex);
-    }
+    at::Tensor result = self->tensor.add(other, alpha);
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
   }
   throw facebook::jsi::JSError(
       runtime,
@@ -136,23 +107,15 @@ jsi::Value itemImpl(
         " supported. Work around this with .to({dtype: torch.int32})"
         " This might alter the tensor values.");
   }
-
+  auto self = args.thisAsHostObject<TensorHostObject>();
   if (args.atLeastNumArguments(0)) {
-    try {
-      auto self = args.thisAsHostObject<TensorHostObject>();
-
-      auto result = self->tensor.item();
-      if (result.isIntegral(/*includeBool=*/false)) {
-        return jsi::Value(result.toInt());
-      } else if (result.isFloatingPoint()) {
-        return jsi::Value(result.toDouble());
-      } else {
-        throw jsi::JSError(runtime, "unsupported dtype for item().");
-      }
-    } catch (jsi::JSError& error) {
-      // Arguments do not match signature at::Scalar (const at::Tensor &)
-    } catch (std::exception& ex) {
-      throw std::move(ex);
+    auto result = self->tensor.item();
+    if (result.isIntegral(/*includeBool=*/false)) {
+      return jsi::Value(result.toInt());
+    } else if (result.isFloatingPoint()) {
+      return jsi::Value(result.toDouble());
+    } else {
+      throw jsi::JSError(runtime, "unsupported dtype for item().");
     }
   }
   throw facebook::jsi::JSError(
@@ -167,21 +130,13 @@ jsi::Value matmulImpl(
     size_t count) {
   utils::ArgumentParser args(runtime, thisValue, arguments, count);
   args.requireNumArguments(1);
-  if (args.atLeastNumArguments(1) && args[0].isObject() &&
-      args[0].asObject(runtime).isHostObject<TensorHostObject>(runtime)) {
-    try {
-      auto self = args.thisAsHostObject<TensorHostObject>();
-      auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
 
-      at::Tensor result = self->tensor.matmul(other);
-      return utils::helpers::createFromHostObject<TensorHostObject>(
-          runtime, std::move(result));
-    } catch (jsi::JSError& error) {
-      // Arguments do not match signature at::Tensor (const at::Tensor &, const
-      // at::Tensor &)
-    } catch (std::exception& ex) {
-      throw std::move(ex);
-    }
+    at::Tensor result = self->tensor.matmul(other);
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
   }
   throw facebook::jsi::JSError(
       runtime,
@@ -195,37 +150,21 @@ jsi::Value mulImpl(
     size_t count) {
   utils::ArgumentParser args(runtime, thisValue, arguments, count);
   args.requireNumArguments(1);
-  if (args.atLeastNumArguments(1) && args[0].isObject() &&
-      args[0].asObject(runtime).isHostObject<TensorHostObject>(runtime)) {
-    try {
-      auto self = args.thisAsHostObject<TensorHostObject>();
-      auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
 
-      at::Tensor result = self->tensor.mul(other);
-      return utils::helpers::createFromHostObject<TensorHostObject>(
-          runtime, std::move(result));
-    } catch (jsi::JSError& error) {
-      // Arguments do not match signature at::Tensor (const at::Tensor &, const
-      // at::Tensor &)
-    } catch (std::exception& ex) {
-      throw std::move(ex);
-    }
+    at::Tensor result = self->tensor.mul(other);
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
   }
 
-  if (args.atLeastNumArguments(1) && args[0].isNumber()) {
-    try {
-      auto self = args.thisAsHostObject<TensorHostObject>();
-      auto other = args[0].asNumber();
+  if (args.atLeastNumArguments(1) && args.isScalar(0)) {
+    auto other = args.asScalar(0);
 
-      at::Tensor result = self->tensor.mul(other);
-      return utils::helpers::createFromHostObject<TensorHostObject>(
-          runtime, std::move(result));
-    } catch (jsi::JSError& error) {
-      // Arguments do not match signature at::Tensor (const at::Tensor &, const
-      // at::Scalar &)
-    } catch (std::exception& ex) {
-      throw std::move(ex);
-    }
+    at::Tensor result = self->tensor.mul(other);
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
   }
   throw facebook::jsi::JSError(
       runtime,
@@ -239,18 +178,11 @@ jsi::Value sqrtImpl(
     size_t count) {
   utils::ArgumentParser args(runtime, thisValue, arguments, count);
   args.requireNumArguments(0);
+  auto self = args.thisAsHostObject<TensorHostObject>();
   if (args.atLeastNumArguments(0)) {
-    try {
-      auto self = args.thisAsHostObject<TensorHostObject>();
-
-      at::Tensor result = self->tensor.sqrt();
-      return utils::helpers::createFromHostObject<TensorHostObject>(
-          runtime, std::move(result));
-    } catch (jsi::JSError& error) {
-      // Arguments do not match signature at::Tensor (const at::Tensor &)
-    } catch (std::exception& ex) {
-      throw std::move(ex);
-    }
+    at::Tensor result = self->tensor.sqrt();
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
   }
   throw facebook::jsi::JSError(
       runtime,
@@ -264,47 +196,25 @@ jsi::Value subImpl(
     size_t count) {
   utils::ArgumentParser args(runtime, thisValue, arguments, count);
   args.requireNumArguments(1);
-  if (args.atLeastNumArguments(1) && args[0].isObject() &&
-      args[0].asObject(runtime).isHostObject<TensorHostObject>(runtime) &&
-      (args.keywordValue(1, "alpha").isUndefined() ||
-       args.keywordValue(1, "alpha").isNumber())) {
-    try {
-      auto self = args.thisAsHostObject<TensorHostObject>();
-      auto other = args.asHostObject<TensorHostObject>(0)->tensor;
-      auto alphaValue = args.keywordValue(1, "alpha");
-      auto alpha = alphaValue.isUndefined() ? at::Scalar(1)
-                                            : at::Scalar(alphaValue.asNumber());
+  auto self = args.thisAsHostObject<TensorHostObject>();
+  if (args.atLeastNumArguments(1) && args.isHostObject<TensorHostObject>(0) &&
+      args.isScalarKwarg(1, "alpha", false)) {
+    auto other = args.asHostObject<TensorHostObject>(0)->tensor;
+    auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
 
-      at::Tensor result = self->tensor.sub(other, alpha);
-      return utils::helpers::createFromHostObject<TensorHostObject>(
-          runtime, std::move(result));
-    } catch (jsi::JSError& error) {
-      // Arguments do not match signature at::Tensor (const at::Tensor &, const
-      // at::Tensor &, const at::Scalar &)
-    } catch (std::exception& ex) {
-      throw std::move(ex);
-    }
+    at::Tensor result = self->tensor.sub(other, alpha);
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
   }
 
-  if (args.atLeastNumArguments(1) && args[0].isNumber() &&
-      (args.keywordValue(1, "alpha").isUndefined() ||
-       args.keywordValue(1, "alpha").isNumber())) {
-    try {
-      auto self = args.thisAsHostObject<TensorHostObject>();
-      auto other = args[0].asNumber();
-      auto alphaValue = args.keywordValue(1, "alpha");
-      auto alpha = alphaValue.isUndefined() ? at::Scalar(1)
-                                            : at::Scalar(alphaValue.asNumber());
+  if (args.atLeastNumArguments(1) && args.isScalar(0) &&
+      args.isScalarKwarg(1, "alpha", false)) {
+    auto other = args.asScalar(0);
+    auto alpha = args.asScalarKwarg(1, "alpha", at::Scalar(1));
 
-      at::Tensor result = self->tensor.sub(other, alpha);
-      return utils::helpers::createFromHostObject<TensorHostObject>(
-          runtime, std::move(result));
-    } catch (jsi::JSError& error) {
-      // Arguments do not match signature at::Tensor (const at::Tensor &, const
-      // at::Scalar &, const at::Scalar &)
-    } catch (std::exception& ex) {
-      throw std::move(ex);
-    }
+    at::Tensor result = self->tensor.sub(other, alpha);
+    return utils::helpers::createFromHostObject<TensorHostObject>(
+        runtime, std::move(result));
   }
   throw facebook::jsi::JSError(
       runtime,
@@ -419,8 +329,9 @@ jsi::Function TensorHostObject::createToString(jsi::Runtime& runtime) {
                           const jsi::Value& thisValue,
                           const jsi::Value* arguments,
                           size_t count) -> jsi::Value {
+    auto tensor = this->tensor;
     std::ostringstream stream;
-    stream << this->tensor;
+    stream << tensor;
     std::string tensor_string = stream.str();
     auto val = jsi::String::createFromUtf8(runtime, tensor_string);
     return jsi::Value(std::move(val));
@@ -435,7 +346,8 @@ jsi::Function TensorHostObject::createSize(jsi::Runtime& runtime) {
                       const jsi::Value& thisValue,
                       const jsi::Value* arguments,
                       size_t count) -> jsi::Value {
-    torch_::IntArrayRef dims = this->tensor.sizes();
+    auto tensor = this->tensor;
+    torch_::IntArrayRef dims = tensor.sizes();
     jsi::Array jsShape = jsi::Array(runtime, dims.size());
     for (int i = 0; i < dims.size(); i++) {
       jsShape.setValueAtIndex(runtime, i, jsi::Value((int)dims[i]));

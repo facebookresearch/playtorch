@@ -3,9 +3,9 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+from dataclasses import dataclass
 from string import Template
-
-from ..codegen.op_data_structures import Argument, OpInfo
+from typing import Dict
 
 # TensorHostObject.cpp
 
@@ -74,16 +74,10 @@ cpp_at_least_num_arguments_template = Template("args.atLeastNumArguments(${num_a
 
 cpp_try_signature_template = Template(
     """
-    if(${check_argument_types}) {
-        try {
-${get_arguments_string}
-${get_returns_string}
-        } catch (jsi::JSError& error) {
-        // Arguments do not match signature ${signature}
-        } catch (std::exception& ex) {
-            throw std::move(ex);
-        }
-    }
+if(${check_argument_types}) {
+    ${get_arguments_string}
+    ${get_returns_string}
+}
 """
 )
 
@@ -95,9 +89,7 @@ cpp_function_implementation_end = "  }"
 
 cpp_end_namespace = "\n}\n"
 
-# new
-
-tensor_host_object_start = """
+cpp_tensor_host_object_start = """
 TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   : BaseHostObject(runtime),
   size_(createSize(runtime)),
@@ -105,7 +97,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   tensor(t) {
 """
 
-set_property_host_function_template = Template(
+cpp_set_property_host_function_template = Template(
     """    setPropertyHostFunction(runtime, "${operator_name}", ${num_required_args}, ${namespace}${operator_name}Impl);
 """
 )
@@ -204,49 +196,32 @@ jsi::Function TensorHostObject::createSize(jsi::Runtime& runtime) {
 } // namespace torchlive
 """
 
-argument_string_templates = {
-    "const at::Tensor &_self": Template(
-        """            auto ${name} = args.thisAsHostObject<TensorHostObject>();"""
-    ),
-    "const at::Tensor &_required": Template(
+cpp_get_self_template = Template(
+    """            auto ${name} = args.thisAsHostObject<TensorHostObject>();"""
+)
+
+cpp_positional_argument_string_templates = {
+    "const at::Tensor &": Template(
         """            auto ${name} = args.asHostObject<TensorHostObject>(${arg_index})->tensor;"""
     ),
     "const at::Scalar &": Template(
-        """            auto ${name}Value = args.keywordValue(${arg_index}, "${name}");
-            auto ${name} = ${name}Value.isUndefined() ? at::Scalar(${default}) : at::Scalar(${name}Value.asNumber());"""
-    ),
-    "const at::Scalar &_required": Template(
-        """            auto ${name} = args[${arg_index}].asNumber();"""
+        """            auto ${name} = args.asScalar(${arg_index});"""
     ),
 }
 
+cpp_kword_argument_string_templates = {
+    "const at::Scalar &": Template(
+        """            auto ${name} = args.asScalarKwarg(${arg_index}, "${name}", at::Scalar(${default}));"""
+    ),
+}
 
-def get_argument_string(argument: Argument, index: int) -> str:
-    try:
-        substitutions = {
-            "arg_index": index - 1,
-            "name": argument.name,
-            "default": argument.default,
-        }
-        argument_string_key = argument.type_
-        if index == 0:
-            argument_string_key += "_self"
-        else:
-            if argument.default is None:
-                argument_string_key += "_required"
-        argument_string = argument_string_templates[argument_string_key].substitute(
-            substitutions
-        )
-        argument.implemented = True
-        return argument_string
-    except KeyError:
-        error_template = Template(
-            '            throw facebook::jsi::JSError(runtime, "Argument parsing for type ${arg_type} has not been implemented yet");'
-        )
-        return error_template.substitute({"arg_type": argument.type_})
+cpp_required_kword_argument_string_templates = {
+    "const at::Scalar &": Template(
+        """            auto ${name} = args.asScalarKwarg(${arg_index}, "${name}");"""
+    ),
+}
 
-
-returns_type_templates = {
+cpp_returns_type_templates = {
     "at::Tensor": Template(
         """
             ${return_type} ${returns_name} = ${self}->tensor.${operator_name}(${arguments});
@@ -265,57 +240,79 @@ returns_type_templates = {
     ),
 }
 
+cpp_check_argument_type_templates = {
+    "const at::Scalar &": Template("args.isScalar(${idx})"),
+    "const at::Tensor &": Template("args.isHostObject<TensorHostObject>(${idx})"),
+}
 
-def get_returns_string(op: OpInfo) -> str:
-    try:
-        return returns_type_templates[op.returns_type].substitute(
-            {
-                "return_type": op.returns_type,
-                "returns_name": op.returns_name,
-                "operator_name": op.name,
-                "arguments": ", ".join([arg.name for arg in op.arguments[1:]])
-                if len(op.arguments) > 1
-                else "",
-                "self": op.arguments[0].name,
-            }
-        )
-    except KeyError:
-        op.implemented = False
-        error_template = Template(
-            'throw facebook::jsi::JSError(runtime, "Generating code for return type ${return_type} has not been implemented");'
-        )
-        return error_template.substitute({"return_type": op.returns_type})
-
-
-jsi_type_mappings = {"const at::Scalar &": "Number", "const at::Tensor &": "HostObject"}
-
-check_argument_types_template = {
-    "Number_required": Template("args[${idx}].isNumber()"),
-    "Number": Template(
-        '(args.keywordValue(${idx}, "${name}").isUndefined() || args.keywordValue(${idx}, "${name}").isNumber())'
-    ),
-    "HostObject_required": Template(
-        "args[${idx}].isObject() && args[${idx}].asObject(runtime).isHostObject<${HostObjectType}>(runtime)"
+cpp_check_kword_argument_type_templates = {
+    "const at::Scalar &": Template(
+        'args.isScalarKwarg(${idx}, "${name}", ${required})'
     ),
 }
 
+cpp_argument_string_error_template = Template(
+    '            throw facebook::jsi::JSError(runtime, "Argument parsing for type ${arg_type} has not been implemented yet");'
+)
 
-def get_check_argument_types_string(op: OpInfo):
-    condition_list = [
-        cpp_at_least_num_arguments_template.substitute({"num_args": op.num_required})
-    ]
-    for i in range(1, len(op.arguments)):  # first argument is always self
-        arg = op.arguments[i]
-        substitutions = {"idx": i - 1, "name": arg.name}
-        try:
-            jsi_type = jsi_type_mappings[arg.type_]
-            if jsi_type == "HostObject":
-                substitutions["HostObjectType"] = "TensorHostObject"
-            if arg.default is None:
-                jsi_type += "_required"
-            condition_list.append(
-                check_argument_types_template[jsi_type].substitute(substitutions)
-            )
-        except KeyError:
-            return "false"  # we don't want to enter that if block if the argument type hasn't been implemented yet
-    return " && ".join(condition_list)
+cpp_returns_string_error_template = Template(
+    'throw facebook::jsi::JSError(runtime, "Generating code for return type ${return_type} has not been implemented");'
+)
+
+
+@dataclass
+class CppCodeStrings:
+    file_start: str
+    start_namespace: str
+    function_implementation_start: str
+    at_least_num_arguments_template: Template
+    try_signature_template: Template
+    throw_error_template: Template
+    function_implementation_end: Template
+    end_namespace: str
+    tensor_host_object_start: str
+    set_property_host_function_template: Template
+    file_end: str
+    get_self_template: Template
+    positional_argument_string_templates: Dict[str, Template]
+    kword_argument_string_templates: Dict[str, Template]
+    required_kword_argument_string_templates: Dict[str, Template]
+    returns_type_templates: Dict[str, Template]
+    check_argument_type_templates: Dict[str, Template]
+    check_kword_argument_type_templates: Dict[str, Template]
+    argument_string_error_template: Template
+    returns_string_error_template: Template
+
+    def __init__(self):
+        self.file_start = cpp_file_start
+        self.start_namespace = cpp_start_namespace
+        self.function_implementation_start = cpp_function_implementation_start
+        self.throw_BigInt = cpp_throw_BigInt
+        self.at_least_num_arguments_template = cpp_at_least_num_arguments_template
+        self.try_signature_template = cpp_try_signature_template
+        self.throw_error_template = cpp_throw_error_template
+        self.function_implementation_end = cpp_function_implementation_end
+        self.end_namespace = cpp_end_namespace
+        self.tensor_host_object_start = cpp_tensor_host_object_start
+        self.set_property_host_function_template = (
+            cpp_set_property_host_function_template
+        )
+        self.file_end = cpp_file_end
+        self.get_self_template = cpp_get_self_template
+        self.positional_argument_string_templates = (
+            cpp_positional_argument_string_templates
+        )
+        self.kword_argument_string_templates = cpp_kword_argument_string_templates
+        self.required_kword_argument_string_templates = (
+            cpp_required_kword_argument_string_templates
+        )
+        self.returns_type_templates = cpp_returns_type_templates
+        self.check_argument_type_templates = cpp_check_argument_type_templates
+        self.check_kword_argument_type_templates = (
+            cpp_check_kword_argument_type_templates
+        )
+        self.argument_string_error_template = cpp_argument_string_error_template
+        self.returns_string_error_template = cpp_returns_string_error_template
+
+
+cpp_code_strings = CppCodeStrings()

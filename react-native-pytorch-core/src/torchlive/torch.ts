@@ -163,20 +163,16 @@ export interface Tensor {
    * tensor.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.argmax.html}
-   *
-   * @param options argmax Options as keywords argument in pytorch
-   * @param options.dim The dimension to reduce. If `undefined`, the argmax of the flattened input is returned.
-   * @param options.keepdim Whether the output tensor has `dim` retained or not. Ignored if `dim` is `undefined`.
+   * @param options.dim
+   * @param options.keepdim
    */
   argmax(options?: {dim?: number; keepdim?: boolean}): Tensor;
   /**
    * Returns the indices of the minimum value(s) of the flattened tensor or along a dimension
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.argmin.html}
-   *
-   * @param options argmin Options as keywords argument in pytorch
-   * @param options.dim The dimension to reduce. If `undefined`, the argmin of the flattened input is returned.
-   * @param options.keepdim Whether the output tensor has `dim` retained or not. Ignored if `dim` is `undefined`.
+   * @param options.dim
+   * @param options.keepdim
    */
   argmin(options?: {dim?: number; keepdim?: boolean}): Tensor;
   /**
@@ -436,7 +432,6 @@ export interface Tensor {
    */
   [index: number]: Tensor;
 } // Tensor
-
 export interface Torch {
   /**
    * Returns a 1-D tensor of size `(end - 0) / 1` with values from the interval

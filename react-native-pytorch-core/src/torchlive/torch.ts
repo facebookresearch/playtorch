@@ -233,14 +233,23 @@ export interface Tensor {
    * other.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.div.html}
-   *
-   * @param other Scalar or tensor that divides each element in this tensor.
-   * @param options.roundingMode Type of rounding applied to the result
+   * @param other
+   * @param options.roundingMode
    */
-  div(
-    other: Scalar | Tensor,
-    options?: {roundingMode?: 'trunc' | 'floor'},
-  ): Tensor;
+  div(other: Tensor, options: {roundingMode: 'trunc' | 'floor'}): Tensor;
+  /**
+   * @param other
+   * @param options.roundingMode
+   */
+  div(other: Scalar, options: {roundingMode: 'trunc' | 'floor'}): Tensor;
+  /**
+   * @param other
+   */
+  div(other: Tensor): Tensor;
+  /**
+   * @param other
+   */
+  div(other: Scalar): Tensor;
   /**
    * A dtype is an string that represents the data type of a torch.Tensor.
    *

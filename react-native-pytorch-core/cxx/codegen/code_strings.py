@@ -84,6 +84,12 @@ cpp_kword_argument_string_templates = {
     "const at::Scalar &": Template(
         """auto ${name} = args.asScalarKwarg(${arg_index}, "${name}", at::Scalar(${default}));"""
     ),
+    "c10::optional<int64_t>": Template(
+        """auto ${name} = args.asC10OptionalInt64Kwarg(${arg_index}, "${name}", ${default});"""
+    ),
+    "bool": Template(
+        """auto ${name} = args.asBoolKwarg(${arg_index}, "${name}", ${default});"""
+    ),
 }
 
 cpp_required_kword_argument_string_templates = {
@@ -95,6 +101,9 @@ cpp_required_kword_argument_string_templates = {
 cpp_returns_type_templates = {
     "at::Tensor": Template(
         """${return_type} ${returns_name} = ${self}->tensor.${operator_name}(${arguments});
+if(${returns_name}.dtype() == utils::constants::getDtypeFromString("int64")) {
+  ${returns_name} = ${returns_name}.to(c10::ScalarType::Int);
+}
 return utils::helpers::createFromHostObject<TensorHostObject>(runtime, std::move(${returns_name}));"""
     ),
     "at::Scalar": Template(
@@ -118,6 +127,10 @@ cpp_check_kword_argument_type_templates = {
     "const at::Scalar &": Template(
         'args.isScalarKwarg(${idx}, "${name}", ${required})'
     ),
+    "c10::optional<int64_t>": Template(
+        'args.isC10OptionalInt64Kwarg(${idx}, "${name}", ${required})'
+    ),
+    "bool": Template('args.isBoolKwarg(${idx}, "${name}", ${required})'),
 }
 
 cpp_argument_string_error_template = Template(

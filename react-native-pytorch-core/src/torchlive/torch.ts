@@ -250,17 +250,16 @@ export interface Tensor {
   /**
    * Returns a new view of the tensor expanded to a larger size.
    *
-   * {@link https://pytorch.org/docs/stable/generated/torch.Tensor.expand.html}
-   *
-   * @param sizes The expanded size, eg: ([3, 4]).
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.expand.html}
+   * @param size
+   * @param options.implicit
    */
-  expand(sizes: number[]): Tensor;
+  expand(size: number[], options?: {implicit?: boolean}): Tensor;
   /**
    * Reverse the order of a n-D tensor along given axis in dims.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.flip.html}
-   *
-   * @param dims Axis to flip on.
+   * @param dims
    */
   flip(dims: number[]): Tensor;
   /**
@@ -293,8 +292,7 @@ export interface Tensor {
    * Returns a view of the original tensor input with its dimensions permuted.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.permute.html}
-   *
-   * @param dims The desired ordering of dimensions.
+   * @param dims
    */
   permute(dims: number[]): Tensor;
   /**
@@ -302,8 +300,7 @@ export interface Tensor {
    * with the specified shape.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.reshape.html}
-   *
-   * @param shape The new shape.
+   * @param shape
    */
   reshape(shape: number[]): Tensor;
   /**

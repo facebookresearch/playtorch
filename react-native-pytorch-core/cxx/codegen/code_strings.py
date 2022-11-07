@@ -101,6 +101,9 @@ cpp_required_kword_argument_string_templates = {
     "const at::Scalar &": Template(
         """auto ${name} = args.asScalarKwarg(${arg_index}, "${name}");"""
     ),
+    "c10::optional<c10::string_view>": Template(
+        """auto ${name} = c10::optional<c10::string_view>(args.asStringKwarg(${arg_index}, "${name}"));"""
+    ),
 }
 
 cpp_returns_type_templates = {
@@ -138,6 +141,9 @@ cpp_check_kword_argument_type_templates = {
         'args.isC10OptionalInt64Kwarg(${idx}, "${name}", ${required})'
     ),
     "bool": Template('args.isBoolKwarg(${idx}, "${name}", ${required})'),
+    "c10::optional<c10::string_view>": Template(
+        'args.isStringKwarg(${idx}, "${name}", ${required})'
+    ),
 }
 
 cpp_argument_string_error_template = Template(

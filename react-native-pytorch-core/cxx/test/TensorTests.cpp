@@ -26,6 +26,16 @@ TEST_F(TorchliveTensorRuntimeTest, TensorAbsTest) {
   EXPECT_TRUE(eval(tensorAbs).getBool());
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorAbs_Test) {
+  std::string tensorAbs_ =
+      R"(
+          let tensor = torch.tensor([[-2, -1], [0, 1]]);
+          let output = tensor.abs_().data();
+          output[0] == 2 && output[1] == 1 && output[2] == 0 && output[3] == 1 && tensor.data()[0] == 2 && tensor.data()[1] == 1 && tensor.data()[2] == 0 && tensor.data()[3] == 1;
+        )";
+  EXPECT_TRUE(eval(tensorAbs_).getBool());
+}
+
 TEST_F(TorchliveTensorRuntimeTest, TensorAddTest) {
   std::string tensorAddCodeWithNumber =
       R"(
@@ -70,6 +80,60 @@ TEST_F(TorchliveTensorRuntimeTest, TensorAddTest) {
           const tensor1 = torch.arange(2);
           const tensor2 = torch.arange(2);
           const result = tensor1.add(tensor2, {alpha: 'random_string'});
+        )";
+  EXPECT_THROW(eval(tensorAddCodeWithInvalidAlpha), facebook::jsi::JSError);
+}
+
+TEST_F(TorchliveTensorRuntimeTest, TensorAdd_Test) {
+  std::string tensorAddCodeWithNumber =
+      R"(
+          const tensor = torch.arange(2);
+          orig_sum = tensor[0].item() + 2;
+          const result = tensor.add_(2);
+          result[0].item() == orig_sum && tensor[0].item() == orig_sum;
+        )";
+  EXPECT_TRUE(eval(tensorAddCodeWithNumber).getBool());
+
+  std::string tensorAddCodeWithTensor =
+      R"(
+          const tensor1 = torch.arange(2);
+          const tensor2 = torch.arange(2);
+          orig_sum = tensor1[0].item() + tensor2[0].item();
+          const result = tensor1.add_(tensor2);
+          result[0].item() == orig_sum && tensor1[0].item() == orig_sum;
+        )";
+  EXPECT_TRUE(eval(tensorAddCodeWithTensor).getBool());
+
+  std::string tensorAddCodeWithNumberAlpha =
+      R"(
+          const tensor1 = torch.arange(2);
+          orig_sum0 = tensor1[0].item() + 2 * 2;
+          orig_sum1 = tensor1[1].item() + 2 * 2;
+          const result = tensor1.add_(2, {alpha: 2});
+          (result[0].item() == orig_sum0) && (result[1].item() == orig_sum1) && (tensor1[0].item() == orig_sum0) && (tensor1[1].item() == orig_sum1);
+        )";
+  EXPECT_TRUE(eval(tensorAddCodeWithNumberAlpha).getBool());
+
+  std::string tensorAddCodeWithTensorAlpha =
+      R"(
+          const tensor1 = torch.arange(2);
+          const tensor2 = torch.arange(2);
+          orig_sum0 = tensor1[0].item() + 2 * tensor2[0].item();
+          orig_sum1 = tensor1[1].item() + 2 * tensor2[1].item();
+          const result = tensor1.add_(tensor2, {alpha: 2});
+          (result[0].item() == orig_sum0) && (result[1].item() == orig_sum1) && (tensor1[0].item() == orig_sum0) && (tensor1[1].item() == orig_sum1);
+        )";
+  EXPECT_TRUE(eval(tensorAddCodeWithTensorAlpha).getBool());
+
+  EXPECT_THROW(eval("torch.arange(2).add_()"), facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("torch.empty(1, 2).add_('some_string')"), facebook::jsi::JSError);
+
+  std::string tensorAddCodeWithInvalidAlpha =
+      R"(
+          const tensor1 = torch.arange(2);
+          const tensor2 = torch.arange(2);
+          const result = tensor1.add_(tensor2, {alpha: 'random_string'});
         )";
   EXPECT_THROW(eval(tensorAddCodeWithInvalidAlpha), facebook::jsi::JSError);
 }

@@ -290,6 +290,8 @@ required_ts_argument_type_mappings = {
 
 optional_ts_argument_type_mappings = {
     "const at::Scalar &": "Number",
+    "c10::optional<int64_t>": "number",
+    "bool": "boolean",
 }
 
 ts_start_interface = "export interface Tensor {"

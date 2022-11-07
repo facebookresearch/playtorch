@@ -295,6 +295,7 @@ optional_ts_argument_type_mappings = {
     "const at::Scalar &": "Number",
     "c10::optional<int64_t>": "number",
     "bool": "boolean",
+    "at::MemoryFormat": "MemoryFormat",
 }
 
 ts_start_interface = "export interface Tensor {"

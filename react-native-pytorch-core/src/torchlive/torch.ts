@@ -85,10 +85,30 @@ interface JIT {
    * Loads a serialized mobile module.
    *
    * @param filePath Path to serialized mobile module.
-   * @returns serialized mobile module of the specified type extending [[Module]],
+   * @param device Device on which the model will be loaded.
+   * @param extraFiles Load extra files when loading the model.
+   * @returns Serialized mobile module of the specified type extending [[Module]],
    * which, if not specified, default to be [[Module]]
    */
-  _loadForMobile<T extends Module = Module>(filePath: string): Promise<T>;
+  _loadForMobile<T extends Module = Module>(
+    filePath: string,
+    device?: Device,
+    extraFiles?: ExtraFilesMap,
+  ): Promise<T>;
+  /**
+   * Loads a serialized mobile module synchronously.
+   *
+   * @param filePath Path to serialized mobile module.
+   * @param device Device on which the model will be loaded.
+   * @param extraFiles Load extra files when loading the model.
+   * @returns Serialized mobile module of the specified type extending [[Module]],
+   * which, if not specified, default to be [[Module]]
+   */
+  _loadForMobileSync<T extends Module = Module>(
+    filePath: string,
+    device?: Device,
+    extraFiles?: ExtraFilesMap,
+  ): T;
 }
 
 /**
@@ -117,6 +137,19 @@ export type Dtype =
   | 'long'
   | 'short'
   | 'uint8';
+
+/**
+ * Allowed torch devices
+ *
+ * {@link https://pytorch.org/docs/1.12/tensor_attributes.html#torch-device}
+ */
+export type Device = 'cpu';
+
+/**
+ * Defining type for extra files loaded with `torch.jit._loadForMobile` and
+ * `torch.jit._loadForMobileSync`.
+ */
+export type ExtraFilesMap = {[key: string]: string | null};
 
 export type TensorOptions = {
   /**

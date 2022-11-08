@@ -136,7 +136,7 @@ const testUnitList = [
         require('../../assets/models/dummy_test_model.ptl'),
       );
 
-      let model = await torch.jit._loadForMobile<TestModule>(model_url);
+      const model = await torch.jit._loadForMobile<TestModule>(model_url);
       let lastTime = performance.now();
 
       for (let i = 0; i < 1000; i++) {
@@ -270,6 +270,62 @@ const testUnitList = [
           throw 'unknown exception thrown.';
         }
       }
+    },
+  },
+  {
+    name: 'model extra files',
+    testFunc: async () => {
+      console.log('------Test generic function-------');
+      let modelUrl = await MobileModel.download(
+        require('../../assets/models/dummy_test_model.ptl'),
+      );
+
+      const lastTime = performance.now();
+
+      const extraFiles = {
+        foo: null,
+        'model/classes.json': null,
+        'classes.json': null,
+      };
+
+      const model = await torch.jit._loadForMobile<TestModule>(
+        modelUrl,
+        'cpu',
+        extraFiles,
+      );
+
+      let totalTime = performance.now() - lastTime;
+      console.log('total time load model with extra files: ', totalTime);
+      console.log(model);
+      console.log('extraFiles', extraFiles);
+    },
+  },
+  {
+    name: 'model extra files (sync)',
+    testFunc: async () => {
+      console.log('------Test generic function-------');
+      let modelUrl = await MobileModel.download(
+        require('../../assets/models/dummy_test_model.ptl'),
+      );
+
+      const lastTime = performance.now();
+
+      const extraFiles = {
+        foo: null,
+        'model/classes.json': null,
+        'classes.json': null,
+      };
+
+      const model = torch.jit._loadForMobileSync<TestModule>(
+        modelUrl,
+        'cpu',
+        extraFiles,
+      );
+
+      let totalTime = performance.now() - lastTime;
+      console.log('total time load model with extra files: ', totalTime);
+      console.log(model);
+      console.log('extraFiles', extraFiles);
     },
   },
 

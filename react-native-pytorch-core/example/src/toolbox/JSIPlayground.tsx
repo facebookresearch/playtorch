@@ -229,14 +229,14 @@ const testUnitList = [
       let inputStrings = ['tensor', 'bool', 'integer', 'double', 'other'];
       for (const inputString of inputStrings) {
         let output = model.forwardSync<
-          string | number | boolean | Tensor,
+          [string, Tensor, boolean, number, number],
           string
         >(inputString, torch.tensor([1, 2, 3]), true, 3, 4.5);
         console.log(output);
       }
       for (const inputString of inputStrings) {
         let output = await model.forward<
-          string | number | boolean | Tensor,
+          [string, Tensor, boolean, number, number],
           string
         >(inputString, torch.tensor([1, 2, 3]), true, 3, 4.5);
         console.log(output);

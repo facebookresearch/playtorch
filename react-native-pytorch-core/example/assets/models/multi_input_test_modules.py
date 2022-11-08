@@ -10,6 +10,9 @@ from torch import Tensor
 from torch.utils.mobile_optimizer import optimize_for_mobile
 
 
+print("PyTorch version", torch.__version__)
+
+
 class DummyTestModel(torch.nn.Module):
     def __init__(self):
         super(DummyTestModel, self).__init__()
@@ -94,4 +97,22 @@ optimized_model = optimize_for_mobile(
         "merge_tuple",
     ],
 )
-optimized_model._save_for_lite_interpreter("dummy_test_model.ptl")
+
+extra_files = {}
+extra_files[
+    "model/classes.json"
+] = """[
+  "Arizona Bark Scorpion",
+  "Giant Hairy Desert Scorpion",
+  "Giant Whip Scorpion",
+  "Northern Scorpion",
+  "Pseudoscorpiones",
+  "Stripe-tailed Scorpion",
+  "Tailless Whip Scorpion"
+]
+"""
+optimized_model._save_for_lite_interpreter(
+    "dummy_test_model.ptl", _extra_files=extra_files
+)
+
+print("Model exported")

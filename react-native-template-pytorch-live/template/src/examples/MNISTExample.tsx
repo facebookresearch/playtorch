@@ -125,7 +125,7 @@ function useMNISTModel() {
     tensor = normalize(tensor);
     tensor = tensor.unsqueeze(0);
     const model = await getModel();
-    const output = await model.forward<Tensor, Tensor[]>(tensor);
+    const output = await model.forward<[Tensor], Tensor[]>(tensor);
 
     const softmax = output[0].squeeze(0).softmax(-1);
 

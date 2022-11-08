@@ -39,48 +39,42 @@ type TypedArray =
   | Float64Array;
 
 /**
- * The [[ModuleValue]] type is a convenient type representative of all possible
- * module output values.
+ * The [[IValue]] type is a convenient type representative of all possible
+ * module input/output values.
  */
-type ModuleValue =
+export type IValue =
   | null
   | string
   | number
   | boolean
   | Tensor
-  | {[key: string]: ModuleValue}
-  | ModuleValue[];
+  | Dict
+  | IValue[];
 
-/**
- * The [[IValue]] type is a type representative of all supported
- * input types to [[Module]] forward function.
- */
-type ModuleInputValue = string | number | boolean | Tensor;
+export type Dict = {[key: string]: IValue};
 
 export interface Module {
   /**
    * Module forward function.
    *
-   * @param inputs Module inputs. Input could be of type [[ModuleInputValue]]
+   * @param inputs Module inputs. Input could be of type [[IValue]]
    * @returns Module output, which is particular to the model and can be any of
-   * the [[ModuleValue]] union types.
+   * the [[IValue]] union types.
    */
-  forward<In extends ModuleInputValue, Out extends ModuleValue>(
-    ...inputs: In[]
+  forward<In extends IValue[], Out extends IValue>(
+    ...inputs: [...In]
   ): Promise<Out>;
   /**
    * Synchronous module forward function.
    *
-   * @param inputs Module inputs. Input could be of type [[ModuleInputValue]]
+   * @param inputs Module inputs. Input could be of type [[IValue]]
    * @returns Module output, which is particular to the model and can be any of
-   * the [[ModuleValue]] union types.
+   * the [[IValue]] union types.
    */
-  forwardSync<In extends ModuleInputValue, Out extends ModuleValue>(
-    ...inputs: In[]
-  ): Out;
+  forwardSync<In extends IValue[], Out extends IValue>(...inputs: [...In]): Out;
 }
 
-interface JIT {
+export interface JIT {
   /**
    * Loads a serialized mobile module.
    *

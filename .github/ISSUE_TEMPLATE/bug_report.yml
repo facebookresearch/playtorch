@@ -21,7 +21,6 @@ body:
       description: What part of the PyTorch Live codebase are you reporitng a bug for?
       options:
         - react-native-pytorch-core (core package)
-        - CLI
         - Website/Documentation
     validations:
       required: true
@@ -29,7 +28,7 @@ body:
     id: reproduce
     attributes:
       label: Steps to Reproduce
-      description: Please provide a detailed list of steps that reproduce the issue.
+      description: Please provide a detailed list of steps that reproduce the issue. If you are reporting an issue with react-native-pytorch-core, provide a reproducible end-to-end example including a model, the JavaScript integration code, the expected output, and the actual output.
       placeholder: |
         1.
         2.

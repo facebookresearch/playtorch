@@ -311,6 +311,7 @@ jsi::Value randintImpl(
     nextArgumentIndex =
         utils::helpers::parseSize(runtime, arguments, 1, count, &dims);
   } else {
+    args.requireNumArguments(3);
     low = arguments[0].asNumber();
     high = arguments[1].asNumber();
     nextArgumentIndex =

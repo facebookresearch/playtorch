@@ -8420,10 +8420,10 @@ react-native-paper@4.10.1:
     color "^3.1.2"
     react-native-iphone-x-helper "^1.3.1"
 
-react-native-pytorch-core@0.2.2:
-  version "0.2.2"
-  resolved "https://registry.yarnpkg.com/react-native-pytorch-core/-/react-native-pytorch-core-0.2.2.tgz#a0906a9e4a1fc144005855988dd6213355b0d3c9"
-  integrity sha512-TMnJP0E3L4G9qdsd/glBUFOLnSNAe2q5AJLN5n83P+aOjwVMM5M+oqGJiyIqysci99ncN/vwTJxG+nn9CXwuZQ==
+react-native-pytorch-core@0.2.3:
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/react-native-pytorch-core/-/react-native-pytorch-core-0.2.3.tgz#da89281c49cd42164aa7c16912268c855b9279c5"
+  integrity sha512-G90ib8y3ebRI9xgPm2wbUOcQI+DKO2T0J2aB1d+FxJY0sdVdqiqS5DEYO5p5iwDrud0bE+41PmPwVhoFQNNqBg==
 
 react-native-reanimated@~2.9.1:
   version "2.9.1"

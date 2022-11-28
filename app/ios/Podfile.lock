@@ -402,7 +402,7 @@ PODS:
     - React-Core
   - react-native-pager-view (5.4.24):
     - React-Core
-  - react-native-pytorch-core (0.2.2):
+  - react-native-pytorch-core (0.2.3):
     - LibTorch-Lite (~> 1.12.0)
     - React
     - React-callinvoker
@@ -940,7 +940,7 @@ SPEC CHECKSUMS:
   react-native-blob-util: c3b0faecd2919db568e9d552084396f3e50b57c7
   react-native-mmkv: 1265a348a4711097ba29c8bcefd5971f48220f2b
   react-native-pager-view: 95d0418c3c74279840abec6926653d32447bafb6
-  react-native-pytorch-core: 81acb178c58f91f3f206057527e48296e6adee69
+  react-native-pytorch-core: a5db0671f6568468764fc5405c6eb47a44d82ec2
   react-native-safe-area-context: 6c12e3859b6f27b25de4fee8201cfb858432d8de
   react-native-skia: 0bd524b32fb96b4f7b7ceeddd90b7be14e64701d
   react-native-view-shot: da768466e1cd371de50a3a5c722d1e95456b5b2c

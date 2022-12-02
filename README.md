@@ -15,14 +15,9 @@
 
 <p>&nbsp;</p>
 
-[![Build Android Template App](https://github.com/facebookresearch/playtorch/actions/workflows/build-template-android.yml/badge.svg)](https://github.com/facebookresearch/playtorch/actions/workflows/build-template-android.yml) [![Build iOS Template App](https://github.com/facebookresearch/playtorch/actions/workflows/build-template-ios.yml/badge.svg)](https://github.com/facebookresearch/playtorch/actions/workflows/build-template-ios.yml)
-
 <p>
   <a href="https://www.npmjs.org/package/react-native-pytorch-core">
     <img src="https://img.shields.io/npm/v/react-native-pytorch-core?label=react-native-pytorch-core" alt="Current React Native PyTorch Core npm package version." />
-  </a>
-  <a href="https://www.npmjs.org/package/react-native-template-pytorch-live">
-    <img src="https://img.shields.io/npm/v/react-native-template-pytorch-live?label=react-native-template-pytorch-live" alt="Current React Native PlayTorch template npm package version." />
   </a>
 </p>
 

@@ -10,10 +10,9 @@ body:
     id: area
     attributes:
       label: Area Select
-      description: What part of the PyTorch Live codebase do you have a feature request for?
+      description: What part of the PlayTorch codebase do you have a feature request for?
       options:
         - react-native-pytorch-core (core package)
-        - CLI
         - Website/Documentation
         - Other
     validations:

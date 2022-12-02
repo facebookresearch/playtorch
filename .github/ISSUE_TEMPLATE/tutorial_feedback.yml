@@ -19,8 +19,6 @@ body:
         - Question Answering
         - MNIST Digit Classification
         - Prepare Custom Model
-        - Server Model
-        - Connecting to a Server Model
     validations:
       required: true
   - type: textarea

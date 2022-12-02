@@ -29,7 +29,7 @@ module.exports = {
       collapsed: false,
       items: [
         'tutorials/get-started',
-        'tutorials/get-started-manually',
+        'tutorials/get-started-expo-app',
         'tutorials/add-package',
       ],
     },

@@ -5,23 +5,17 @@ on:
     branches: [main]
     paths:
       - '.github/workflows/build-react-native-pytorch-core-android.yml'
-      - '.github/actions/init-react-native-vanila-template/action.yml'
       - 'react-native-pytorch-core/android/**'
       - 'react-native-pytorch-core/cxx/**'
-      - 'react-native-template-pytorch-live/template/android/**'
       - 'react-native-pytorch-core/package.json'
       - 'react-native-pytorch-core/yarn.lock'
-      - 'react-native-template-pytorch-live/template/yarn.lock'
   pull_request:
     paths:
       - '.github/workflows/build-react-native-pytorch-core.yml'
-      - '.github/actions/init-react-native-vanila-template/action.yml'
       - 'react-native-pytorch-core/android/**'
       - 'react-native-pytorch-core/cxx/**'
-      - 'react-native-template-pytorch-live/template/android/**'
       - 'react-native-pytorch-core/package.json'
       - 'react-native-pytorch-core/yarn.lock'
-      - 'react-native-template-pytorch-live/template/yarn.lock'
 
   workflow_dispatch:
 

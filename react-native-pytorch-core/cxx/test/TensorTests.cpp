@@ -360,20 +360,62 @@ TEST_F(TorchliveTensorRuntimeTest, TensorIndexing) {
       )";
   EXPECT_TRUE(eval(tensorAccessWithIndex).getBool());
 
-  std::string nestedTensorAcessWithIndex =
+  std::string nestedTensorAccessWithIndex =
       R"(
         const tensor = torch.tensor([[128], [255]]);
-        const tensor1 = tensor[0];
-        const tensor2 = tensor[1];
-        tensor1[0].item() == 128 && tensor2[0].item() == 255;
+        const tensor0 = tensor[0];
+        const tensor1 = tensor[1];
+        tensor0[0].item() == 128 && tensor1[0].item() == 255;
       )";
-  EXPECT_TRUE(eval(nestedTensorAcessWithIndex).getBool());
+  EXPECT_TRUE(eval(nestedTensorAccessWithIndex).getBool());
 
   EXPECT_TRUE(eval("torch.tensor([[128], [255]])['foo']").isUndefined());
 
   EXPECT_TRUE(eval("torch.tensor([[128], [255]])[-1]").isUndefined());
 
   EXPECT_TRUE(eval("torch.tensor([[128], [255]])[2]").isUndefined());
+}
+
+TEST_F(TorchliveTensorRuntimeTest, TensorIndexingPut) {
+  std::string tensorPutWithIndex =
+      R"(
+        const tensor = torch.zeros([3]);
+        tensor[0] = torch.tensor([1]);
+        tensor[1] = torch.tensor([2]);
+        tensor[2] = torch.tensor([3]);
+        tensor[0].item() === 1 && tensor[1].item() === 2 && tensor[2].item() === 3;
+      )";
+  EXPECT_TRUE(eval(tensorPutWithIndex).getBool());
+
+  std::string tensorPutWithIndexAndNumberValue =
+      R"(
+        const tensor = torch.zeros([3]);
+        tensor[0] = 1;
+        tensor[1] = 2;
+        tensor[2] = 3;
+        tensor[0].item() === 1 && tensor[1].item() === 2 && tensor[2].item() === 3;
+      )";
+  EXPECT_TRUE(eval(tensorPutWithIndexAndNumberValue).getBool());
+
+  std::string nestedTensorPutWithIndex =
+      R"(
+        const tensor = torch.tensor([[128], [0]]);
+        tensor[1] = torch.tensor([[255]]);
+        const tensor0 = tensor[0];
+        const tensor1 = tensor[1];
+        tensor0[0].item() == 128 && tensor1[0].item() == 255;
+      )";
+  EXPECT_TRUE(eval(nestedTensorPutWithIndex).getBool());
+
+  EXPECT_THROW(
+      eval("torch.tensor([[128], [255]])['foo'] = 'bar'"),
+      facebook::jsi::JSError);
+
+  EXPECT_THROW(
+      eval("torch.tensor([[128], [255]])[-1] = 'bar'"), facebook::jsi::JSError);
+
+  EXPECT_THROW(
+      eval("torch.tensor([[128], [255]])[2] = 'bar'"), facebook::jsi::JSError);
 }
 
 TEST_F(TorchliveTensorRuntimeTest, TensorDivTest) {

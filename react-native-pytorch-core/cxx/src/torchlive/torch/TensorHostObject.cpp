@@ -737,6 +737,39 @@ jsi::Value TensorHostObject::get(
   return BaseHostObject::get(runtime, propNameId);
 }
 
+void TensorHostObject::set(
+    jsi::Runtime& runtime,
+    const jsi::PropNameID& propNameId,
+    const jsi::Value& value) {
+  auto name = propNameId.utf8(runtime);
+
+  int idx = -1;
+  try {
+    idx = std::stoi(name.c_str());
+  } catch (...) {
+    // Cannot parse name value to int. This can happen when the name in bracket
+    // or dot notion is not an int (e.g., tensor['foo']).
+    // Let's ignore this exception here and have the PyTorch C++ API throw an
+    // error for index out of bounds.
+    // Note: The Tensor Indexing API allows for a much broader range of indices
+    // but for now, the PlayTorch API only supports single value index values.
+  }
+  if (value.isObject()) {
+    // Get TensorHostObject with wrapped tensor, otherwise it will be nullptr
+    auto tensorHostObject =
+        value.asObject(runtime).asHostObject<TensorHostObject>(runtime);
+    if (tensorHostObject != nullptr) {
+      this->tensor.index_put_({idx}, tensorHostObject->tensor);
+    }
+  } else if (value.isNumber()) {
+    this->tensor.index_put_({idx}, value.asNumber());
+  } else {
+    throw jsi::JSError(
+        runtime,
+        "Invalid value! The value has to be of type tensor or a number");
+  }
+}
+
 jsi::Function TensorHostObject::createToString(jsi::Runtime& runtime) {
   auto toStringFunc = [this](
                           jsi::Runtime& runtime,

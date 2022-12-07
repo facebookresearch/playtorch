@@ -38,6 +38,10 @@ class JSI_EXPORT TensorHostObject : public common::BaseHostObject {
   facebook::jsi::Value get(
       facebook::jsi::Runtime&,
       const facebook::jsi::PropNameID& name) override;
+  void set(
+      facebook::jsi::Runtime&,
+      const facebook::jsi::PropNameID& name,
+      const facebook::jsi::Value& value) override;
   std::vector<facebook::jsi::PropNameID> getPropertyNames(
       facebook::jsi::Runtime& rt) override;
 

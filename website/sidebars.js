@@ -39,6 +39,7 @@ module.exports = {
       collapsed: false,
       items: [
         'tutorials/models/install-pytorch',
+        'tutorials/models/hello-world-model',
       ],
     },
     {

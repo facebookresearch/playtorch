@@ -19,7 +19,7 @@ namespace media {
 class Image : public IImage {
  public:
   Image(facebook::jni::alias_ref<JIImage> image);
-  ~Image() override = default;
+  ~Image() override;
 
   std::string getId() const override;
 

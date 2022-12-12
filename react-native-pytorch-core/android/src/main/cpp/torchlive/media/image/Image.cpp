@@ -33,6 +33,13 @@ Image::Image(facebook::jni::alias_ref<JIImage> image)
   id_ = wrapObjectMethod(mediaUtilsClass, image)->toStdString();
 }
 
+Image::~Image() {
+  ThreadScope::WithClassLoader([&]() {
+    Environment::ensureCurrentThreadIsAttached();
+    this->image_.release();
+  });
+}
+
 std::string Image::getId() const {
   return id_;
 }

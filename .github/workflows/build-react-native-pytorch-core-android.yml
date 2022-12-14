@@ -1,4 +1,4 @@
-name: Test Library on Android build of various RN Versions
+name: Test PlayTorch SDK with various React Native versions
 
 on:
   push:
@@ -28,35 +28,37 @@ jobs:
         working-directory: .
     steps:
       - uses: actions/checkout@v3
-      - name: Setup JDK 1.8
-        uses: actions/setup-java@v1
+      - name: Setup JDK 8 (zulu)
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.8
+          distribution: 'zulu'
+          java-version: '8'
+          cache: 'gradle'
       - uses: actions/setup-node@v3
         with:
             node-version: 16
-      - name: download vanilla template
+      - name: Init React Native 0.64 project
         run: npx react-native@0.64 init myrn64 --version 0.64
-      - name: install react-native-pytorch-core
+      - name: Add react-native-pytorch-core package
         run: yarn add file:./../react-native-pytorch-core
         working-directory: ./myrn64
-      - name: add pickFirst
+      - name: Add pickFirst to build.gradle
         env:
           prior: 'android {'
           append: "packagingOptions {pickFirst '**/*.so'}"
         run: nl=$'\n' && sed -i '' "/${prior}/a\\${nl}${append}${nl}" build.gradle
         working-directory: ./myrn64/android/app
-      - name: enlarge jvm capacity
+      - name: Enlarge JVM capacity
         env:
           prior: 'FLIPPER_VERSION'
           append: "org.gradle.jvmargs=-Xmx8192m"
         run: nl=$'\n' && sed -i '' "/${prior}/a\\${nl}${append}${nl}" gradle.properties
         working-directory: ./myrn64/android
-      - name: build android debug
-        run: ./gradlew assembleDebug
+      - name: Build Android debug
+        run: ./gradlew assembleDebug --no-daemon
         working-directory: ./myrn64/android
-      - name: build android release
-        run: ./gradlew assembleRelease
+      - name: Build Android release
+        run: ./gradlew assembleRelease --no-daemon
         working-directory: ./myrn64/android
 
   build_with_rn65:
@@ -67,34 +69,36 @@ jobs:
         working-directory: .
     steps:
       - uses: actions/checkout@v3
-      - name: Setup JDK 1.8
-        uses: actions/setup-java@v1
+      - name: Setup JDK 8 (zulu)
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.8
+          distribution: 'zulu'
+          java-version: '8'
+          cache: 'gradle'
       - uses: actions/setup-node@v3
         with:
             node-version: 16
-      - name: download vanilla template
+      - name: Init React Native 0.65 project
         run: npx react-native@0.65 init myrn65 --version 0.65
-      - name: install react-native-pytorch-core
+      - name: Add react-native-pytorch-core package
         run: yarn add file:./../react-native-pytorch-core
         working-directory: ./myrn65
-      - name: add pickFirst
+      - name: Add pickFirst to build.gradle
         env:
           prior: 'android {'
           append: "packagingOptions {pickFirst '**/*.so'}"
         run: nl=$'\n' && sed -i '' "/${prior}/a\\${nl}${append}${nl}" build.gradle
         working-directory: ./myrn65/android/app
-      - name: enlarge jvm capacity
+      - name: Enlarge JVM capacity
         env:
           prior: 'FLIPPER_VERSION'
           append: "org.gradle.jvmargs=-Xmx8192m"
         run: nl=$'\n' && sed -i '' "/${prior}/a\\${nl}${append}${nl}" gradle.properties
         working-directory: ./myrn65/android
-      - name: build android debug
+      - name: Build Android debug
         run: ./gradlew assembleDebug
         working-directory: ./myrn65/android
-      - name: build android release
+      - name: Build Android release
         run: ./gradlew assembleRelease
         working-directory: ./myrn65/android
 
@@ -106,34 +110,36 @@ jobs:
         working-directory: .
     steps:
       - uses: actions/checkout@v3
-      - name: Setup JDK 1.8
-        uses: actions/setup-java@v1
+      - name: Setup JDK 8 (zulu)
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.8
+          distribution: 'zulu'
+          java-version: '8'
+          cache: 'gradle'
       - uses: actions/setup-node@v3
         with:
             node-version: 16
-      - name: download vanilla template
+      - name: Init React Native 0.66 project
         run: npx react-native@0.66 init myrn66 --version 0.66
-      - name: install react-native-pytorch-core
+      - name: Add react-native-pytorch-core package
         run: yarn add file:./../react-native-pytorch-core
         working-directory: ./myrn66
-      - name: add pickFirst
+      - name: Add pickFirst to build.gradle
         env:
           prior: 'android {'
           append: "packagingOptions {pickFirst '**/*.so'}"
         run: nl=$'\n' && sed -i '' "/${prior}/a\\${nl}${append}${nl}" build.gradle
         working-directory: ./myrn66/android/app
-      - name: enlarge jvm capacity
+      - name: Enlarge JVM capacity
         env:
           prior: 'FLIPPER_VERSION'
           append: "org.gradle.jvmargs=-Xmx8192m"
         run: nl=$'\n' && sed -i '' "/${prior}/a\\${nl}${append}${nl}" gradle.properties
         working-directory: ./myrn66/android
-      - name: build android debug
+      - name: Build Android debug
         run: ./gradlew assembleDebug
         working-directory: ./myrn66/android
-      - name: build android release
+      - name: Build Android release
         run: ./gradlew assembleRelease
         working-directory: ./myrn66/android
 
@@ -145,38 +151,40 @@ jobs:
         working-directory: .
     steps:
       - uses: actions/checkout@v3
-      - name: Setup JDK 1.8
-        uses: actions/setup-java@v1
+      - name: Setup JDK 8 (zulu)
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.8
+          distribution: 'zulu'
+          java-version: '8'
+          cache: 'gradle'
       - uses: actions/setup-node@v3
         with:
             node-version: 16
       - name: Set up Ruby 2.7.4
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.4
-      - name: download vanilla template
+          ruby-version: '2.7.4'
+      - name: Init React Native 0.67 project
         run: npx react-native@0.67 init myrn67 --version 0.67
-      - name: install react-native-pytorch-core
+      - name: Add react-native-pytorch-core package
         run: yarn add file:./../react-native-pytorch-core
         working-directory: ./myrn67
-      - name: add pickFirst
+      - name: Add pickFirst to build.gradle
         env:
           prior: 'android {'
           append: "packagingOptions {pickFirst '**/*.so'}"
         run: nl=$'\n' && sed -i '' "/${prior}/a\\${nl}${append}${nl}" build.gradle
         working-directory: ./myrn67/android/app
-      - name: enlarge jvm capacity
+      - name: Enlarge JVM capacity
         env:
           prior: 'FLIPPER_VERSION'
           append: "org.gradle.jvmargs=-Xmx8192m"
         run: nl=$'\n' && sed -i '' "/${prior}/a\\${nl}${append}${nl}" gradle.properties
         working-directory: ./myrn67/android
-      - name: build android debug
+      - name: Build Android debug
         run: ./gradlew assembleDebug
         working-directory: ./myrn67/android
-      - name: build android release
+      - name: Build Android release
         run: ./gradlew assembleRelease
         working-directory: ./myrn67/android
 
@@ -188,29 +196,31 @@ jobs:
         working-directory: .
     steps:
       - uses: actions/checkout@v3
-      - name: Setup JDK 1.11
-        uses: actions/setup-java@v1
+      - name: Setup JDK 11 (zulu)
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.11
+          distribution: 'zulu'
+          java-version: '11'
+          cache: 'gradle'
       - uses: actions/setup-node@v3
         with:
             node-version: 16
       - name: Set up Ruby 2.7.4
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.4
-      - name: download vanilla template
+          ruby-version: '2.7.4'
+      - name: Init React Native 0.68 project
         run: npx react-native@0.68 init myrn68 --version 0.68
-      - name: install react-native-pytorch-core
+      - name: Add react-native-pytorch-core package
         run: yarn add file:./../react-native-pytorch-core
         working-directory: ./myrn68
-      - name: add pickFirst
+      - name: Add pickFirst to build.gradle
         run: nl=$'\n' && sed -i '' "/android {/a\\${nl}packagingOptions {pickFirst '**/*.so'}${nl}" build.gradle
         working-directory: ./myrn68/android/app
-      - name: build android debug
+      - name: Build Android debug
         run: ./gradlew assembleDebug
         working-directory: ./myrn68/android
-      - name: build android release
+      - name: Build Android release
         run: ./gradlew assembleRelease
         working-directory: ./myrn68/android
 
@@ -222,30 +232,31 @@ jobs:
         working-directory: .
     steps:
       - uses: actions/checkout@v3
-      - name: Setup JDK 1.11
-        uses: actions/setup-java@v1
+      - name: Setup JDK 11 (zulu)
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.11
+          distribution: 'zulu'
+          java-version: '11'
+          cache: 'gradle'
       - uses: actions/setup-node@v3
         with:
             node-version: 16
       - name: Set up Ruby 2.7.5
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.5
-      - name: download vanilla template
-        run: npx react-native init myrn69 --version 0.69
-      - name: install react-native-pytorch-core
+          ruby-version: '2.7.5'
+      - name: Init React Native 0.69 project
+        run: npx react-native@0.69 init myrn69 --version 0.69
+      - name: Add react-native-pytorch-core package
         run: yarn add file:./../react-native-pytorch-core
         working-directory: ./myrn69
-      - name: add pickFirst
+      - name: Add pickFirst to build.gradle
         run: nl=$'\n' && prior='android {' && append="packagingOptions {pickFirst '**/*.so'}" && sed -i '' "/${prior}/a\\${nl}${append}${nl}" build.gradle
         working-directory: ./myrn69/android/app
-
-      - name: build android debug
+      - name: Build Android debug
         run: ./gradlew assembleDebug
         working-directory: ./myrn69/android
-      - name: build android release
+      - name: Build Android release
         run: ./gradlew assembleRelease
         working-directory: ./myrn69/android
 
@@ -257,29 +268,30 @@ jobs:
         working-directory: .
     steps:
       - uses: actions/checkout@v3
-      - name: Setup JDK 1.11
-        uses: actions/setup-java@v1
+      - name: Setup JDK 11 (zulu)
+        uses: actions/setup-java@v3
         with:
-          java-version: 1.11
+          distribution: 'zulu'
+          java-version: '11'
+          cache: 'gradle'
       - uses: actions/setup-node@v3
         with:
             node-version: 16
       - name: Set up Ruby 2.7.5
         uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7.5
-      - name: download vanilla template
-        run: npx react-native init myrn70 --version 0.70
-      - name: install react-native-pytorch-core
+          ruby-version: '2.7.5'
+      - name: Init React Native 0.70 project
+        run: npx react-native@0.70 init myrn70 --version 0.70
+      - name: Add react-native-pytorch-core package
         run: yarn add file:./../react-native-pytorch-core
         working-directory: ./myrn70
-      - name: add pickFirst
+      - name: Add pickFirst to build.gradle
         run: nl=$'\n' && prior='android {' && append="packagingOptions {pickFirst '**/*.so'}" && sed -i '' "/${prior}/a\\${nl}${append}${nl}" build.gradle
         working-directory: ./myrn70/android/app
-
-      - name: build android debug
+      - name: Build Android debug
         run: ./gradlew assembleDebug
         working-directory: ./myrn70/android
-      - name: build android release
+      - name: Build Android release
         run: ./gradlew assembleRelease
         working-directory: ./myrn70/android

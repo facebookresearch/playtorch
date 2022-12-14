@@ -39,7 +39,7 @@ jobs:
             node-version: 16
       - name: Init React Native 0.64 project
         run: npx react-native@0.64 init myrn64 --version 0.64
-      - name: Install react-native-pytorch-core
+      - name: Add react-native-pytorch-core package
         run: yarn add file:./../react-native-pytorch-core
         working-directory: ./myrn64
       - name: Add pickFirst to build.gradle
@@ -80,7 +80,7 @@ jobs:
             node-version: 16
       - name: Init React Native 0.65 project
         run: npx react-native@0.65 init myrn65 --version 0.65
-      - name: Install react-native-pytorch-core
+      - name: Add react-native-pytorch-core package
         run: yarn add file:./../react-native-pytorch-core
         working-directory: ./myrn65
       - name: Add pickFirst to build.gradle
@@ -121,7 +121,7 @@ jobs:
             node-version: 16
       - name: Init React Native 0.66 project
         run: npx react-native@0.66 init myrn66 --version 0.66
-      - name: install react-native-pytorch-core
+      - name: Add react-native-pytorch-core package
         run: yarn add file:./../react-native-pytorch-core
         working-directory: ./myrn66
       - name: Add pickFirst to build.gradle
@@ -166,7 +166,7 @@ jobs:
           ruby-version: '2.7.4'
       - name: Init React Native 0.67 project
         run: npx react-native@0.67 init myrn67 --version 0.67
-      - name: install react-native-pytorch-core
+      - name: Add react-native-pytorch-core package
         run: yarn add file:./../react-native-pytorch-core
         working-directory: ./myrn67
       - name: Add pickFirst to build.gradle
@@ -211,7 +211,7 @@ jobs:
           ruby-version: '2.7.4'
       - name: Init React Native 0.68 project
         run: npx react-native@0.68 init myrn68 --version 0.68
-      - name: install react-native-pytorch-core
+      - name: Add react-native-pytorch-core package
         run: yarn add file:./../react-native-pytorch-core
         working-directory: ./myrn68
       - name: Add pickFirst to build.gradle
@@ -247,7 +247,7 @@ jobs:
           ruby-version: '2.7.5'
       - name: Init React Native 0.69 project
         run: npx react-native@0.69 init myrn69 --version 0.69
-      - name: install react-native-pytorch-core
+      - name: Add react-native-pytorch-core package
         run: yarn add file:./../react-native-pytorch-core
         working-directory: ./myrn69
       - name: Add pickFirst to build.gradle
@@ -283,7 +283,7 @@ jobs:
           ruby-version: '2.7.5'
       - name: Init React Native 0.70 project
         run: npx react-native@0.70 init myrn70 --version 0.70
-      - name: install react-native-pytorch-core
+      - name: Add react-native-pytorch-core package
         run: yarn add file:./../react-native-pytorch-core
         working-directory: ./myrn70
       - name: Add pickFirst to build.gradle

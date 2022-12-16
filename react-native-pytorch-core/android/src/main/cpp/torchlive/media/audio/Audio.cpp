@@ -31,6 +31,13 @@ Audio::Audio(alias_ref<JIAudio> audio) : audio_(make_global(audio)) {
   id_ = wrapObjectMethod(mediaUtilsClass, audio)->toStdString();
 }
 
+Audio::~Audio() {
+  ThreadScope::WithClassLoader([&]() {
+    Environment::ensureCurrentThreadIsAttached();
+    this->audio_.release();
+  });
+}
+
 std::string Audio::getId() const {
   return id_;
 }

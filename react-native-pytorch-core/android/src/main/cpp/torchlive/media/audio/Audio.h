@@ -19,7 +19,7 @@ namespace media {
 class Audio : public IAudio {
  public:
   Audio(facebook::jni::alias_ref<JIAudio> audio);
-  ~Audio() override = default;
+  ~Audio() override;
 
   std::string getId() const override;
 

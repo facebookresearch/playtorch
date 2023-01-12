@@ -10,13 +10,13 @@ import UIKit
 
 extension UIImage {
 
-    func resizeImage(size: CGSize) -> UIImage? {
-        UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
-        let context = UIGraphicsGetCurrentContext()
-        context?.interpolationQuality = .none
-        self.draw(in: CGRect(origin: CGPoint.zero, size: size))
-        let resizedImage = UIGraphicsGetImageFromCurrentImageContext()!
-        UIGraphicsEndImageContext()
-        return resizedImage
-    }
+  func resizeImage(size: CGSize) -> UIImage? {
+    UIGraphicsBeginImageContextWithOptions(size, false, 1.0)
+    let context = UIGraphicsGetCurrentContext()
+    context?.interpolationQuality = .none
+    self.draw(in: CGRect(origin: CGPoint.zero, size: size))
+    let resizedImage = UIGraphicsGetImageFromCurrentImageContext()!
+    UIGraphicsEndImageContext()
+    return resizedImage
+  }
 }

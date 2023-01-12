@@ -8,51 +8,50 @@
 import Foundation
 
 enum LayerType {
-    case textLayer
-    case shapeLayer
-    case imageLayer
+  case textLayer
+  case shapeLayer
+  case imageLayer
 }
 
 class LayerData {
-    let type: LayerType
-    let transform: CATransform3D
+  let type: LayerType
+  let transform: CATransform3D
 
-    init(layerType: LayerType, transform: CATransform3D) {
-        self.type = layerType
-        self.transform = transform
-    }
-
+  init(layerType: LayerType, transform: CATransform3D) {
+    self.type = layerType
+    self.transform = transform
+  }
 }
 
 class TextLayerData: LayerData {
-    let text: NSAttributedString
-    let frame: CGRect
+  let text: NSAttributedString
+  let frame: CGRect
 
-    init(text: NSAttributedString, transform: CATransform3D, frame: CGRect) {
-        self.text = text
-        self.frame = frame
-        super.init(layerType: LayerType.textLayer, transform: transform)
-    }
+  init(text: NSAttributedString, transform: CATransform3D, frame: CGRect) {
+    self.text = text
+    self.frame = frame
+    super.init(layerType: LayerType.textLayer, transform: transform)
+  }
 }
 
 class ShapeLayerData: LayerData {
-    let path: CGPath
-    let state: CanvasState
+  let path: CGPath
+  let state: CanvasState
 
-    init(path: CGPath, state: CanvasState) {
-        self.path = path
-        self.state = state
-        super.init(layerType: LayerType.shapeLayer, transform: state.transform)
-    }
+  init(path: CGPath, state: CanvasState) {
+    self.path = path
+    self.state = state
+    super.init(layerType: LayerType.shapeLayer, transform: state.transform)
+  }
 }
 
 class ImageLayerData: LayerData {
-    let image: CGImage
-    let frame: CGRect
+  let image: CGImage
+  let frame: CGRect
 
-    init(image: CGImage, transform: CATransform3D, frame: CGRect) {
-        self.image = image
-        self.frame = frame
-        super.init(layerType: LayerType.imageLayer, transform: transform)
-    }
+  init(image: CGImage, transform: CATransform3D, frame: CGRect) {
+    self.image = image
+    self.frame = frame
+    super.init(layerType: LayerType.imageLayer, transform: transform)
+  }
 }

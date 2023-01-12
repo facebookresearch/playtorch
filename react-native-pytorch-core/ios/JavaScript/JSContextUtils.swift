@@ -14,14 +14,14 @@ class JSContextUtils {
   }
 
   public static func unwrapObject<T>(_ objRef: String, _ objType: T.Type) throws -> T {
-      guard let obj = try JSContext.unwrapObject(jsRef: ["ID": objRef]) as? T else {
-        throw JSContextUtilsError.castingObject(objType)
-      }
-      return obj
+    guard let obj = try JSContext.unwrapObject(jsRef: ["ID": objRef]) as? T else {
+      throw JSContextUtilsError.castingObject(objType)
+    }
+    return obj
   }
 
   public static func unwrapObject<T>(_ objRef: NSDictionary, _ objType: T.Type) throws -> T {
-      guard let ref = objRef["ID"] as? String else { throw JSContextUtilsError.castingDict(objType) }
-      return try unwrapObject(ref, T.self)
+    guard let ref = objRef["ID"] as? String else { throw JSContextUtilsError.castingDict(objType) }
+    return try unwrapObject(ref, T.self)
   }
 }

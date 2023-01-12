@@ -43,21 +43,21 @@ struct ShapeLayer {
     circlePath.addArc(withCenter: center,
                       radius: radius,
                       startAngle: -CGFloat(Double.pi),
-                      endAngle: -CGFloat(Double.pi/2),
+                      endAngle: -CGFloat(Double.pi / 2),
                       clockwise: true)
     circlePath.addArc(withCenter: center,
                       radius: radius,
-                      startAngle: -CGFloat(Double.pi/2),
+                      startAngle: -CGFloat(Double.pi / 2),
                       endAngle: 0,
                       clockwise: true)
     circlePath.addArc(withCenter: center,
                       radius: radius,
                       startAngle: 0,
-                      endAngle: CGFloat(Double.pi/2),
+                      endAngle: CGFloat(Double.pi / 2),
                       clockwise: true)
     circlePath.addArc(withCenter: center,
                       radius: radius,
-                      startAngle: CGFloat(Double.pi/2),
+                      startAngle: CGFloat(Double.pi / 2),
                       endAngle: CGFloat(Double.pi),
                       clockwise: true)
     circlePath.close()
@@ -84,5 +84,4 @@ struct ShapeLayer {
     squarePath.close()
     return squarePath
   }
-
 }

@@ -8,13 +8,13 @@
 import Foundation
 
 public protocol IAudio {
-    func getData() -> Data
+  func getData() -> Data
 
-    func play()
+  func play()
 
-    func pause()
+  func pause()
 
-    func stop()
+  func stop()
 
-    func getDuration() -> Int
+  func getDuration() -> Int
 }

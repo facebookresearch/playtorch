@@ -10,13 +10,13 @@ import Foundation
 @objc(CanvasManager)
 class CanvasManager: RCTViewManager {
 
-    override func view() -> UIView! {
-        let canvas = DrawingCanvasView()
-        canvas.backgroundColor = .white
-        return canvas
-    }
+  override func view() -> UIView! {
+    let canvas = DrawingCanvasView()
+    canvas.backgroundColor = .white
+    return canvas
+  }
 
-    override static func requiresMainQueueSetup() -> Bool {
-       return true
-     }
+  override static func requiresMainQueueSetup() -> Bool {
+    return true
+  }
 }

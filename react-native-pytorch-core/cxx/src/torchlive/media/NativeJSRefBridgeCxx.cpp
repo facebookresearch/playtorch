@@ -31,6 +31,10 @@ imageFromBlob(const Blob& blob, double width, double height) {
   return nullptr;
 }
 
+std::shared_ptr<IImage> imageFromFile(std::string filepath) {
+  return nullptr;
+}
+
 std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
   size_t const size = 0;
   auto data = std::unique_ptr<uint8_t[]>(0);

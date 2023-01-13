@@ -44,6 +44,21 @@ std::shared_ptr<IImage> imageFromBlob(
   return std::make_shared<Image>(image);
 }
 
+std::shared_ptr<IImage> imageFromFile(std::string filePath) {
+  NSString* imageFilePath = [NSString stringWithUTF8String:filePath.c_str()];
+
+  NSFileManager* fileManager = [NSFileManager defaultManager];
+  BOOL isFileExist = [fileManager fileExistsAtPath:imageFilePath];
+  UIImage* image;
+  if (isFileExist) {
+    image = [[UIImage alloc] initWithContentsOfFile:imageFilePath];
+  } else {
+    // do something.
+    return nullptr;
+  }
+  return std::make_shared<Image>(image);
+}
+
 std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
   auto idRef = [NSString stringWithUTF8String:refId.c_str()];
   NSError *error = nil;

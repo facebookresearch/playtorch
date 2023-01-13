@@ -40,6 +40,28 @@ alias_ref<JClass> getMediaUtilsClass() {
 
 namespace media {
 
+std::shared_ptr<IImage> resolveNativeJSRefToImage_DO_NOT_USE(
+    const std::string& refId) {
+  auto mediaUtilsClass = getMediaUtilsClass();
+  auto method =
+      mediaUtilsClass->getStaticMethod<local_ref<JIImage>(alias_ref<JString>)>(
+          "resolveNativeJSRefToImage_DO_NOT_USE");
+  local_ref<JIImage> image = method(mediaUtilsClass, make_jstring(refId));
+  return std::make_shared<Image>(make_global(image));
+}
+
+std::string imageToFile(
+    std::shared_ptr<IImage> image,
+    const std::string& filepath) {
+  std::shared_ptr<Image> derivedImage = std::dynamic_pointer_cast<Image>(image);
+  auto mediaUtilsClass = getMediaUtilsClass();
+  auto imageToFileMethod = mediaUtilsClass->getStaticMethod<local_ref<JString>(
+      alias_ref<JIImage>, alias_ref<JString>)>("imageToFile");
+  return imageToFileMethod(
+             mediaUtilsClass, derivedImage->image_, make_jstring(filepath))
+      ->toStdString();
+}
+
 std::shared_ptr<IImage>
 imageFromBlob(const Blob& blob, double width, double height) {
   auto mediaUtilsClass = getMediaUtilsClass();

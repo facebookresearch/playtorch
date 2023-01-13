@@ -49,10 +49,14 @@ public class JSContext {
     return new NativeJSRef(object);
   }
 
-  public static <T> T unwrapObject(ReadableMap jsRef) {
-    String id = jsRef.getString(ID_KEY);
+  public static <T> T unwrapObject(String id) {
     NativeJSRef ref = JSContext.getRef(id);
     return (T) ref.getObject();
+  }
+
+  public static <T> T unwrapObject(ReadableMap jsRef) {
+    String id = jsRef.getString(ID_KEY);
+    return JSContext.unwrapObject(id);
   }
 
   public static final class NativeJSRef {

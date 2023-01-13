@@ -91,6 +91,30 @@ export interface Media {
   imageFromTensor(tensor: Tensor): Image;
 
   /**
+   * @experimental This function is experimental and can change.
+   *
+   * Saves an [[Image]] to a file. The second argument is the local filepath at
+   * which the image will be saved. The filepath can be created by using a
+   * third-party React Native package like `react-native-fs` (i.e., RNFS).
+   *
+   * ```typescript
+   * const image = await ImageUtil.fromURL('https://example.com/image.jpg');
+   * const filepath = media.imageToFile(
+   *   image,
+   *   RNFS.DownloadDirectoryPath + '/saved_image.png',
+   * );
+   * image.release();
+   * ```
+   *
+   * The function will throw an error if the [[Image]] couldn't be saved.
+   *
+   * @param image Image that should be saved to a file.
+   * @param filepath The filepath at which the image will be saved.
+   * @returns The filepath of the saved image.
+   */
+  imageToFile(image: Image, filepath: string): string;
+
+  /**
    * Converts a [[Tensor]] or [[NativeJSRef]] into a [[Blob]]. The blob can be
    * used to create a [[Tensor]] object or convert into a [[NativeJSRef]] like
    * an image or audio.

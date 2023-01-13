@@ -18,6 +18,18 @@ namespace torchlive {
 
 namespace media {
 
+/**
+ * The resolveNativeJSRefToImage_DO_NOT_USE function is needed to resolve
+ * NativeJSRef objects to IImage. This function will be removed without
+ * warning in future releases once NativeJSRef is fully deprecated.
+ */
+std::shared_ptr<IImage> resolveNativeJSRefToImage_DO_NOT_USE(
+    const std::string& refId);
+
+std::string imageToFile(
+    std::shared_ptr<IImage> image,
+    const std::string& filepath);
+
 std::shared_ptr<IImage>
 imageFromBlob(const Blob& blob, double width, double height);
 

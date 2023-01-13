@@ -20,6 +20,22 @@ namespace torchlive {
 
 namespace media {
 
+  std::shared_ptr<IImage> resolveNativeJSRefToImage_DO_NOT_USE(
+    const std::string& refId) {
+      NSError *error = nil;
+auto ptlImage = (PTLImage*) [PTLJSContext unwrapObjectWithJsRef:@{@"ID": [NSString stringWithUTF8String:refId.c_str()]} error:&error];
+      UIImage* image = [[UIImage alloc] initWithCGImage:[ptlImage getBitmap]];
+  return std::make_shared<Image>(image);
+    }
+
+std::string imageToFile(std::shared_ptr<IImage> image, const std::string& filepath) {
+   std::shared_ptr<Image> derivedImage = std::dynamic_pointer_cast<Image>(image);
+   UIImage* uiImage = derivedImage->image_;
+    NSData *imageData = UIImagePNGRepresentation(uiImage);
+    [imageData writeToFile:[NSString stringWithUTF8String:filepath.c_str()] atomically:YES];
+    return filepath;
+}
+
 std::shared_ptr<IImage> imageFromBlob(
     const Blob& blob,
     double width,

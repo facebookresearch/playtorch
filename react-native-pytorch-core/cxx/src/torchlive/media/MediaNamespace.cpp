@@ -29,6 +29,46 @@ std::unique_ptr<Blob> tensorToBlob(
   return std::make_unique<torchlive::media::Blob>(std::move(data), size, type);
 }
 
+jsi::Value imageToFileImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(2);
+
+  const auto& obj = args[0].asObject(runtime);
+  const std::string filepath = args[1].asString(runtime).utf8(runtime);
+
+  std::shared_ptr<IImage> image = nullptr;
+  if (obj.isHostObject<torchlive::media::ImageHostObject>(runtime)) {
+    image = obj.asHostObject<torchlive::media::ImageHostObject>(runtime)
+                ->getImage();
+  } else {
+    const auto ID_PROP = jsi::PropNameID::forUtf8(runtime, std::string("ID"));
+    if (!obj.hasProperty(runtime, ID_PROP)) {
+      throw jsi::JSError(runtime, "object must have ID property");
+    }
+
+    auto idValue = obj.getProperty(runtime, ID_PROP);
+    if (!idValue.isString()) {
+      throw jsi::JSError(runtime, "ID property must be a string");
+    }
+
+    auto id = idValue.asString(runtime).utf8(runtime);
+    image = torchlive::media::resolveNativeJSRefToImage_DO_NOT_USE(id);
+  }
+
+  try {
+    auto savedFilepath = torchlive::media::imageToFile(image, filepath);
+    auto val = jsi::String::createFromUtf8(runtime, savedFilepath);
+    return jsi::Value(std::move(val));
+  } catch (const std::exception& e) {
+    throw jsi::JSError(
+        runtime, "error saving image to file: " + std::string(e.what()));
+  }
+}
+
 jsi::Value imageFromBlobImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -165,6 +205,7 @@ jsi::Object buildNamespace(jsi::Runtime& rt, RuntimeExecutor rte) {
   setPropertyHostFunction(rt, ns, "imageFromBlob", 3, imageFromBlobImpl);
   setPropertyHostFunction(rt, ns, "imageFromTensor", 1, imageFromTensorImpl);
   setPropertyHostFunction(rt, ns, "toBlob", 1, toBlobImpl);
+  setPropertyHostFunction(rt, ns, "imageToFile", 1, imageToFileImpl);
   return ns;
 }
 

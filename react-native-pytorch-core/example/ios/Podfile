@@ -9,6 +9,7 @@ target 'PyTorchCoreExample' do
   use_react_native!(:path => config["reactNativePath"])
 
   pod 'react-native-pytorch-core', :path => '../..'
+  pod 'RNFS', :path => '../node_modules/react-native-fs'
 
   # Enables Flipper.
   #

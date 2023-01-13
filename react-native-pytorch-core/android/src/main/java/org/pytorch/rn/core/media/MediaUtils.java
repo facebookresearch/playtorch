@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import androidx.annotation.Keep;
 import com.facebook.proguard.annotations.DoNotStrip;
+import java.io.FileOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import org.pytorch.rn.core.audio.Audio;
@@ -24,6 +25,12 @@ public class MediaUtils {
 
   @DoNotStrip
   @Keep
+  public static IImage resolveNativeJSRefToImage_DO_NOT_USE(final String refId) {
+    return JSContext.unwrapObject(refId);
+  }
+
+  @DoNotStrip
+  @Keep
   public static String wrapObject(final Object obj) {
     final JSContext.NativeJSRef ref = JSContext.wrapObject(obj);
     return ref.getJSRef().getString("ID");
@@ -33,6 +40,15 @@ public class MediaUtils {
   @Keep
   public static void releaseObject(final String id) throws Exception {
     JSContext.release(id);
+  }
+
+  @DoNotStrip
+  @Keep
+  public static String imageToFile(final IImage image, final String filepath) throws Exception {
+    final Bitmap bitmap = image.getBitmap();
+    final FileOutputStream outputStream = new FileOutputStream(filepath);
+    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+    return filepath;
   }
 
   @DoNotStrip

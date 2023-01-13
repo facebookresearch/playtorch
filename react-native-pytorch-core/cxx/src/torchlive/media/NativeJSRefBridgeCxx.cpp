@@ -15,6 +15,17 @@ namespace torchlive {
 
 namespace media {
 
+std::shared_ptr<IImage> resolveNativeJSRefToImage_DO_NOT_USE(
+    const std::string& refId) {
+  return nullptr;
+}
+
+std::string imageToFile(
+    std::shared_ptr<IImage> image,
+    const std::string& filepath) {
+  return filepath;
+}
+
 std::shared_ptr<IImage>
 imageFromBlob(const Blob& blob, double width, double height) {
   return nullptr;

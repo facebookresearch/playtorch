@@ -62,6 +62,16 @@ std::string imageToFile(
       ->toStdString();
 }
 
+std::shared_ptr<IImage> imageFromFile(std::string filepath) {
+  auto mediaUtilsClass = getMediaUtilsClass();
+  auto imageFromFileMethod =
+      mediaUtilsClass->getStaticMethod<local_ref<JIImage>(local_ref<JString>)>(
+          "imageFromFile");
+  local_ref<JIImage> image =
+      imageFromFileMethod(mediaUtilsClass, make_jstring(filepath));
+  return std::make_shared<Image>(make_global(image));
+}
+
 std::shared_ptr<IImage>
 imageFromBlob(const Blob& blob, double width, double height) {
   auto mediaUtilsClass = getMediaUtilsClass();

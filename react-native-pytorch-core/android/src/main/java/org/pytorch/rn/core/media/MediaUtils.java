@@ -8,6 +8,7 @@
 package org.pytorch.rn.core.media;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import androidx.annotation.Keep;
 import com.facebook.proguard.annotations.DoNotStrip;
@@ -49,6 +50,13 @@ public class MediaUtils {
     final FileOutputStream outputStream = new FileOutputStream(filepath);
     bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
     return filepath;
+  }
+
+  @DoNotStrip
+  @Keep
+  public static IImage imageFromFile(final String filepath) {
+    Bitmap bitmap = BitmapFactory.decodeFile(filepath);
+    return new Image(bitmap);
   }
 
   @DoNotStrip

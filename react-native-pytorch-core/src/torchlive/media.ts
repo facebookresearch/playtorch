@@ -115,6 +115,17 @@ export interface Media {
   imageToFile(image: Image, filepath: string): string;
 
   /**
+   * @experimental This function is experimental and can change.
+   *
+   * Loads an [[Image]] from a file. The function will throw an error if the
+   * image couldn't be loaded.
+   *
+   * @param filepath A local file path to an image.
+   * @returns An [[Image]] loaded from filepath.
+   */
+  imageFromFile(filepath: string): Image;
+
+  /**
    * Converts a [[Tensor]] or [[NativeJSRef]] into a [[Blob]]. The blob can be
    * used to create a [[Tensor]] object or convert into a [[NativeJSRef]] like
    * an image or audio.

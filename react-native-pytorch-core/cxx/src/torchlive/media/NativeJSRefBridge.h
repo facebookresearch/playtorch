@@ -30,6 +30,8 @@ std::string imageToFile(
     std::shared_ptr<IImage> image,
     const std::string& filepath);
 
+std::shared_ptr<IImage> imageFromFile(std::string filepath);
+
 std::shared_ptr<IImage>
 imageFromBlob(const Blob& blob, double width, double height);
 

@@ -34,7 +34,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 // Alias for torchvision transforms
 const T = torchvision.transforms;
 
-// URL to the image classification model that is used int his example
+// URL to the image classification model that is used in this example
 const MODEL_URL =
   'https://github.com/facebookresearch/playtorch/releases/download/v0.1.0/mobilenet_v3_small.ptl';
 

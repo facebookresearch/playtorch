@@ -8,4 +8,4 @@
 import Foundation
 
 // Created this file to fix the error Could not find or use auto-linked library 'swiftWebKit'
-//https://github.com/facebookarchive/react-native-fbsdk/issues/755
+// https://github.com/facebookarchive/react-native-fbsdk/issues/755

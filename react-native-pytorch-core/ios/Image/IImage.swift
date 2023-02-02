@@ -8,12 +8,12 @@
 import Foundation
 
 public protocol IImage {
-    func getPixelDensity() -> CGFloat
-    func getWidth() -> CGFloat
-    func getHeight() -> CGFloat
-    func getNaturalWidth() -> Int
-    func getNaturalHeight() -> Int
-    func scale(sx: CGFloat, sy: CGFloat) throws -> IImage
-    func getBitmap() -> CGImage?
-    func close() throws
+  func getPixelDensity() -> CGFloat
+  func getWidth() -> CGFloat
+  func getHeight() -> CGFloat
+  func getNaturalWidth() -> Int
+  func getNaturalHeight() -> Int
+  func scale(sx: CGFloat, sy: CGFloat) throws -> IImage
+  func getBitmap() -> CGImage?
+  func close() throws
 }

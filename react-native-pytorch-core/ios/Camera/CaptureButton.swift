@@ -64,7 +64,7 @@ class CaptureButton: UIButton {
                                                                 fillColor: UIColor.white.cgColor)
       layer.addSublayer(innerCircleLayer!)
       innerCircleLayer!.bounds = innerCircleBounds
-        innerCircleLayer!.position = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
+      innerCircleLayer!.position = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
     }
   }
 

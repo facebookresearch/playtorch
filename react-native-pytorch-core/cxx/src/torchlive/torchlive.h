@@ -7,6 +7,8 @@
 
 #pragma once
 
+#include <functional>
+
 namespace facebook {
 namespace jsi {
 

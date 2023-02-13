@@ -51,6 +51,10 @@ RCT_EXPORT_MODULE()
 
         torchlive::install(*(facebook::jsi::Runtime *)cxxBridge.runtime, runtimeExecutor);
     }
+    else {
+    	[NSThread sleepForTimeInterval:0.1]
+    	[self install]
+    }
 }
 
 @end

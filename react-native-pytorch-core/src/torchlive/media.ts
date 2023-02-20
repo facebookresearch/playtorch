@@ -10,6 +10,7 @@
 import type {Tensor} from 'react-native-pytorch-core';
 import type {NativeJSRef} from '../NativeJSRef';
 import type {Image} from '../ImageModule';
+import type {VisionCameraFrame} from './frame';
 
 export interface Blob {
   /**
@@ -128,10 +129,12 @@ export interface Media {
   /**
    * Converts a VisionCamera [`Frame`](https://mrousavy.com/react-native-vision-camera/docs/api/interfaces/Frame) into an [[Image]]. This function has to be called inside a Frame Processor, as the Frame only exists inside a Frame Processor.
    *
-   * @param frame [[Frame]] to turn into an [[Image]].
-   * @returns An [[Image]] object created from the [[Frame]].
+   * Requires [react-native-vision-camera](https://github.com/mrousavy/react-native-vision-camera) to be installed.
+   *
+   * @param frame [[VisionCameraFrame]] to turn into an [[Image]].
+   * @returns An [[Image]] object created from the [[VisionCameraFrame]].
    */
-  imageFromFrame(frame: unknown): Image;
+  imageFromFrame(frame: VisionCameraFrame): Image;
 
   /**
    * Converts a [[Tensor]] or [[NativeJSRef]] into a [[Blob]]. The blob can be

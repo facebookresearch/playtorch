@@ -180,13 +180,11 @@ jsi::Value imageFromFrameImpl(
 
   std::shared_ptr<IImage> image;
   try {
-    image = torchlive::media::imageFromFrame(runtime, args.asObject(0));
+    image = torchlive::media::imageFromFrame(runtime, args[0].asObject(runtime));
   } catch (const std::exception& e) {
     throw jsi::JSError(
         runtime,
-        "error on converting frame to image with width: " +
-            std::to_string(width) + ", height: " + std::to_string(height) +
-            "\n" + e.what());
+        std::string("error on converting frame to image!\n") + e.what());
   }
   return utils::helpers::createFromHostObject<ImageHostObject>(
       runtime, std::move(image));

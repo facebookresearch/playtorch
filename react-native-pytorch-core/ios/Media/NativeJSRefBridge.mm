@@ -64,7 +64,7 @@ std::shared_ptr<IImage> imageFromFile(std::string filePath) {
   return std::make_shared<Image>(image);
 }
 
-jsi::Value imageFromFrameImpl(jsi::Runtime& runtime, jsi::Object frameHostObject) {
+std::shared_ptr<IImage> imageFromFrame(jsi::Runtime& runtime, jsi::Object frameHostObject) {
 #ifdef HAS_VISION_CAMERA
   const auto& frameHostObject = frameHostObject.asHostObject<vision::FrameHostObject>(runtime);
   auto image = MediaUtilsImageFromCMSampleBuffer(frameHostObject->frame.buffer);

@@ -15,6 +15,8 @@ namespace torchlive {
 
 namespace media {
 
+using namespace facebook;
+
 std::shared_ptr<IImage> resolveNativeJSRefToImage_DO_NOT_USE(
     const std::string& refId) {
   return nullptr;

@@ -18,6 +18,8 @@ namespace torchlive {
 
 namespace media {
 
+using namespace facebook;
+
 /**
  * The resolveNativeJSRefToImage_DO_NOT_USE function is needed to resolve
  * NativeJSRef objects to IImage. This function will be removed without

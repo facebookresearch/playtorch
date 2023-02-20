@@ -61,6 +61,12 @@ public class MediaUtils {
 
   @DoNotStrip
   @Keep
+  public static IImage imageFromImageProxy(final ImageProxy imageProxy, Context context) {
+    return new Image(imageProxy, context);
+  }
+
+  @DoNotStrip
+  @Keep
   public static IImage imageFromBlob(
       final ByteBuffer buffer, final double width, final double height, final String type) {
     buffer.order(ByteOrder.nativeOrder());

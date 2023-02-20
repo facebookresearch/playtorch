@@ -16,6 +16,11 @@
 #import "MediaUtils.h"
 #import "PyTorchCore-Swift-Header.h"
 
+#if __has_include(<VisionCamera/FrameHostObject.h>)
+#define HAS_VISION_CAMERA
+#include <VisionCamera/FrameHostObject.h>
+#endif
+
 namespace torchlive {
 
 namespace media {
@@ -57,6 +62,16 @@ std::shared_ptr<IImage> imageFromFile(std::string filePath) {
     return nullptr;
   }
   return std::make_shared<Image>(image);
+}
+
+jsi::Value imageFromFrameImpl(jsi::Runtime& runtime, jsi::Object frameHostObject) {
+#ifdef HAS_VISION_CAMERA
+  const auto& frameHostObject = frameHostObject.asHostObject<vision::FrameHostObject>(runtime);
+  auto image = MediaUtilsImageFromCMSampleBuffer(frameHostObject->frame.buffer);
+  return std::make_shared<Image>(image);
+#else
+  throw jsi::JSError(runtime, "Error converting Frame to Image - VisionCamera is not properly installed!");
+#endif
 }
 
 std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {

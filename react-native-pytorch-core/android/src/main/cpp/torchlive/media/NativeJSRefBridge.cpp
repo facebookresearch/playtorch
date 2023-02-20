@@ -18,6 +18,11 @@
 #include "./image/Image.h"
 #include "./image/JIImage.h"
 
+#if __has_include(<FrameHostObject.h>)
+#define HAS_VISION_CAMERA
+#include <FrameHostObject.h>
+#endif
+
 namespace torchlive {
 
 using namespace facebook::jni;
@@ -70,6 +75,23 @@ std::shared_ptr<IImage> imageFromFile(std::string filepath) {
   local_ref<JIImage> image =
       imageFromFileMethod(mediaUtilsClass, make_jstring(filepath));
   return std::make_shared<Image>(make_global(image));
+}
+
+std::shared_ptr<IImage> imageFromFrame(jsi::Runtime& runtime, jsi::Object frameHostObject) {
+#ifdef HAS_VISION_CAMERA
+  auto hostObject = frameHostObject.asHostObject<vision::FrameHostObject>(runtime);
+
+  auto mediaUtilsClass = getMediaUtilsClass();
+  auto imageFromImageProxyMethod =
+      mediaUtilsClass->getStaticMethod<local_ref<JIImage>(local_ref<JImageProxy>)>(
+          "imageFromImageProxy");
+  // TODO: Figure out how to get Context here
+  local_ref<JIImage> image =
+      imageFromImageProxyMethod(mediaUtilsClass, hostObject->frame, nullptr);
+  return std::make_shared<Image>(make_global(image));
+#else
+  throw jsi::JSError(runtime, "Error converting Frame to Image - VisionCamera is not properly installed!");
+#endif
 }
 
 std::shared_ptr<IImage>

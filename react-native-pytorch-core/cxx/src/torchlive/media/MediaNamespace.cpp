@@ -170,6 +170,28 @@ jsi::Value imageFromTensorImpl(
       runtime, std::move(image));
 }
 
+jsi::Value imageFromFrameImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  auto args = utils::ArgumentParser(runtime, thisValue, arguments, count);
+  args.requireNumArguments(1);
+
+  std::shared_ptr<IImage> image;
+  try {
+    image = torchlive::media::imageFromFrame(runtime, args.asObject(0));
+  } catch (const std::exception& e) {
+    throw jsi::JSError(
+        runtime,
+        "error on converting frame to image with width: " +
+            std::to_string(width) + ", height: " + std::to_string(height) +
+            "\n" + e.what());
+  }
+  return utils::helpers::createFromHostObject<ImageHostObject>(
+      runtime, std::move(image));
+}
+
 jsi::Value toBlobImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -225,6 +247,7 @@ jsi::Object buildNamespace(jsi::Runtime& rt, RuntimeExecutor rte) {
   jsi::Object ns(rt);
   setPropertyHostFunction(rt, ns, "imageFromBlob", 3, imageFromBlobImpl);
   setPropertyHostFunction(rt, ns, "imageFromTensor", 1, imageFromTensorImpl);
+  setPropertyHostFunction(rt, ns, "imageFromFrame", 1, imageFromFrameImpl);
   setPropertyHostFunction(rt, ns, "imageFromFile", 1, imageFromFileImpl);
   setPropertyHostFunction(rt, ns, "toBlob", 1, toBlobImpl);
   setPropertyHostFunction(rt, ns, "imageToFile", 1, imageToFileImpl);

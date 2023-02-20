@@ -94,6 +94,23 @@ UIImage *MediaUtilsImageFromBlob(const torchlive::media::Blob& blob,
   }
 }
 
+UIImage *MediaUtilsImageFromCMSampleBuffer(CMSampleBufferRef sampleBuffer) {
+  CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+  CIImage *ciImage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
+
+  // TODO: Cache the CIContext for performance
+  CIContext *temporaryContext = [CIContext contextWithOptions:nil];
+  CGImageRef videoImage = [temporaryContext
+                    createCGImage:ciImage
+                    fromRect:CGRectMake(0, 0,
+                            CVPixelBufferGetWidth(pixelBuffer),
+                            CVPixelBufferGetHeight(pixelBuffer))];
+
+  UIImage *uiImage = [UIImage imageWithCGImage:videoImage];
+  CGImageRelease(videoImage);
+  return uiImage;
+}
+
 #pragma mark - Audio
 
 static void write(std::stringstream &stream, int value, int size)

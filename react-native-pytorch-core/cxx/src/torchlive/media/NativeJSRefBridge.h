@@ -35,6 +35,9 @@ std::shared_ptr<IImage> imageFromFile(std::string filepath);
 std::shared_ptr<IImage>
 imageFromBlob(const Blob& blob, double width, double height);
 
+std::shared_ptr<IImage>
+imageFromFrame(jsi::Runtime& runtime, jsi::Object frameHostObject);
+
 std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId);
 
 std::unique_ptr<torchlive::media::Blob> toBlob(std::shared_ptr<IImage> image);

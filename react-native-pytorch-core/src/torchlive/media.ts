@@ -126,6 +126,14 @@ export interface Media {
   imageFromFile(filepath: string): Image;
 
   /**
+   * Converts a VisionCamera [`Frame`](https://mrousavy.com/react-native-vision-camera/docs/api/interfaces/Frame) into an [[Image]]. This function has to be called inside a Frame Processor, as the Frame only exists inside a Frame Processor.
+   *
+   * @param frame [[Frame]] to turn into an [[Image]].
+   * @returns An [[Image]] object created from the [[Frame]].
+   */
+  imageFromFrame(frame: unknown): Image;
+
+  /**
    * Converts a [[Tensor]] or [[NativeJSRef]] into a [[Blob]]. The blob can be
    * used to create a [[Tensor]] object or convert into a [[NativeJSRef]] like
    * an image or audio.

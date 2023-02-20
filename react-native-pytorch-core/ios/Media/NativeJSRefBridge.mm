@@ -16,9 +16,14 @@
 #import "MediaUtils.h"
 #import "PyTorchCore-Swift-Header.h"
 
-#if __has_include(<VisionCamera/FrameHostObject.h>)
-#define HAS_VISION_CAMERA
-#include <VisionCamera/FrameHostObject.h>
+#if __has_include(<VisionCamera/Frame.h>)
+ #define HAS_VISION_CAMERA
+ #import <VisionCamera/Frame.h>
+ // forward declaration for the Frame Host Object since we only care about `Frame*`
+ class FrameHostObject: public facebook::jsi::HostObject {
+ public:
+   Frame* frame;
+ };
 #endif
 
 namespace torchlive {

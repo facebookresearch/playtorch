@@ -66,8 +66,8 @@ std::shared_ptr<IImage> imageFromFile(std::string filePath) {
 
 std::shared_ptr<IImage> imageFromFrame(jsi::Runtime& runtime, jsi::Object frameHostObject) {
 #ifdef HAS_VISION_CAMERA
-  const auto& frameHostObject = frameHostObject.asHostObject<vision::FrameHostObject>(runtime);
-  auto image = MediaUtilsImageFromCMSampleBuffer(frameHostObject->frame.buffer);
+  const auto& frame = frameHostObject.asHostObject<FrameHostObject>(runtime);
+  auto image = MediaUtilsImageFromCMSampleBuffer(frame->frame.buffer);
   return std::make_shared<Image>(image);
 #else
   throw jsi::JSError(runtime, "Error converting Frame to Image - VisionCamera is not properly installed!");

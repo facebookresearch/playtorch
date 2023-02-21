@@ -12,16 +12,10 @@
 namespace torchlive {
 namespace media {
 
-Image::Image(UIImage *image) : image_(image) {
-  NSString *refId = [ImageModule wrapImage:image];
-  if (refId == nil) {
-    throw "error on wrapImage";
-  }
-  id_ = std::string([refId UTF8String]);
-}
+Image::Image(UIImage *image) : image_(image) {}
 
 std::string Image::getId() const {
-  return id_;
+  return "LEGACY_VALUE_DO_NOT_USE";
 }
 
 double Image::getWidth() const noexcept {
@@ -65,14 +59,7 @@ std::shared_ptr<IImage> Image::scale(double sx, double sy) const {
   return std::make_shared<Image>(scaledImage);
 }
 
-void Image::close() const {
-  // This is not needed once we fully migrate to JSI.
-  NSError *error = nil;
-  [PTLJSContext releaseWithJsRef:@{@"ID": [NSString stringWithUTF8String:id_.c_str()]} error:&error];
-  if (error != nil) {
-    throw [error.localizedDescription UTF8String];
-  }
-}
+void Image::close() const {}
 
 } // namespace media
 } // namespace torchlive

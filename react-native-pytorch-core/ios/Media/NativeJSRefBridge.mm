@@ -127,9 +127,13 @@ std::unique_ptr<torchlive::media::Blob> toBlob(std::shared_ptr<IImage> image) {
     buffer[i * 3 + 1] = imageData[i * 4 + 1]; // G
     buffer[i * 3 + 2] = imageData[i * 4 + 2]; // B
   }
-
+    
   auto data = std::unique_ptr<uint8_t[]>(new uint8_t[finalDataSize]);
   std::memcpy(data.get(), buffer, finalDataSize);
+    
+    free(imageData);
+    free(buffer);
+    
   std::string blobType = Blob::kBlobTypeImageRGB;
   return std::make_unique<torchlive::media::Blob>(
       std::move(data), dataSize, blobType);

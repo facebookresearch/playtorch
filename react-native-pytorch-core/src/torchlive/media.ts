@@ -12,7 +12,7 @@ import type {NativeJSRef} from '../NativeJSRef';
 import type {Image} from '../ImageModule';
 import type {VisionCameraFrame} from './frame';
 
-export interface Blob {
+export interface PlayTorchBlob {
   /**
    * The Blob interface's size property returns the size of the Blob in bytes.
    */
@@ -55,6 +55,13 @@ export interface Blob {
    * within the blob on which this method was called. The original blob is not altered.
    */
   slice(start?: number, end?: number): Blob;
+  /**
+   * @experimental
+   * 
+   * Release blob memory immediately rather than waiting for JavaScript GC
+   * collecting the host object.
+   */
+  release(): void;
 }
 
 export interface Media {
@@ -137,13 +144,13 @@ export interface Media {
   imageFromFrame(frame: VisionCameraFrame): Image;
 
   /**
-   * Converts a [[Tensor]] or [[NativeJSRef]] into a [[Blob]]. The blob can be
+   * Converts a [[Tensor]] or [[NativeJSRef]] into a [[PlayTorchBlob]]. The blob can be
    * used to create a [[Tensor]] object or convert into a [[NativeJSRef]] like
    * an image or audio.
    *
-   * @param obj Object to turn into a [[Blob]].
+   * @param obj Object to turn into a [[PlayTorchBlob]].
    */
-  toBlob(obj: Tensor | NativeJSRef): Blob;
+  toBlob(obj: Tensor | NativeJSRef): PlayTorchBlob;
 }
 
 type Torchlive = {

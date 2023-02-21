@@ -297,6 +297,13 @@ export interface Tensor {
    */
   item(): number;
   /**
+   * @experimental
+   * 
+   * Release tensor memory immediately rather than waiting for JavaScript GC
+   * collecting the host object.
+   */
+  release(): void;
+  /**
    * Returns a tensor with the same data and number of elements as input, but
    * with the specified shape.
    *

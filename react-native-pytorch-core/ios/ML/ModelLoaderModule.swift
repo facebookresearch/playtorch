@@ -15,7 +15,7 @@ class ModelLoaderModule: NSObject {
                        resolver resolve: @escaping RCTPromiseResolveBlock,
                        rejecter reject: @escaping RCTPromiseRejectBlock) {
     let completionHandler: (URL?, String?) -> Void = { url, error in
-      if let error = error {
+      if let error {
         reject(RCTErrorUnspecified, error, nil)
       } else {
         do {

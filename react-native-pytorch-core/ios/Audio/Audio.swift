@@ -48,7 +48,7 @@ public class Audio: NSObject, IAudio {
 
   @objc
   public func stop() {
-    if let mPlayer = mPlayer, mPlayer.isPlaying {
+    if let mPlayer, mPlayer.isPlaying {
       mPlayer.stop()
       mPlayer.currentTime = 0
     }

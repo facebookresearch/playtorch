@@ -54,7 +54,7 @@ public class BitmapImage: IImage {
       return bitmap
     } else {
       let context = CIContext()
-      if let ciImage = ciImage, let bitmap = context.createCGImage(ciImage, from: ciImage.extent) {
+      if let ciImage, let bitmap = context.createCGImage(ciImage, from: ciImage.extent) {
         mBitmap = bitmap
         return bitmap
       } else {

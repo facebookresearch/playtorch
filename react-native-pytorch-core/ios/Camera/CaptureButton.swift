@@ -43,7 +43,7 @@ class CaptureButton: UIButton {
     let width = self.bounds.size.width
     super.layoutSubviews()
 
-    if let hollowCircleLayer = hollowCircleLayer {
+    if let hollowCircleLayer {
       hollowCircleLayer.frame = self.bounds
     } else {
       hollowCircleLayer = ShapeLayer.hollowCircleLayer(rect: self.bounds,
@@ -56,7 +56,7 @@ class CaptureButton: UIButton {
     let innerRingPadding = (1 - ViewConstants.captureButtonScaleFactor) * width / 2
     let innerCircleBounds = self.bounds.insetBy(dx: innerRingPadding, dy: innerRingPadding)
 
-    if let innerCircleLayer = innerCircleLayer {
+    if let innerCircleLayer {
       innerCircleLayer.bounds = innerCircleBounds
       innerCircleLayer.position = CGPoint(x: self.bounds.midX, y: self.bounds.midY)
     } else {

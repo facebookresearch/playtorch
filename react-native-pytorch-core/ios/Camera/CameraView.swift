@@ -95,7 +95,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
   }
 
   func setSessionPreset() {
-    if let captureSession = captureSession,
+    if let captureSession,
        let width = (targetResolution["width"] as? NSNumber)?.intValue,
        let height = (targetResolution["height"] as? NSNumber)?.intValue {
       if width <= 288 && height <= 352 {
@@ -119,7 +119,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
     captureButton = CaptureButton(frame: frame)
     captureButton?.isHidden = hideCaptureButton
     captureButton?.addTarget(self, action: #selector(captureImage), for: .touchDown)
-    if let captureButton = captureButton {
+    if let captureButton {
       self.addSubview(captureButton)
     }
   }
@@ -151,7 +151,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
       flipCameraButton?.setImage(flipCameraImage, for: .normal)
     }
 
-    if let flipCameraButton = flipCameraButton {
+    if let flipCameraButton {
       self.addSubview(flipCameraButton)
     }
   }
@@ -263,7 +263,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
 
   @available(iOS 11.0, *)
   func photoOutput(_ output: AVCapturePhotoOutput, didFinishProcessingPhoto photo: AVCapturePhoto, error: Error?) {
-    if let error = error {
+    if let error {
       print("Error capturing photo: \(error)")
       return
     }
@@ -281,7 +281,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
       print("Could not create context to rotate image, resolving with unrotated image")
       let bitmapImage = Image(image: image)
       let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
-      if let onCapture = onCapture {
+      if let onCapture {
         onCapture(ref)
       }
       return
@@ -294,7 +294,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
     if let rotatedImage = context.makeImage() {
       let bitmapImage = Image(image: rotatedImage)
       let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
-      if let onCapture = onCapture {
+      if let onCapture {
         onCapture(ref)
       }
     } else {
@@ -312,7 +312,7 @@ class CameraView: UIView, AVCapturePhotoCaptureDelegate, AVCaptureVideoDataOutpu
     if previousImageFrame != nil && previousImageFrame!.isClosed() == false {
       return
     }
-    guard let onFrame = onFrame else { return }
+    guard let onFrame else { return }
     guard let cvBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
       print("Could not get sample buffer")
       return

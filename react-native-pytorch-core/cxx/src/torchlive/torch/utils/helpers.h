@@ -34,6 +34,13 @@ int parseSize(
     size_t count,
     std::vector<int64_t>* dimensions);
 
+int parseIntArrayRef(
+    facebook::jsi::Runtime& runtime,
+    const facebook::jsi::Value* arguments,
+    int argIndex,
+    size_t count,
+    std::shared_ptr<std::vector<int64_t>> dimensions);
+
 /**
  * A helper method to parse the tensor provided as an input argument and
  * convert it to a reference which holds a torch::Tensor

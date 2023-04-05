@@ -164,42 +164,42 @@ export type MemoryFormat =
 
 // Adopt the notion of a Scalar
 export type Scalar = number;
-
 export interface Tensor {
   /**
    * Computes the absolute value of each element in input.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.abs.html}
+
    */
   abs(): Tensor;
   /**
    * Add a scalar or tensor to this tensor.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.add.html}
-   *
-   * @param other Scalar or tensor to be added to each element in this tensor.
-   * @param options.alpha The multiplier for `other`. Default: `1`.
+   * @param other
+   * @param options.alpha
    */
-  add(other: Scalar | Tensor, options?: {alpha?: Number}): Tensor;
+  add(other: Tensor, options?: {alpha?: Number}): Tensor;
+  /**
+   * @param other
+   * @param options.alpha
+   */
+  add(other: Scalar, options?: {alpha?: Number}): Tensor;
   /**
    * Returns the indices of the maximum value of all elements in the input
    * tensor.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.argmax.html}
-   *
-   * @param options argmax Options as keywords argument in pytorch
-   * @param options.dim The dimension to reduce. If `undefined`, the argmax of the flattened input is returned.
-   * @param options.keepdim Whether the output tensor has `dim` retained or not. Ignored if `dim` is `undefined`.
+   * @param options.dim
+   * @param options.keepdim
    */
   argmax(options?: {dim?: number; keepdim?: boolean}): Tensor;
   /**
    * Returns the indices of the minimum value(s) of the flattened tensor or along a dimension
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.argmin.html}
-   *
-   * @param options argmin Options as keywords argument in pytorch
-   * @param options.dim The dimension to reduce. If `undefined`, the argmin of the flattened input is returned.
-   * @param options.keepdim Whether the output tensor has `dim` retained or not. Ignored if `dim` is `undefined`.
+   * @param options.dim
+   * @param options.keepdim
    */
   argmin(options?: {dim?: number; keepdim?: boolean}): Tensor;
   /**
@@ -237,8 +237,6 @@ export interface Tensor {
   /**
    * Returns the tensor data as `TypedArray` buffer.
    *
-   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray}
-   *
    * A valid TypeScript expression is as follows:
    *
    * ```typescript
@@ -252,6 +250,9 @@ export interface Tensor {
    * :::
    *
    * @experimental
+   *
+   * {@link https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/TypedArray}
+
    */
   data(): TypedArray;
   /**
@@ -259,14 +260,23 @@ export interface Tensor {
    * other.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.div.html}
-   *
-   * @param other Scalar or tensor that divides each element in this tensor.
-   * @param options.roundingMode Type of rounding applied to the result
+   * @param other
+   * @param options.roundingMode
    */
-  div(
-    other: Scalar | Tensor,
-    options?: {roundingMode?: 'trunc' | 'floor'},
-  ): Tensor;
+  div(other: Tensor, options: {roundingMode: 'trunc' | 'floor'}): Tensor;
+  /**
+   * @param other
+   * @param options.roundingMode
+   */
+  div(other: Scalar, options: {roundingMode: 'trunc' | 'floor'}): Tensor;
+  /**
+   * @param other
+   */
+  div(other: Tensor): Tensor;
+  /**
+   * @param other
+   */
+  div(other: Scalar): Tensor;
   /**
    * A dtype is an string that represents the data type of a torch.Tensor.
    *
@@ -276,17 +286,16 @@ export interface Tensor {
   /**
    * Returns a new view of the tensor expanded to a larger size.
    *
-   * {@link https://pytorch.org/docs/stable/generated/torch.Tensor.expand.html}
-   *
-   * @param sizes The expanded size, eg: ([3, 4]).
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.expand.html}
+   * @param size
+   * @param options.implicit
    */
-  expand(sizes: number[]): Tensor;
+  expand(size: number[], options?: {implicit?: boolean}): Tensor;
   /**
    * Reverse the order of a n-D tensor along given axis in dims.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.flip.html}
-   *
-   * @param dims Axis to flip on.
+   * @param dims
    */
   flip(dims: number[]): Tensor;
   /**
@@ -294,41 +303,42 @@ export interface Tensor {
    * tensors with one element.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.item.html}
+
    */
   item(): number;
-  /**
-   * Returns a tensor with the same data and number of elements as input, but
-   * with the specified shape.
-   *
-   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.reshape.html}
-   *
-   * @param shape The new shape.
-   */
-  reshape(shape: number[]): Tensor;
   /**
    * Performs matrix multiplication with other tensor.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.matmul.html}
-   *
-   * @param other tensor matrix multiplied this tensor.
+   * @param other
    */
   matmul(other: Tensor): Tensor;
   /**
    * Multiplies input by other scalar or tensor.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.mul.html}
-   *
-   * @param other Scalar or tensor multiplied with each element in this tensor.
+   * @param other
    */
-  mul(other: Scalar | Tensor): Tensor;
+  mul(other: Tensor): Tensor;
+  /**
+   * @param other
+   */
+  mul(other: Scalar): Tensor;
   /**
    * Returns a view of the original tensor input with its dimensions permuted.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.permute.html}
-   *
-   * @param dims The desired ordering of dimensions.
+   * @param dims
    */
   permute(dims: number[]): Tensor;
+  /**
+   * Returns a tensor with the same data and number of elements as input, but
+   * with the specified shape.
+   *
+   * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.reshape.html}
+   * @param shape
+   */
+  reshape(shape: number[]): Tensor;
   /**
    * Returns the size of the tensor.
    *
@@ -355,6 +365,7 @@ export interface Tensor {
    * Computes the square-root value of each element in input.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sqrt.html}
+
    */
   sqrt(): Tensor;
   /**
@@ -383,11 +394,15 @@ export interface Tensor {
    * Subtracts other from input.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.sub.html}
-   *
-   * @param other The scalar or tensor to subtract from input.
-   * @param options.alpha The multiplier for `other`. Default: `1`.
+   * @param other
+   * @param options.alpha
    */
-  sub(other: Scalar | Tensor, options?: {alpha?: Number}): Tensor;
+  sub(other: Tensor, options?: {alpha?: Number}): Tensor;
+  /**
+   * @param other
+   * @param options.alpha
+   */
+  sub(other: Scalar, options?: {alpha?: Number}): Tensor;
   /**
    * Returns the sum of all elements in the input tensor.
    *
@@ -433,8 +448,7 @@ export interface Tensor {
    * specified position.
    *
    * {@link https://pytorch.org/docs/1.12/generated/torch.Tensor.unsqueeze.html}
-   *
-   * @param dim The index at which to insert the singleton dimension.
+   * @param dim
    */
   unsqueeze(dim: number): Tensor;
   /**
@@ -449,8 +463,7 @@ export interface Tensor {
    * {@link https://pytorch.org/cppdocs/notes/tensor_indexing.html}
    */
   [index: number]: Tensor;
-}
-
+} // Tensor
 export interface Torch {
   /**
    * Returns a 1-D tensor of size `(end - 0) / 1` with values from the interval

@@ -8,6 +8,9 @@
 #pragma once
 
 #include <jsi/jsi.h>
+#include <cstddef>
+#include <exception>
+#include <string>
 
 // Suppress deprecated-declarations error to support Clang/C++17
 #pragma clang diagnostic push
@@ -40,6 +43,15 @@ class ArgumentParser {
   std::shared_ptr<T> asHostObject(size_t idx) {
     return safeArg_(idx).asObject(runtime_).asHostObject<T>(runtime_);
   }
+  template <typename T>
+  bool isHostObject(size_t idx) {
+    try {
+      asHostObject<T>(idx);
+      return true;
+    } catch (std::exception& ex) {
+      return false;
+    }
+  }
 
   // Ensure this argument's asNumber is integral or throw an error
   int asInteger(size_t idx) const;
@@ -53,9 +65,60 @@ class ArgumentParser {
       const;
 
   void requireNumArguments(size_t minArgCount) const;
+  bool atLeastNumArguments(size_t minArgCount) const;
 
   // See helpers::parseTensorOptions()
   ::torch::TensorOptions tensorOptions(size_t idx) const;
+
+  bool isScalar(size_t idx) const;
+  bool isScalarKwarg(size_t idx, const std::string& keyword, bool required)
+      const;
+  bool isBoolKwarg(size_t idx, const std::string& keyword, bool required) const;
+  bool isC10OptionalInt64Kwarg(
+      size_t idx,
+      const std::string& keyword,
+      bool required) const;
+  bool isInt64(size_t idx) const;
+  bool isInt64Kwarg(size_t idx, const std::string& keyword, bool required)
+      const;
+  bool isIntArrayRef(size_t idx) const;
+  bool isStringKwarg(size_t idx, const std::string& keyword, bool required)
+      const;
+  bool isMemoryFormatKwarg(
+      size_t idx,
+      const std::string& keyword,
+      bool required) const;
+
+  at::Scalar asScalar(size_t idx) const;
+  at::Scalar asScalarKwarg(size_t idx, const std::string& keyword) const;
+  at::Scalar asScalarKwarg(
+      size_t idx,
+      const std::string& keyword,
+      at::Scalar defaultValue) const;
+  bool asBoolKwarg(size_t idx, const std::string& keyword) const;
+  bool asBoolKwarg(size_t idx, const std::string& keyword, bool defaultValue)
+      const;
+  c10::optional<int64_t> asC10OptionalInt64Kwarg(
+      size_t idx,
+      const std::string& keyword) const;
+  c10::optional<int64_t> asC10OptionalInt64Kwarg(
+      size_t idx,
+      const std::string& keyword,
+      c10::optional<int64_t> defaultValue) const;
+  int64_t asInt64(size_t idx) const;
+  int64_t asInt64Kwarg(size_t idx, const std::string& keyword) const;
+  int64_t asInt64Kwarg(
+      size_t idx,
+      const std::string& keyword,
+      int64_t defaultValue) const;
+  std::shared_ptr<std::vector<int64_t>> asIntArrayRefPtr(size_t idx) const;
+  std::string asStringKwarg(size_t idx, const std::string& keyword) const;
+  at::MemoryFormat asMemoryFormatKwarg(size_t idx, const std::string& keyword)
+      const;
+  at::MemoryFormat asMemoryFormatKwarg(
+      size_t idx,
+      const std::string& keyword,
+      at::MemoryFormat defaultValue) const;
 
  private:
   facebook::jsi::Runtime& runtime_;

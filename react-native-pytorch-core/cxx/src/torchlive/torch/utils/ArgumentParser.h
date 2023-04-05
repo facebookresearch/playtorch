@@ -40,6 +40,15 @@ class ArgumentParser {
   std::shared_ptr<T> asHostObject(size_t idx) {
     return safeArg_(idx).asObject(runtime_).asHostObject<T>(runtime_);
   }
+  template <typename T>
+  bool isHostObject(size_t idx) {
+    try {
+      asHostObject<T>(idx);
+      return true;
+    } catch (std::exception& ex) {
+      return false;
+    }
+  }
 
   // Ensure this argument's asNumber is integral or throw an error
   int asInteger(size_t idx) const;
@@ -53,9 +62,21 @@ class ArgumentParser {
       const;
 
   void requireNumArguments(size_t minArgCount) const;
+  bool atLeastNumArguments(size_t minArgCount) const;
 
   // See helpers::parseTensorOptions()
   ::torch::TensorOptions tensorOptions(size_t idx) const;
+
+  bool isScalar(size_t idx) const;
+  bool isScalarKwarg(size_t idx, const std::string& keyword, bool required)
+      const;
+
+  at::Scalar asScalar(size_t idx) const;
+  at::Scalar asScalarKwarg(size_t idx, const std::string& keyword) const;
+  at::Scalar asScalarKwarg(
+      size_t idx,
+      const std::string& keyword,
+      at::Scalar defaultValue) const;
 
  private:
   facebook::jsi::Runtime& runtime_;

@@ -53,6 +53,7 @@ class ArgumentParser {
       const;
 
   void requireNumArguments(size_t minArgCount) const;
+  bool atLeastNumArguments(size_t minArgCount) const;
 
   // See helpers::parseTensorOptions()
   ::torch::TensorOptions tensorOptions(size_t idx) const;

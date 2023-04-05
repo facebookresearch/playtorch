@@ -26,6 +26,16 @@ TEST_F(TorchliveTensorRuntimeTest, TensorAbsTest) {
   EXPECT_TRUE(eval(tensorAbs).getBool());
 }
 
+TEST_F(TorchliveTensorRuntimeTest, TensorAbs_Test) {
+  std::string tensorAbs_ =
+      R"(
+          let tensor = torch.tensor([[-2, -1], [0, 1]]);
+          let output = tensor.abs_().data();
+          output[0] == 2 && output[1] == 1 && output[2] == 0 && output[3] == 1 && tensor.data()[0] == 2 && tensor.data()[1] == 1 && tensor.data()[2] == 0 && tensor.data()[3] == 1;
+        )";
+  EXPECT_TRUE(eval(tensorAbs_).getBool());
+}
+
 TEST_F(TorchliveTensorRuntimeTest, TensorAddTest) {
   std::string tensorAddCodeWithNumber =
       R"(
@@ -70,6 +80,60 @@ TEST_F(TorchliveTensorRuntimeTest, TensorAddTest) {
           const tensor1 = torch.arange(2);
           const tensor2 = torch.arange(2);
           const result = tensor1.add(tensor2, {alpha: 'random_string'});
+        )";
+  EXPECT_THROW(eval(tensorAddCodeWithInvalidAlpha), facebook::jsi::JSError);
+}
+
+TEST_F(TorchliveTensorRuntimeTest, TensorAdd_Test) {
+  std::string tensorAddCodeWithNumber =
+      R"(
+          const tensor = torch.arange(2);
+          orig_sum = tensor[0].item() + 2;
+          const result = tensor.add_(2);
+          result[0].item() == orig_sum && tensor[0].item() == orig_sum;
+        )";
+  EXPECT_TRUE(eval(tensorAddCodeWithNumber).getBool());
+
+  std::string tensorAddCodeWithTensor =
+      R"(
+          const tensor1 = torch.arange(2);
+          const tensor2 = torch.arange(2);
+          orig_sum = tensor1[0].item() + tensor2[0].item();
+          const result = tensor1.add_(tensor2);
+          result[0].item() == orig_sum && tensor1[0].item() == orig_sum;
+        )";
+  EXPECT_TRUE(eval(tensorAddCodeWithTensor).getBool());
+
+  std::string tensorAddCodeWithNumberAlpha =
+      R"(
+          const tensor1 = torch.arange(2);
+          orig_sum0 = tensor1[0].item() + 2 * 2;
+          orig_sum1 = tensor1[1].item() + 2 * 2;
+          const result = tensor1.add_(2, {alpha: 2});
+          (result[0].item() == orig_sum0) && (result[1].item() == orig_sum1) && (tensor1[0].item() == orig_sum0) && (tensor1[1].item() == orig_sum1);
+        )";
+  EXPECT_TRUE(eval(tensorAddCodeWithNumberAlpha).getBool());
+
+  std::string tensorAddCodeWithTensorAlpha =
+      R"(
+          const tensor1 = torch.arange(2);
+          const tensor2 = torch.arange(2);
+          orig_sum0 = tensor1[0].item() + 2 * tensor2[0].item();
+          orig_sum1 = tensor1[1].item() + 2 * tensor2[1].item();
+          const result = tensor1.add_(tensor2, {alpha: 2});
+          (result[0].item() == orig_sum0) && (result[1].item() == orig_sum1) && (tensor1[0].item() == orig_sum0) && (tensor1[1].item() == orig_sum1);
+        )";
+  EXPECT_TRUE(eval(tensorAddCodeWithTensorAlpha).getBool());
+
+  EXPECT_THROW(eval("torch.arange(2).add_()"), facebook::jsi::JSError);
+  EXPECT_THROW(
+      eval("torch.empty(1, 2).add_('some_string')"), facebook::jsi::JSError);
+
+  std::string tensorAddCodeWithInvalidAlpha =
+      R"(
+          const tensor1 = torch.arange(2);
+          const tensor2 = torch.arange(2);
+          const result = tensor1.add_(tensor2, {alpha: 'random_string'});
         )";
   EXPECT_THROW(eval(tensorAddCodeWithInvalidAlpha), facebook::jsi::JSError);
 }
@@ -133,6 +197,97 @@ TEST_F(TorchliveTensorRuntimeTest, TensorArgmaxTest) {
         )";
   EXPECT_THROW(
       eval(tensorArgmaxWtihInvalidKeepdimOption), facebook::jsi::JSError);
+}
+
+TEST_F(TorchliveTensorRuntimeTest, TensorDeg2RadTest) {
+  std::string tensorDeg2Rad =
+      R"(
+          const degTensor = torch.tensor([[180.0, -180.0], [360.0, -360.0], [90.0, -90.0]]);
+          const radTensor = degTensor.deg2rad().to({dtype: torch.int});
+          radTensor[0][0].item() == 3 && radTensor[0][1].item() == -3 && radTensor[1][0].item() == 6 && radTensor[1][1].item() == -6;
+        )";
+  EXPECT_TRUE(eval(tensorDeg2Rad).getBool());
+}
+
+TEST_F(TorchliveTensorRuntimeTest, TensorRepeatInterleaveTest) {
+  std::string repeatInterleave1 =
+      R"(
+          const x = torch.tensor([1, 2, 3]);
+          const result = x.repeatInterleave(2);
+          result[0].item() == 1 && result[1].item() == 1 && result[2].item()
+          == 2 && result[3].item() == 2 && result[4].item() == 3 &&
+          result[5].item() == 3;
+        )";
+  EXPECT_TRUE(eval(repeatInterleave1).getBool());
+
+  std::string repeatInterleave2 =
+      R"(
+          const x = torch.tensor([[1, 2], [3, 4]]);
+          const result = x.repeatInterleave(2);
+          result[0].item() == 1 && result[1].item() == 1 && result[2].item()
+          == 2 && result[3].item() == 2 && result[4].item() == 3 &&
+          result[5].item() == 3 && result[6].item() == 4 && result[7].item()
+          == 4;
+        )";
+  EXPECT_TRUE(eval(repeatInterleave2).getBool());
+
+  std::string repeatInterleave3 =
+      R"(
+          const x = torch.tensor([[1, 2], [3, 4]]);
+          const result = x.repeatInterleave(3, {dim: 1});
+          result[0][0].item() == 1 && result[0][1].item() == 1 &&
+          result[0][2].item() == 1 && result[0][3].item() == 2 &&
+          result[0][4].item() == 2 && result[0][5].item() == 2 &&
+          result[1][0].item() == 3 && result[1][1].item() == 3 &&
+          result[1][2].item() == 3 && result[1][3].item() == 4 &&
+          result[1][4].item() == 4 && result[1][5].item() == 4;
+        )";
+  EXPECT_TRUE(eval(repeatInterleave3).getBool());
+
+  std::string repeatInterleave4 =
+      R"(
+          const x = torch.tensor([[1, 2],[3,4]]);
+          const y = torch.tensor([1, 2]).to({dtype: torch.int});
+          const result = x.repeatInterleave(y, {dim: 0});
+          result[0][0].item() == 1 && result[0][1].item() == 2 && result[1][0].item() == 3 && result[1][1].item() == 4 && result[2][0].item() == 3 && result[2][1].item() == 4;
+        )";
+  EXPECT_TRUE(eval(repeatInterleave4).getBool());
+
+  std::string repeatInterleave5 =
+      R"(
+          const x = torch.tensor([[1, 2],[3,4]]);
+          const y = torch.tensor([1, 2]).to({dtype: torch.int});
+          const result = x.repeatInterleave(y, {dim: 0, outputSize: 3});
+          result[0][0].item() == 1 && result[0][1].item() == 2 && result[1][0].item() == 3 && result[1][1].item() == 4 && result[2][0].item() == 3 && result[2][1].item() == 4;
+        )";
+  EXPECT_TRUE(eval(repeatInterleave5).getBool());
+
+  std::string repeatInterleaveBadOutputSize =
+      R"(
+          const x = torch.tensor([[1, 2],[3,4]]);
+          const y = torch.tensor([1, 2]).to({dtype: torch.int});
+          const result = x.repeatInterleave(y, {dim: 0, outputSize: 2});
+          result[0][0].item() == 1 && result[0][1].item() == 2 && result[1][0].item() == 3 && result[1][1].item() == 4 && result[2][0].item() == 3 && result[2][1].item() == 4;
+        )";
+  EXPECT_THROW(eval(repeatInterleaveBadOutputSize), facebook::jsi::JSError);
+}
+
+TEST_F(TorchliveTensorRuntimeTest, TensorTileTest) {
+  std::string tile1 =
+      R"(
+          const x = torch.tensor([1, 2, 3]);
+          const result = x.tile([2,]);
+          result[0].item() == 1 && result[1].item() == 2 && result[2].item() == 3 && result[3].item() == 1 && result[4].item() == 2 && result[5].item() == 3; 1 == 1;
+        )";
+  EXPECT_TRUE(eval(tile1).getBool());
+
+  std::string tile2 =
+      R"(
+          const x = torch.tensor([[1, 2], [3, 4]]);
+          const result = x.tile([2, 2]);
+          result[0][0].item() == 1 && result[0][1].item() == 2 && result[0][2].item() == 1 && result[0][3].item() == 2 && result[1][0].item() == 3 && result[1][1].item() == 4 && result[1][2].item() == 3 && result[1][3].item() == 4 && result[2][0].item() == 1 && result[2][1].item() == 2 && result[2][2].item() == 1 && result[2][3].item() == 2 && result[3][0].item() == 3 && result[3][1].item() == 4 && result[3][2].item() == 3 && result[3][3].item() == 4;
+        )";
+  EXPECT_TRUE(eval(tile2).getBool());
 }
 
 TEST_F(TorchliveTensorRuntimeTest, TensorArgminTest) {
@@ -1057,6 +1212,32 @@ TEST_F(TorchliveTensorRuntimeTest, TensorItemTest) {
         }
       },
       facebook::jsi::JSError);
+}
+
+TEST_F(TorchliveTensorRuntimeTest, TensorPolygammaTest) {
+  std::string tensorPolygamma =
+      R"(
+        const tensor = torch.tensor([1, 0.5]);
+        const output = tensor.polygamma(1).to({dtype: torch.int});
+        output[0].item() == 1 && output[1].item() == 4;
+      )";
+  EXPECT_TRUE(eval(tensorPolygamma).getBool());
+
+  std::string tensorPolygamma1 =
+      R"(
+        const tensor = torch.tensor([1, 0.5]);
+        const output = tensor.polygamma(2).to({dtype: torch.int});
+        output[0].item() == -2 && output[1].item() == -16;
+      )";
+  EXPECT_TRUE(eval(tensorPolygamma1).getBool());
+
+  std::string tensorPolygamma2 =
+      R"(
+        const tensor = torch.tensor([1, 0.5]);
+        const output = tensor.polygamma(3).to({dtype: torch.int});
+        output[0].item() == 6 && output[1].item() == 97;
+      )";
+  EXPECT_TRUE(eval(tensorPolygamma2).getBool());
 }
 
 TEST_F(TorchliveTensorRuntimeTest, TensorSqrtTest) {

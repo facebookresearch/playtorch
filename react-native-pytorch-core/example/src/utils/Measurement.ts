@@ -13,7 +13,7 @@ declare var performance: any;
 
 const marks = ['inference', 'pack', 'unpack'] as const;
 
-type Mark = typeof marks[number];
+type Mark = (typeof marks)[number];
 
 type Measures = {[key in Mark]: number};
 

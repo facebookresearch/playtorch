@@ -27,4 +27,4 @@ export const ExampleCategories = [
   'Game',
 ] as const;
 
-export type ExampleCategory = typeof ExampleCategories[number];
+export type ExampleCategory = (typeof ExampleCategories)[number];

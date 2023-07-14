@@ -9,7 +9,7 @@ package dev.playtorch.newarchitecture.components;
 
 import com.facebook.jni.HybridData;
 import com.facebook.proguard.annotations.DoNotStrip;
-import com.facebook.react.fabric.ComponentFactory;
+import com.facebook.react.renderer.ComponentFactory;
 import com.facebook.soloader.SoLoader;
 
 /**

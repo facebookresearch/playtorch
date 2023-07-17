@@ -20,6 +20,9 @@ import com.facebook.react.bridge.WritableMap;
 import com.facebook.react.modules.core.DeviceEventManagerModule;
 import expo.modules.devlauncher.DevLauncherController;
 import expo.modules.devmenu.react.DevMenuAwareReactActivity;
+import com.facebook.react.ReactRootView;
+import expo.modules.splashscreen.SplashScreenImageResizeMode;
+import expo.modules.splashscreen.singletons.SplashScreen;
 
 public class MainActivity extends DevMenuAwareReactActivity
     implements TwoFingerLongPressDetector.TwoFingerLongPressListener {
@@ -63,6 +66,7 @@ public class MainActivity extends DevMenuAwareReactActivity
         .setSystemUiVisibility(
             View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_STABLE);
     super.onCreate(null);
+    SplashScreen.show(this, SplashScreenImageResizeMode.COVER, ReactRootView.class, false);
   }
 
   /**

@@ -17,7 +17,6 @@ import {ApolloProvider} from '@apollo/client';
 import client from './graphql/client';
 import {SnackIdCacheProvider} from './cache/useSnackIDCache';
 import {useFonts} from 'expo-font';
-import AppLoading from 'expo-app-loading';
 import * as Linking from 'expo-linking';
 import useAsync from 'react-use/lib/useAsync';
 import {BottomSheetModalProvider} from '@gorhom/bottom-sheet';
@@ -25,7 +24,9 @@ import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {StyleSheet} from 'react-native';
 import {SnackbarProvider} from './providers/Snackbar';
 import './utils/CacheManager';
+import * as SplashScreen from 'expo-splash-screen';
 
+SplashScreen.preventAutoHideAsync();
 export default function App() {
   const {value: initialUrl, loading: loadingInitialUrl} = useAsync(
     Linking.getInitialURL,
@@ -34,14 +35,28 @@ export default function App() {
   let [fontsLoaded] = useFonts({
     PTLIconFont: require('./assets/fonts/icomoon.ttf'),
   });
+
+  const onLayoutRootView = React.useCallback(async () => {
+    if (fontsLoaded && !loadingInitialUrl) {
+      // This tells the splash screen to hide immediately! If we call this after
+      // `setAppIsReady`, then we may see a blank screen while the app is
+      // loading its initial state and rendering its first pixels. So instead,
+      // we hide the splash screen once we know the root view has already
+      // performed layout.
+      await SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, loadingInitialUrl]);
+
   if (!fontsLoaded || loadingInitialUrl) {
-    return <AppLoading />;
+    return null;
   }
   return (
     <ApolloProvider client={client}>
       <SnackIdCacheProvider>
         <ThemeProvider>
-          <GestureHandlerRootView style={StyleSheet.absoluteFill}>
+          <GestureHandlerRootView
+            style={StyleSheet.absoluteFill}
+            onLayout={onLayoutRootView}>
             <SafeAreaProvider>
               <BottomSheetModalProvider>
                 <SnackbarProvider>

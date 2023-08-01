@@ -27,7 +27,8 @@ Pod::Spec.new do |s|
   s.pod_target_xcconfig = {
     "DEFINES_MODULE" => "YES",
     "USE_HEADERMAP" => "YES",
-    "HEADER_SEARCH_PATHS" => '$(inherited) "$(PODS_TARGET_SRCROOT)/ReactCommon" "$(PODS_TARGET_SRCROOT)" "$(PODS_ROOT)/Headers/Private/React-Core" "$(PODS_ROOT)/Headers/Public/React-hermes" "$(PODS_ROOT)/Headers/Public/hermes-engine" "${PODS_ROOT}/LibTorch-Lite/install/include"'
+    "HEADER_SEARCH_PATHS" => '$(inherited) "$(PODS_TARGET_SRCROOT)/ReactCommon" "$(PODS_TARGET_SRCROOT)" "$(PODS_ROOT)/Headers/Private/React-Core" "$(PODS_ROOT)/Headers/Public/React-hermes" "$(PODS_ROOT)/Headers/Public/hermes-engine" "${PODS_ROOT}/LibTorch-Lite/install/include"',
+    "OTHER_SWIFT_FLAGS" => '-no-verify-emitted-module-interface'
   }
   s.preserve_paths = [
     "cxx/**/*.h",

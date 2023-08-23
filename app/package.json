@@ -70,7 +70,7 @@
     "react-native-webview": "11.23.0",
     "react-use": "^17.3.2",
     "snack-babel-standalone": "^2.2.0",
-    "snack-runtime": "0.2.0-alpha.2"
+    "snack-runtime": "0.2.0-alpha.4"
   },
   "devDependencies": {
     "@babel/core": "^7.18.6",

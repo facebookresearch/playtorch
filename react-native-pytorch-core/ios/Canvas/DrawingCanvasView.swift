@@ -386,7 +386,7 @@ class DrawingCanvasView: UIView {
     sublayers.append(newLayer)
   }
 
-  func drawImage(image: IImage, dx: CGFloat, dy: CGFloat) throws {
+  func drawImage(image: Image, dx: CGFloat, dy: CGFloat) throws {
     let frame = CGRect(x: dx, y: dy, width: CGFloat(image.getWidth()), height: CGFloat(image.getHeight()))
     if let bitmap = image.getBitmap() {
       let newLayer = ImageLayerData(image: bitmap, transform: currentState.transform, frame: frame)
@@ -396,7 +396,7 @@ class DrawingCanvasView: UIView {
     }
   }
 
-  func drawImage(image: IImage, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) throws {
+  func drawImage(image: Image, dx: CGFloat, dy: CGFloat, dWidth: CGFloat, dHeight: CGFloat) throws {
     let frame = CGRect(x: dx, y: dy, width: dWidth, height: dHeight)
     if let bitmap = image.getBitmap() {
       let newLayer = ImageLayerData(image: bitmap, transform: currentState.transform, frame: frame)
@@ -406,7 +406,7 @@ class DrawingCanvasView: UIView {
     }
   }
 
-  func drawImage(image: IImage,
+  func drawImage(image: Image,
                  sx: CGFloat,
                  sy: CGFloat,
                  sWidth: CGFloat,

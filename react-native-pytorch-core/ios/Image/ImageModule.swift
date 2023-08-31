@@ -77,7 +77,7 @@ public class ImageModule: NSObject {
       do {
         let imageData = try JSContextUtils.unwrapObject(imageDataRef, ImageData.self)
 
-        var image: IImage
+        var image: Image
         if scaled {
           let bitmap = try imageData.getScaledBitmap()
           image = Image(image: bitmap)
@@ -99,7 +99,7 @@ public class ImageModule: NSObject {
                      resolver resolve: RCTPromiseResolveBlock,
                      rejecter reject: RCTPromiseRejectBlock) {
     do {
-      let image = try JSContextUtils.unwrapObject(imageRef, IImage.self)
+      let image = try JSContextUtils.unwrapObject(imageRef, Image.self)
       guard let bitmap = image.getBitmap() else {
         print("Could not get bitmap from image")
         return
@@ -125,7 +125,7 @@ public class ImageModule: NSObject {
   @objc
   public func getWidth(_ imageRef: NSDictionary) -> Any {
     do {
-      let image = try JSContextUtils.unwrapObject(imageRef, IImage.self)
+      let image = try JSContextUtils.unwrapObject(imageRef, Image.self)
       return NSNumber(value: Float(image.getWidth()))
     } catch {
       print("Invalid image reference in getWidth")
@@ -136,7 +136,7 @@ public class ImageModule: NSObject {
   @objc
   public func getHeight(_ imageRef: NSDictionary) -> Any {
     do {
-      let image = try JSContextUtils.unwrapObject(imageRef, IImage.self)
+      let image = try JSContextUtils.unwrapObject(imageRef, Image.self)
       return NSNumber(value: Float(image.getHeight()))
     } catch {
       print("Invalid image reference in getHeight")
@@ -151,7 +151,7 @@ public class ImageModule: NSObject {
                     resolver resolve: RCTPromiseResolveBlock,
                     rejecter reject: RCTPromiseRejectBlock) {
     do {
-      let image = try JSContextUtils.unwrapObject(imageRef, IImage.self)
+      let image = try JSContextUtils.unwrapObject(imageRef, Image.self)
       let scaledImage = try image.scale(sx: CGFloat(truncating: sx), sy: CGFloat(truncating: sy))
       let ref = JSContext.wrapObject(object: scaledImage).getJSRef()
       resolve(ref)

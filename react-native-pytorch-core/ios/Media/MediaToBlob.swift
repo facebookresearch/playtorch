@@ -26,9 +26,9 @@ public class MediaToBlob: NSObject {
   public init(refId: String) throws {
     super.init()
     let obj = try JSContext.unwrapObject(jsRef: ["ID": refId])
-    if obj is IImage {
+    if obj is Image {
       // swiftlint:disable:next force_cast
-      let image = obj as! IImage
+      let image = obj as! Image
       imageToBlob(img: image)
     } else if obj is IAudio {
       // swiftlint:disable:next force_cast
@@ -39,7 +39,7 @@ public class MediaToBlob: NSObject {
     }
   }
 
-  private func imageToBlob(img: IImage) {
+  private func imageToBlob(img: Image) {
     let bitmap = img.getBitmap()!
     let width = bitmap.width
     let height = bitmap.height

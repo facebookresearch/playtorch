@@ -11,6 +11,8 @@ import * as React from 'react';
 import {
   findNodeHandle,
   requireNativeComponent,
+  NativeModules,
+  Platform,
   UIManager,
   ViewProps,
 } from 'react-native';
@@ -116,6 +118,10 @@ const nativeCameraViewName = 'PyTorchCoreCameraView';
 const PyTorchCoreCameraView =
   requireNativeComponent<CameraProps>(nativeCameraViewName);
 
+const nativeCameraModuleName = 'PyTorchCoreCameraModule';
+
+const PyTorchCoreCameraModule = NativeModules[nativeCameraModuleName];
+
 /**
  * A camera component with [[CameraProps.onCapture]] and [[CameraProps.onFrame]] callbacks.
  * To programmatically trigger a capture, call the [[takePicture]] function.
@@ -195,17 +201,25 @@ export class Camera extends React.PureComponent<CameraProps> {
    * }
    * ```
    */
-  public takePicture(): void {
+  public async takePicture(): void {
     if (this.cameraRef.current) {
-      const takePictureCommandId =
-        UIManager.getViewManagerConfig(nativeCameraViewName).Commands
-          .takePicture;
       const cameraViewHandle = findNodeHandle(this.cameraRef.current);
-      UIManager.dispatchViewManagerCommand(
-        cameraViewHandle,
-        takePictureCommandId,
-        [],
-      );
+      if (Platform.OS === 'android') {
+        // TODO: also implement ios
+        const nativeEvent = await PyTorchCoreCameraModule.takePicture(cameraViewHandle);
+        if (nativeEvent.ID) {
+          this.handleOnCapture({nativeEvent});
+        }
+      } else {
+        const takePictureCommandId =
+          UIManager.getViewManagerConfig(nativeCameraViewName).Commands
+            .takePicture;
+        UIManager.dispatchViewManagerCommand(
+          cameraViewHandle,
+          takePictureCommandId,
+          [],
+        );
+      }
     }
   }
 

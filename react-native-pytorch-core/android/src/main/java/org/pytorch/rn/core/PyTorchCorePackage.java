@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import org.jetbrains.annotations.NotNull;
 import org.pytorch.rn.core.audio.AudioModule;
+import org.pytorch.rn.core.camera.CameraModule;
 import org.pytorch.rn.core.camera.CameraViewManager;
 import org.pytorch.rn.core.canvas.CanvasRenderingContext2DModule;
 import org.pytorch.rn.core.canvas.CanvasViewManager;
@@ -29,6 +30,7 @@ public class PyTorchCorePackage implements ReactPackage {
   public List<NativeModule> createNativeModules(@NotNull ReactApplicationContext reactContext) {
     return Arrays.<NativeModule>asList(
         new ModelLoaderModule(reactContext),
+        new CameraModule(reactContext),
         new ImageModule(reactContext),
         new ImageDataModule(reactContext),
         new CanvasRenderingContext2DModule(reactContext),

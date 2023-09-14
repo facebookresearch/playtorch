@@ -9,6 +9,7 @@ package org.pytorch.rn.core.camera;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -216,26 +217,37 @@ public class CameraView extends ConstraintLayout {
     }
   }
 
-  protected void takePicture(Promise promise) {
+  protected void takePicture(Activity activity, boolean isPreviewView, Promise promise) {
     if (mImageCapture != null) {
-      mImageCapture.takePicture(
-          ContextCompat.getMainExecutor(mReactContext),
-          new ImageCapture.OnImageCapturedCallback() {
-            @Override
-            public void onCaptureSuccess(@NonNull ImageProxy imageProxy) {
-              super.onCaptureSuccess(imageProxy);
-              IImage image = new Image(imageProxy, mReactContext.getApplicationContext());
-              JSContext.NativeJSRef ref = JSContext.wrapObject(image);
-              promise.resolve(ref.getJSRef());
-            }
+      if (isPreviewView) {
+        activity.runOnUiThread(new Runnable() {
+          @Override
+          public void run() {
+            IImage image = new Image(mPreviewView.getBitmap());
+            JSContext.NativeJSRef ref = JSContext.wrapObject(image);
+            promise.resolve(ref.getJSRef());
+          }
+        });
+      } else {
+        mImageCapture.takePicture(
+            ContextCompat.getMainExecutor(mReactContext),
+            new ImageCapture.OnImageCapturedCallback() {
+              @Override
+              public void onCaptureSuccess(@NonNull ImageProxy imageProxy) {
+                super.onCaptureSuccess(imageProxy);
+                IImage image = new Image(imageProxy, mReactContext.getApplicationContext());
+                JSContext.NativeJSRef ref = JSContext.wrapObject(image);
+                promise.resolve(ref.getJSRef());
+              }
 
-            @Override
-            public void onError(@NonNull ImageCaptureException exception) {
-              super.onError(exception);
-              Log.e(TAG, exception.getLocalizedMessage(), exception);
-              promise.reject(exception);
-            }
-          });
+              @Override
+              public void onError(@NonNull ImageCaptureException exception) {
+                super.onError(exception);
+                Log.e(TAG, exception.getLocalizedMessage(), exception);
+                promise.reject(exception);
+              }
+            });
+      }
     }
   }
 

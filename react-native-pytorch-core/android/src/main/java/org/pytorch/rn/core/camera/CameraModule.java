@@ -36,13 +36,13 @@ public class CameraModule extends ReactContextBaseJavaModule {
   }
 
   @ReactMethod
-  public void takePicture(int reactTag, Promise promise) {
+  public void takePicture(int reactTag, boolean isPreviewView, Promise promise) {
     Activity activity = getCurrentActivity();
     View view = activity.findViewById(reactTag);
 
     try {
       CameraView cameraView = (CameraView) view;
-      cameraView.takePicture(promise);
+      cameraView.takePicture(activity, isPreviewView, promise);
     } catch (Exception e) {
       // Sometimes(when RELOAD js of react-native) cause
       // `java.lang.ClassCastException: com.facebook.react.views.view.ReactViewGroup cannot be cast to org.pytorch.rn.core.camera.CameraView`

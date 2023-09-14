@@ -201,12 +201,15 @@ export class Camera extends React.PureComponent<CameraProps> {
    * }
    * ```
    */
-  public async takePicture(): void {
+  // if isPreviewView is true, will use preview instead of photo,
+  // this can reduce 400ms to 100ms, but since preview will delay
+  // some from real target, maybe it's nonsense, so default false
+  public async takePicture(isPreviewView: boolean = false): void {
     if (this.cameraRef.current) {
       const cameraViewHandle = findNodeHandle(this.cameraRef.current);
       if (Platform.OS === 'android') {
         // TODO: also implement ios
-        const nativeEvent = await PyTorchCoreCameraModule.takePicture(cameraViewHandle);
+        const nativeEvent = await PyTorchCoreCameraModule.takePicture(cameraViewHandle, isPreviewView);
         if (nativeEvent.ID) {
           this.handleOnCapture({nativeEvent});
         }

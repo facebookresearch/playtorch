@@ -34,6 +34,10 @@ module.exports = {
       theme: require('prism-react-renderer/themes/github'),
       darkTheme: require('prism-react-renderer/themes/dracula'),
     },
+    announcementBar: {
+      id: 'announcementBar-1', // Increment on change
+      content: `This project has been archived and is no longer actively maintained.`,
+    },
     navbar: {
       title: '',
       logo: {

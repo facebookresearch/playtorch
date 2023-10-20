@@ -1,3 +1,5 @@
+<h1>This project has been archived and is no longer actively maintained.</h1>
+
 <h1>
   <a href="https://playtorch.dev/">
     <img src="./website/static/img/PlayTorch_Logo_P.svg" />

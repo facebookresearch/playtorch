@@ -81,17 +81,10 @@ jsi::Value scaleImpl(
   utils::ArgumentParser args(runtime, thisValue, arguments, count);
   args.requireNumArguments(2);
   const auto& image = args.thisAsHostObject<ImageHostObject>()->getImage();
-  auto promiseValue = torchlive::createPromiseAsJSIValue(
-      runtime,
-      [&image, sx = args[0].asNumber(), sy = args[1].asNumber()](
-          jsi::Runtime& rt, std::shared_ptr<torchlive::Promise> promise) {
-        auto scaledImage = image->scale(sx, sy);
-        auto imageObject =
-            utils::helpers::createFromHostObject<ImageHostObject>(
-                rt, std::move(scaledImage));
-        promise->resolve(std::move(imageObject));
-      });
-  return promiseValue;
+  double sx = args[0].asNumber();
+  double sy = args[1].asNumber();
+  auto scaledImage = image->scale(sx, sy);
+  return utils::helpers::createFromHostObject<ImageHostObject>(runtime, std::move(scaledImage));
 };
 
 jsi::Value releaseImpl(
@@ -99,24 +92,9 @@ jsi::Value releaseImpl(
     const jsi::Value& thisValue,
     const jsi::Value* arguments,
     size_t count) {
-  auto image = thisValue.asObject(runtime)
-                   .asHostObject<ImageHostObject>(runtime)
-                   ->getImage();
-  auto promiseValue = torchlive::createPromiseAsJSIValue(
-      runtime,
-      [image](jsi::Runtime& rt, std::shared_ptr<torchlive::Promise> promise) {
-        try {
-          image->close();
-          promise->resolve(jsi::Value::undefined());
-        } catch (std::exception& e) {
-          promise->reject("error on release: " + std::string(e.what()));
-        } catch (const char* error) {
-          promise->reject("error on release: " + std::string(error));
-        } catch (...) {
-          promise->reject("error on release");
-        }
-      });
-  return promiseValue;
+    auto image = thisValue.asObject(runtime).asHostObject<ImageHostObject>(runtime);
+    image->release();
+    return jsi::Value::undefined();
 };
 
 } // namespace
@@ -141,6 +119,10 @@ ImageHostObject::ImageHostObject(
 
 std::shared_ptr<IImage> ImageHostObject::getImage() const noexcept {
   return image_;
+}
+
+void ImageHostObject::release() noexcept {
+  image_ = nullptr;
 }
 
 } // namespace media

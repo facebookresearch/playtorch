@@ -21,9 +21,10 @@ class JSI_EXPORT ImageHostObject : public common::BaseHostObject {
       std::shared_ptr<IImage> image);
 
   std::shared_ptr<IImage> getImage() const noexcept;
-
+  void release() noexcept;
+  
  private:
-  std::shared_ptr<IImage> image_;
+    std::shared_ptr<IImage> image_;
 };
 
 } // namespace media

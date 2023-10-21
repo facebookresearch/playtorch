@@ -88,7 +88,7 @@ export interface Image extends NativeJSRef {
    * @param sx Scaling factor in the horizontal direction. A negative value flips pixels across the vertical axis. A value of `1` results in no horizontal scaling.
    * @param sy Scaling factor in the vertical direction. A negative value flips pixels across the horizontal axis. A value of `1` results in no vertical scaling.
    */
-  scale(sx: number, sy: number): Promise<Image>;
+  scale(sx: number, sy: number): Image;
 }
 
 export const wrapRef = (ref: NativeJSRef): Image => ({

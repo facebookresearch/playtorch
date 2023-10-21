@@ -94,6 +94,14 @@ UIImage *MediaUtilsImageFromBlob(const torchlive::media::Blob& blob,
   }
 }
 
+UIImage *MediaUtilsImageFromCMSampleBuffer(CMSampleBufferRef sampleBuffer) {
+    @autoreleasepool {
+        CVPixelBufferRef pixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+        CIImage *ciImage = [CIImage imageWithCVPixelBuffer:pixelBuffer];
+        return [UIImage imageWithCIImage:ciImage];
+    }
+}
+
 #pragma mark - Audio
 
 static void write(std::stringstream &stream, int value, int size)

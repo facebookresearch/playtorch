@@ -433,6 +433,17 @@ jsi::Value permuteImpl(
       runtime, std::move(tensor));
 }
 
+jsi::Value releaseImpl(
+    jsi::Runtime& runtime,
+    const jsi::Value& thisValue,
+    const jsi::Value* arguments,
+    size_t count) {
+  utils::ArgumentParser args(runtime, thisValue, arguments, count);
+  args.requireNumArguments(0);
+  args.thisAsHostObject<TensorHostObject>()->tensor.reset();
+  return jsi::Value::undefined();
+}
+
 jsi::Value reshapeImpl(
     jsi::Runtime& runtime,
     const jsi::Value& thisValue,
@@ -672,6 +683,7 @@ TensorHostObject::TensorHostObject(jsi::Runtime& runtime, torch_::Tensor t)
   setPropertyHostFunction(runtime, "matmul", 1, matmulImpl);
   setPropertyHostFunction(runtime, "mul", 1, mulImpl);
   setPropertyHostFunction(runtime, "permute", 1, permuteImpl);
+  setPropertyHostFunction(runtime, "release", 0, releaseImpl);
   setPropertyHostFunction(runtime, "reshape", 1, reshapeImpl);
   setPropertyHostFunction(runtime, "softmax", 1, softmaxImpl);
   setPropertyHostFunction(runtime, "squeeze", 1, squeezeImpl);

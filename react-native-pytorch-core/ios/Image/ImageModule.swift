@@ -183,6 +183,13 @@ public class ImageModule: NSObject {
         return nil
       }
       return refID
+    } else if let ciImage = image.ciImage {
+      let bitmapImage = Image(image: ciImage)
+      let ref = JSContext.wrapObject(object: bitmapImage).getJSRef()
+      guard let refID = ref["ID"] as? NSString else {
+        return nil
+      }
+      return refID
     } else {
       return nil
     }

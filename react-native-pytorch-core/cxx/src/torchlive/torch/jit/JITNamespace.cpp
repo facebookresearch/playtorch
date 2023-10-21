@@ -128,6 +128,66 @@ _LoadForMobileAsyncTask _loadForMobileImpl(
           runtime, std::move(moduleHostObject));
     });
 
+jsi::Value syncImpl(jsi::Runtime& runtime,
+                    const jsi::Value& thisValue,
+                    const jsi::Value* arguments,
+                    size_t count) {
+    
+    utils::ArgumentParser args(runtime, thisValue, arguments, count);
+    args.requireNumArguments(1);
+
+    std::string filename = args[0].asString(runtime).utf8(runtime);
+
+    c10::optional<at::Device> device = c10::nullopt;
+    if (count > 1) {
+      auto deviceType = args[1].asString(runtime).utf8(runtime);
+      if (deviceType == "cpu") {
+        device = torch_::kCPU;
+      } else {
+        throw facebook::jsi::JSError(
+            runtime, "only 'cpu' device is currently supported");
+      }
+    }
+
+    std::unordered_map<std::string, std::string> extraFiles;
+    std::shared_ptr<jsi::Value> extraFilesObject = nullptr;
+    if (count > 2) {
+      jsi::Object obj = args[2].asObject(runtime);
+      auto arr = obj.getPropertyNames(runtime);
+      for (size_t i = 0; i < arr.length(runtime); i++) {
+        auto propName =
+            arr.getValueAtIndex(runtime, i).asString(runtime).utf8(runtime);
+        extraFiles[propName] = "";
+      }
+      // Move jsi::Object to pass it through to the result worker function
+      // to update its values with the extra files values after loading the
+      // model.
+      extraFilesObject = std::make_shared<jsi::Value>(std::move(obj));
+    }
+    
+    auto model = torch_::jit::_load_for_mobile(filename, device, extraFiles);
+    
+    // Update the extra files object passed in as third argument with the
+    // extra files values retrieved on _load_for_mobile in the worker thread.
+    // Note, this will only run if a JavaScript object was used as third
+    // argument and if the model included any extra files for the given keys.
+    if (extraFilesObject != nullptr && extraFilesObject->isObject() &&
+        extraFiles.size() > 0) {
+      auto obj = extraFilesObject->asObject(runtime);
+      for (auto it : extraFiles) {
+        auto key = jsi::PropNameID::forUtf8(runtime, it.first);
+        auto value = jsi::String::createFromUtf8(runtime, it.second);
+        obj.setProperty(runtime, key, value);
+      }
+    }
+
+    auto moduleHostObject =
+        std::make_shared<torchlive::torch::jit::mobile::ModuleHostObject>(
+            runtime, nullptr, std::move(model));
+    
+    return jsi::Object::createFromHostObject(runtime, std::move(moduleHostObject));
+}
+
 } // namespace
 
 jsi::Object buildNamespace(jsi::Runtime& rt, torchlive::RuntimeExecutor rte) {
@@ -137,7 +197,7 @@ jsi::Object buildNamespace(jsi::Runtime& rt, torchlive::RuntimeExecutor rte) {
   setPropertyHostFunction(
       rt, ns, "_loadForMobile", 1, _loadForMobileImpl.asyncPromiseFunc(rte));
   setPropertyHostFunction(
-      rt, ns, "_loadForMobileSync", 1, _loadForMobileImpl.syncFunc(rte));
+      rt, ns, "_loadForMobileSync", 1, syncImpl);
   return ns;
 }
 

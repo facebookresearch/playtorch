@@ -28,80 +28,95 @@ jsi::Value BlobObjectWithNoData(jsi::Runtime& runtime) {
 
 } // namespace
 
-static jsi::Value arrayBufferImpl(
-    jsi::Runtime& runtime,
-    const jsi::Value& thisValue,
-    const jsi::Value* arguments,
-    size_t count) {
-  utils::ArgumentParser args(runtime, thisValue, arguments, count);
-  const auto& blob = args.thisAsHostObject<BlobHostObject>()->blob;
-  auto promiseValue = torchlive::createPromiseAsJSIValue(
-      runtime,
-      [&blob](jsi::Runtime& rt, std::shared_ptr<torchlive::Promise> promise) {
-        auto buffer = blob->getDirectBytes();
-        auto size = blob->getDirectSize();
-        jsi::ArrayBuffer arrayBuffer =
-            rt.global()
-                .getPropertyAsFunction(rt, "ArrayBuffer")
-                .callAsConstructor(rt, static_cast<int>(size))
-                .asObject(rt)
-                .getArrayBuffer(rt);
-        std::memcpy(arrayBuffer.data(rt), buffer, size);
-        auto typedArray = rt.global()
-                              .getPropertyAsFunction(rt, "Uint8Array")
-                              .callAsConstructor(rt, std::move(arrayBuffer))
-                              .asObject(rt);
-        promise->resolve(std::move(typedArray));
-      });
-  return promiseValue;
+namespace {
+
+jsi::Value arrayBufferImpl(
+                                  jsi::Runtime& runtime,
+                                  const jsi::Value& thisValue,
+                                  const jsi::Value* arguments,
+                                  size_t count) {
+    utils::ArgumentParser args(runtime, thisValue, arguments, count);
+    const auto& blob = args.thisAsHostObject<BlobHostObject>()->blob;
+    auto promiseValue = torchlive::createPromiseAsJSIValue(
+                                                           runtime,
+                                                           [&blob](jsi::Runtime& rt, std::shared_ptr<torchlive::Promise> promise) {
+                                                               auto buffer = blob->getDirectBytes();
+                                                               auto size = blob->getDirectSize();
+                                                               jsi::ArrayBuffer arrayBuffer =
+                                                               rt.global()
+                                                                   .getPropertyAsFunction(rt, "ArrayBuffer")
+                                                                   .callAsConstructor(rt, static_cast<int>(size))
+                                                                   .asObject(rt)
+                                                                   .getArrayBuffer(rt);
+                                                               std::memcpy(arrayBuffer.data(rt), buffer, size);
+                                                               auto typedArray = rt.global()
+                                                                   .getPropertyAsFunction(rt, "Uint8Array")
+                                                                   .callAsConstructor(rt, std::move(arrayBuffer))
+                                                                   .asObject(rt);
+                                                               promise->resolve(std::move(typedArray));
+                                                           });
+    return promiseValue;
 }
 
-static jsi::Value sliceImpl(
-    jsi::Runtime& runtime,
-    const jsi::Value& thisValue,
-    const jsi::Value* arguments,
-    size_t count) {
-  utils::ArgumentParser args(runtime, thisValue, arguments, count);
-  const auto& blob = args.thisAsHostObject<BlobHostObject>()->blob;
-  auto blobSize = static_cast<int>(blob->getDirectSize());
+jsi::Value sliceImpl(
+                            jsi::Runtime& runtime,
+                            const jsi::Value& thisValue,
+                            const jsi::Value* arguments,
+                            size_t count) {
+    utils::ArgumentParser args(runtime, thisValue, arguments, count);
+    const auto& blob = args.thisAsHostObject<BlobHostObject>()->blob;
+    auto blobSize = static_cast<int>(blob->getDirectSize());
+    
+    // Default values
+    int start = 0;
+    int end = blobSize;
+    
+    // Optinal inputs
+    if (args.count() > 0) {
+        start = args.asInteger(0);
+    }
+    if (args.count() > 1) {
+        end = args.asInteger(1);
+    }
+    
+    // Invalid cases
+    if (std::abs(start) > blobSize || std::abs(end) > blobSize) {
+        return BlobObjectWithNoData(runtime);
+    }
+    
+    if (start < 0) {
+        start = blobSize + start;
+    }
+    if (end < 0) {
+        end = blobSize + end;
+    }
+    
+    // More invalid cases
+    if (start >= end) {
+        return BlobObjectWithNoData(runtime);
+    }
+    
+    // Implement slice(start, end)
+    auto size = end - start;
+    auto buffer = std::unique_ptr<uint8_t[]>(new uint8_t[size]);
+    std::memcpy(buffer.get(), blob->getDirectBytes() + start, size);
+    
+    auto blobHostObject = std::make_shared<BlobHostObject>(
+                                                           runtime, std::make_unique<Blob>(std::move(buffer), size));
+    return jsi::Object::createFromHostObject(runtime, std::move(blobHostObject));
+}
 
-  // Default values
-  int start = 0;
-  int end = blobSize;
+jsi::Value releaseImpl(
+                            jsi::Runtime& runtime,
+                            const jsi::Value& thisValue,
+                            const jsi::Value* arguments,
+                     size_t count) {
+utils::ArgumentParser args(runtime, thisValue, arguments, count);
+    args.requireNumArguments(0);
+    args.thisAsHostObject<BlobHostObject>()->blob = nullptr;
+    return jsi::Value::undefined();
+}
 
-  // Optinal inputs
-  if (args.count() > 0) {
-    start = args.asInteger(0);
-  }
-  if (args.count() > 1) {
-    end = args.asInteger(1);
-  }
-
-  // Invalid cases
-  if (std::abs(start) > blobSize || std::abs(end) > blobSize) {
-    return BlobObjectWithNoData(runtime);
-  }
-
-  if (start < 0) {
-    start = blobSize + start;
-  }
-  if (end < 0) {
-    end = blobSize + end;
-  }
-
-  // More invalid cases
-  if (start >= end) {
-    return BlobObjectWithNoData(runtime);
-  }
-
-  // Implement slice(start, end)
-  auto size = end - start;
-  auto buffer = std::unique_ptr<uint8_t[]>(new uint8_t[size]);
-  std::memcpy(buffer.get(), blob->getDirectBytes() + start, size);
-
-  auto blobHostObject = std::make_shared<BlobHostObject>(
-      runtime, std::make_unique<Blob>(std::move(buffer), size));
-  return jsi::Object::createFromHostObject(runtime, std::move(blobHostObject));
 }
 
 BlobHostObject::BlobHostObject(
@@ -116,6 +131,7 @@ BlobHostObject::BlobHostObject(
   // Functions
   setPropertyHostFunction(runtime, "arrayBuffer", 0, arrayBufferImpl);
   setPropertyHostFunction(runtime, "slice", 0, sliceImpl);
+  setPropertyHostFunction(runtime, "release", 0, releaseImpl);
 }
 
 } // namespace media

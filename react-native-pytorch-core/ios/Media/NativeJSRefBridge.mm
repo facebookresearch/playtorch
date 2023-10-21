@@ -16,6 +16,16 @@
 #import "MediaUtils.h"
 #import "PyTorchCore-Swift-Header.h"
 
+#if __has_include(<VisionCamera/Frame.h>)
+ #define HAS_VISION_CAMERA
+ #import <VisionCamera/Frame.h>
+ // forward declaration for the Frame Host Object since we only care about `Frame*`
+ class FrameHostObject: public facebook::jsi::HostObject {
+ public:
+   Frame* frame;
+ };
+#endif
+
 namespace torchlive {
 
 namespace media {
@@ -57,6 +67,16 @@ std::shared_ptr<IImage> imageFromFile(std::string filePath) {
     return nullptr;
   }
   return std::make_shared<Image>(image);
+}
+
+std::shared_ptr<IImage> imageFromFrame(jsi::Runtime& runtime, jsi::Object frameHostObject) {
+#ifdef HAS_VISION_CAMERA
+  const auto& frame = frameHostObject.asHostObject<FrameHostObject>(runtime);
+  auto image = MediaUtilsImageFromCMSampleBuffer(frame->frame.buffer);
+  return std::make_shared<Image>(image);
+#else
+  throw jsi::JSError(runtime, "Error converting Frame to Image - VisionCamera is not properly installed!");
+#endif
 }
 
 std::unique_ptr<torchlive::media::Blob> toBlob(const std::string& refId) {
@@ -107,9 +127,13 @@ std::unique_ptr<torchlive::media::Blob> toBlob(std::shared_ptr<IImage> image) {
     buffer[i * 3 + 1] = imageData[i * 4 + 1]; // G
     buffer[i * 3 + 2] = imageData[i * 4 + 2]; // B
   }
-
+    
   auto data = std::unique_ptr<uint8_t[]>(new uint8_t[finalDataSize]);
   std::memcpy(data.get(), buffer, finalDataSize);
+    
+    free(imageData);
+    free(buffer);
+    
   std::string blobType = Blob::kBlobTypeImageRGB;
   return std::make_unique<torchlive::media::Blob>(
       std::move(data), dataSize, blobType);

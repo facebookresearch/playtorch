@@ -10,8 +10,9 @@
 import type {Tensor} from 'react-native-pytorch-core';
 import type {NativeJSRef} from '../NativeJSRef';
 import type {Image} from '../ImageModule';
+import type {VisionCameraFrame} from './frame';
 
-export interface Blob {
+export interface PlayTorchBlob {
   /**
    * The Blob interface's size property returns the size of the Blob in bytes.
    */
@@ -54,6 +55,13 @@ export interface Blob {
    * within the blob on which this method was called. The original blob is not altered.
    */
   slice(start?: number, end?: number): Blob;
+  /**
+   * @experimental
+   * 
+   * Release blob memory immediately rather than waiting for JavaScript GC
+   * collecting the host object.
+   */
+  release(): void;
 }
 
 export interface Media {
@@ -126,13 +134,23 @@ export interface Media {
   imageFromFile(filepath: string): Image;
 
   /**
-   * Converts a [[Tensor]] or [[NativeJSRef]] into a [[Blob]]. The blob can be
+   * Converts a VisionCamera [`Frame`](https://mrousavy.com/react-native-vision-camera/docs/api/interfaces/Frame) into an [[Image]]. This function has to be called inside a Frame Processor, as the Frame only exists inside a Frame Processor.
+   *
+   * Requires [react-native-vision-camera](https://github.com/mrousavy/react-native-vision-camera) to be installed.
+   *
+   * @param frame [[VisionCameraFrame]] to turn into an [[Image]].
+   * @returns An [[Image]] object created from the [[VisionCameraFrame]].
+   */
+  imageFromFrame(frame: VisionCameraFrame): Image;
+
+  /**
+   * Converts a [[Tensor]] or [[NativeJSRef]] into a [[PlayTorchBlob]]. The blob can be
    * used to create a [[Tensor]] object or convert into a [[NativeJSRef]] like
    * an image or audio.
    *
-   * @param obj Object to turn into a [[Blob]].
+   * @param obj Object to turn into a [[PlayTorchBlob]].
    */
-  toBlob(obj: Tensor | NativeJSRef): Blob;
+  toBlob(obj: Tensor | NativeJSRef): PlayTorchBlob;
 }
 
 type Torchlive = {

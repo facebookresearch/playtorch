@@ -96,6 +96,42 @@ MethodAsyncTask createMethodAsyncTask(
         return utils::converter::ivalueToJSIValue(runtime, value);
       });
 }
+
+jsi::Value syncImpl(jsi::Runtime& runtime,
+                    const jsi::Value& thisValue,
+                    const jsi::Value* arguments,
+                    size_t count) {
+    auto thiz =
+        thisValue.asObject(runtime).asHostObject<ModuleHostObject>(runtime);
+
+    auto args = thiz->mobileModule.get_method("forward")
+                    .function()
+                    .getSchema()
+                    .arguments();
+
+    // Two Cases in terms of number of argument required and argument
+    // provided
+    // Case 1 (n_required < n_provided) we ignore the extra provided args,
+    // respecting Js convention
+    // Case 2 (n_required >= n_provided) we process the provided argument
+    // and let libtorch check if they are enough, this would handle module
+    // with default parameters
+    int argCount = std::min(count, args.size() - 1);
+
+    std::vector<torch_::jit::IValue> inputs = {};
+    for (int i = 0; i < argCount; i++) {
+      c10::DynamicType& dynType =
+          args[i + 1].type()->expectRef<c10::DynamicType>();
+      inputs.push_back(utils::converter::jsiValuetoIValue(
+          runtime, arguments[i], dynType));
+    }
+    
+    c10::InferenceMode guard;
+    auto ivalue = thiz->mobileModule.get_method("forward")(inputs);
+    
+    return utils::converter::ivalueToJSIValue(runtime, ivalue);
+}
+
 } // namespace
 
 ModuleHostObject::ModuleHostObject(
@@ -109,8 +145,7 @@ ModuleHostObject::ModuleHostObject(
       "forward", createMethodAsyncTask(mobileModule, "forward"));
   setPropertyHostFunction(
       rt, "forward", 1, methodAsyncTasks.at("forward").asyncPromiseFunc(rte));
-  setPropertyHostFunction(
-      rt, "forwardSync", 1, methodAsyncTasks.at("forward").syncFunc(rte));
+  setPropertyHostFunction(rt, "forwardSync", 1, syncImpl);
 }
 jsi::Value ModuleHostObject::get(
     jsi::Runtime& runtime,

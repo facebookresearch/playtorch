@@ -15,6 +15,8 @@ namespace torchlive {
 
 namespace media {
 
+using namespace facebook;
+
 std::shared_ptr<IImage> resolveNativeJSRefToImage_DO_NOT_USE(
     const std::string& refId) {
   return nullptr;
@@ -32,6 +34,10 @@ imageFromBlob(const Blob& blob, double width, double height) {
 }
 
 std::shared_ptr<IImage> imageFromFile(std::string filepath) {
+  return nullptr;
+}
+
+std::shared_ptr<IImage> imageFromFrame(jsi::Runtime& runtime, jsi::Object frameHostObject) {
   return nullptr;
 }
 

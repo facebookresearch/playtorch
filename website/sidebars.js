@@ -35,7 +35,16 @@ module.exports = {
     },
     {
       type: 'category',
-      label: 'Tutorials',
+      label: 'Model Tutorials',
+      collapsed: false,
+      items: [
+        'tutorials/models/install-pytorch',
+        'tutorials/models/hello-world-model',
+      ],
+    },
+    {
+      type: 'category',
+      label: 'Demo Tutorials',
       collapsed: false,
       items: [
         'tutorials/snacks/image-classification',

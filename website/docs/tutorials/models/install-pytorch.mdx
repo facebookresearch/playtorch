@@ -1,0 +1,76 @@
+---
+id: install-pytorch
+sidebar_position: 1
+title: Install PyTorch
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+In this tutorial, we will learn a quick way for how to set up PyTorch.
+
+# [OPTIONAL] Set up Python virtual environment
+
+It is recommended to run the Python scripts in a virtual environment. Python offers a command to create a virtual environment with the following command.
+
+```shell
+python3 -m venv venv
+source venv/bin/activate
+```
+
+# Install `torch` dependency
+
+Last, let's install the PyTorch dependencies via the Python package manager.
+
+<Tabs
+  defaultValue="macos"
+  values={[
+    {label: 'macOS', value: 'macos'},
+    {label: 'Linux', value: 'linux'},
+    {label: 'Windows', value: 'windows'},
+  ]}>
+  <TabItem value="macos">
+
+  ```shell
+  pip install torch==1.12.1
+  ```
+
+  </TabItem>
+  <TabItem value="linux">
+
+  ```shell
+  pip install torch==1.12.1+cpu
+  ```
+
+  </TabItem>
+  <TabItem value="windows">
+
+  ```shell
+  pip install torch==1.12.1+cpu
+  ```
+
+  </TabItem>
+</Tabs>
+
+# Test Installation
+
+Open Python interpreter in terminal
+
+```python
+python
+```
+
+Then execute the two lines of code, which will print the PyTorch version
+
+```python
+import torch
+print(torch.__version__)
+```
+
+```python title="Output"
+1.12.1
+```
+
+Exit the Python interpreter with `exit()`.
+
+That's it! PyTorch is installed successfully

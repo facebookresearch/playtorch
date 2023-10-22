@@ -1,0 +1,41 @@
+@@ -16,8 +16,11 @@
+ 
+   const [text, setText] = useState('');
+   const [sentiment, setSentiment] = useState('');
++  const [isProcessing, setIsProcessing] = useState(false);
++
++  async function handleAsk() {
++    setIsProcessing(true);
+ 
+-  async function handleClassify() {
+     const _text = `[CLS] ${text} [SEP]`;
+ 
+     const { result } = await MobileModel.execute<TextClassificationResult>(model, {
+@@ -27,10 +30,12 @@
+ 
+     // No answer found if the answer is null
+     if (result.sentiment == null) {
+-      setSentiment('Could not find sentiment.');
++      setSentiment('No answer found');
+     } else {
+-      setSentiment(result.answer);
++      setSentiment(result.sentiment);
+     }
++
++    setIsProcessing(false);
+   }
+ 
+   return (
+@@ -47,8 +52,10 @@
+         style={[styles.item, styles.input]}
+         value={text}
+       />
+-      <Button onPress={handleClassify} title="Classify" />
+-      <Text style={styles.item}>{sentiment}</Text>
++      <Button onPress={handleAsk} title="Classify" />
++      <Text style={styles.item}>
++        {isProcessing ? 'Predicting sentiment' : sentiment}
++      </Text>
+     </View>
+   );
+ }

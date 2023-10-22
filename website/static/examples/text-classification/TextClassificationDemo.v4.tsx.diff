@@ -1,0 +1,41 @@
+@@ -15,20 +15,22 @@
+   const insets = useSafeAreaInsets();
+ 
+   const [text, setText] = useState('');
++  const [sentiment, setSentiment] = useState('');
+ 
+   async function handleClassify() {
+     const _text = `[CLS] ${text} [SEP]`;
+ 
+-    const inferenceResult = await MobileModel.execute<TextClassificationResult>(
+-      model,
+-      {
+-        text: _text,
+-        modelInputLength: 360,
+-      },
+-    );
++    const { result } = await MobileModel.execute<TextClassificationResult>(model, {
++      text: _text,
++      modelInputLength: 360,
++    });
+ 
+-    // Log model inference result to Metro console
+-    console.log(inferenceResult);
++    // No answer found if the answer is null
++    if (result.sentiment == null) {
++      setSentiment('Could not find sentiment.');
++    } else {
++      setSentiment(result.answer);
++    }
+   }
+ 
+   return (
+@@ -46,7 +48,7 @@
+         value={text}
+       />
+       <Button onPress={handleClassify} title="Classify" />
+-      <Text style={styles.item}>Text Classification</Text>
++      <Text style={styles.item}>{sentiment}</Text>
+     </View>
+   );
+ }

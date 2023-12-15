@@ -1,6 +1,6 @@
 {
   "name": "@flyskywhy/react-native-pytorch-core",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "PyTorch core library for React Native",
   "private": false,
   "main": "lib/commonjs/index",

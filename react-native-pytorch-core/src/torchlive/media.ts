@@ -7,7 +7,7 @@
  * @format
  */
 
-import type {Tensor} from 'react-native-pytorch-core';
+import type {Tensor} from '@flyskywhy/react-native-pytorch-core';
 import type {NativeJSRef} from '../NativeJSRef';
 import type {Image} from '../ImageModule';
 

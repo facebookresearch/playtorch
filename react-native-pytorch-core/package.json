@@ -1,7 +1,8 @@
 {
-  "name": "react-native-pytorch-core",
-  "version": "0.0.0",
+  "name": "react-native-playtorch",
+  "version": "1.0.0",
   "description": "PyTorch core library for React Native",
+  "private": false,
   "main": "lib/commonjs/index",
   "module": "lib/module/index",
   "types": "lib/typescript/index.d.ts",
@@ -42,13 +43,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/facebookresearch/playtorch.git",
+    "url": "https://github.com/flyskywhy/playtorch.git",
     "directory": "react-native-pytorch-core"
   },
   "author": "Meta Platforms, Inc.",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/facebookresearch/playtorch/issues"
+    "url": "https://github.com/flyskywhy/playtorch/issues"
   },
   "homepage": "https://playtorch.dev/",
   "publishConfig": {

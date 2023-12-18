@@ -9,6 +9,7 @@ package org.pytorch.rn.core.camera;
 
 import android.Manifest;
 import android.animation.ValueAnimator;
+import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
@@ -36,6 +37,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.lifecycle.LifecycleOwner;
+import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.uimanager.events.RCTEventEmitter;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -212,6 +214,40 @@ public class CameraView extends ConstraintLayout {
               Log.e(TAG, exception.getLocalizedMessage(), exception);
             }
           });
+    }
+  }
+
+  protected void takePicture(Activity activity, boolean isPreviewView, Promise promise) {
+    if (mImageCapture != null) {
+      if (isPreviewView) {
+        activity.runOnUiThread(new Runnable() {
+          @Override
+          public void run() {
+            IImage image = new Image(mPreviewView.getBitmap());
+            JSContext.NativeJSRef ref = JSContext.wrapObject(image);
+            promise.resolve(ref.getJSRef());
+          }
+        });
+      } else {
+        mImageCapture.takePicture(
+            ContextCompat.getMainExecutor(mReactContext),
+            new ImageCapture.OnImageCapturedCallback() {
+              @Override
+              public void onCaptureSuccess(@NonNull ImageProxy imageProxy) {
+                super.onCaptureSuccess(imageProxy);
+                IImage image = new Image(imageProxy, mReactContext.getApplicationContext());
+                JSContext.NativeJSRef ref = JSContext.wrapObject(image);
+                promise.resolve(ref.getJSRef());
+              }
+
+              @Override
+              public void onError(@NonNull ImageCaptureException exception) {
+                super.onError(exception);
+                Log.e(TAG, exception.getLocalizedMessage(), exception);
+                promise.reject(exception);
+              }
+            });
+      }
     }
   }
 

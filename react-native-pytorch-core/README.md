@@ -28,7 +28,7 @@ import {
   Tensor,
   torch,
   torchvision,
-} from 'react-native-pytorch-core';
+} from 'react-native-playtorch';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 // Alias for torchvision transforms

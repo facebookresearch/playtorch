@@ -519,7 +519,7 @@ class CanvasRenderingContext2D: NSObject {
                  rejecter reject: RCTPromiseRejectBlock) {
     do {
       let canvasView = try JSContextUtils.unwrapObject(canvasRef, DrawingCanvasView.self)
-      let image = try JSContextUtils.unwrapObject(image, IImage.self)
+      let image = try JSContextUtils.unwrapObject(image, Image.self)
       if dWidth == -1 && sWidth == -1 {
         try canvasView.drawImage(image: image, dx: CGFloat(truncating: sx), dy: CGFloat(truncating: sy))
       } else if dx == -1 {

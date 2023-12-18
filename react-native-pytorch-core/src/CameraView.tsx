@@ -11,6 +11,8 @@ import * as React from 'react';
 import {
   findNodeHandle,
   requireNativeComponent,
+  NativeModules,
+  Platform,
   UIManager,
   ViewProps,
 } from 'react-native';
@@ -116,6 +118,10 @@ const nativeCameraViewName = 'PyTorchCoreCameraView';
 const PyTorchCoreCameraView =
   requireNativeComponent<CameraProps>(nativeCameraViewName);
 
+const nativeCameraModuleName = 'PyTorchCoreCameraModule';
+
+const PyTorchCoreCameraModule = NativeModules[nativeCameraModuleName];
+
 /**
  * A camera component with [[CameraProps.onCapture]] and [[CameraProps.onFrame]] callbacks.
  * To programmatically trigger a capture, call the [[takePicture]] function.
@@ -195,17 +201,31 @@ export class Camera extends React.PureComponent<CameraProps> {
    * }
    * ```
    */
-  public takePicture(): void {
+  // if isPreviewView is true, will use preview instead of photo,
+  // this can reduce 400ms to 100ms, but since preview will delay
+  // some from real target, maybe it's nonsense, so default false
+  public async takePicture(isPreviewView: boolean = false): Promise<void> {
     if (this.cameraRef.current) {
-      const takePictureCommandId =
-        UIManager.getViewManagerConfig(nativeCameraViewName).Commands
-          .takePicture;
       const cameraViewHandle = findNodeHandle(this.cameraRef.current);
-      UIManager.dispatchViewManagerCommand(
-        cameraViewHandle,
-        takePictureCommandId,
-        [],
-      );
+      if (Platform.OS === 'android') {
+        // TODO: also implement ios
+        const nativeEvent = await PyTorchCoreCameraModule.takePicture(
+          cameraViewHandle,
+          isPreviewView,
+        );
+        if (nativeEvent.ID) {
+          this.handleOnCapture({nativeEvent});
+        }
+      } else {
+        const takePictureCommandId =
+          UIManager.getViewManagerConfig(nativeCameraViewName).Commands
+            .takePicture;
+        UIManager.dispatchViewManagerCommand(
+          cameraViewHandle,
+          takePictureCommandId,
+          [],
+        );
+      }
     }
   }
 

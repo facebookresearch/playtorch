@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   s.authors      = package["author"]
 
   s.platforms    = { :ios => "12.0" }
-  s.source       = { :git => "https://github.com/flyskywhy/react-native-playtorch.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/flyskywhy/playtorch.git", :tag => "#{s.version}" }
 
   s.source_files = "ios/**/*.{h,m,mm,swift,cpp}", "cxx/src/**/*.{h,cpp}"
 

@@ -15,7 +15,7 @@ import {
 } from '@expo/config-plugins';
 
 // Keeping the name, and version in sync with it's package.
-const pkg = require('@flyskywhy/react-native-pytorch-core/package.json');
+const pkg = require('react-native-playtorch/package.json');
 
 type Props = {};
 

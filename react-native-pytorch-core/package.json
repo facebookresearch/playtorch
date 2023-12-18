@@ -1,5 +1,5 @@
 {
-  "name": "@flyskywhy/react-native-pytorch-core",
+  "name": "react-native-playtorch",
   "version": "1.0.1",
   "description": "PyTorch core library for React Native",
   "private": false,
@@ -43,13 +43,13 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/facebookresearch/playtorch.git",
+    "url": "https://github.com/flyskywhy/playtorch.git",
     "directory": "react-native-pytorch-core"
   },
   "author": "Meta Platforms, Inc.",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/facebookresearch/playtorch/issues"
+    "url": "https://github.com/flyskywhy/playtorch/issues"
   },
   "homepage": "https://playtorch.dev/",
   "publishConfig": {

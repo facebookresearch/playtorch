@@ -2,7 +2,7 @@
   "compilerOptions": {
     "baseUrl": "./",
     "paths": {
-      "@flyskywhy/react-native-pytorch-core": ["./src/index"]
+      "react-native-playtorch": ["./src/index"]
     },
     "allowUnreachableCode": false,
     "allowUnusedLabels": false,

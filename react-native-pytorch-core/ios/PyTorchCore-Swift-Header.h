@@ -9,4 +9,4 @@
 // Imports needed to call Swift from Objective-C
 //
 #import <AVFoundation/AVFoundation.h>
-#import "react_native_pytorch_core-Swift.h"
+#import "react_native_playtorch-Swift.h"

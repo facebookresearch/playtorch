@@ -1,6 +1,6 @@
 {
   "name": "react-native-playtorch",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "PyTorch core library for React Native",
   "private": false,
   "main": "lib/commonjs/index",
@@ -14,7 +14,7 @@
     "android",
     "ios",
     "cxx",
-    "react-native-pytorch-core.podspec",
+    "react-native-playtorch.podspec",
     "!lib/typescript/example",
     "!android/build",
     "!ios/build",
@@ -37,9 +37,15 @@
     "doc": "typedoc --plugin typedoc-plugin-markdown src/index.tsx"
   },
   "keywords": [
-    "react-native",
+    "android",
     "ios",
-    "android"
+    "playtorch",
+    "pytorch",
+    "tensor",
+    "torch",
+    "torchlive",
+    "torchvision",
+    "react-native"
   ],
   "repository": {
     "type": "git",

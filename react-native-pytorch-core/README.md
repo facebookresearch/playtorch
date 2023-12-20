@@ -1,5 +1,10 @@
 # PyTorch core library for React Native
 
+[![npm version](http://img.shields.io/npm/v/react-native-playtorch.svg?style=flat-square)](https://npmjs.org/package/react-native-playtorch "View this project on npm")
+[![npm downloads](http://img.shields.io/npm/dm/react-native-playtorch.svg?style=flat-square)](https://npmjs.org/package/react-native-playtorch "View this project on npm")
+[![npm licence](http://img.shields.io/npm/l/react-native-playtorch.svg?style=flat-square)](https://npmjs.org/package/react-native-playtorch "View this project on npm")
+[![Platform](https://img.shields.io/badge/platform-ios%20%7C%20android-989898.svg?style=flat-square)](https://npmjs.org/package/react-native-playtorch "View this project on npm")
+
 The PyTorch core library for React Native is part of the PlayTorch project. Please follow the instructions provided on the [PlayTorch website](https://playtorch.dev/) as outlined below!
 
 ## 🎉 Getting started with PlayTorch

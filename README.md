@@ -13,19 +13,10 @@
   <a href="https://playtorch.dev/docs/next/api/core/">API</a>
 </h3>
 
-<p>&nbsp;</p>
-
-<p>
-  <a href="https://www.npmjs.org/package/react-native-pytorch-core">
-    <img src="https://img.shields.io/npm/v/react-native-pytorch-core?label=react-native-pytorch-core" alt="Current React Native PyTorch Core npm package version." />
-  </a>
-</p>
-
-<p>
-  <a href="https://github.com/pytorch/live/blob/main/LICENSE">
-    <img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="PlayTorch is released under the MIT license." />
-  </a>
-</p>
+[![npm version](http://img.shields.io/npm/v/react-native-playtorch.svg?style=flat-square)](https://npmjs.org/package/react-native-playtorch "View this project on npm")
+[![npm downloads](http://img.shields.io/npm/dm/react-native-playtorch.svg?style=flat-square)](https://npmjs.org/package/react-native-playtorch "View this project on npm")
+[![npm licence](http://img.shields.io/npm/l/react-native-playtorch.svg?style=flat-square)](https://npmjs.org/package/react-native-playtorch "View this project on npm")
+[![Platform](https://img.shields.io/badge/platform-ios%20%7C%20android-989898.svg?style=flat-square)](https://npmjs.org/package/react-native-playtorch "View this project on npm")
 
 ----------------------
 

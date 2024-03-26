@@ -12,11 +12,13 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
+import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.facebook.react.bridge.ReactContextBaseJavaModule;
 import com.facebook.react.bridge.ReactMethod;
 import com.facebook.react.bridge.ReadableMap;
+import com.facebook.react.bridge.WritableArray;
 import com.facebook.react.common.build.ReactBuildConfig;
 import com.facebook.react.module.annotations.ReactModule;
 import com.facebook.react.views.imagehelper.ImageSource;
@@ -27,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import org.pytorch.rn.core.canvas.ImageData;
+import org.pytorch.rn.core.image.ImageUtils;
 import org.pytorch.rn.core.javascript.JSContext;
 import org.pytorch.rn.core.utils.FileUtils;
 
@@ -185,6 +188,18 @@ public class ImageModule extends ReactContextBaseJavaModule {
     }
     JSContext.NativeJSRef ref = JSContext.wrapObject(image);
     promise.resolve(ref.getJSRef());
+  }
+
+  @ReactMethod
+  public void toImageDataDataWeb(final ReadableMap imageRef, Promise promise) {
+    IImage image = JSContext.unwrapObject(imageRef);
+    byte[] bytes = ImageUtils.bitmapToRGBA(image.getBitmap());
+
+    WritableArray array = Arguments.createArray();
+    for (int i = 0; i < bytes.length; i++) {
+        array.pushInt(bytes[i]);
+    }
+    promise.resolve(array);
   }
 
   @ReactMethod

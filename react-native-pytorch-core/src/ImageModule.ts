@@ -186,6 +186,11 @@ export const ImageUtil = {
     return wrapRef(ref);
   },
 
+  // 2073600 bytes of 720x720 cost 5 seconds to await
+  async toImageDataDataWeb(image: Image): Promise<void> {
+    return await ImageModule.toImageDataDataWeb(image);
+  },
+
   /**
    * The `fromJSRef` function returns an [[Image]] by wrapping a [[NativeJSRef]]
    * object.
